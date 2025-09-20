@@ -11,9 +11,26 @@
       <div class="operate">
         <div class="select">
           <label>文案：</label>
-          <select :value="writer.currentCorpusId" @change="onCorpus">
-            <option v-for="c in corpora" :key="c.id" :value="c.id">{{ c.title }}</option>
-          </select>
+          <div class="dropdown" @click="toggleMenu">
+            <span class="dropdownLabel">{{ currentCorpusTitle }}</span>
+            <span class="caret">▾</span>
+            <div v-if="showMenu" class="menu" @click.stop>
+              <div
+                v-for="c in corpora"
+                :key="c.id"
+                class="menuItem"
+                @click="selectCorpus(c.id)"
+              >
+                <span class="title">{{ c.title }}</span>
+                <button
+                  v-if="c.id.startsWith('custom-')"
+                  class="delBtn"
+                  title="删除"
+                  @click.stop="deleteDoc(c.id)"
+                >🗑️</button>
+              </div>
+            </div>
+          </div>
         </div>
         <button class="el-button el-button--small" @click="openImport">导入文本</button>
         <label><input type="checkbox" :checked="writer.showPinyin" @change="e=>writer.setShowPinyin(e.target.checked)"/> 拼音显示</label>
@@ -95,6 +112,11 @@ const settings = useSettingsStore()
 const writer = useWriterStore()
 const buckets = LENGTH_BUCKETS
 const corpora = computed(() => writer.corpora)
+const showMenu = ref(false)
+const currentCorpusTitle = computed(() => corpora.value.find(c => c.id === writer.currentCorpusId)?.title || '选择文案')
+function toggleMenu() { showMenu.value = !showMenu.value }
+function selectCorpus(id) { writer.applyCorpus(id); showMenu.value = false }
+function deleteDoc(id) { writer.deleteCustomDoc(id) }
 const cardItems = computed(() => writer.queue.slice(writer.lineStart, writer.lineStart + writer.windowSize))
 const currentInLine = computed(() => writer.charIdx - writer.lineStart)
 function codeToLetter(c) { return (c || '').replace('Key','') }
@@ -151,7 +173,13 @@ onMounted(() => {
 <style scoped>
 .pageCenter { min-height: calc(100vh - 52px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 12px; }
 .operate { display: flex; gap: 10px; align-items: center; padding: 10px 20px; }
-.operate .select select { padding: 4px 8px; border-radius: 6px; border: 1px solid var(--theme-border-color); background: var(--theme-background-light-color); color: var(--theme-text-color); }
+.operate .select select { display: none; }
+.operate .select .dropdown { position: relative; display: inline-flex; align-items: center; gap: 6px; min-width: 220px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--theme-border-color); background: var(--theme-background-light-color); color: var(--theme-text-color); cursor: pointer; }
+.operate .select .dropdown .menu { position: absolute; top: calc(100% + 6px); left: 0; min-width: 280px; max-height: 260px; overflow: auto; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 8px; box-shadow: 0 6px 16px rgba(0,0,0,0.18); padding: 6px; z-index: 20; }
+.operate .select .dropdown .menu .menuItem { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 8px; border-radius: 6px; }
+.operate .select .dropdown .menu .menuItem:hover { background: rgba(53,226,183,0.08); }
+.operate .select .dropdown .menu .menuItem .delBtn { background: transparent; border: none; color: #d9534f; cursor: pointer; font-size: 16px; }
+.operate .select .dropdown .menu .menuItem .delBtn:hover { color: #ff4d4f; }
 .cardsWrap { width: 1040px; max-width: 96%; margin: 10px auto 10px; }
 .cards { display: flex; gap: 10px; justify-content: center; }
 .card { width: 96px; height: 124px; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 10px; box-shadow: 0 2px 0 rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; justify-content: space-around; padding: 8px 6px; }

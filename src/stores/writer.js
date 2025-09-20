@@ -156,6 +156,17 @@ export const useWriterStore = defineStore('writer', {
       const id = this.addCustomDoc(rawText)
       if (id) this.applyCorpus(id)
     },
+    deleteCustomDoc(id) {
+      const idx = this.customDocs.findIndex(d => d.id === id)
+      if (idx >= 0) {
+        this.customDocs.splice(idx, 1)
+        if (this.currentCorpusId === id) {
+          this.currentCorpusId = 'builtin-all'
+          this.applyCorpus('builtin-all')
+        }
+        this.save()
+      }
+    },
     restartCurrent() {
       if (this.currentCorpusId) this.applyCorpus(this.currentCorpusId)
     },
