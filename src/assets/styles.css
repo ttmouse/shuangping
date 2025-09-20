@@ -64,8 +64,43 @@ a { color: var(--theme-menu-text-color); text-decoration: none; }
 .keyBox .keyAuxiliary p.red-text { color: #d9534f; font-weight: 600; }
 .keyBox:hover { border-color: var(--theme-menu-hover-color); }
 .keyBox.pressed { transform: translateY(1px); }
-.keyBox.flash-ok { box-shadow: 0 0 0 2px #28a74555 inset, 0 0 8px #28a74555; }
-.keyBox.flash-bad { box-shadow: 0 0 0 2px #d9534f55 inset, 0 0 8px #d9534f55; }
+.keyBox.flash-ok {
+  border-color: #52c41a;
+  box-shadow:
+    0 0 0 2px rgba(82,196,26,0.6) inset,
+    0 0 12px rgba(82,196,26,0.5);
+  animation: keyPop 0.22s ease;
+}
+.keyBox.flash-ok .keyCapital p,
+.keyBox.flash-ok .keyAuxiliary p,
+.keyBox.flash-ok .keyMnemonic span { color: #52c41a; }
+.keyBox.flash-bad {
+  border-color: #ff4d4f;
+  /* 强化红色内阴影 + 外发光，并加一层轻微红色蒙层 */
+  box-shadow:
+    0 0 0 2px #ff4d4f99 inset,
+    0 0 12px #ff4d4f80,
+    0 0 0 999px rgba(255,77,79,0.08) inset;
+  animation: keyShake 0.18s ease;
+}
+.keyBox.flash-bad .keyCapital p,
+.keyBox.flash-bad .keyAuxiliary p,
+.keyBox.flash-bad .keyMnemonic span { color: #ff4d4f; }
+
+@keyframes keyShake {
+  0%   { transform: translateX(0) }
+  25%  { transform: translateX(-2px) }
+  50%  { transform: translateX(2px) }
+  75%  { transform: translateX(-1px) }
+  100% { transform: translateX(0) }
+}
+
+@keyframes keyPop {
+  0%   { transform: scale(1) }
+  50%  { transform: scale(1.035) }
+  100% { transform: scale(1) }
+}
+.keyBox.selected { border-color: var(--theme-menu-hover-color); box-shadow: 0 0 0 2px #35e2b733 inset, 0 0 10px #35e2b733; }
 
 /* 页脚间距 */
 .footerSpace { height: 36px; }

@@ -8,11 +8,25 @@
         <h2 data-v-01350f3e>为快速入门双拼打字而生，提供双拼声母、韵母专项练习法。</h2>
       </div>
 
-      <div class="mask" :class="{ active: !started }" @click="start">
+      <div class="mask" :class="{ active: !started && !selectMode }" @click="start">
         <p>键盘按任意键<br/>或点击当前页面开始练习</p>
       </div>
 
-      <div class="operation" />
+      <div class="operate">
+        <div class="select">
+          <label>范围：</label>
+          <select :value="session.rangeId" @change="onRange">
+            <option v-for="r in rangesDisplay" :key="r.id" :value="r.id">{{ r.name }}</option>
+          </select>
+        </div>
+        <label><input type="checkbox" :checked="settings.yunmuShowShuangpin" @change="e=>{ settings.yunmuShowShuangpin = !!e.target.checked; settings.save() }"/> 双拼编码显示</label>
+        <!-- 自选模式：开始与重新选择的切换 -->
+        <template v-if="session.rangeId === 'custom'">
+          <button v-if="!session.started" class="el-button el-button--small" @click="start">开始</button>
+          <button v-else class="el-button el-button--small" @click="reselect">重新选择</button>
+          <button class="el-button el-button--small" @click="onClearSelected" :disabled="!session.selectedKeyCodes.length">清空选择</button>
+        </template>
+      </div>
 
       <div class="cardsWrap">
         <div class="cards">
@@ -23,7 +37,7 @@
             :class="{ current: idx === currentIndex, done: idx < currentIndex }"
           >
             <div class="hz">{{ f }}</div>
-            <div class="keys">
+            <div class="keys" v-if="settings.yunmuShowShuangpin">
               <span
                 v-for="(l,i) in lettersForFinal(f)"
                 :key="i + '-' + l"
@@ -35,7 +49,8 @@
         </div>
       </div>
 
-      <Keyboard :handle="onPress" />
+      <Keyboard v-if="!selectMode" :handle="onPress" />
+      <Keyboard v-else :selectable="true" :selected-codes="session.selectedKeyCodes" :on-toggle="onToggleKey" />
 
       <div class="footerSpace" />
     </div>
@@ -43,10 +58,10 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import Keyboard from '../components/Keyboard.vue'
 import TopStatusBar from '../components/TopStatusBar.vue'
-import { finalToKeyCodes, keyByCode } from '../data/xiaohe.js'
+import { finalToKeyCodes, keyByCode, ranges } from '../data/xiaohe.js'
 import { useSettingsStore } from '../stores/settings.js'
 import { useSessionStore } from '../stores/session.js'
 
@@ -64,10 +79,12 @@ onMounted(() => {
   // 启动时任意按键开始
   const handler = (e) => {
     if (!session.started) {
+      // 自选模式下不自动启动，等待点击“开始”
+      if (session.rangeId === 'custom') return
       e.preventDefault()
       start()
     }
-    window.removeEventListener('keydown', handler)
+    if (session.started) window.removeEventListener('keydown', handler)
   }
   window.addEventListener('keydown', handler)
 })
@@ -75,6 +92,10 @@ onMounted(() => {
 const target = computed(() => session.currentTarget)
 const upcoming = computed(() => session.upcoming)
 const currentIndex = computed(() => session.pos)
+const rangesDisplay = [
+  ...['row1','row2','row3','all'].map(id => ranges.find(r => r.id === id)).filter(Boolean),
+  { id: 'custom', name: '自选韵母' }
+]
 
 function codeToLetter(c) { return (c || '').replace('Key','') }
 function lettersForFinal(final) {
@@ -84,8 +105,15 @@ function lettersForFinal(final) {
   return Array.from(new Set(letters))
 }
 const started = computed(() => session.started)
+const selectMode = computed(() => session.rangeId === 'custom' && !session.started)
 
 function start() {
+  if (session.rangeId === 'custom') {
+    if (!session.selectedKeyCodes.length) {
+      alert('请先勾选至少一个韵母键')
+      return
+    }
+  }
   session.start()
 }
 
@@ -94,10 +122,32 @@ function onPress(code) {
   const res = session.submitKeyCode(code)
   return res
 }
+
+function onRange(e) {
+  session.setRange(e.target.value)
+}
+
+function onToggleKey(code) {
+  session.toggleKey(code)
+}
+
+function onClearSelected() {
+  // 清空并进入选择模式
+  session.clearSelected()
+  if (session.started) session.reset()
+  session.setRange('custom')
+}
+
+function reselect() {
+  // 退出练习，回到自选勾选模式
+  session.reset()
+}
 </script>
 
 <style scoped>
 .pageCenter { min-height: calc(100vh - 52px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 12px; }
+.operate { display: flex; gap: 10px; align-items: center; padding: 10px 20px; }
+.operate .select select { padding: 4px 8px; border-radius: 6px; border: 1px solid var(--theme-border-color); background: var(--theme-background-light-color); color: var(--theme-text-color); }
 /* 卡片样式与 Writer 对齐 */
 .cardsWrap { width: 1040px; max-width: 96%; margin: 10px auto 10px; }
 .cards { display: flex; gap: 10px; justify-content: center; }

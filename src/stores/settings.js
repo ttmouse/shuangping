@@ -11,6 +11,8 @@ export const useSettingsStore = defineStore('settings', {
     soundUseCustom: true,
     soundOkFile: '',
     soundList: [],
+    // UI preferences
+    yunmuShowShuangpin: true,
   }),
   actions: {
     load() {

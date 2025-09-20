@@ -23,7 +23,9 @@ function normalizeZeroInitial(syl) {
     if (r.startsWith('e')) return { initial: '', final: 'ie' }
     if (r.startsWith('o')) return { initial: '', final: 'io' } // rare
     if (r.startsWith('u')) {
-      if (r.startsWith('ue')) return { initial: '', final: 'ue' }
+      // y + u 系其实来源于 ü 系：yu/ yue / yuan / yun
+      if (r === 'u') return { initial: '', final: 'v' }
+      if (r.startsWith('ue')) return { initial: '', final: 've' }
       if (r.startsWith('uan')) return { initial: '', final: 'uan' }
       if (r.startsWith('un')) return { initial: '', final: 'un' }
     }

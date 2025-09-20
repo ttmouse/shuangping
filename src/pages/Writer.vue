@@ -10,12 +10,12 @@
 
       <div class="operate">
         <div class="select">
-          <label>长度：</label>
-          <select :value="writer.bucketId" @change="onBucket">
-            <option v-for="b in buckets" :key="b.id" :value="b.id">{{ b.label }}</option>
+          <label>文案：</label>
+          <select :value="writer.currentCorpusId" @change="onCorpus">
+            <option v-for="c in corpora" :key="c.id" :value="c.id">{{ c.title }}</option>
           </select>
         </div>
-        <button class="el-button el-button--small" @click="nextOne">随机更换</button>
+        <button class="el-button el-button--small" @click="openImport">导入文本</button>
         <label><input type="checkbox" :checked="writer.showPinyin" @change="e=>writer.setShowPinyin(e.target.checked)"/> 拼音显示</label>
         <label><input type="checkbox" :checked="writer.showShuangpin" @change="e=>writer.setShowShuangpin(e.target.checked)"/> 双拼编码显示</label>
         <label><input type="checkbox" :checked="writer.hideKeyboard" @change="e=>writer.setHideKeyboard(e.target.checked)"/> 隐藏键盘</label>
@@ -47,20 +47,54 @@
 
       <div class="footerSpace" />
     </div>
+
+    <!-- 导入文本弹窗 -->
+    <div v-if="showImport" class="modalMask" @click.self="closeImport">
+      <div class="modal">
+        <h3>导入自定义中文文本</h3>
+        <textarea
+          v-model="importText"
+          placeholder="粘贴中文文本（仅中文会被用于练习，最多 1000 字）"
+        />
+        <div class="modalFooter">
+          <div class="tip">中文计数：{{ hanCount }}/1000</div>
+          <div class="actions">
+            <button class="el-button el-button--small" @click="closeImport">取消</button>
+            <button class="el-button el-button--small primary" :disabled="hanCount===0" @click="confirmImport">生成练习</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 练习完成浮层（仅自定义/内置文案） -->
+    <div v-if="writer.completed" class="modalMask" @click.self="restart">
+      <div class="modal">
+        <h3>练习完成</h3>
+        <p>已完成当前文案的全部文字练习。</p>
+        <div class="modalFooter">
+          <div />
+          <div class="actions">
+            <button class="el-button el-button--small primary" @click="restart">重新开始</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 import { useSettingsStore } from '../stores/settings.js'
 import { useWriterStore } from '../stores/writer.js'
 import Keyboard from '../components/Keyboard.vue'
 import TopStatusBar from '../components/TopStatusBar.vue'
 import { LENGTH_BUCKETS } from '../data/words.js'
+import { extractChinese } from '../utils/text2pinyin.js'
 
 const settings = useSettingsStore()
 const writer = useWriterStore()
 const buckets = LENGTH_BUCKETS
+const corpora = computed(() => writer.corpora)
 const cardItems = computed(() => writer.queue.slice(writer.lineStart, writer.lineStart + writer.windowSize))
 const currentInLine = computed(() => writer.charIdx - writer.lineStart)
 function codeToLetter(c) { return (c || '').replace('Key','') }
@@ -70,14 +104,47 @@ function letterClass(cardIndex, letterIndex) {
   return { done: isDone, hidden: !writer.showShuangpin && !isDone }
 }
 
-function onBucket(e) { writer.setBucket(e.target.value) }
-function nextOne() { writer.pickRandom() }
+function onBucket(e) { /* removed */ }
+function onCorpus(e) { writer.applyCorpus(e.target.value) }
 function onPress(code) { return writer.submit(code) }
+
+// 导入文本弹窗逻辑
+const showImport = ref(false)
+const importText = ref('')
+const hanCount = computed(() => extractChinese(importText.value).length)
+function openImport() {
+  importText.value = writer.lastText || ''
+  showImport.value = true
+}
+function closeImport() { showImport.value = false }
+function confirmImport() {
+  writer.addCustomDocAndApply(importText.value)
+  showImport.value = false
+}
+
+function restart() {
+  writer.restartCurrent()
+}
+
+function onKeydownRestart(e) {
+  if (!writer.completed) return
+  if (e.key === 'Enter' || e.code === 'Enter' || e.keyCode === 13) {
+    e.preventDefault()
+    restart()
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', onKeydownRestart)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', onKeydownRestart)
+})
 
 onMounted(() => {
   settings.load()
   writer.load()
-  writer.pickRandom()
+  writer.applyCorpus(writer.currentCorpusId)
 })
 </script>
 
@@ -95,4 +162,14 @@ onMounted(() => {
 .card .keys .letter.hidden { opacity: 0; }
 .card .keys .letter { margin: 0 0px; }
 .card .keys .letter.done { color: var(--theme-menu-text-color); font-weight: 700; }
+
+/* 简易弹窗样式 */
+.modalMask { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; z-index: 40; }
+.modal { width: 720px; max-width: 92vw; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 10px; box-shadow: 0 6px 16px rgba(0,0,0,0.18); padding: 14px; }
+.modal h3 { margin: 4px 0 10px; color: var(--theme-main-text-color); }
+.modal textarea { width: 100%; height: 220px; padding: 10px; border-radius: 8px; border: 1px solid var(--theme-border-color); background: var(--theme-background-light-color); color: var(--theme-text-color); resize: vertical; }
+.modalFooter { margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.modalFooter .tip { font-size: 12px; color: var(--theme-rich-text-color); }
+.modalFooter .actions { display: flex; gap: 8px; }
+.el-button.primary { background: var(--theme-menu-hover-color); color: #0b1a14; border-color: var(--theme-menu-hover-color); }
 </style>

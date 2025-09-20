@@ -27,7 +27,10 @@ import { keyRows as rows, keyByCode } from '../data/xiaohe.js'
 import { playKeySound } from '../utils/sound.js'
 import { useSettingsStore } from '../stores/settings.js'
 const props = defineProps({
-  handle: { type: Function, required: true },
+  handle: { type: Function, required: false },
+  selectable: { type: Boolean, default: false },
+  selectedCodes: { type: Array, default: () => [] },
+  onToggle: { type: Function, required: false },
 })
 
 const flash = reactive(new Map()) // code -> 'ok' | 'bad' | undefined
@@ -39,6 +42,7 @@ function boxClass(code) {
     pressed: pressed.has(code),
     'flash-ok': flash.get(code) === 'ok',
     'flash-bad': flash.get(code) === 'bad',
+    selected: props.selectable && props.selectedCodes?.includes?.(code),
   }
 }
 
@@ -46,20 +50,27 @@ function doFlash(code, kind) {
   flash.set(code, kind)
   setTimeout(() => {
     if (flash.get(code) === kind) flash.delete(code)
-  }, kind === 'ok' ? 150 : 200)
+  }, kind === 'ok' ? 220 : 280)
 }
 
 function onClick(code) {
-  const res = props.handle?.(code) || { correct: false }
-  doFlash(code, res.correct ? 'ok' : 'bad')
-  if (settings.sound) {
-    playKeySound(res.correct ? 'ok' : 'bad', { volume: settings.soundVolume })
+  if (props.selectable && props.onToggle) {
+    props.onToggle(code)
+    return
+  }
+  if (props.handle) {
+    const res = props.handle?.(code) || { correct: false }
+    doFlash(code, res.correct ? 'ok' : 'bad')
+    if (settings.sound) {
+      playKeySound(res.correct ? 'ok' : 'bad', { volume: settings.soundVolume })
+    }
   }
 }
 
 function onKeyDown(e) {
   const code = e.code
   if (!keyByCode.has(code)) return
+  if (props.selectable) return
   if (e.repeat) return
   if (!pressed.has(code)) pressed.add(code)
   const res = props.handle?.(code) || { correct: false }

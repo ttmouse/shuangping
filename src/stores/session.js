@@ -15,11 +15,20 @@ export const useSessionStore = defineStore('session', {
     pos: 0, // 当前批次内的位置（0..windowSize-1）
     rangeId: 'all',
     scheduler: 'uniform',
+    selectedKeyCodes: [], // 自选韵母对应的按键 codes，如 ['KeyQ','KeyP']
   }),
   getters: {
+    allowedKeyCodes(state) {
+      // 自选模式：直接使用已选 codes
+      if (state.rangeId === 'custom') {
+        return new Set(state.selectedKeyCodes || [])
+      }
+      // 否则按范围
+      const r = ranges.find(r => r.id === state.rangeId) || ranges[0]
+      return new Set(r.keyCodes)
+    },
     pool(state) {
-      const range = ranges.find(r => r.id === state.rangeId) || ranges[0]
-      const allowed = new Set(range.keyCodes)
+      const allowed = this.allowedKeyCodes
       // Build pool filtered by range
       const pool = finalsPool.filter(f => {
         const codes = finalToKeyCodes.get(f)
@@ -55,6 +64,8 @@ export const useSessionStore = defineStore('session', {
         const raw = localStorage.getItem(STORAGE_KEY)
         if (raw) Object.assign(this.$state, JSON.parse(raw))
       } catch {}
+      // 校验范围 id（允许 'custom'）
+      if (this.rangeId !== 'custom' && !ranges.some(r => r.id === this.rangeId)) this.rangeId = 'all'
       // 迁移兼容：若已开始但无队列，补齐一批；同时校正指针
       if (this.started && (!Array.isArray(this.queue) || this.queue.length === 0)) {
         this._fillBatch()
@@ -110,6 +121,33 @@ export const useSessionStore = defineStore('session', {
       const ok = codes.has(code)
       if (ok) this.nextTarget()
       return { correct: ok }
+    },
+    setRange(id) {
+      if (id !== 'custom' && !ranges.some(r => r.id === id)) return
+      this.rangeId = id
+      // 切换范围后，若已开始则刷新一整批
+      if (this.started) {
+        if (this.rangeId === 'custom') {
+          // 自选模式不立即开始，等待用户勾选后点击开始
+          this.reset()
+        } else {
+          this._fillBatch()
+          this.pos = 0
+          this.currentTarget = this.queue[0] || ''
+        }
+      }
+      this.save()
+    },
+    toggleKey(code) {
+      if (!code) return
+      const idx = this.selectedKeyCodes.indexOf(code)
+      if (idx >= 0) this.selectedKeyCodes.splice(idx, 1)
+      else this.selectedKeyCodes.push(code)
+      this.save()
+    },
+    clearSelected() {
+      this.selectedKeyCodes = []
+      this.save()
     },
   },
 })
