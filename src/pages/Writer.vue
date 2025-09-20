@@ -201,8 +201,10 @@ onMounted(() => {
   inset: 0;
   border-radius: 10px;
   box-shadow: 0 0 0 0 rgba(82,196,26,0.0), 0 0 0 rgba(82,196,26,0.0);
+  background: rgba(82,196,26,0.18);
   opacity: 0;
   pointer-events: none;
+  z-index: 2;
   animation: cardHitGlow 0.3s ease-out;
 }
 .card.doneLatest::before {
@@ -217,6 +219,8 @@ onMounted(() => {
   border-radius: 50%;
   opacity: 0.8;
   pointer-events: none;
+  z-index: 2;
+  will-change: transform, opacity;
   animation: cardRipple 0.3s ease-out;
 }
 .card.donePast { opacity: 0; visibility: hidden; pointer-events: none; }
