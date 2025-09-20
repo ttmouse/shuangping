@@ -16,6 +16,7 @@ export const useSessionStore = defineStore('session', {
     rangeId: 'all',
     scheduler: 'uniform',
     selectedKeyCodes: [], // 自选韵母对应的按键 codes，如 ['KeyQ','KeyP']
+    lineHold: false,
   }),
   getters: {
     allowedKeyCodes(state) {
@@ -108,14 +109,24 @@ export const useSessionStore = defineStore('session', {
         this.pos += 1
         this.currentTarget = this.queue[this.pos] || ''
       } else {
+        // 改为延时刷新，等待倒下动画
         this.lastTarget = this.currentTarget
-        this._fillBatch()
-        this.pos = 0
-        this.currentTarget = this.queue[0] || ''
+        this.lineHold = true
+        this.pos = this.windowSize // 使得 UI 可判定最新完成
+        this.currentTarget = ''
+        const holdMs = 700
+        setTimeout(() => {
+          this._fillBatch()
+          this.pos = 0
+          this.currentTarget = this.queue[0] || ''
+          this.lineHold = false
+          this.save()
+        }, holdMs)
       }
       this.save()
     },
     submitKeyCode(code) {
+      if (this.lineHold) return { correct: false, ignore: true }
       if (!this.currentTarget) return { correct: false }
       const codes = finalToKeyCodes.get(this.currentTarget) || new Set()
       const ok = codes.has(code)

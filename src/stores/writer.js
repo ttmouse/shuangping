@@ -22,6 +22,8 @@ export const useWriterStore = defineStore('writer', {
     codeIdx: 0, // 当前字符内按键索引
     windowSize: 10,
     completed: false,
+    nextId: 1,
+    lineHold: false,
   }),
   getters: {
     bucket(state) { return LENGTH_BUCKETS.find(b => b.id === state.bucketId) || LENGTH_BUCKETS[0] },
@@ -30,7 +32,11 @@ export const useWriterStore = defineStore('writer', {
       const b = this.bucket
       return WORDS.filter(w => w.text.length >= b.min && w.text.length <= b.max)
     },
-    lineStart(state) { return Math.floor(state.charIdx / state.windowSize) * state.windowSize },
+    lineStart(state) {
+      const base = Math.floor(state.charIdx / state.windowSize) * state.windowSize
+      if (state.lineHold && state.charIdx % state.windowSize === 0) return Math.max(0, base - state.windowSize)
+      return base
+    },
     currentItem(state) { return this.queue[state.charIdx] || null },
     currentPinyin() { return this.currentItem?.pinyin || '' },
     currentShuangpin() {
@@ -71,7 +77,7 @@ export const useWriterStore = defineStore('writer', {
         if (!py) continue
         const seq = syllableToKeyCodes(py)
         if (!seq.length) continue
-        items.push({ ch, pinyin: py, seq })
+        items.push({ id: this.nextId++, ch, pinyin: py, seq })
       }
       return items
     },
@@ -86,7 +92,7 @@ export const useWriterStore = defineStore('writer', {
         const py = pys[i]
         const seq = syllableToKeyCodes(py)
         if (!seq.length) continue
-        items.push({ ch, pinyin: py, seq })
+        items.push({ id: this.nextId++, ch, pinyin: py, seq })
       }
       return items
     },
@@ -195,6 +201,7 @@ export const useWriterStore = defineStore('writer', {
       this.resetQueue()
     },
     submit(code) {
+      if (this.lineHold) return { correct: false, ignore: true }
       const item = this.currentItem
       if (!item) return { correct: false }
       const expect = item.seq[this.codeIdx]
@@ -211,17 +218,23 @@ export const useWriterStore = defineStore('writer', {
             this.save()
             return { correct: ok }
           }
-          // 若到达行末，切换到下一行
+          // 若到达行末，延时切换到下一行（等待倒下动画完成）
           if (this.charIdx % this.windowSize === 0) {
-            // 裁剪已完成的行，保持内存稳定
-            this.queue = this.queue.slice(this.charIdx)
-            this.charIdx = 0
-            // 裁剪后若无剩余，自定义模式下视为完成
-            if (this.useCustom && this.queue.length === 0) {
-              this.completed = true
+            this.lineHold = true
+            const holdMs = 820
+            setTimeout(() => {
+              // 裁剪已完成的行，保持内存稳定
+              this.queue = this.queue.slice(this.charIdx)
+              this.charIdx = 0
+              this.lineHold = false
+              // 裁剪后若无剩余，自定义模式下视为完成
+              if (this.useCustom && this.queue.length === 0) {
+                this.completed = true
+              } else if (!this.useCustom && this.queue.length < this.windowSize) {
+                this._appendFromRandomWords(this.windowSize - this.queue.length)
+              }
               this.save()
-              return { correct: ok }
-            }
+            }, holdMs)
           }
           // 维持行的长度：若剩余不足，追加（自定义模式不追加）
           if (!this.useCustom && this.queue.length < this.windowSize) this._appendFromRandomWords(this.windowSize - this.queue.length)

@@ -60,9 +60,11 @@ function onClick(code) {
   }
   if (props.handle) {
     const res = props.handle?.(code) || { correct: false }
-    doFlash(code, res.correct ? 'ok' : 'bad')
-    if (settings.sound) {
-      playKeySound(res.correct ? 'ok' : 'bad', { volume: settings.soundVolume })
+    if (!res?.ignore) {
+      doFlash(code, res.correct ? 'ok' : 'bad')
+      if (settings.sound) {
+        playKeySound(res.correct ? 'ok' : 'bad', { volume: settings.soundVolume })
+      }
     }
   }
 }
@@ -74,9 +76,11 @@ function onKeyDown(e) {
   if (e.repeat) return
   if (!pressed.has(code)) pressed.add(code)
   const res = props.handle?.(code) || { correct: false }
-  doFlash(code, res.correct ? 'ok' : 'bad')
-  if (settings.sound) {
-    playKeySound(res.correct ? 'ok' : 'bad', { volume: settings.soundVolume })
+  if (!res?.ignore) {
+    doFlash(code, res.correct ? 'ok' : 'bad')
+    if (settings.sound) {
+      playKeySound(res.correct ? 'ok' : 'bad', { volume: settings.soundVolume })
+    }
   }
 }
 

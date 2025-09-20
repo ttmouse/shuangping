@@ -34,7 +34,11 @@
             v-for="(f, idx) in upcoming"
             :key="idx + '-' + f"
             class="card"
-            :class="{ current: idx === currentIndex, done: idx < currentIndex }"
+            :class="{
+              current: idx === currentIndex,
+              doneLatest: idx === currentIndex - 1,
+              donePast: idx < currentIndex - 1
+            }"
           >
             <div class="hz">{{ f }}</div>
             <div class="keys" v-if="settings.yunmuShowShuangpin">
@@ -150,16 +154,60 @@ function reselect() {
 .operate .select select { padding: 4px 8px; border-radius: 6px; border: 1px solid var(--theme-border-color); background: var(--theme-background-light-color); color: var(--theme-text-color); }
 .cardsWrap { width: 1040px; max-width: 96%; margin: 10px auto 10px; }
 .cards { display: flex; gap: 10px; justify-content: center; perspective: 900px; }
-.card { width: 96px; height: 124px; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 10px; box-shadow: 0 2px 0 rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 6px; transform-style: preserve-3d; }
+.card { position: relative; width: 96px; height: 124px; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 10px; box-shadow: 0 2px 0 rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 6px; transform-style: preserve-3d; overflow: hidden; }
 .card.current { border-color: var(--theme-menu-hover-color); box-shadow: 0 0 0 2px #35e2b733 inset, 0 0 10px #35e2b733; }
-.card.done { transform-origin: bottom center; animation: cardFall 0.52s cubic-bezier(0.2, 0.7, 0.2, 1); opacity: 0.15; box-shadow: 0 8px 16px rgba(0,0,0,0.12); }
+.card.doneLatest {
+  transform-origin: bottom center;
+  animation:
+    cardHit 0.3s ease-out,
+    cardFall 0.48s cubic-bezier(0.22, 0.62, 0.2, 0.95) 0.3s forwards;
+  will-change: transform, opacity, box-shadow;
+}
+.card.doneLatest::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 30px;
+  height: 30px;
+  transform: translate(-50%, -50%) scale(0.3);
+  border: 2px solid #52c41a;
+  border-radius: 50%;
+  opacity: 0.8;
+  pointer-events: none;
+  animation: cardRipple 0.3s ease-out;
+}
+.card.doneLatest::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  box-shadow: 0 0 0 0 rgba(82,196,26,0.0), 0 0 0 rgba(82,196,26,0.0);
+  opacity: 0;
+  pointer-events: none;
+  animation: cardHitGlow 0.22s ease-out;
+}
+.card.donePast { opacity: 0; visibility: hidden; pointer-events: none; }
 @keyframes cardFall {
-  0%   { transform: rotateX(0deg) rotateZ(0deg) translateY(0); opacity: 1; }
-  35%  { transform: rotateZ(-6deg) translateY(4px); }
-  100% { transform: rotateX(88deg) translateY(26px) scale(0.96); opacity: 0.15; }
+  0%   { transform: rotateX(0deg) translateY(0); opacity: 1; }
+  100% { transform: rotateX(88deg) translateY(26px) scale(0.96); opacity: 0; visibility: hidden; }
 }
 .card .hz { font-size: 28px; font-weight: 700; color: var(--theme-main-text-color); line-height: 1; }
 .card .keys { font-size: 22px; color: #54709536; letter-spacing: 1px; }
 .card .keys .letter { margin: 0 0px; }
 .card .keys .letter.done { color: var(--theme-menu-text-color); font-weight: 700; }
 </style>
+@keyframes cardHit {
+  0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(82,196,26,0.0), 0 0 0 rgba(0,0,0,0); }
+  60%  { transform: scale(1.08); box-shadow: 0 0 0 2px rgba(82,196,26,0.55) inset, 0 0 18px rgba(82,196,26,0.55); }
+  100% { transform: scale(1); box-shadow: 0 0 0 2px rgba(82,196,26,0.30) inset, 0 4px 12px rgba(0,0,0,0.10); }
+}
+@keyframes cardHitGlow {
+  0%   { opacity: 0; box-shadow: 0 0 0 0 rgba(82,196,26,0.0), 0 0 0 rgba(82,196,26,0.0); }
+  50%  { opacity: 1; box-shadow: 0 0 0 2px rgba(82,196,26,0.65) inset, 0 0 24px rgba(82,196,26,0.55); }
+  100% { opacity: 0; box-shadow: 0 0 0 0 rgba(82,196,26,0.0), 0 0 0 rgba(82,196,26,0.0); }
+}
+@keyframes cardRipple {
+  0%   { transform: translate(-50%, -50%) scale(0.3); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(2.2); opacity: 0; }
+}

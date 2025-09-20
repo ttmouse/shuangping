@@ -42,9 +42,13 @@
         <div class="cards">
           <div
             v-for="(it, idx) in cardItems"
-            :key="writer.charIdx + idx + '-' + it.ch + '-' + it.pinyin"
+            :key="it.id"
             class="card"
-            :class="{ current: idx === currentInLine, done: idx < currentInLine }"
+            :class="{
+              current: idx === currentInLine,
+              doneLatest: idx === currentInLine - 1,
+              donePast: idx < currentInLine - 1
+            }"
           >
             <div class="py" v-if="writer.showPinyin">{{ it.pinyin }}</div>
             <div class="hz">{{ it.ch }}</div>
@@ -182,13 +186,43 @@ onMounted(() => {
 .operate .select .dropdown .ddMenu .menuItem .delBtn:hover { color: #ff4d4f; }
 .cardsWrap { width: 1040px; max-width: 96%; margin: 10px auto 10px; }
 .cards { display: flex; gap: 10px; justify-content: center; perspective: 900px; }
-.card { width: 96px; height: 124px; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 10px; box-shadow: 0 2px 0 rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; justify-content: space-around; padding: 8px 6px; transform-style: preserve-3d; }
+.card { position: relative; width: 96px; height: 124px; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 10px; box-shadow: 0 2px 0 rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; justify-content: space-around; padding: 8px 6px; transform-style: preserve-3d; overflow: hidden; }
 .card.current { border-color: var(--theme-menu-hover-color); box-shadow: 0 0 0 2px #35e2b733 inset, 0 0 10px #35e2b733; }
-.card.done { transform-origin: bottom center; animation: cardFall 0.52s cubic-bezier(0.2, 0.7, 0.2, 1); box-shadow: 0 0 0 2px rgba(82,196,26,0.45) inset, 0 8px 16px rgba(0,0,0,0.12); opacity: 0.15; }
+.card.doneLatest {
+  transform-origin: bottom center;
+  animation:
+    cardHit 0.3s ease-out,
+    cardFall 0.48s cubic-bezier(0.22, 0.62, 0.2, 0.95) 0.3s forwards;
+  will-change: transform, opacity, box-shadow;
+}
+.card.doneLatest::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  box-shadow: 0 0 0 0 rgba(82,196,26,0.0), 0 0 0 rgba(82,196,26,0.0);
+  opacity: 0;
+  pointer-events: none;
+  animation: cardHitGlow 0.3s ease-out;
+}
+.card.doneLatest::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 30px;
+  height: 30px;
+  transform: translate(-50%, -50%) scale(0.3);
+  border: 2px solid #52c41a;
+  border-radius: 50%;
+  opacity: 0.8;
+  pointer-events: none;
+  animation: cardRipple 0.3s ease-out;
+}
+.card.donePast { opacity: 0; visibility: hidden; pointer-events: none; }
 @keyframes cardFall {
-  0%   { transform: rotateX(0deg) rotateZ(0deg) translateY(0); opacity: 1; }
-  35%  { transform: rotateZ(-6deg) translateY(4px); }
-  100% { transform: rotateX(88deg) translateY(26px) scale(0.96); opacity: 0.15; }
+  0%   { transform: rotateX(0deg) translateY(0); opacity: 1; }
+  100% { transform: rotateX(88deg) translateY(26px) scale(0.96); opacity: 0; visibility: hidden; }
 }
 .card .py { font-size: 22px; color: var(--theme-rich-text-color); }
 .card .hz { font-size: 28px; font-weight: 700; color: var(--theme-main-text-color); line-height: 1; }
@@ -207,3 +241,17 @@ onMounted(() => {
 .modalFooter .actions { display: flex; gap: 8px; }
 .el-button.primary { background: var(--theme-menu-hover-color); color: #0b1a14; border-color: var(--theme-menu-hover-color); }
 </style>
+@keyframes cardHit {
+  0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(82,196,26,0.0), 0 0 0 rgba(0,0,0,0); }
+  60%  { transform: scale(1.12); box-shadow: 0 0 0 2px rgba(82,196,26,0.65) inset, 0 0 22px rgba(82,196,26,0.6); }
+  100% { transform: scale(1); box-shadow: 0 0 0 2px rgba(82,196,26,0.30) inset, 0 4px 12px rgba(0,0,0,0.10); }
+}
+@keyframes cardHitGlow {
+  0%   { opacity: 0; box-shadow: 0 0 0 0 rgba(82,196,26,0.0), 0 0 0 rgba(82,196,26,0.0); }
+  50%  { opacity: 1; box-shadow: 0 0 0 2px rgba(82,196,26,0.75) inset, 0 0 28px rgba(82,196,26,0.65); }
+  100% { opacity: 0; box-shadow: 0 0 0 0 rgba(82,196,26,0.0), 0 0 0 rgba(82,196,26,0.0); }
+}
+@keyframes cardRipple {
+  0%   { transform: translate(-50%, -50%) scale(0.3); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(2.2); opacity: 0; }
+}
