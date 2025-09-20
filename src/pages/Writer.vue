@@ -27,7 +27,7 @@
             v-for="(it, idx) in cardItems"
             :key="writer.charIdx + idx + '-' + it.ch + '-' + it.pinyin"
             class="card"
-            :class="{ current: idx === currentInLine }"
+            :class="{ current: idx === currentInLine, done: idx < currentInLine }"
           >
             <div class="py" v-if="writer.showPinyin">{{ it.pinyin }}</div>
             <div class="hz">{{ it.ch }}</div>
@@ -156,6 +156,9 @@ onMounted(() => {
 .cards { display: flex; gap: 10px; justify-content: center; }
 .card { width: 96px; height: 124px; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 10px; box-shadow: 0 2px 0 rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; justify-content: space-around; padding: 8px 6px; }
 .card.current { border-color: var(--theme-menu-hover-color); box-shadow: 0 0 0 2px #35e2b733 inset, 0 0 10px #35e2b733; }
+.card.done { animation: cardDone 0.35s ease; box-shadow: 0 0 0 2px rgba(82,196,26,0.45) inset, 0 0 12px rgba(82,196,26,0.35); }
+.card.done .hz, .card.done .keys { color: #52c41a; }
+@keyframes cardDone { 0% { transform: scale(1); } 60% { transform: scale(1.04); } 100% { transform: scale(1); } }
 .card .py { font-size: 22px; color: var(--theme-rich-text-color); }
 .card .hz { font-size: 28px; font-weight: 700; color: var(--theme-main-text-color); line-height: 1; }
 .card .keys { font-size: 22px; color: #54709536; letter-spacing: 1px; }
