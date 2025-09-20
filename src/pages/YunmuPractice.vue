@@ -148,14 +148,16 @@ function reselect() {
 .pageCenter { min-height: calc(100vh - 52px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 12px; }
 .operate { display: flex; gap: 10px; align-items: center; padding: 10px 20px; }
 .operate .select select { padding: 4px 8px; border-radius: 6px; border: 1px solid var(--theme-border-color); background: var(--theme-background-light-color); color: var(--theme-text-color); }
-/* 卡片样式与 Writer 对齐 */
 .cardsWrap { width: 1040px; max-width: 96%; margin: 10px auto 10px; }
-.cards { display: flex; gap: 10px; justify-content: center; }
-.card { width: 96px; height: 124px; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 10px; box-shadow: 0 2px 0 rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 6px; }
+.cards { display: flex; gap: 10px; justify-content: center; perspective: 900px; }
+.card { width: 96px; height: 124px; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 10px; box-shadow: 0 2px 0 rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 6px; transform-style: preserve-3d; }
 .card.current { border-color: var(--theme-menu-hover-color); box-shadow: 0 0 0 2px #35e2b733 inset, 0 0 10px #35e2b733; }
-.card.done { opacity: 0.65; }
-.card.done { animation: cardDone 0.35s ease; box-shadow: 0 0 0 2px rgba(82,196,26,0.45) inset, 0 0 12px rgba(82,196,26,0.35); }
-@keyframes cardDone { 0% { transform: scale(1); } 60% { transform: scale(1.04); } 100% { transform: scale(1); } }
+.card.done { transform-origin: bottom center; animation: cardFall 0.52s cubic-bezier(0.2, 0.7, 0.2, 1); opacity: 0.15; box-shadow: 0 8px 16px rgba(0,0,0,0.12); }
+@keyframes cardFall {
+  0%   { transform: rotateX(0deg) rotateZ(0deg) translateY(0); opacity: 1; }
+  35%  { transform: rotateZ(-6deg) translateY(4px); }
+  100% { transform: rotateX(88deg) translateY(26px) scale(0.96); opacity: 0.15; }
+}
 .card .hz { font-size: 28px; font-weight: 700; color: var(--theme-main-text-color); line-height: 1; }
 .card .keys { font-size: 22px; color: #54709536; letter-spacing: 1px; }
 .card .keys .letter { margin: 0 0px; }
