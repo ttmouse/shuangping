@@ -2,7 +2,6 @@
   <div class="soundBar">
     <label>正确音效：</label>
     <select :value="settings.soundOkFile" @change="onSelect">
-      <option value="">内置合成</option>
       <option v-for="n in options" :key="n" :value="n">{{ n }}</option>
     </select>
   </div>
@@ -20,6 +19,9 @@ const options = ref([])
 onMounted(async () => {
   await settings.loadSoundList()
   options.value = settings.soundList
+  if (!settings.soundOkFile && options.value.length > 0) {
+    settings.setOkSoundFile(options.value[0])
+  }
   apply()
 })
 
@@ -28,7 +30,7 @@ function apply() {
     setSoundURLs({ ok: `/sounds/${settings.soundOkFile}` })
     loadCustomSounds().catch(() => {})
   } else {
-    // reset to default correct file path to fallback (no custom)
+    // 无选择时尝试默认 correct.mp3（若存在）
     setSoundURLs({ ok: '/sounds/correct.mp3' })
   }
 }
@@ -45,4 +47,3 @@ function onSelect(e) {
 label { color: var(--theme-text-color); font-size: 12px; }
 select { padding: 4px 8px; border-radius: 6px; border: 1px solid var(--theme-border-color); background: var(--theme-background-light-color); color: var(--theme-text-color); }
 </style>
-
