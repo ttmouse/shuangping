@@ -5,6 +5,12 @@
         class="modeBtn"
         :class="{ active: route.name === 'home' }"
         @click="go('/')"
+        title="首页"
+      >首页</button>
+      <button
+        class="modeBtn"
+        :class="{ active: route.name === 'yunmu-practice' }"
+        @click="go('/yunmu-practice')"
         title="声母韵母练习"
       >声母韵母练习</button>
       <button
