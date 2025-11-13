@@ -111,6 +111,8 @@ import Keyboard from '../components/Keyboard.vue'
 import TopStatusBar from '../components/TopStatusBar.vue'
 import { LENGTH_BUCKETS } from '../data/words.js'
 import { extractChinese } from '../utils/text2pinyin.js'
+import { playKeySound } from '../utils/sound.js'
+import { keyByCode } from '../data/xiaohe.js'
 
 const settings = useSettingsStore()
 const writer = useWriterStore()
@@ -160,11 +162,26 @@ function onKeydownRestart(e) {
   }
 }
 
+// 处理键盘输入，即使键盘被隐藏也能工作
+function onKeyDown(e) {
+  if (writer.hideKeyboard && keyByCode.has(e.code)) {
+    // 只有当键盘被隐藏时才处理输入，且必须是有效的按键
+    const res = writer.submit(e.code) || { correct: false }
+    if (!res?.ignore) {
+      if (settings.sound) {
+        playKeySound(res.correct ? 'ok' : 'bad', { volume: settings.soundVolume })
+      }
+    }
+  }
+}
+
 onMounted(() => {
   window.addEventListener('keydown', onKeydownRestart)
+  window.addEventListener('keydown', onKeyDown)
 })
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeydownRestart)
+  window.removeEventListener('keydown', onKeyDown)
 })
 
 onMounted(() => {

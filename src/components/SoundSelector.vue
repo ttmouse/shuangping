@@ -27,11 +27,11 @@ onMounted(async () => {
 
 function apply() {
   if (settings.soundOkFile) {
-    setSoundURLs({ ok: `/sounds/${settings.soundOkFile}` })
+    setSoundURLs({ ok: `/sounds/${settings.soundOkFile}`, bad: '/sounds/cuowu.mp3' })
     loadCustomSounds().catch(() => {})
   } else {
-    // 无选择时尝试默认 correct.mp3（若存在）
-    setSoundURLs({ ok: '/sounds/correct.mp3' })
+    // 无选择时使用默认正确音效
+    setSoundURLs({ ok: '/sounds/ting.mp3', bad: '/sounds/cuowu.mp3' })
   }
 }
 
