@@ -19,7 +19,9 @@
             <option v-for="r in rangesDisplay" :key="r.id" :value="r.id">{{ r.name }}</option>
           </select>
         </div>
+        <SchemeSelector />
         <label><input type="checkbox" :checked="settings.yunmuShowShuangpin" @change="e=>{ settings.yunmuShowShuangpin = !!e.target.checked; settings.save() }"/> 双拼编码显示</label>
+        <label><input type="checkbox" :checked="settings.yunmuAutoSpeak" @change="e=>{ settings.yunmuAutoSpeak = !!e.target.checked; settings.save() }"/> 自动朗读</label>
         <label><input type="checkbox" :checked="session.hideKeyboard" @change="e=>{ session.setHideKeyboard(e.target.checked) }"/> 隐藏键盘</label>
         <!-- 自选模式：开始与重新选择的切换 -->
         <template v-if="session.rangeId === 'custom'">
@@ -63,9 +65,10 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import Keyboard from '../components/Keyboard.vue'
 import TopStatusBar from '../components/TopStatusBar.vue'
+import SchemeSelector from '../components/SchemeSelector.vue'
 import { finalToKeyCodes, keyByCode, ranges } from '../data/xiaohe.js'
 import { useSettingsStore } from '../stores/settings.js'
 import { useSessionStore } from '../stores/session.js'
@@ -77,6 +80,8 @@ const session = useSessionStore()
 onMounted(() => {
   settings.load()
   session.load()
+  initAudio() // 初始化音频功能
+
   if (!session.started) {
     // 等待用户开始
   } else if (!session.currentTarget) {
@@ -85,7 +90,7 @@ onMounted(() => {
   // 启动时任意按键开始
   const handler = (e) => {
     if (!session.started) {
-      // 自选模式下不自动启动，等待点击“开始”
+      // 自选模式下不自动启动，等待点击"开始"
       if (session.rangeId === 'custom') return
       e.preventDefault()
       start()
@@ -98,6 +103,18 @@ onMounted(() => {
 const target = computed(() => session.currentTarget)
 const upcoming = computed(() => session.upcoming)
 const currentIndex = computed(() => session.pos)
+
+// 监听当前目标变化，自动朗读
+const currentTarget = ref('')
+watch(target, (newVal, oldVal) => {
+  // 如果新的当前目标与之前不同，且自动朗读已开启，则朗读
+  if (newVal && newVal !== oldVal && settings.yunmuAutoSpeak && started.value) {
+    // 延迟一点时间，确保卡片动画完成
+    setTimeout(() => {
+      playFinalAudio(newVal)
+    }, 200)
+  }
+}, { immediate: true })
 const rangesDisplay = [
   ...['row1','row2','row3','all'].map(id => ranges.find(r => r.id === id)).filter(Boolean),
   { id: 'custom', name: '自选韵母' }
@@ -112,6 +129,36 @@ function lettersForFinal(final) {
 }
 const started = computed(() => session.started)
 const selectMode = computed(() => session.rangeId === 'custom' && !session.started)
+
+// 语音功能
+let audioEnabled = false
+let currentAudio = null
+
+function initAudio() {
+  // 检查是否有音频文件
+  audioEnabled = true
+}
+
+function playFinalAudio(final) {
+  if (!audioEnabled) return
+
+  // 停止当前播放的音频
+  if (currentAudio) {
+    currentAudio.pause()
+    currentAudio.currentTime = 0
+  }
+
+  try {
+    currentAudio = new Audio(`/finals/${final}.mp3`)
+    currentAudio.volume = 0.7
+    currentAudio.play().catch(err => {
+      console.warn(`无法播放音频 ${final}.mp3:`, err)
+    })
+  } catch (err) {
+    console.warn(`创建音频对象失败 ${final}.mp3:`, err)
+  }
+}
+
 
 function start() {
   if (session.rangeId === 'custom') {
@@ -131,6 +178,11 @@ function onPress(code) {
 
 function onRange(e) {
   session.setRange(e.target.value)
+  // 切换范围时停止当前音频
+  if (currentAudio) {
+    currentAudio.pause()
+    currentAudio.currentTime = 0
+  }
 }
 
 function onToggleKey(code) {
@@ -147,6 +199,11 @@ function onClearSelected() {
 function reselect() {
   // 退出练习，回到自选勾选模式
   session.reset()
+  // 停止音频
+  if (currentAudio) {
+    currentAudio.pause()
+    currentAudio.currentTime = 0
+  }
 }
 
 // 处理键盘输入，即使键盘被隐藏也能工作
@@ -167,6 +224,11 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeyDown)
+  // 清理音频资源
+  if (currentAudio) {
+    currentAudio.pause()
+    currentAudio = null
+  }
 })
 </script>
 

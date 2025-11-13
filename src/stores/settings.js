@@ -13,6 +13,9 @@ export const useSettingsStore = defineStore('settings', {
     soundList: [],
     // UI preferences
     yunmuShowShuangpin: true,
+    yunmuAutoSpeak: false, // 自动朗读功能
+    // Double pinyin scheme
+    currentScheme: 'xiaohe', // 当前双拼方案ID
   }),
   actions: {
     load() {
@@ -58,6 +61,10 @@ export const useSettingsStore = defineStore('settings', {
     },
     setOkSoundFile(name) {
       this.soundOkFile = name || ''
+      this.save()
+    },
+    setCurrentScheme(schemeId) {
+      this.currentScheme = schemeId || 'xiaohe'
       this.save()
     },
   },

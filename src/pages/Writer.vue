@@ -32,6 +32,7 @@
             </div>
           </div>
         </div>
+        <SchemeSelector />
         <button class="el-button el-button--small" @click="openImport">导入文本</button>
         <label><input type="checkbox" :checked="writer.showPinyin" @change="e=>writer.setShowPinyin(e.target.checked)"/> 拼音显示</label>
         <label><input type="checkbox" :checked="writer.showShuangpin" @change="e=>writer.setShowShuangpin(e.target.checked)"/> 双拼编码显示</label>
@@ -109,6 +110,7 @@ import { useSettingsStore } from '../stores/settings.js'
 import { useWriterStore } from '../stores/writer.js'
 import Keyboard from '../components/Keyboard.vue'
 import TopStatusBar from '../components/TopStatusBar.vue'
+import SchemeSelector from '../components/SchemeSelector.vue'
 import { LENGTH_BUCKETS } from '../data/words.js'
 import { extractChinese } from '../utils/text2pinyin.js'
 import { playKeySound } from '../utils/sound.js'
