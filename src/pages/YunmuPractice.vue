@@ -103,6 +103,8 @@ onMounted(() => {
 const target = computed(() => session.currentTarget)
 const upcoming = computed(() => session.upcoming)
 const currentIndex = computed(() => session.pos)
+const started = computed(() => session.started)
+const selectMode = computed(() => session.rangeId === 'custom' && !session.started)
 
 // 监听当前目标变化，自动朗读
 const currentTarget = ref('')
@@ -127,8 +129,6 @@ function lettersForFinal(final) {
   // 去重，保持顺序
   return Array.from(new Set(letters))
 }
-const started = computed(() => session.started)
-const selectMode = computed(() => session.rangeId === 'custom' && !session.started)
 
 // 语音功能
 let audioEnabled = false
