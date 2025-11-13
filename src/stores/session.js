@@ -17,6 +17,7 @@ export const useSessionStore = defineStore('session', {
     scheduler: 'uniform',
     selectedKeyCodes: [], // 自选韵母对应的按键 codes，如 ['KeyQ','KeyP']
     lineHold: false,
+    hideKeyboard: false, // 是否隐藏键盘
   }),
   getters: {
     allowedKeyCodes(state) {
@@ -158,6 +159,10 @@ export const useSessionStore = defineStore('session', {
     },
     clearSelected() {
       this.selectedKeyCodes = []
+      this.save()
+    },
+    setHideKeyboard(value) {
+      this.hideKeyboard = value
       this.save()
     },
   },

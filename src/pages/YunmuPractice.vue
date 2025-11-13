@@ -20,6 +20,7 @@
           </select>
         </div>
         <label><input type="checkbox" :checked="settings.yunmuShowShuangpin" @change="e=>{ settings.yunmuShowShuangpin = !!e.target.checked; settings.save() }"/> 双拼编码显示</label>
+        <label><input type="checkbox" :checked="session.hideKeyboard" @change="e=>{ session.setHideKeyboard(e.target.checked) }"/> 隐藏键盘</label>
         <!-- 自选模式：开始与重新选择的切换 -->
         <template v-if="session.rangeId === 'custom'">
           <button v-if="!session.started" class="el-button el-button--small" @click="start">开始</button>
@@ -53,8 +54,8 @@
         </div>
       </div>
 
-      <Keyboard v-if="!selectMode" :handle="onPress" />
-      <Keyboard v-else :selectable="true" :selected-codes="session.selectedKeyCodes" :on-toggle="onToggleKey" />
+      <Keyboard v-if="!selectMode && !session.hideKeyboard" :handle="onPress" />
+      <Keyboard v-else-if="selectMode" :selectable="true" :selected-codes="session.selectedKeyCodes" :on-toggle="onToggleKey" />
 
       <div class="footerSpace" />
     </div>
@@ -62,12 +63,13 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 import Keyboard from '../components/Keyboard.vue'
 import TopStatusBar from '../components/TopStatusBar.vue'
 import { finalToKeyCodes, keyByCode, ranges } from '../data/xiaohe.js'
 import { useSettingsStore } from '../stores/settings.js'
 import { useSessionStore } from '../stores/session.js'
+import { playKeySound } from '../utils/sound.js'
 
 const settings = useSettingsStore()
 const session = useSessionStore()
@@ -146,6 +148,26 @@ function reselect() {
   // 退出练习，回到自选勾选模式
   session.reset()
 }
+
+// 处理键盘输入，即使键盘被隐藏也能工作
+function onKeyDown(e) {
+  // 只有当键盘被隐藏时才处理输入，且必须是有效的按键
+  if (session.hideKeyboard && keyByCode.has(e.code)) {
+    e.preventDefault()
+    const res = session.submitKeyCode(e.code) || { correct: false }
+    if (settings.sound) {
+      playKeySound(res.correct ? 'ok' : 'bad', { volume: settings.soundVolume })
+    }
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', onKeyDown)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', onKeyDown)
+})
 </script>
 
 <style scoped>
