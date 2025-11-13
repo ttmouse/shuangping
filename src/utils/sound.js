@@ -79,7 +79,42 @@ export function playKeySound(kind = 'ok', { volume = 0.18 } = {}) {
   if (!triedLoad) tryLoadBuffers()
 
   if (kind === 'ok') {
-    // 保留轻微高通噪声“闪亮”，去除合成主旋律与点缀
+    // 奖励"金币"音效：三连上行琶音（G6 -> C7 -> E7），带轻微闪烁
+    // 注：选择古典"硬币"式上行和弦，清脆、好听、辨识度高
+    const notes = [
+      { f: 1568, t: 0.00, dur: 0.09 }, // G6
+      { f: 2093, t: 0.055, dur: 0.10 }, // C7
+      { f: 2637, t: 0.11, dur: 0.11 }, // E7
+    ]
+    for (const { f, t, dur } of notes) {
+      const tt = now + t
+      // 主音：triangle，略微上滑 6%
+      const oTri = ctx.createOscillator()
+      const gTri = ctx.createGain()
+      oTri.type = 'triangle'
+      oTri.frequency.setValueAtTime(f, tt)
+      oTri.frequency.exponentialRampToValueAtTime(f * 1.06, tt + Math.max(0.04, dur - 0.02))
+      gTri.gain.setValueAtTime(0.0001, tt)
+      gTri.gain.exponentialRampToValueAtTime(Math.max(0.001, volume * 0.9), tt + 0.008)
+      gTri.gain.exponentialRampToValueAtTime(0.0001, tt + dur)
+      oTri.connect(gTri); gTri.connect(ctx.destination)
+      oTri.start(tt); oTri.stop(tt + dur + 0.01)
+      oTri.onended = () => { try { oTri.disconnect(); gTri.disconnect() } catch {} }
+
+      // 辅音：sine 高一倍频，细小点缀
+      const oSin = ctx.createOscillator()
+      const gSin = ctx.createGain()
+      oSin.type = 'sine'
+      oSin.frequency.setValueAtTime(f * 2, tt)
+      gSin.gain.setValueAtTime(0.0001, tt)
+      gSin.gain.exponentialRampToValueAtTime(Math.max(0.001, volume * 0.25), tt + 0.006)
+      gSin.gain.exponentialRampToValueAtTime(0.0001, tt + Math.max(0.06, dur - 0.02))
+      oSin.connect(gSin); gSin.connect(ctx.destination)
+      oSin.start(tt); oSin.stop(tt + dur)
+      oSin.onended = () => { try { oSin.disconnect(); gSin.disconnect() } catch {} }
+    }
+
+    // 轻微高通噪声"闪亮"
     const nd = 0.08
     const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * nd), ctx.sampleRate)
     const data = buf.getChannelData(0)

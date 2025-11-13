@@ -39,8 +39,8 @@ function normalizeZeroInitial(syl) {
     if (r.startsWith('o')) return { initial: '', final: 'uo' }
     if (r.startsWith('ai')) return { initial: '', final: 'uai' }
     if (r.startsWith('an')) return { initial: '', final: 'uan' }
-    if (r.startsWith('ei')) return { initial: '', final: 'ui' } // wei -> ui
-    if (r.startsWith('en')) return { initial: '', final: 'un' } // wen -> un
+    if (r === 'ei') return { initial: 'w', final: 'ei' } // wei -> w + ei
+    if (r === 'en') return { initial: 'w', final: 'en' } // wen -> w + en
     if (r.startsWith('eng')) return { initial: '', final: 'eng' }
     if (r.startsWith('ang')) return { initial: '', final: 'uang' }
     return { initial: '', final: r }

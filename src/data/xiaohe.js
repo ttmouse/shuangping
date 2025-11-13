@@ -31,7 +31,7 @@ export const keys = [
   { code:'KeyZ', label:'Z', finals:['ou'], hint:'', mnemonics:['奏'] },
   { code:'KeyX', label:'X', finals:['ia','ua'], hint:'', mnemonics:['夏','蛙'] },
   { code:'KeyC', label:'C', finals:['ao'], hint:'', mnemonics:['草'] },
-  { code:'KeyV', label:'V', finals:['ui','v'], hint:'zh', mnemonics:['追','鱼'] },
+  { code:'KeyV', label:'V', finals:['ui'], hint:'zh', mnemonics:['追'] },
   { code:'KeyB', label:'B', finals:['in'], hint:'', mnemonics:['滨'] },
   { code:'KeyN', label:'N', finals:['iao'], hint:'', mnemonics:['鸟'] },
   { code:'KeyM', label:'M', finals:['ian'], hint:'', mnemonics:['眠'] },
