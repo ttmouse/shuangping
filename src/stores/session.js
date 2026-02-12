@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia'
 import { finalsPool, finalToKeyCodes, ranges } from '../data/xiaohe.js'
-import { getNextUniform } from '../utils/scheduler.js'
+import { getNextUniform, getNextWeighted } from '../utils/scheduler.js'
 
 const STORAGE_KEY = 'sp-session'
+const ERROR_STATS_KEY = 'sp-error-stats'
 
 export const useSessionStore = defineStore('session', {
   state: () => ({
@@ -18,8 +19,37 @@ export const useSessionStore = defineStore('session', {
     selectedKeyCodes: [], // 自选韵母对应的按键 codes，如 ['KeyQ','KeyP']
     lineHold: false,
     hideKeyboard: false, // 是否隐藏键盘
+    // 错题强化模式
+    weakMode: false,
+    weakStreak: {}, // { 'iu': 3 } - 连续正确次数，用于消减权重
   }),
   getters: {
+    errorStats(state) {
+      try {
+        const raw = localStorage.getItem(ERROR_STATS_KEY)
+        return raw ? JSON.parse(raw) : {}
+      } catch {
+        return {}
+      }
+    },
+    totalAttempts(state) {
+      const stats = this.errorStats
+      return Object.values(stats).reduce((sum, count) => sum + count, 0)
+    },
+    accuracy(state) {
+      if (this.totalAttempts === 0) return 100
+      const stats = this.errorStats
+      const errors = Object.values(stats).reduce((sum, count) => sum + count, 0)
+      return Math.round((1 - errors / this.totalAttempts) * 100)
+    },
+    weakFinals(state) {
+      const stats = this.errorStats
+      // 返回错误次数 > 0 的韵母，按错误次数降序
+      return Object.entries(stats)
+        .filter(([_, count]) => count > 0)
+        .sort((a, b) => b[1] - a[1])
+        .map(([final]) => final)
+    },
     allowedKeyCodes(state) {
       // 自选模式：直接使用已选 codes
       if (state.rangeId === 'custom') {
@@ -46,9 +76,27 @@ export const useSessionStore = defineStore('session', {
     },
   },
   actions: {
+    _loadErrorStats() {
+      try {
+        const raw = localStorage.getItem(ERROR_STATS_KEY)
+        return raw ? JSON.parse(raw) : {}
+      } catch {
+        return {}
+      }
+    },
+    _saveErrorStats(stats) {
+      localStorage.setItem(ERROR_STATS_KEY, JSON.stringify(stats))
+    },
     _genOne(last) {
       const pool = this.pool
       if (!pool.length) return ''
+      
+      // 错题强化模式：加权随机
+      if (this.weakMode) {
+        return getNextWeighted(pool, last, this._loadErrorStats(), this.weakStreak)
+      }
+      
+      // 普通模式：均匀随机
       return getNextUniform(pool, last)
     },
     _fillBatch() {
@@ -104,33 +152,63 @@ export const useSessionStore = defineStore('session', {
         this.save()
         return
       }
-      // 批次内前进；最后一个完成后刷新下一批
+      const fallMs = 480
       if (this.pos < this.windowSize - 1) {
         this.lastTarget = this.currentTarget
         this.pos += 1
         this.currentTarget = this.queue[this.pos] || ''
+        setTimeout(() => {
+          const last = this.queue[this.queue.length - 1] || this.lastTarget || ''
+          const n = this._genOne(last)
+          this.queue = this.queue.slice(1).concat([n])
+          this.pos = Math.max(0, this.pos - 1)
+          this.currentTarget = this.queue[this.pos] || ''
+          this.save()
+        }, fallMs)
       } else {
-        // 改为延时刷新，等待倒下动画
         this.lastTarget = this.currentTarget
         this.lineHold = true
-        this.pos = this.windowSize // 使得 UI 可判定最新完成
+        this.pos = this.windowSize
         this.currentTarget = ''
-        const holdMs = 700
         setTimeout(() => {
-          this._fillBatch()
-          this.pos = 0
-          this.currentTarget = this.queue[0] || ''
+          const last = this.queue[this.queue.length - 1] || this.lastTarget || ''
+          const n = this._genOne(last)
+          this.queue = this.queue.slice(1).concat([n])
+          this.pos = this.windowSize - 1
+          this.currentTarget = this.queue[this.pos] || ''
           this.lineHold = false
           this.save()
-        }, holdMs)
+        }, fallMs)
       }
       this.save()
     },
     submitKeyCode(code) {
-      if (this.lineHold) return { correct: false, ignore: true }
+      if (this.lineHold && !this.currentTarget) return { correct: false, ignore: true }
       if (!this.currentTarget) return { correct: false }
       const codes = finalToKeyCodes.get(this.currentTarget) || new Set()
       const ok = codes.has(code)
+      
+      if (!ok) {
+        // 记录错误
+        const stats = this._loadErrorStats()
+        const target = this.currentTarget
+        stats[target] = (stats[target] || 0) + 1
+        this._saveErrorStats(stats)
+      } else {
+        // 正确时更新连续正确次数
+        const target = this.currentTarget
+        this.weakStreak[target] = (this.weakStreak[target] || 0) + 1
+        // 连续正确 3 次，消减错误权重
+        if (this.weakStreak[target] >= 3) {
+          const stats = this._loadErrorStats()
+          if (stats[target] > 0) {
+            stats[target] = Math.max(0, stats[target] - 1)
+            this._saveErrorStats(stats)
+          }
+          this.weakStreak[target] = 0
+        }
+      }
+      
       if (ok) this.nextTarget()
       return { correct: ok }
     },
@@ -163,6 +241,17 @@ export const useSessionStore = defineStore('session', {
     },
     setHideKeyboard(value) {
       this.hideKeyboard = value
+      this.save()
+    },
+    toggleWeakMode() {
+      this.weakMode = !this.weakMode
+      // 切换模式时重置连续正确计数
+      this.weakStreak = {}
+      this.save()
+    },
+    clearErrorStats() {
+      this._saveErrorStats({})
+      this.weakStreak = {}
       this.save()
     },
   },

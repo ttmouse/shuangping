@@ -23,6 +23,14 @@
         <label><input type="checkbox" :checked="settings.yunmuShowShuangpin" @change="e=>{ settings.yunmuShowShuangpin = !!e.target.checked; settings.save() }"/> 双拼编码显示</label>
         <label><input type="checkbox" :checked="settings.yunmuAutoSpeak" @change="e=>{ settings.yunmuAutoSpeak = !!e.target.checked; settings.save() }"/> 自动朗读</label>
         <label><input type="checkbox" :checked="session.hideKeyboard" @change="e=>{ session.setHideKeyboard(e.target.checked) }"/> 隐藏键盘</label>
+        <button 
+          class="el-button el-button--small" 
+          :class="{ 'is-weak': session.weakMode }"
+          @click="session.toggleWeakMode()"
+        >
+          {{ session.weakMode ? '✅ 错题强化中' : '错题强化' }}
+        </button>
+        <button class="el-button el-button--small" @click="showStats = true">📊 错误统计</button>
         <!-- 自选模式：开始与重新选择的切换 -->
         <template v-if="session.rangeId === 'custom'">
           <button v-if="!session.started" class="el-button el-button--small" @click="start">开始</button>
@@ -59,6 +67,42 @@
       <Keyboard v-if="!selectMode && !session.hideKeyboard" :handle="onPress" />
       <Keyboard v-else-if="selectMode" :selectable="true" :selected-codes="session.selectedKeyCodes" :on-toggle="onToggleKey" />
 
+      <!-- 错误统计弹窗 -->
+      <div v-if="showStats" class="stats-overlay" @click.self="showStats = false">
+        <div class="stats-modal">
+          <div class="stats-header">
+            <h3>错误统计</h3>
+            <button class="close-btn" @click="showStats = false">&times;</button>
+          </div>
+          <div class="stats-content">
+            <div class="stats-summary">
+              <div class="stat-item">
+                <span class="stat-value">{{ session.totalAttempts }}</span>
+                <span class="stat-label">总练习次数</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">{{ session.accuracy }}%</span>
+                <span class="stat-label">正确率</span>
+              </div>
+            </div>
+            <div class="stats-list" v-if="session.weakFinals.length">
+              <h4>易错韵母（按错误次数排序）</h4>
+              <div class="stat-row" v-for="f in session.weakFinals" :key="f">
+                <span class="final">{{ f }}</span>
+                <div class="bar-wrap">
+                  <div class="bar" :style="{ width: Math.min(100, (session.errorStats[f] / session.weakFinals[0][1]) * 100) + '%' }"></div>
+                </div>
+                <span class="count">{{ session.errorStats[f] }}次</span>
+              </div>
+            </div>
+            <div class="stats-empty" v-else>
+              <p>暂无错误记录，继续加油！</p>
+            </div>
+            <button class="clear-btn" @click="clearStats" v-if="session.weakFinals.length">清除统计</button>
+          </div>
+        </div>
+      </div>
+
       <div class="footerSpace" />
     </div>
   </div>
@@ -76,6 +120,8 @@ import { playKeySound } from '../utils/sound.js'
 
 const settings = useSettingsStore()
 const session = useSessionStore()
+
+const showStats = ref(false)
 
 onMounted(() => {
   settings.load()
@@ -206,6 +252,12 @@ function reselect() {
   }
 }
 
+function clearStats() {
+  if (confirm('确定要清除所有错误记录吗？')) {
+    session.clearErrorStats()
+  }
+}
+
 // 处理键盘输入，即使键盘被隐藏也能工作
 function onKeyDown(e) {
   // 只有当键盘被隐藏时才处理输入，且必须是有效的按键
@@ -242,7 +294,7 @@ onBeforeUnmount(() => {
 .card.current { border-color: var(--theme-menu-hover-color); box-shadow: 0 0 0 2px #35e2b733 inset, 0 0 10px #35e2b733; }
 .card.doneLatest { transform-origin: bottom center; animation: cardFall 0.48s cubic-bezier(0.22, 0.62, 0.2, 0.95) forwards; }
 
-.card.donePast { opacity: 0; visibility: hidden; pointer-events: none; }
+.card.donePast { opacity: 0; pointer-events: none; }
 @keyframes cardFall {
   0%   { transform: rotateX(0deg) translateY(0); opacity: 1; }
   100% { transform: rotateX(88deg) translateY(26px) scale(0.96); opacity: 0; visibility: hidden; }
@@ -251,5 +303,29 @@ onBeforeUnmount(() => {
 .card .keys { font-size: 22px; color: #54709536; letter-spacing: 1px; }
 .card .keys .letter { margin: 0 0px; }
 .card .keys .letter.done { color: var(--theme-menu-text-color); font-weight: 700; }
+
+/* 错题强化按钮 */
+.el-button.is-weak { background: #67c23a; border-color: #67c23a; color: #fff; }
+
+/* 统计弹窗 */
+.stats-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.stats-modal { background: var(--theme-background-color); border-radius: 12px; width: 400px; max-width: 90vw; max-height: 80vh; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+.stats-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--theme-border-color); }
+.stats-header h3 { margin: 0; font-size: 18px; }
+.close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--theme-text-color); padding: 0; line-height: 1; }
+.stats-content { padding: 20px; }
+.stats-summary { display: flex; gap: 20px; margin-bottom: 20px; }
+.stat-item { flex: 1; text-align: center; padding: 12px; background: var(--theme-background-light-color); border-radius: 8px; }
+.stat-value { display: block; font-size: 28px; font-weight: 700; color: var(--theme-main-text-color); }
+.stat-label { font-size: 12px; color: var(--theme-text-color); }
+.stats-list h4 { margin: 0 0 12px; font-size: 14px; color: var(--theme-text-color); }
+.stat-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.stat-row .final { width: 40px; font-weight: 600; }
+.bar-wrap { flex: 1; height: 12px; background: var(--theme-background-light-color); border-radius: 6px; overflow: hidden; }
+.bar { height: 100%; background: #f56c6c; border-radius: 6px; transition: width 0.3s; }
+.stat-row .count { width: 50px; text-align: right; font-size: 13px; color: var(--theme-text-color); }
+.stats-empty { text-align: center; padding: 30px; color: var(--theme-text-color); }
+.clear-btn { width: 100%; margin-top: 16px; padding: 10px; background: #f56c6c; border: none; border-radius: 6px; color: #fff; cursor: pointer; }
+.clear-btn:hover { background: #f78989; }
 </style>
 /* removed highlight keyframes */
