@@ -8,11 +8,15 @@
         <h2 data-v-01350f3e>为快速入门双拼打字而生，提供双拼声母、韵母专项练习法。</h2>
       </div>
 
-      <div class="mask" :class="{ active: !started && !selectMode }" @click="start">
+      <div
+        class="mask"
+        :class="{ active: !started && !selectMode }"
+        @click="start"
+      >
         <p>键盘按任意键<br/>或点击当前页面开始练习</p>
       </div>
 
-      <div class="operate">
+      <div class="operate" :class="{ 'is-sticky': started }">
         <div class="select">
           <label>范围：</label>
           <select :value="session.rangeId" @change="onRange">
@@ -64,8 +68,8 @@
         </div>
       </div>
 
-      <Keyboard v-if="!selectMode && !session.hideKeyboard" :handle="onPress" />
-      <Keyboard v-else-if="selectMode" :selectable="true" :selected-codes="session.selectedKeyCodes" :on-toggle="onToggleKey" />
+      <Keyboard v-if="!selectMode && !session.hideKeyboard" data-testid="keyboard" :handle="onPress" />
+      <Keyboard v-else-if="selectMode" data-testid="keyboard" :selectable="true" :selected-codes="session.selectedKeyCodes" :on-toggle="onToggleKey" />
 
       <!-- 错误统计弹窗 -->
       <div v-if="showStats" class="stats-overlay" @click.self="showStats = false">
@@ -103,6 +107,22 @@
         </div>
       </div>
 
+      <!-- 连击提示 -->
+      <div v-if="showCombo" class="combo-indicator" :class="{ 'combo-high': comboCount >= 10 }">
+        <div class="combo-text">{{ comboCount }} 连击!</div>
+        <div class="combo-stars">✨ ✨ ✨</div>
+      </div>
+
+      <!-- 成功粒子效果容器 -->
+      <div v-if="session.pos > 0" class="particles-container">
+        <div
+          v-for="n in 6"
+          :key="n"
+          class="particle"
+          :style="{ animationDelay: (n * 0.1) + 's' }"
+        >★</div>
+      </div>
+
       <div class="footerSpace" />
     </div>
   </div>
@@ -122,6 +142,12 @@ const settings = useSettingsStore()
 const session = useSessionStore()
 
 const showStats = ref(false)
+
+// 游戏化动效状态
+const comboCount = ref(0)
+const showCombo = ref(false)
+const comboTimer = ref(null)
+const lastCorrect = ref(false)
 
 onMounted(() => {
   settings.load()
@@ -219,6 +245,30 @@ function start() {
 function onPress(code) {
   if (!session.started) return { correct: false }
   const res = session.submitKeyCode(code)
+
+  // 游戏化动效：连击计数
+  if (res.correct) {
+    if (lastCorrect.value) {
+      comboCount.value++
+    } else {
+      comboCount.value = 1
+    }
+    lastCorrect.value = true
+
+    // 显示连击提示（3连击以上）
+    if (comboCount.value >= 3) {
+      showCombo.value = true
+      if (comboTimer.value) clearTimeout(comboTimer.value)
+      comboTimer.value = setTimeout(() => {
+        showCombo.value = false
+      }, 1500)
+    }
+  } else {
+    comboCount.value = 0
+    lastCorrect.value = false
+    showCombo.value = false
+  }
+
   return res
 }
 
@@ -264,6 +314,30 @@ function onKeyDown(e) {
   if (session.hideKeyboard && keyByCode.has(e.code)) {
     e.preventDefault()
     const res = session.submitKeyCode(e.code) || { correct: false }
+
+    // 游戏化动效：连击计数
+    if (res.correct) {
+      if (lastCorrect.value) {
+        comboCount.value++
+      } else {
+        comboCount.value = 1
+      }
+      lastCorrect.value = true
+
+      // 显示连击提示（3连击以上）
+      if (comboCount.value >= 3) {
+        showCombo.value = true
+        if (comboTimer.value) clearTimeout(comboTimer.value)
+        comboTimer.value = setTimeout(() => {
+          showCombo.value = false
+        }, 1500)
+      }
+    } else {
+      comboCount.value = 0
+      lastCorrect.value = false
+      showCombo.value = false
+    }
+
     if (settings.sound) {
       playKeySound(res.correct ? 'ok' : 'bad', { volume: settings.soundVolume })
     }
@@ -285,19 +359,114 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.pageCenter { min-height: calc(100vh - 52px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 12px; }
-.operate { display: flex; gap: 10px; align-items: center; padding: 10px 20px; }
-.operate .select select { padding: 4px 8px; border-radius: 6px; border: 1px solid var(--theme-border-color); background: var(--theme-background-light-color); color: var(--theme-text-color); }
+.pageCenter { min-height: calc(100vh - 52px); min-height: calc(100dvh - 52px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 calc(12px + env(safe-area-inset-left)) calc(env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-right)); }
+
+/* 关键：键盘出现时避免整体被“压扁”导致布局跳 */
+@supports (height: 100svh) {
+  .pageCenter { min-height: calc(100svh - 52px); }
+}
+
+/* 把虚拟键盘当作底部固定区：保证键盘永远贴底、操作区不会把它挤走 */
+.pageCenter { position: relative; }
+.pageCenter :deep(.keyWrap) { position: sticky; bottom: 0; z-index: 20; padding-bottom: max(8px, env(safe-area-inset-bottom)); flex: 0 0 auto; width: 100%; }
+
+/* 关键：让键盘“占住”底部空间，避免 sticky 只悬浮但不占位导致手指点不到/看起来漂 */
+.pageCenter :deep(.keyWrap) { padding-top: 8px; background: var(--theme-background-color); }
+.pageCenter :deep(.keyboard) { width: 100%; }
+
+/* 开始前的 mask 不要参与布局，不然会把下面内容整体往下推 */
+.mask { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; z-index: 30; padding: 24px; background: transparent; }
+.mask.active { display: flex; }
+
+/* 顶部简介在手机上更紧凑，给键盘留空间 */
+@media (max-width: 600px) {
+  .tipsTextContent h1 { font-size: 22px; line-height: 1.2; margin: 6px 0; }
+  .tipsTextContent h2 { font-size: 13px; line-height: 1.35; margin: 0 0 6px; }
+  .operate { gap: 8px; padding: 8px 10px; }
+  .cardsWrap { margin: 6px auto 8px; }
+}
+.tipsTextContent { flex: 0 0 auto; }
+.mask { flex: 0 0 auto; }
+.cardsWrap { flex: 0 0 auto; }
+
+.operate { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; padding: 10px 12px; }
+.operate .select select { padding: 6px 10px; border-radius: 8px; border: 1px solid var(--theme-border-color); background: var(--theme-background-light-color); color: var(--theme-text-color); }
+
+@media (max-width: 520px) {
+  .operate.is-sticky { position: sticky; top: 52px; z-index: 10; backdrop-filter: blur(10px); background: color-mix(in srgb, var(--theme-background-light-color) 85%, transparent); border-bottom: 1px solid var(--theme-border-color); }
+}
 .cardsWrap { width: 1040px; max-width: 96%; margin: 10px auto 10px; }
-.cards { display: flex; gap: 10px; justify-content: center; perspective: 900px; }
+.cards { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; perspective: 900px; }
 .card { position: relative; width: 96px; height: 124px; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 10px; box-shadow: 0 2px 0 rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 6px; transform-style: preserve-3d; overflow: hidden; }
 .card.current { border-color: var(--theme-menu-hover-color); box-shadow: 0 0 0 2px #35e2b733 inset, 0 0 10px #35e2b733; }
-.card.doneLatest { transform-origin: bottom center; animation: cardFall 0.48s cubic-bezier(0.22, 0.62, 0.2, 0.95) forwards; }
+.card.doneLatest {
+  transform-origin: bottom center;
+  animation: cardSuccess 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
 
 .card.donePast { opacity: 0; pointer-events: none; }
-@keyframes cardFall {
-  0%   { transform: rotateX(0deg) translateY(0); opacity: 1; }
-  100% { transform: rotateX(88deg) translateY(26px) scale(0.96); opacity: 0; visibility: hidden; }
+
+/* 游戏化成功动效：缩放弹跳 + 光晕 + 粒子效果 */
+@keyframes cardSuccess {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+    filter: brightness(1);
+  }
+  20% {
+    transform: scale(1.15) rotate(-3deg);
+    opacity: 1;
+    filter: brightness(1.3) drop-shadow(0 0 20px #67c23a);
+  }
+  40% {
+    transform: scale(1.08) rotate(2deg);
+    opacity: 0.9;
+    filter: brightness(1.2) drop-shadow(0 0 15px #67c23a);
+  }
+  60% {
+    transform: scale(1.12) rotate(-1deg);
+    opacity: 0.7;
+    filter: brightness(1.15) drop-shadow(0 0 10px #67c23a);
+  }
+  80% {
+    transform: scale(1.05) rotate(0deg);
+    opacity: 0.4;
+    filter: brightness(1.1);
+  }
+  100% {
+    transform: scale(0.9) translateY(-30px);
+    opacity: 0;
+    filter: brightness(1);
+  }
+}
+
+/* 当前卡片待输入时的微妙呼吸效果 */
+.card.current {
+  border-color: var(--theme-menu-hover-color);
+  box-shadow: 0 0 0 2px #35e2b733 inset, 0 0 10px #35e2b733;
+  animation: cardBreathe 2s ease-in-out infinite;
+}
+
+@keyframes cardBreathe {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 2px #35e2b733 inset, 0 0 10px #35e2b733;
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 3px #35e2b755 inset, 0 0 15px #35e2b755;
+  }
+}
+
+/* 连续正确时的连击效果（通过JS动态添加类） */
+.card.combo {
+  animation: cardCombo 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes cardCombo {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); filter: brightness(1.4) drop-shadow(0 0 30px #ffd700); }
+  100% { transform: scale(1); }
 }
 .card .hz { font-size: 28px; font-weight: 700; color: var(--theme-main-text-color); line-height: 1; }
 .card .keys { font-size: 22px; color: #54709536; letter-spacing: 1px; }
@@ -327,5 +496,108 @@ onBeforeUnmount(() => {
 .stats-empty { text-align: center; padding: 30px; color: var(--theme-text-color); }
 .clear-btn { width: 100%; margin-top: 16px; padding: 10px; background: #f56c6c; border: none; border-radius: 6px; color: #fff; cursor: pointer; }
 .clear-btn:hover { background: #f78989; }
+
+/* 连击提示 */
+.combo-indicator {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  animation: comboPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+.combo-text {
+  font-size: 24px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffd700, #ff8c00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+}
+
+.combo-stars {
+  font-size: 20px;
+  animation: starsTwinkle 0.8s ease-in-out infinite;
+}
+
+.combo-high .combo-text {
+  font-size: 32px;
+  background: linear-gradient(135deg, #ff6b6b, #ffd700, #ff6b6b);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  animation: gradientShift 1s ease infinite;
+}
+
+@keyframes comboPop {
+  0% { transform: translateX(-50%) scale(0) translateY(20px); opacity: 0; }
+  50% { transform: translateX(-50%) scale(1.2) translateY(-5px); opacity: 1; }
+  100% { transform: translateX(-50%) scale(1) translateY(0); opacity: 1; }
+}
+
+@keyframes starsTwinkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.9); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 粒子效果 */
+.particles-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 50;
+}
+
+.particle {
+  position: absolute;
+  font-size: 16px;
+  color: #ffd700;
+  opacity: 0;
+  animation: particleBurst 0.8s ease-out forwards;
+}
+
+.particle:nth-child(1) { --angle: 0deg; }
+.particle:nth-child(2) { --angle: 60deg; }
+.particle:nth-child(3) { --angle: 120deg; }
+.particle:nth-child(4) { --angle: 180deg; }
+.particle:nth-child(5) { --angle: 240deg; }
+.particle:nth-child(6) { --angle: 300deg; }
+
+@keyframes particleBurst {
+  0% {
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateX(0) scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateX(80px) scale(1);
+    opacity: 0;
+  }
+}
+
+/* 移动端适配 */
+@media (max-width: 600px) {
+  .combo-indicator {
+    top: 70px;
+  }
+  .combo-text {
+    font-size: 20px;
+  }
+  .combo-high .combo-text {
+    font-size: 26px;
+  }
+}
 </style>
-/* removed highlight keyframes */
