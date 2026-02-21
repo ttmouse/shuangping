@@ -272,9 +272,8 @@ function confirmImport() {
 }
 
 function restart() {
-  // 结束当前会话并开始新会话
-  stats.endSession()
-  progress.endSession()
+  // 结束当前会话并记录进度
+  endPractice()
   writer.restartCurrent()
   stats.startSession()
   progress.startSession()
@@ -282,6 +281,45 @@ function restart() {
   if (settings.timeChallenge) {
     startTimeChallenge()
   }
+}
+
+// 结束练习并记录进度
+function endPractice() {
+  // 计算会话时长和字符数
+  const duration = progress.sessionStats.startTime 
+    ? Math.floor((Date.now() - progress.sessionStats.startTime) / 60000) 
+    : 0
+  const charsTyped = progress.sessionStats.chars
+  
+  // 记录练习会话
+  if (duration > 0 || charsTyped > 0) {
+    progress.recordPracticeSession(duration, charsTyped)
+  }
+  
+  // 检查每日目标
+  progress.checkDailyGoal(charsTyped, duration)
+  
+  // 检查学习阶段完成（文字练习使用 corpusId）
+  const accuracy = progress.sessionStats.accuracy
+  if (writer.currentCorpusId && accuracy > 0 && charsTyped > 0) {
+    const result = progress.checkStageCompletion(writer.currentCorpusId, accuracy, charsTyped)
+    if (result.completed) {
+      console.log(`阶段完成: ${result.stage.name}`)
+    }
+    
+    // 记录阶段尝试
+    progress.recordStageAttempt(
+      writer.currentCorpusId, 
+      accuracy, 
+      stats.averageSpeed
+    )
+    
+    // 更新技能掌握度
+    progress.updateSkillMastery(writer.currentCorpusId, charsTyped, accuracy)
+  }
+  
+  stats.endSession()
+  progress.endSession()
 }
 
 // 限时挑战功能
@@ -338,8 +376,16 @@ function toggleBlindMode() {
 function closeTimeChallengeResult() {
   showTimeChallengeResult.value = false
   timeChallengeResults.value = null
+  // 结束当前练习
+  endPractice()
   // 重新开始练习
-  restart()
+  writer.restartCurrent()
+  stats.startSession()
+  progress.startSession()
+  // 重新启动限时挑战
+  if (settings.timeChallenge) {
+    startTimeChallenge()
+  }
 }
 
 function onKeydownRestart(e) {
@@ -400,9 +446,8 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeydownRestart)
   window.removeEventListener('keydown', onKeyDown)
-  // 结束统计会话
-  stats.endSession()
-  progress.endSession()
+  // 结束统计会话并记录进度
+  endPractice()
   // 清除限时挑战计时器
   if (timeChallengeTimer.value) {
     clearInterval(timeChallengeTimer.value)

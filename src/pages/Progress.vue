@@ -42,6 +42,33 @@
         </div>
       </div>
 
+      <!-- 学习统计概览 -->
+      <div class="stats-overview">
+        <h2>学习统计</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-icon">🔥</span>
+            <span class="stat-value">{{ streakDays }}</span>
+            <span class="stat-label">连续练习天数</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">📚</span>
+            <span class="stat-value">{{ progress.totalPracticeSessions }}</span>
+            <span class="stat-label">总练习次数</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">⏱️</span>
+            <span class="stat-value">{{ Math.round(progress.learningTimeTotal) }}</span>
+            <span class="stat-label">学习时长(分钟)</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">📅</span>
+            <span class="stat-value">{{ progress.dailyGoals.completedDates.length }}</span>
+            <span class="stat-label">完成目标天数</span>
+          </div>
+        </div>
+      </div>
+
       <!-- 学习路径 -->
       <div class="learning-path">
         <h2>学习路径</h2>
@@ -93,14 +120,33 @@
 
       <!-- 成就展示 -->
       <div class="achievements-section">
-        <h2>成就系统</h2>
+        <div class="achievements-header">
+          <h2>成就系统</h2>
+          <div class="achievements-filter">
+            <button 
+              v-for="filter in achievementFilters" 
+              :key="filter.key"
+              class="filter-btn"
+              :class="{ active: currentFilter === filter.key }"
+              @click="currentFilter = filter.key"
+            >
+              {{ filter.label }}
+            </button>
+          </div>
+        </div>
         <div class="achievements-grid">
           <div
-            v-for="achievement in progress.allAchievements"
+            v-for="achievement in filteredAchievements"
             :key="achievement.id"
             class="achievement-card"
-            :class="{ 'unlocked': isAchievementUnlocked(achievement.id), 'rare': isRare(achievement.id) }"
+            :class="{ 
+              'unlocked': isAchievementUnlocked(achievement.id), 
+              'rare': isRare(achievement.id),
+              'epic': isEpic(achievement.id),
+              'legendary': isLegendary(achievement.id)
+            }"
           >
+            <div class="achievement-rarity" :class="achievement.rarity || 'common'"></div>
             <div class="achievement-icon">{{ achievement.icon }}</div>
             <div class="achievement-name">{{ achievement.name }}</div>
             <div class="achievement-desc">{{ achievement.description }}</div>
@@ -132,11 +178,27 @@
 
       <!-- 操作按钮 -->
       <div class="actions-section">
+        <button class="action-btn export" @click="exportProgress">
+          <span class="btn-icon">📤</span>
+          导出进度
+        </button>
+        <button class="action-btn import" @click="triggerImport">
+          <span class="btn-icon">📥</span>
+          导入进度
+        </button>
         <button class="action-btn reset" @click="resetProgress">
           <span class="btn-icon">🔄</span>
           重置进度
         </button>
       </div>
+      
+      <input 
+        ref="importInput" 
+        type="file" 
+        accept=".json" 
+        style="display: none" 
+        @change="handleImport"
+      />
 
       <div class="footer-space"/>
     </div>
@@ -144,12 +206,55 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useProgressStore } from '../stores/progress.js'
 import TopStatusBar from '../components/TopStatusBar.vue'
 
 const progress = useProgressStore()
+const importInput = ref(null)
+const currentFilter = ref('all')
+
 const RARE_ACHIEVEMENTS = ['ten-thousand', 'streak-30', 'combo-50', 'accuracy-95']
+const EPIC_ACHIEVEMENTS = ['fifty-thousand', 'accuracy-100', 'speed-150', 'streak-100', 'combo-100', 'advanced-complete']
+const LEGENDARY_ACHIEVEMENTS = ['all-complete']
+
+const achievementFilters = [
+  { key: 'all', label: '全部' },
+  { key: 'unlocked', label: '已解锁' },
+  { key: 'locked', label: '未解锁' },
+  { key: 'milestone', label: '里程碑' },
+  { key: 'special', label: '特殊' }
+]
+
+const filteredAchievements = computed(() => {
+  let list = progress.allAchievements
+  
+  switch (currentFilter.value) {
+    case 'unlocked':
+      list = list.filter(a => progress.unlockedAchievements.includes(a.id))
+      break
+    case 'locked':
+      list = list.filter(a => !progress.unlockedAchievements.includes(a.id))
+      break
+    case 'milestone':
+      list = list.filter(a => a.category === 'milestone')
+      break
+    case 'special':
+      list = list.filter(a => a.category === 'special')
+      break
+  }
+  
+  // 已解锁的排在前面
+  return list.sort((a, b) => {
+    const aUnlocked = progress.unlockedAchievements.includes(a.id)
+    const bUnlocked = progress.unlockedAchievements.includes(b.id)
+    if (aUnlocked && !bUnlocked) return -1
+    if (!aUnlocked && bUnlocked) return 1
+    return 0
+  })
+})
+
+const streakDays = computed(() => progress.streakDays)
 
 const PATH_ICONS = {
   basics: '🌱',
@@ -188,6 +293,14 @@ function isRare(achievementId) {
   return RARE_ACHIEVEMENTS.includes(achievementId)
 }
 
+function isEpic(achievementId) {
+  return EPIC_ACHIEVEMENTS.includes(achievementId)
+}
+
+function isLegendary(achievementId) {
+  return LEGENDARY_ACHIEVEMENTS.includes(achievementId)
+}
+
 function formatUnlockDate(achievementId) {
   const timestamp = progress.achievementUnlockTimes[achievementId]
   if (!timestamp) return ''
@@ -202,6 +315,44 @@ function formatDate(timestamp) {
 
 function resetProgress() {
   progress.resetProgress()
+}
+
+function exportProgress() {
+  const data = progress.exportFullData()
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `shuangping-progress-${new Date().toISOString().split('T')[0]}.json`
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+}
+
+function triggerImport() {
+  importInput.value?.click()
+}
+
+function handleImport(event) {
+  const file = event.target.files[0]
+  if (!file) return
+  
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result)
+      if (progress.importData(data)) {
+        alert('进度导入成功！')
+      } else {
+        alert('进度导入失败，请检查文件格式。')
+      }
+    } catch (err) {
+      alert('无法解析文件，请确保是有效的JSON格式。')
+    }
+  }
+  reader.readAsText(file)
+  event.target.value = ''
 }
 
 onMounted(() => {
@@ -664,6 +815,165 @@ onMounted(() => {
 
 .footer-space {
   height: 40px;
+}
+
+/* 学习统计概览 */
+.stats-overview {
+  margin-bottom: 32px;
+}
+
+.stats-overview h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--theme-main-text-color);
+  margin-bottom: 20px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.stat-card {
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--theme-main-text-color);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--theme-text-color);
+}
+
+/* 成就筛选 */
+.achievements-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.achievements-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--theme-main-text-color);
+  margin: 0;
+}
+
+.achievements-filter {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-light-color);
+  color: var(--theme-text-color);
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  background: var(--theme-menu-hover-color);
+}
+
+.filter-btn.active {
+  background: #35e2b7;
+  color: #0b1a14;
+  border-color: #35e2b7;
+}
+
+/* 成就稀有度 */
+.achievement-rarity {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 12px 12px 0 0;
+}
+
+.achievement-rarity.common {
+  background: linear-gradient(90deg, #9e9e9e, #bdbdbd);
+}
+
+.achievement-rarity.uncommon {
+  background: linear-gradient(90deg, #4caf50, #81c784);
+}
+
+.achievement-rarity.rare {
+  background: linear-gradient(90deg, #2196f3, #64b5f6);
+}
+
+.achievement-rarity.epic {
+  background: linear-gradient(90deg, #9c27b0, #ce93d8);
+}
+
+.achievement-rarity.legendary {
+  background: linear-gradient(90deg, #ff9800, #ffd54f, #ff9800);
+  background-size: 200% 100%;
+  animation: legendaryGlow 2s linear infinite;
+}
+
+@keyframes legendaryGlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.achievement-card.epic.unlocked {
+  border-color: #9c27b0;
+  box-shadow: 0 0 20px rgba(156, 39, 176, 0.2);
+}
+
+.achievement-card.legendary.unlocked {
+  border-color: #ff9800;
+  box-shadow: 0 0 30px rgba(255, 152, 0, 0.3);
+  animation: legendaryPulse 3s ease-in-out infinite;
+}
+
+@keyframes legendaryPulse {
+  0%, 100% { box-shadow: 0 0 30px rgba(255, 152, 0, 0.3); }
+  50% { box-shadow: 0 0 50px rgba(255, 152, 0, 0.5); }
+}
+
+/* 操作按钮样式 */
+.action-btn.export:hover {
+  background: #4caf50;
+  color: white;
+}
+
+.action-btn.import:hover {
+  background: #2196f3;
+  color: white;
 }
 
 /* 响应式 */

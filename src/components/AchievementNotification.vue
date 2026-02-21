@@ -4,14 +4,14 @@
       v-for="achievement in notifications"
       :key="achievement.id"
       class="achievement-toast"
-      :class="{ 'rare': isRare(achievement) }"
+      :class="[getRarity(achievement)]"
     >
       <div class="achievement-icon">{{ achievement.icon }}</div>
       <div class="achievement-content">
         <div class="achievement-title">解锁成就</div>
         <div class="achievement-name">{{ achievement.name }}</div>
         <div class="achievement-desc">{{ achievement.description }}</div>
-        <button v-if="isRare(achievement)" class="share-achievement-btn" @click="shareAchievement(achievement)">
+        <button v-if="isRare(achievement) || achievement.rarity === 'epic' || achievement.rarity === 'legendary'" class="share-achievement-btn" @click="shareAchievement(achievement)">
           📤 分享
         </button>
       </div>
@@ -33,10 +33,32 @@ const props = defineProps({
 const emit = defineEmits(['share'])
 
 const notifications = ref([])
+
+// 稀有度定义
+const RARITY = {
+  COMMON: 'common',
+  UNCOMMON: 'uncommon',
+  RARE: 'rare',
+  EPIC: 'epic',
+  LEGENDARY: 'legendary'
+}
+
 const RARE_ACHIEVEMENTS = ['ten-thousand', 'streak-30', 'combo-50', 'accuracy-95']
+const EPIC_ACHIEVEMENTS = ['fifty-thousand', 'accuracy-100', 'speed-150', 'streak-100', 'combo-100', 'advanced-complete']
+const LEGENDARY_ACHIEVEMENTS = ['all-complete']
+
+function getRarity(achievement) {
+  if (achievement.rarity) return achievement.rarity
+  if (LEGENDARY_ACHIEVEMENTS.includes(achievement.id)) return RARITY.LEGENDARY
+  if (EPIC_ACHIEVEMENTS.includes(achievement.id)) return RARITY.EPIC
+  if (RARE_ACHIEVEMENTS.includes(achievement.id)) return RARITY.RARE
+  return RARITY.COMMON
+}
 
 function isRare(achievement) {
-  return RARE_ACHIEVEMENTS.includes(achievement.id)
+  return getRarity(achievement) === RARITY.RARE || 
+         getRarity(achievement) === RARITY.EPIC || 
+         getRarity(achievement) === RARITY.LEGENDARY
 }
 
 function shareAchievement(achievement) {
@@ -86,14 +108,46 @@ watch(() => props.newAchievements, (newVals) => {
 }
 
 .achievement-toast.rare {
-  border-color: #ffd700;
-  box-shadow: 0 8px 32px rgba(255, 215, 0, 0.4), 0 0 0 1px rgba(255, 215, 0, 0.2);
+  border-color: #2196f3;
+  box-shadow: 0 8px 32px rgba(33, 150, 243, 0.4), 0 0 0 1px rgba(33, 150, 243, 0.2);
   animation: rareGlow 2s ease-in-out infinite;
 }
 
+.achievement-toast.epic {
+  border-color: #9c27b0;
+  box-shadow: 0 8px 32px rgba(156, 39, 176, 0.5), 0 0 0 1px rgba(156, 39, 176, 0.3);
+  animation: epicGlow 2s ease-in-out infinite;
+}
+
+.achievement-toast.legendary {
+  border-color: #ff9800;
+  box-shadow: 0 8px 32px rgba(255, 152, 0, 0.6), 0 0 0 1px rgba(255, 152, 0, 0.4);
+  animation: legendaryGlow 1.5s ease-in-out infinite;
+}
+
 @keyframes rareGlow {
-  0%, 100% { box-shadow: 0 8px 32px rgba(255, 215, 0, 0.4), 0 0 20px rgba(255, 215, 0, 0.2); }
-  50% { box-shadow: 0 8px 32px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4); }
+  0%, 100% { box-shadow: 0 8px 32px rgba(33, 150, 243, 0.4), 0 0 20px rgba(33, 150, 243, 0.2); }
+  50% { box-shadow: 0 8px 32px rgba(33, 150, 243, 0.6), 0 0 40px rgba(33, 150, 243, 0.4); }
+}
+
+@keyframes epicGlow {
+  0%, 100% { box-shadow: 0 8px 32px rgba(156, 39, 176, 0.5), 0 0 25px rgba(156, 39, 176, 0.3); }
+  50% { box-shadow: 0 8px 32px rgba(156, 39, 176, 0.7), 0 0 50px rgba(156, 39, 176, 0.5); }
+}
+
+@keyframes legendaryGlow {
+  0%, 100% { 
+    box-shadow: 0 8px 32px rgba(255, 152, 0, 0.6), 0 0 30px rgba(255, 152, 0, 0.4);
+    border-color: #ff9800;
+  }
+  33% { 
+    box-shadow: 0 8px 32px rgba(255, 87, 34, 0.7), 0 0 50px rgba(255, 87, 34, 0.5);
+    border-color: #ff5722;
+  }
+  66% { 
+    box-shadow: 0 8px 32px rgba(255, 193, 7, 0.7), 0 0 50px rgba(255, 193, 7, 0.5);
+    border-color: #ffc107;
+  }
 }
 
 .achievement-shine {
@@ -136,7 +190,16 @@ watch(() => props.newAchievements, (newVals) => {
 }
 
 .achievement-toast.rare .achievement-title {
-  color: #ffd700;
+  color: #2196f3;
+}
+
+.achievement-toast.epic .achievement-title {
+  color: #9c27b0;
+}
+
+.achievement-toast.legendary .achievement-title {
+  color: #ff9800;
+  text-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
 }
 
 .achievement-name {
