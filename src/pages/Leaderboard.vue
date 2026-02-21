@@ -82,6 +82,19 @@
         </div>
       </div>
 
+      <!-- 快速分享我的排名 -->
+      <div class="quick-share-section" v-if="myStats">
+        <div class="quick-share-card">
+          <div class="quick-share-text">
+            <span class="share-emoji">🏆</span>
+            <span>我在双拼练习中排名第 <strong>#{{ myAllTimeRank || '-' }}</strong>，准确率 {{ myStats.accuracy }}%，速度 {{ myStats.speed }} 字/分！</span>
+          </div>
+          <button class="quick-share-btn" @click="openShareCard">
+            <span>分享成绩</span>
+          </button>
+        </div>
+      </div>
+
       <!-- 挑战区域 -->
       <div class="challenges-section">
         <div class="section-header">
@@ -226,9 +239,20 @@
             <input type="text" readonly :value="shareLink" ref="shareLinkInput" />
             <button @click="copyShareLink">复制链接</button>
           </div>
+          <div class="share-social">
+            <span class="share-label">分享到:</span>
+            <div class="social-btns">
+              <button class="social-btn twitter" @click="shareToTwitter" title="分享到 X">𝕏</button>
+              <button class="social-btn weibo" @click="shareToWeibo" title="分享到微博">🐦</button>
+              <button class="social-btn qq" @click="shareToQQ" title="分享到QQ">🐧</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- 成绩分享卡片弹窗 -->
+    <ShareCard v-if="showShareCard" @close="showShareCard = false" />
   </div>
 </template>
 
@@ -237,6 +261,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useLeaderboardStore } from '../stores/leaderboard.js'
 import { useStatsStore } from '../stores/stats.js'
 import TopStatusBar from '../components/TopStatusBar.vue'
+import ShareCard from '../components/ShareCard.vue'
 
 const leaderboard = useLeaderboardStore()
 const stats = useStatsStore()
@@ -244,6 +269,7 @@ const stats = useStatsStore()
 const activeTab = ref('score')
 const showCreateChallenge = ref(false)
 const showShareChallenge = ref(false)
+const showShareCard = ref(false)
 const shareChallengeData = ref(null)
 const shareLink = ref('')
 const shareLinkInput = ref(null)
@@ -368,6 +394,25 @@ function copyShareLink() {
   }
 }
 
+function shareToTwitter() {
+  const text = encodeURIComponent(`🎯 ${shareChallengeData.value?.from || '我'} 向你发起双拼挑战：${getChallengeTypeName(shareChallengeData.value?.type)}，目标 ${shareChallengeData.value?.target}！一起来练习吧！`)
+  const url = `https://twitter.com/intent/tweet?text=${text}`
+  window.open(url, '_blank', 'width=600,height=400')
+}
+
+function shareToWeibo() {
+  const text = encodeURIComponent(`🎯 ${shareChallengeData.value?.from || '我'} 向你发起双拼挑战：${getChallengeTypeName(shareChallengeData.value?.type)}，目标 ${shareChallengeData.value?.target}！一起来练习吧！`)
+  const url = `https://service.weibo.com/share/share.php?title=${text}&url=${encodeURIComponent(window.location.origin)}`
+  window.open(url, '_blank', 'width=600,height=400')
+}
+
+function shareToQQ() {
+  const text = encodeURIComponent(`🎯 ${shareChallengeData.value?.from || '我'} 向你发起双拼挑战`)
+  const desc = encodeURIComponent(`${getChallengeTypeName(shareChallengeData.value?.type)}，目标 ${shareChallengeData.value?.target}！一起来练习双拼吧！`)
+  const url = `https://connect.qq.com/widget/shareqq/index.html?title=${text}&summary=${desc}&url=${encodeURIComponent(window.location.origin)}`
+  window.open(url, '_blank', 'width=600,height=400')
+}
+
 function formatNumber(num) {
   if (num >= 10000) {
     return (num / 10000).toFixed(1) + '万'
@@ -379,6 +424,10 @@ function formatDate(timestamp) {
   if (!timestamp) return ''
   const date = new Date(timestamp)
   return `${date.getMonth() + 1}/${date.getDate()}`
+}
+
+function openShareCard() {
+  showShareCard.value = true
 }
 </script>
 
@@ -1064,6 +1113,115 @@ function formatDate(timestamp) {
   white-space: nowrap;
 }
 
+/* 社交媒体分享按钮 */
+.share-social {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--theme-border-color);
+}
+
+.share-label {
+  font-size: 13px;
+  color: var(--theme-text-color);
+  white-space: nowrap;
+}
+
+.social-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.social-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all 0.2s;
+}
+
+.social-btn:hover {
+  transform: scale(1.1);
+}
+
+.social-btn.twitter:hover {
+  background: #000;
+  border-color: #000;
+  color: #fff;
+}
+
+.social-btn.weibo:hover {
+  background: #e6162d;
+  border-color: #e6162d;
+  color: #fff;
+}
+
+.social-btn.qq:hover {
+  background: #12b7f5;
+  border-color: #12b7f5;
+  color: #fff;
+}
+
+/* 快速分享区域 */
+.quick-share-section {
+  margin-bottom: 24px;
+}
+
+.quick-share-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(53, 226, 183, 0.15), rgba(53, 226, 183, 0.05));
+  border: 1px solid rgba(53, 226, 183, 0.3);
+  border-radius: 12px;
+}
+
+.quick-share-text {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--theme-main-text-color);
+}
+
+.share-emoji {
+  font-size: 28px;
+}
+
+.quick-share-text strong {
+  color: #35e2b7;
+  font-size: 18px;
+}
+
+.quick-share-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #35e2b7;
+  color: #0b1a14;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.quick-share-btn:hover {
+  background: #2aa88a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(53, 226, 183, 0.3);
+}
+
 .footer-space {
   height: 40px;
 }
@@ -1100,6 +1258,28 @@ function formatDate(timestamp) {
 
   .challenge-types {
     grid-template-columns: 1fr;
+  }
+
+  .quick-share-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .quick-share-text {
+    flex-direction: column;
+  }
+
+  .quick-share-btn {
+    width: 100%;
+  }
+
+  .share-social {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .social-btns {
+    justify-content: center;
   }
 }
 </style>

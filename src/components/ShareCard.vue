@@ -81,6 +81,12 @@
         </div>
       </div>
 
+      <!-- 分享成功提示 -->
+      <div v-if="shareSuccess" class="share-success">
+        <span class="success-icon">✓</span>
+        <span>分享成功！</span>
+      </div>
+
       <!-- 分享选项 -->
       <div class="share-options">
         <button class="share-btn primary" @click="downloadCard">
@@ -91,10 +97,31 @@
           <span class="btn-icon">📋</span>
           复制文本
         </button>
-        <button class="share-btn" @click="shareToTwitter" v-if="canShareNative">
-          <span class="btn-icon">𝕏</span>
-          分享到 X
-        </button>
+      </div>
+
+      <!-- 社交媒体分享 -->
+      <div class="social-share-section">
+        <div class="section-divider">
+          <span>分享到</span>
+        </div>
+        <div class="social-buttons">
+          <button class="social-btn twitter" @click="shareToTwitter" title="分享到 X">
+            <span class="social-icon">𝕏</span>
+            <span class="social-name">X</span>
+          </button>
+          <button class="social-btn weibo" @click="shareToWeibo" title="分享到微博">
+            <span class="social-icon">🐦</span>
+            <span class="social-name">微博</span>
+          </button>
+          <button class="social-btn qq" @click="shareToQQ" title="分享到QQ">
+            <span class="social-icon">🐧</span>
+            <span class="social-name">QQ</span>
+          </button>
+          <button class="social-btn native" @click="shareNative" v-if="canShareNative" title="系统分享">
+            <span class="social-icon">🔗</span>
+            <span class="social-name">更多</span>
+          </button>
+        </div>
       </div>
 
       <!-- 文本分享预览 -->
@@ -110,6 +137,7 @@
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { useStatsStore } from '../stores/stats.js'
 import { useProgressStore } from '../stores/progress.js'
+import { useLeaderboardStore } from '../stores/leaderboard.js'
 
 const props = defineProps({
   stats: {
@@ -126,11 +154,13 @@ const emit = defineEmits(['close'])
 
 const stats = useStatsStore()
 const progress = useProgressStore()
+const leaderboard = useLeaderboardStore()
 
 const cardPreview = ref(null)
 const qrcodeCanvas = ref(null)
 const cardTheme = ref('gradient')
 const showTextPreview = ref(false)
+const shareSuccess = ref(false)
 
 const themes = [
   { id: 'gradient', name: '渐变绿', preview: 'linear-gradient(135deg, #35e2b7, #2aa88a)' },
@@ -192,12 +222,13 @@ const shareText = computed(() => {
 })
 
 const canShareNative = computed(() => {
-  return navigator.share && navigator.canShare
+  return typeof navigator !== 'undefined' && navigator.share && navigator.canShare
 })
 
-const showQRCode = computed(() => {
-  return true
-})
+const canShareToWeibo = computed(() => true)
+const canShareToQQ = computed(() => true)
+
+const showQRCode = computed(() => true)
 
 onMounted(() => {
   stats.load()
@@ -402,6 +433,40 @@ async function shareToTwitter() {
   const text = encodeURIComponent(shareText.value)
   const url = `https://twitter.com/intent/tweet?text=${text}`
   window.open(url, '_blank', 'width=600,height=400')
+}
+
+async function shareToWeibo() {
+  const text = encodeURIComponent(shareText.value)
+  const url = `https://service.weibo.com/share/share.php?title=${text}&url=${encodeURIComponent(window.location.origin)}`
+  window.open(url, '_blank', 'width=600,height=400')
+}
+
+async function shareToQQ() {
+  const text = encodeURIComponent(shareText.value)
+  const url = `https://connect.qq.com/widget/shareqq/index.html?title=${text}&url=${encodeURIComponent(window.location.origin)}`
+  window.open(url, '_blank', 'width=600,height=400')
+}
+
+async function shareNative() {
+  if (!canShareNative.value) return
+  
+  try {
+    const shareData = {
+      title: '我的双拼练习成绩',
+      text: shareText.value,
+      url: window.location.origin
+    }
+    
+    if (navigator.canShare && navigator.canShare(shareData)) {
+      await navigator.share(shareData)
+      shareSuccess.value = true
+      setTimeout(() => shareSuccess.value = false, 2000)
+    }
+  } catch (err) {
+    if (err.name !== 'AbortError') {
+      console.error('Share failed:', err)
+    }
+  }
 }
 </script>
 
@@ -741,6 +806,120 @@ async function shareToTwitter() {
   background: #2aa88a;
 }
 
+/* 分享成功提示 */
+.share-success {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  margin: 0 20px 16px;
+  background: rgba(53, 226, 183, 0.15);
+  border: 1px solid #35e2b7;
+  border-radius: 10px;
+  color: #35e2b7;
+  font-size: 14px;
+  animation: fadeIn 0.3s ease;
+}
+
+.success-icon {
+  width: 20px;
+  height: 20px;
+  background: #35e2b7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b1a14;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 社交媒体分享区域 */
+.social-share-section {
+  padding: 0 20px 20px;
+}
+
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  color: var(--theme-text-color);
+  font-size: 13px;
+}
+
+.section-divider::before,
+.section-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--theme-border-color);
+}
+
+.social-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.social-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 20px;
+  border: 1px solid var(--theme-border-color);
+  border-radius: 12px;
+  background: var(--theme-background-color);
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 70px;
+}
+
+.social-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.social-btn.twitter:hover {
+  background: rgba(0, 0, 0, 0.8);
+  border-color: #000;
+  color: #fff;
+}
+
+.social-btn.weibo:hover {
+  background: rgba(230, 22, 45, 0.1);
+  border-color: #e6162d;
+  color: #e6162d;
+}
+
+.social-btn.qq:hover {
+  background: rgba(18, 183, 245, 0.1);
+  border-color: #12b7f5;
+  color: #12b7f5;
+}
+
+.social-btn.native:hover {
+  background: rgba(53, 226, 183, 0.1);
+  border-color: #35e2b7;
+  color: #35e2b7;
+}
+
+.social-icon {
+  font-size: 24px;
+}
+
+.social-name {
+  font-size: 12px;
+  font-weight: 500;
+}
+
 @media (max-width: 480px) {
   .share-card-modal {
     max-height: 95vh;
@@ -764,6 +943,16 @@ async function shareToTwitter() {
 
   .share-btn {
     width: 100%;
+  }
+
+  .social-buttons {
+    flex-wrap: wrap;
+  }
+
+  .social-btn {
+    flex: 1;
+    min-width: 60px;
+    padding: 10px 12px;
   }
 }
 </style>

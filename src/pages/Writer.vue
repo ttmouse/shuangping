@@ -197,11 +197,23 @@
 
     <!-- 练习完成浮层（仅自定义/内置文案） -->
     <div v-if="writer.completed" class="modalMask" @click.self="restart">
-      <div class="modal">
-        <h3>练习完成</h3>
+      <div class="modal completion-modal">
+        <h3>🎉 练习完成</h3>
         <p>已完成当前文案的全部文字练习。</p>
+        <div class="completion-stats" v-if="stats">
+          <div class="comp-stat">
+            <span class="comp-value">{{ stats.overallAccuracy }}%</span>
+            <span class="comp-label">准确率</span>
+          </div>
+          <div class="comp-stat">
+            <span class="comp-value">{{ stats.averageSpeed }}</span>
+            <span class="comp-label">字/分</span>
+          </div>
+        </div>
         <div class="modalFooter">
-          <div />
+          <button class="el-button el-button--small share" @click="showShareCard = true">
+            <span>📤 分享成绩</span>
+          </button>
           <div class="actions">
             <button class="el-button el-button--small primary" @click="restart">重新开始</button>
           </div>
@@ -253,13 +265,18 @@
           </p>
         </div>
         <div class="modalFooter">
-          <div />
+          <button class="el-button el-button--small share" @click="showShareCard = true">
+            <span>📤 分享</span>
+          </button>
           <div class="actions">
             <button class="el-button el-button--small primary" @click="closeTimeChallengeResult">再来一次</button>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- 成绩分享卡片弹窗 -->
+    <ShareCard v-if="showShareCard" @close="showShareCard = false" />
 
     <!-- 成就通知 -->
     <AchievementNotification :new-achievements="newAchievements" />
@@ -276,6 +293,7 @@ import Keyboard from '../components/Keyboard.vue'
 import TopStatusBar from '../components/TopStatusBar.vue'
 import SchemeSelector from '../components/SchemeSelector.vue'
 import AchievementNotification from '../components/AchievementNotification.vue'
+import ShareCard from '../components/ShareCard.vue'
 import { LENGTH_BUCKETS } from '../data/words.js'
 import { extractChinese } from '../utils/text2pinyin.js'
 import { playKeySound } from '../utils/sound.js'
@@ -294,6 +312,7 @@ const corpora = computed(() => writer.corpora)
 // 成就通知
 const newAchievements = ref([])
 const showMenu = ref(false)
+const showShareCard = ref(false)
 
 // 限时挑战状态
 const timeRemaining = ref(0)
@@ -654,6 +673,64 @@ onBeforeUnmount(() => {
 .modalFooter .tip { font-size: 12px; color: var(--theme-rich-text-color); }
 .modalFooter .actions { display: flex; gap: 8px; }
 .el-button.primary { background: var(--theme-menu-hover-color); color: #0b1a14; border-color: var(--theme-menu-hover-color); }
+
+/* 分享按钮 */
+.el-button.share {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: transparent;
+  color: #fff;
+}
+
+.el-button.share:hover {
+  background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* 完成弹窗样式 */
+.completion-modal h3 {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.completion-modal p {
+  text-align: center;
+  color: var(--theme-text-color);
+  margin-bottom: 20px;
+}
+
+.completion-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: var(--theme-background-color);
+  border-radius: 12px;
+}
+
+.comp-stat {
+  text-align: center;
+}
+
+.comp-value {
+  display: block;
+  font-size: 32px;
+  font-weight: 700;
+  color: #35e2b7;
+  margin-bottom: 4px;
+}
+
+.comp-label {
+  font-size: 12px;
+  color: var(--theme-text-color);
+}
+
+.completion-modal .modalFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 /* 盲打和限时按钮激活状态 */
 .el-button.is-active {

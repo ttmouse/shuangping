@@ -175,9 +175,13 @@
               </p>
             </div>
             <button class="clear-btn" @click="closeTimeChallengeResult">再来一次</button>
+            <button class="share-btn" @click="showShareCard = true">📤 分享成绩</button>
           </div>
         </div>
       </div>
+
+      <!-- 分享卡片弹窗 -->
+      <ShareCard v-if="showShareCard" @close="showShareCard = false" />
 
       <!-- 成功粒子效果容器 -->
       <div v-if="session.pos > 0" class="particles-container">
@@ -203,6 +207,7 @@ import Keyboard from '../components/Keyboard.vue'
 import TopStatusBar from '../components/TopStatusBar.vue'
 import SchemeSelector from '../components/SchemeSelector.vue'
 import AchievementNotification from '../components/AchievementNotification.vue'
+import ShareCard from '../components/ShareCard.vue'
 import { finalToKeyCodes, keyByCode, ranges } from '../data/xiaohe.js'
 import { useSettingsStore } from '../stores/settings.js'
 import { useSessionStore } from '../stores/session.js'
@@ -231,6 +236,7 @@ const timeRemaining = ref(0)
 const timeChallengeTimer = ref(null)
 const timeChallengeResults = ref(null)
 const showTimeChallengeResult = ref(false)
+const showShareCard = ref(false)
 
 onMounted(() => {
   settings.load()
@@ -726,6 +732,27 @@ onBeforeUnmount(() => {
 .stats-empty { text-align: center; padding: 30px; color: var(--theme-text-color); }
 .clear-btn { width: 100%; margin-top: 16px; padding: 10px; background: #f56c6c; border: none; border-radius: 6px; color: #fff; cursor: pointer; }
 .clear-btn:hover { background: #f78989; }
+
+/* 分享按钮 */
+.share-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.share-btn:hover {
+  background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
 
 /* 连击提示 */
 .combo-indicator {

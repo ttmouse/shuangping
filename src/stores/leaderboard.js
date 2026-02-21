@@ -336,6 +336,8 @@ export const useLeaderboardStore = defineStore('leaderboard', {
         type: challenge.type,
         target: challenge.target,
         from: this.userName,
+        challengeId: challenge.id,
+        createdAt: challenge.createdAt,
       }))
       return `${window.location.origin}/?challenge=${data}`
     },
@@ -354,7 +356,40 @@ export const useLeaderboardStore = defineStore('leaderboard', {
 
     // 接受挑战
     acceptChallenge(challengeData) {
-      return this.createChallenge(challengeData.type, challengeData.target)
+      // 创建相同的挑战
+      const newChallenge = this.createChallenge(challengeData.type, challengeData.target, 7)
+      // 记录挑战来源
+      if (newChallenge) {
+        newChallenge.acceptedFrom = challengeData.from
+        newChallenge.originalChallengeId = challengeData.challengeId
+        this.save()
+      }
+      return newChallenge
+    },
+
+    // 获取挑战分享文本
+    getChallengeShareText(challenge) {
+      const typeNames = { accuracy: '准确率挑战', speed: '速度挑战', streak: '连续练习挑战', chars: '练习字数挑战' }
+      const units = { accuracy: '%', speed: '字/分', streak: '天', chars: '字' }
+      const typeName = typeNames[challenge.type] || '双拼挑战'
+      const unit = units[challenge.type] || ''
+      
+      return `🎯 ${this.userName} 向你发起${typeName}！\n目标：${challenge.target}${unit}\n一起来双拼练习吧！⌨️`
+    },
+
+    // 生成挑战分享卡片数据
+    generateChallengeCardData(challenge) {
+      const typeNames = { accuracy: '准确率挑战', speed: '速度挑战', streak: '连续练习', chars: '练习字数' }
+      const icons = { accuracy: '🎯', speed: '⚡', streak: '🔥', chars: '📝' }
+      
+      return {
+        title: `${icons[challenge.type] || '🎯'} ${typeNames[challenge.type] || '双拼挑战'}`,
+        target: challenge.target,
+        from: this.userName,
+        progress: challenge.progress || 0,
+        type: challenge.type,
+        daysLeft: Math.max(0, challenge.duration - Math.floor((Date.now() - challenge.createdAt) / (24 * 60 * 60 * 1000)))
+      }
     },
   },
 })
