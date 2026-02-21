@@ -25,6 +25,12 @@
         @click="go('/statistics')"
         title="练习统计"
       >📊 统计</button>
+      <button
+        class="modeBtn"
+        :class="{ active: route.name === 'progress' }"
+        @click="go('/progress')"
+        title="学习进度"
+      >🎯 进度</button>
     </div>
     <div class="right">
       <div class="accuracy" v-if="session.totalAttempts > 0" title="正确率">

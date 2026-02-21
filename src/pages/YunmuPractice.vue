@@ -34,6 +34,20 @@
         >
           {{ session.weakMode ? '✅ 错题强化中' : '错题强化' }}
         </button>
+        <button 
+          class="el-button el-button--small" 
+          :class="{ 'is-active': settings.blindMode }"
+          @click="toggleBlindMode"
+        >
+          {{ settings.blindMode ? '👁️ 盲打中' : '盲打模式' }}
+        </button>
+        <button 
+          class="el-button el-button--small" 
+          :class="{ 'is-active': settings.timeChallenge }"
+          @click="toggleTimeChallenge"
+        >
+          {{ settings.timeChallenge ? '⏱️ 限时中' : '限时挑战' }}
+        </button>
         <button class="el-button el-button--small" @click="showStats = true">📊 错误统计</button>
         <!-- 自选模式：开始与重新选择的切换 -->
         <template v-if="session.rangeId === 'custom'">
@@ -123,6 +137,9 @@
         >★</div>
       </div>
 
+      <!-- 成就通知 -->
+      <AchievementNotification :new-achievements="newAchievements" />
+
       <div class="footerSpace" />
     </div>
   </div>
@@ -133,15 +150,18 @@ import { computed, onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import Keyboard from '../components/Keyboard.vue'
 import TopStatusBar from '../components/TopStatusBar.vue'
 import SchemeSelector from '../components/SchemeSelector.vue'
+import AchievementNotification from '../components/AchievementNotification.vue'
 import { finalToKeyCodes, keyByCode, ranges } from '../data/xiaohe.js'
 import { useSettingsStore } from '../stores/settings.js'
 import { useSessionStore } from '../stores/session.js'
 import { useStatsStore } from '../stores/stats.js'
+import { useProgressStore } from '../stores/progress.js'
 import { playKeySound } from '../utils/sound.js'
 
 const settings = useSettingsStore()
 const session = useSessionStore()
 const stats = useStatsStore()
+const progress = useProgressStore()
 
 const showStats = ref(false)
 
@@ -151,10 +171,20 @@ const showCombo = ref(false)
 const comboTimer = ref(null)
 const lastCorrect = ref(false)
 
+// 成就通知
+const newAchievements = ref([])
+
+// 限时挑战状态
+const timeRemaining = ref(0)
+const timeChallengeTimer = ref(null)
+const timeChallengeResults = ref(null)
+const showTimeChallengeResult = ref(false)
+
 onMounted(() => {
   settings.load()
   session.load()
   stats.load()
+  progress.load()
   initAudio() // 初始化音频功能
 
   if (!session.started) {
@@ -243,7 +273,71 @@ function start() {
     }
   }
   stats.startSession()
+  progress.startSession()
   session.start()
+  
+  // 启动限时挑战计时器
+  if (settings.timeChallenge) {
+    startTimeChallenge()
+  }
+}
+
+// 限时挑战功能
+function startTimeChallenge() {
+  timeRemaining.value = settings.timeChallengeDuration
+  timeChallengeResults.value = {
+    correct: 0,
+    total: 0,
+    startTime: Date.now()
+  }
+  
+  if (timeChallengeTimer.value) {
+    clearInterval(timeChallengeTimer.value)
+  }
+  
+  timeChallengeTimer.value = setInterval(() => {
+    timeRemaining.value--
+    if (timeRemaining.value <= 0) {
+      endTimeChallenge()
+    }
+  }, 1000)
+}
+
+function endTimeChallenge() {
+  if (timeChallengeTimer.value) {
+    clearInterval(timeChallengeTimer.value)
+    timeChallengeTimer.value = null
+  }
+  
+  if (timeChallengeResults.value) {
+    timeChallengeResults.value.endTime = Date.now()
+    timeChallengeResults.value.duration = Math.floor(
+      (timeChallengeResults.value.endTime - timeChallengeResults.value.startTime) / 1000
+    )
+    showTimeChallengeResult.value = true
+  }
+}
+
+function toggleTimeChallenge() {
+  const enabled = settings.toggleTimeChallenge()
+  if (!enabled && timeChallengeTimer.value) {
+    // 关闭时清除计时器
+    clearInterval(timeChallengeTimer.value)
+    timeChallengeTimer.value = null
+  }
+}
+
+function toggleBlindMode() {
+  settings.toggleBlindMode()
+}
+
+function closeTimeChallengeResult() {
+  showTimeChallengeResult.value = false
+  timeChallengeResults.value = null
+  // 重置练习状态
+  stats.endSession()
+  progress.endSession()
+  session.reset()
 }
 
 function onPress(code) {
@@ -253,6 +347,20 @@ function onPress(code) {
   // 记录统计
   const target = session.currentTarget || session.lastTarget
   stats.recordFinalPractice(target, res.correct)
+
+  // 记录进度
+  progress.recordKeystroke(res.correct)
+
+  // 错题强化模式记录
+  if (session.weakMode) {
+    progress.recordWeakModePractice()
+  }
+
+  // 检查成就
+  const unlocked = progress.checkAchievements(stats)
+  if (unlocked.length > 0) {
+    newAchievements.value = [...newAchievements.value, ...unlocked]
+  }
 
   // 游戏化动效：连击计数
   if (res.correct) {
@@ -271,10 +379,21 @@ function onPress(code) {
         showCombo.value = false
       }, 1500)
     }
+    
+    // 限时挑战统计
+    if (settings.timeChallenge && timeChallengeResults.value) {
+      timeChallengeResults.value.correct++
+      timeChallengeResults.value.total++
+    }
   } else {
     comboCount.value = 0
     lastCorrect.value = false
     showCombo.value = false
+    
+    // 限时挑战统计
+    if (settings.timeChallenge && timeChallengeResults.value) {
+      timeChallengeResults.value.total++
+    }
   }
 
   return res
@@ -303,6 +422,7 @@ function onClearSelected() {
 function reselect() {
   // 结束统计会话
   stats.endSession()
+  progress.endSession()
   // 退出练习，回到自选勾选模式
   session.reset()
   // 停止音频

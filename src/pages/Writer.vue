@@ -109,6 +109,9 @@
         </div>
       </div>
     </div>
+
+    <!-- 成就通知 -->
+    <AchievementNotification :new-achievements="newAchievements" />
   </div>
 </template>
 
@@ -117,9 +120,11 @@ import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 import { useSettingsStore } from '../stores/settings.js'
 import { useWriterStore, CORPUS_IDS } from '../stores/writer.js'
 import { useStatsStore } from '../stores/stats.js'
+import { useProgressStore } from '../stores/progress.js'
 import Keyboard from '../components/Keyboard.vue'
 import TopStatusBar from '../components/TopStatusBar.vue'
 import SchemeSelector from '../components/SchemeSelector.vue'
+import AchievementNotification from '../components/AchievementNotification.vue'
 import { LENGTH_BUCKETS } from '../data/words.js'
 import { extractChinese } from '../utils/text2pinyin.js'
 import { playKeySound } from '../utils/sound.js'
@@ -131,8 +136,12 @@ const CUSTOM_PREFIX = 'custom-'
 const settings = useSettingsStore()
 const writer = useWriterStore()
 const stats = useStatsStore()
+const progress = useProgressStore()
 const buckets = LENGTH_BUCKETS
 const corpora = computed(() => writer.corpora)
+
+// 成就通知
+const newAchievements = ref([])
 const showMenu = ref(false)
 const currentCorpusTitle = computed(() => corpora.value.find(c => c.id === writer.currentCorpusId)?.title || '选择文案')
 function toggleMenu() { showMenu.value = !showMenu.value }
@@ -159,6 +168,13 @@ function onPress(code) {
   if (currentItem) {
     stats.recordCharPractice(currentItem.ch, res.correct)
   }
+  // 记录进度
+  progress.recordKeystroke(res.correct)
+  // 检查成就
+  const unlocked = progress.checkAchievements(stats)
+  if (unlocked.length > 0) {
+    newAchievements.value = [...newAchievements.value, ...unlocked]
+  }
   return res
 }
 
@@ -179,8 +195,10 @@ function confirmImport() {
 function restart() {
   // 结束当前会话并开始新会话
   stats.endSession()
+  progress.endSession()
   writer.restartCurrent()
   stats.startSession()
+  progress.startSession()
 }
 
 function onKeydownRestart(e) {
@@ -200,6 +218,13 @@ function onKeyDown(e) {
     if (currentItem) {
       stats.recordCharPractice(currentItem.ch, res.correct)
     }
+    // 记录进度
+    progress.recordKeystroke(res.correct)
+    // 检查成就
+    const unlocked = progress.checkAchievements(stats)
+    if (unlocked.length > 0) {
+      newAchievements.value = [...newAchievements.value, ...unlocked]
+    }
     if (!res?.ignore) {
       if (settings.sound) {
         playKeySound(res.correct ? 'ok' : 'bad', { volume: settings.soundVolume })
@@ -212,9 +237,11 @@ onMounted(() => {
   settings.load()
   writer.load()
   stats.load()
+  progress.load()
   writer.applyCorpus(writer.currentCorpusId)
   // 开始统计会话
   stats.startSession()
+  progress.startSession()
   window.addEventListener('keydown', onKeydownRestart)
   window.addEventListener('keydown', onKeyDown)
 })
@@ -223,6 +250,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeyDown)
   // 结束统计会话
   stats.endSession()
+  progress.endSession()
 })
 </script>
 

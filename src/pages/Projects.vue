@@ -130,6 +130,17 @@ import { ref, computed, onMounted } from 'vue'
     highlights: ['8种双拼方案', '自动语音朗读', 'Figma风格界面']
   },
   {
+    id: 'progress',
+    title: '学习进度',
+    description: '追踪双拼学习进度，查看成就和学习路径',
+    category: 'learning',
+    status: 'active',
+    icon: '📊',
+    tech: ['Vue 3', 'Pinia', 'LocalStorage'],
+    route: '/progress',
+    highlights: ['进度追踪', '成就系统', '学习路径']
+  },
+  {
     id: 'chat-list',
     title: 'Chat List（话术助手）',
     description: '浏览器话术助手与短句管理，支持多关键词高亮与AND匹配',

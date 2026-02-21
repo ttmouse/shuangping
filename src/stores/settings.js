@@ -19,6 +19,11 @@ export const useSettingsStore = defineStore('settings', {
     yunmuAutoSpeak: false, // 自动朗读功能
     // Double pinyin scheme
     currentScheme: 'xiaohe', // 当前双拼方案ID
+    // 高级练习模式设置
+    blindMode: false, // 盲打模式 - 隐藏键盘提示
+    timeChallenge: false, // 限时挑战模式
+    timeChallengeDuration: 60, // 限时挑战时长（秒）
+    customPracticeSet: [], // 自定义练习集
   }),
   actions: {
     load() {
@@ -68,6 +73,48 @@ export const useSettingsStore = defineStore('settings', {
     },
     setCurrentScheme(schemeId) {
       this.currentScheme = schemeId || 'xiaohe'
+      this.save()
+    },
+    // 盲打模式
+    toggleBlindMode() {
+      this.blindMode = !this.blindMode
+      this.save()
+      return this.blindMode
+    },
+    setBlindMode(value) {
+      this.blindMode = !!value
+      this.save()
+    },
+    // 限时挑战
+    toggleTimeChallenge() {
+      this.timeChallenge = !this.timeChallenge
+      this.save()
+      return this.timeChallenge
+    },
+    setTimeChallenge(value) {
+      this.timeChallenge = !!value
+      this.save()
+    },
+    setTimeChallengeDuration(seconds) {
+      this.timeChallengeDuration = Math.max(10, Math.min(600, seconds))
+      this.save()
+    },
+    // 自定义练习集
+    addToCustomPracticeSet(item) {
+      if (!this.customPracticeSet.includes(item)) {
+        this.customPracticeSet.push(item)
+        this.save()
+      }
+    },
+    removeFromCustomPracticeSet(item) {
+      const idx = this.customPracticeSet.indexOf(item)
+      if (idx >= 0) {
+        this.customPracticeSet.splice(idx, 1)
+        this.save()
+      }
+    },
+    clearCustomPracticeSet() {
+      this.customPracticeSet = []
       this.save()
     },
   },

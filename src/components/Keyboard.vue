@@ -10,7 +10,7 @@
         @touchstart.prevent="onClick(code)"
       >
         <div class="keyCapital"><p>{{ keyByCode.get(code).label }}</p></div>
-        <div class="keyAuxiliary" style="display:block;">
+        <div class="keyAuxiliary" style="display:block;" v-if="!settings.blindMode">
           <p v-if="keyByCode.get(code).hint" class="red-text">{{ keyByCode.get(code).hint }}</p>
           <p v-for="(f, i) in keyByCode.get(code).finals" :key="i">{{ f }}</p>
         </div>
@@ -27,6 +27,8 @@ import { onMounted, onBeforeUnmount, reactive } from 'vue'
 import { keyRows as rows, keyByCode } from '../data/xiaohe.js'
 import { playKeySound } from '../utils/sound.js'
 import { useSettingsStore } from '../stores/settings.js'
+
+const settings = useSettingsStore()
 const props = defineProps({
   handle: { type: Function, required: false },
   selectable: { type: Boolean, default: false },
@@ -36,7 +38,6 @@ const props = defineProps({
 
 const flash = reactive(new Map()) // code -> 'ok' | 'bad' | undefined
 const pressed = reactive(new Set())
-const settings = useSettingsStore()
 
 function boxClass(code) {
   return {
