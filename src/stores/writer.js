@@ -12,6 +12,7 @@ export const CORPUS_IDS = {
   ROW3: 'builtin-row3',
   ALL: 'builtin-all',
   NASAL: 'builtin-nasal',
+  ERROR_RETRY: 'error-retry', // 错误字重练
 }
 
 // 自定义文案 ID 前缀
@@ -62,14 +63,56 @@ export const useWriterStore = defineStore('writer', {
       return slice.map(i => i.ch).join('')
     },
     corpora() {
-      return [
+      const list = [
         { id: CORPUS_IDS.ROW1, title: '第一排按键（韵母）' },
         { id: CORPUS_IDS.ROW2, title: '第二排按键（韵母）' },
         { id: CORPUS_IDS.ROW3, title: '第三排按键（韵母）' },
         { id: CORPUS_IDS.ALL, title: '全部按键（韵母）' },
         { id: CORPUS_IDS.NASAL, title: '前后鼻音专项' },
-        ...this.customDocs.map(d => ({ id: d.id, title: d.title }))
+        { id: CORPUS_IDS.ERROR_RETRY, title: '🔄 错误字重练' },
       ]
+      // 添加自定义练习集
+      try {
+        const settingsRaw = localStorage.getItem('sp-settings')
+        if (settingsRaw) {
+          const settings = JSON.parse(settingsRaw)
+          if (settings.customPracticeSets?.length) {
+            list.push({ id: 'separator', title: '─── 自定义练习集 ───', disabled: true })
+            settings.customPracticeSets.forEach(set => {
+              list.push({ id: `set-${set.id}`, title: `📚 ${set.name}`, itemCount: set.items?.length || 0 })
+            })
+          }
+        }
+      } catch {}
+      // 添加自定义文案
+      list.push({ id: 'separator2', title: '─── 自定义文案 ───', disabled: true })
+      list.push(...this.customDocs.map(d => ({ id: d.id, title: d.title })))
+      return list
+    },
+    // 获取易错字列表（基于历史记录）
+    errorProneChars() {
+      // 从 localStorage 读取历史记录
+      try {
+        const rawHistory = localStorage.getItem('sp-history')
+        if (!rawHistory) return []
+        const history = JSON.parse(rawHistory)
+        
+        // 统计每个字符的错误次数
+        const errorCounts = {}
+        history.forEach(h => {
+          if (h.type === 'char' && !h.correct && h.expected) {
+            errorCounts[h.expected] = (errorCounts[h.expected] || 0) + 1
+          }
+        })
+        
+        // 按错误次数排序，返回字符列表
+        return Object.entries(errorCounts)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 50) // 最多50个
+          .map(([char]) => char)
+      } catch {
+        return []
+      }
     },
   },
   actions: {
@@ -151,19 +194,54 @@ export const useWriterStore = defineStore('writer', {
           '中东同红龙公，松送懂，容空。'
         ].join('')
       }
+      if (id === CORPUS_IDS.ERROR_RETRY) {
+        // 错误字重练：使用易错字生成练习文本
+        const errorChars = this.errorProneChars
+        if (errorChars.length === 0) {
+          return '暂无错误记录，先去练习吧！'
+        }
+        // 重复易错字以达到练习量
+        let text = ''
+        while (text.length < 200) {
+          text += errorChars.join('')
+        }
+        return text.slice(0, 200)
+      }
       // builtin-all
       return '中文输入双拼练习，提升速度与准确，保持节奏与专注。'
     },
     applyCorpus(id) {
       this.currentCorpusId = id
       let text = ''
-      if (id.startsWith('builtin-')) text = this._builtinText(id)
-      else {
+      if (id.startsWith('builtin-') || id === CORPUS_IDS.ERROR_RETRY) text = this._builtinText(id)
+      else if (id.startsWith('set-')) {
+        // 自定义练习集
+        const setId = id.slice(4)
+        text = this._getPracticeSetText(setId)
+      } else {
         const doc = this.customDocs.find(d => d.id === id)
         text = doc?.text || ''
       }
       if (text) this.importText(text)
       this.save()
+    },
+    _getPracticeSetText(setId) {
+      try {
+        const settingsRaw = localStorage.getItem('sp-settings')
+        if (!settingsRaw) return ''
+        const settings = JSON.parse(settingsRaw)
+        const set = settings.customPracticeSets?.find(s => s.id === setId)
+        if (!set || !set.items?.length) return '练习集为空，请先添加字符'
+        // 将练习集中的字符重复多次以形成练习文本
+        let text = ''
+        const chars = set.items.map(i => i.char)
+        while (text.length < 200) {
+          text += chars.join('')
+        }
+        return text.slice(0, 200)
+      } catch {
+        return ''
+      }
     },
     addCustomDoc(rawText) {
       const chars = extractChinese(rawText).slice(0, 1000)

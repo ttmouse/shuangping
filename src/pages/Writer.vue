@@ -19,10 +19,15 @@
                 v-for="c in corpora"
                 :key="c.id"
                 class="menuItem"
-                :class="{ custom: c.id.startsWith(CUSTOM_PREFIX) }"
-                @click="selectCorpus(c.id)"
+                :class="{ 
+                  custom: c.id.startsWith(CUSTOM_PREFIX) || c.id.startsWith('set-'),
+                  separator: c.id.startsWith('separator'),
+                  disabled: c.disabled
+                }"
+                @click="!c.disabled && selectCorpus(c.id)"
               >
                 <span class="title">{{ c.title }}</span>
+                <span v-if="c.itemCount !== undefined" class="item-count">{{ c.itemCount }} 字</span>
                 <button
                   v-if="c.id.startsWith(CUSTOM_PREFIX)"
                   class="delBtn"
@@ -42,6 +47,7 @@
         </div>
         <SchemeSelector />
         <button class="el-button el-button--small" @click="openImport">导入文本</button>
+        <button class="el-button el-button--small" @click="openPracticeSetManager">📚 练习集</button>
         <label><input type="checkbox" :checked="writer.showPinyin" @change="e=>writer.setShowPinyin(e.target.checked)"/> 拼音显示</label>
         <label><input type="checkbox" :checked="writer.showShuangpin" @change="e=>writer.setShowShuangpin(e.target.checked)"/> 双拼编码显示</label>
         <label><input type="checkbox" :checked="writer.hideKeyboard" @change="e=>writer.setHideKeyboard(e.target.checked)"/> 隐藏键盘</label>
@@ -105,6 +111,85 @@
           <div class="actions">
             <button class="el-button el-button--small" @click="closeImport">取消</button>
             <button class="el-button el-button--small primary" :disabled="hanCount===0" @click="confirmImport">生成练习</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 练习集管理弹窗 -->
+    <div v-if="showPracticeSetManager" class="modalMask" @click.self="closePracticeSetManager">
+      <div class="modal practice-set-modal">
+        <h3>📚 自定义练习集管理</h3>
+        <div class="practice-set-content">
+          <!-- 左侧：练习集列表 -->
+          <div class="set-list">
+            <h4>我的练习集</h4>
+            <div class="create-set">
+              <input
+                v-model="newSetName"
+                placeholder="输入练习集名称"
+                @keyup.enter="createPracticeSet"
+              />
+              <button class="el-button el-button--small primary" @click="createPracticeSet">创建</button>
+            </div>
+            <div class="sets">
+              <div
+                v-for="set in customPracticeSets"
+                :key="set.id"
+                class="set-item"
+                :class="{ active: selectedSetId === set.id }"
+                @click="selectSet(set.id)"
+              >
+                <span class="set-name">{{ set.name }}</span>
+                <span class="set-count">{{ set.items?.length || 0 }} 字</span>
+                <button class="del-btn" @click.stop="deletePracticeSet(set.id)">×</button>
+              </div>
+              <div v-if="customPracticeSets.length === 0" class="empty-tip">
+                暂无练习集，创建一个吧！
+              </div>
+            </div>
+          </div>
+          <!-- 右侧：练习集详情 -->
+          <div class="set-detail">
+            <h4>练习内容</h4>
+            <div v-if="selectedSet" class="add-char">
+              <input
+                v-model="newChar"
+                placeholder="输入汉字"
+                maxlength="1"
+              />
+              <input
+                v-model="newCharPinyin"
+                placeholder="拼音（可选）"
+              />
+              <button class="el-button el-button--small" @click="addCharToSet">添加</button>
+            </div>
+            <div v-if="selectedSet" class="char-list">
+              <div
+                v-for="item in selectedSet.items"
+                :key="item.char"
+                class="char-tag"
+              >
+                <span class="char">{{ item.char }}</span>
+                <span class="pinyin">{{ item.pinyin }}</span>
+                <button class="remove-btn" @click="removeCharFromSet(item.char)">×</button>
+              </div>
+              <div v-if="selectedSet.items?.length === 0" class="empty-tip">
+                练习集为空，添加一些字符吧！
+              </div>
+            </div>
+            <div v-if="selectedSet" class="set-actions">
+              <button class="el-button el-button--small primary" @click="startPracticeWithSet(selectedSetId)">开始练习</button>
+            </div>
+            <div v-else class="empty-tip select-tip">
+              选择一个练习集进行管理
+            </div>
+          </div>
+        </div>
+        <div class="modalFooter">
+          <div class="tip">自定义练习集可以帮助你针对性地练习特定汉字</div>
+          <div class="actions">
+            <button class="el-button el-button--small" @click="closePracticeSetManager">关闭</button>
           </div>
         </div>
       </div>
@@ -269,6 +354,56 @@ function closeImport() { showImport.value = false }
 function confirmImport() {
   writer.addCustomDocAndApply(importText.value)
   showImport.value = false
+}
+
+// 练习集管理
+const showPracticeSetManager = ref(false)
+const newSetName = ref('')
+const selectedSetId = ref(null)
+const newChar = ref('')
+const newCharPinyin = ref('')
+
+const customPracticeSets = computed(() => settings.customPracticeSets)
+const selectedSet = computed(() => 
+  customPracticeSets.value.find(s => s.id === selectedSetId.value)
+)
+
+function openPracticeSetManager() {
+  showPracticeSetManager.value = true
+  selectedSetId.value = settings.activePracticeSetId
+}
+function closePracticeSetManager() { showPracticeSetManager.value = false }
+function createPracticeSet() {
+  if (!newSetName.value.trim()) return
+  settings.createPracticeSet(newSetName.value.trim())
+  newSetName.value = ''
+}
+function deletePracticeSet(id) {
+  if (confirm('确定要删除这个练习集吗？')) {
+    settings.deletePracticeSet(id)
+    if (selectedSetId.value === id) selectedSetId.value = null
+  }
+}
+function selectSet(id) { selectedSetId.value = id }
+function addCharToSet() {
+  if (!selectedSetId.value || !newChar.value.trim()) return
+  const char = newChar.value.trim()[0]
+  // 自动获取拼音
+  const pinyins = toPinyinArray(char)
+  const pinyin = newCharPinyin.value.trim() || pinyins[0] || ''
+  settings.addToPracticeSet(selectedSetId.value, { char, pinyin })
+  newChar.value = ''
+  newCharPinyin.value = ''
+}
+function removeCharFromSet(char) {
+  if (!selectedSetId.value) return
+  settings.removeFromPracticeSet(selectedSetId.value, char)
+}
+function startPracticeWithSet(setId) {
+  settings.setActivePracticeSet(setId)
+  writer.applyCorpus(`set-${setId}`)
+  closePracticeSetManager()
+  showMenu.value = false
 }
 
 function restart() {
@@ -466,6 +601,23 @@ onBeforeUnmount(() => {
 .operate .select .dropdown .ddMenu .menuItem.custom { padding-right: 6px; }
 .operate .select .dropdown .ddMenu .menuItem .delBtn { background: transparent; border: none; color: #d9534f; cursor: pointer; padding: 4px; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
 .operate .select .dropdown .ddMenu .menuItem .delBtn:hover { color: #ff4d4f; background: rgba(217,83,79,0.1); }
+.operate .select .dropdown .ddMenu .menuItem.separator {
+  pointer-events: none;
+  padding: 4px 10px;
+  color: var(--theme-text-color);
+  font-size: 12px;
+  opacity: 0.6;
+  background: transparent;
+}
+.operate .select .dropdown .ddMenu .menuItem.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.operate .select .dropdown .ddMenu .menuItem .item-count {
+  font-size: 12px;
+  color: var(--theme-text-color);
+  margin-left: 8px;
+}
 .cardsWrap { width: 1040px; max-width: 96%; margin: 10px auto 10px; }
 .cards { display: flex; gap: 10px; justify-content: center; perspective: 900px; flex-wrap: wrap; }
 .card { position: relative; width: 96px; height: 124px; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 10px; box-shadow: 0 2px 0 rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; justify-content: space-around; padding: 8px 6px; transform-style: preserve-3d; overflow: hidden; }
@@ -650,6 +802,209 @@ onBeforeUnmount(() => {
   .stats-summary {
     flex-direction: column;
     gap: 8px;
+  }
+}
+
+/* 练习集管理弹窗样式 */
+.practice-set-modal {
+  width: 800px;
+  max-width: 95vw;
+}
+
+.practice-set-content {
+  display: flex;
+  gap: 20px;
+  min-height: 400px;
+}
+
+.set-list {
+  flex: 0 0 280px;
+  border-right: 1px solid var(--theme-border-color);
+  padding-right: 16px;
+}
+
+.set-list h4,
+.set-detail h4 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--theme-text-color);
+}
+
+.create-set {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.create-set input {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-color);
+  color: var(--theme-text-color);
+}
+
+.sets {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.set-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-bottom: 4px;
+}
+
+.set-item:hover {
+  background: rgba(53, 226, 183, 0.08);
+}
+
+.set-item.active {
+  background: rgba(53, 226, 183, 0.15);
+  border: 1px solid var(--theme-menu-hover-color);
+}
+
+.set-name {
+  flex: 1;
+  font-size: 14px;
+  color: var(--theme-main-text-color);
+}
+
+.set-count {
+  font-size: 12px;
+  color: var(--theme-text-color);
+}
+
+.del-btn {
+  background: none;
+  border: none;
+  color: #d9534f;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.del-btn:hover {
+  color: #ff4d4f;
+}
+
+.set-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-char {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.add-char input {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-color);
+  color: var(--theme-text-color);
+}
+
+.add-char input:first-child {
+  width: 80px;
+  text-align: center;
+}
+
+.add-char input:nth-child(2) {
+  flex: 1;
+}
+
+.char-list {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-content: flex-start;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 8px;
+  background: var(--theme-background-color);
+  border-radius: 8px;
+}
+
+.char-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 6px;
+}
+
+.char-tag .char {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--theme-main-text-color);
+}
+
+.char-tag .pinyin {
+  font-size: 12px;
+  color: var(--theme-text-color);
+}
+
+.char-tag .remove-btn {
+  background: none;
+  border: none;
+  color: #d9534f;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 2px;
+  margin-left: 4px;
+}
+
+.char-tag .remove-btn:hover {
+  color: #ff4d4f;
+}
+
+.set-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.empty-tip {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--theme-text-color);
+  font-size: 14px;
+}
+
+.empty-tip.select-tip {
+  padding: 80px 20px;
+}
+
+@media (max-width: 600px) {
+  .practice-set-content {
+    flex-direction: column;
+  }
+  .set-list {
+    flex: none;
+    border-right: none;
+    border-bottom: 1px solid var(--theme-border-color);
+    padding-right: 0;
+    padding-bottom: 16px;
+  }
+  .sets {
+    max-height: 200px;
+  }
+  .char-list {
+    max-height: 200px;
   }
 }
 </style>

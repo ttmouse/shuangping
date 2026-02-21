@@ -23,7 +23,9 @@ export const useSettingsStore = defineStore('settings', {
     blindMode: false, // 盲打模式 - 隐藏键盘提示
     timeChallenge: false, // 限时挑战模式
     timeChallengeDuration: 60, // 限时挑战时长（秒）
-    customPracticeSet: [], // 自定义练习集
+    // 自定义练习集
+    customPracticeSets: [], // 自定义练习集列表 [{ id, name, items: [{ char, pinyin }] }]
+    activePracticeSetId: null, // 当前激活的练习集
   }),
   actions: {
     load() {
@@ -99,23 +101,69 @@ export const useSettingsStore = defineStore('settings', {
       this.timeChallengeDuration = Math.max(10, Math.min(600, seconds))
       this.save()
     },
-    // 自定义练习集
-    addToCustomPracticeSet(item) {
-      if (!this.customPracticeSet.includes(item)) {
-        this.customPracticeSet.push(item)
-        this.save()
-      }
-    },
-    removeFromCustomPracticeSet(item) {
-      const idx = this.customPracticeSet.indexOf(item)
-      if (idx >= 0) {
-        this.customPracticeSet.splice(idx, 1)
-        this.save()
-      }
-    },
-    clearCustomPracticeSet() {
-      this.customPracticeSet = []
+    // 自定义练习集管理
+    createPracticeSet(name) {
+      const id = 'set-' + Date.now()
+      this.customPracticeSets.push({
+        id,
+        name: name || '未命名练习集',
+        items: [],
+        createdAt: Date.now()
+      })
       this.save()
+      return id
+    },
+    deletePracticeSet(id) {
+      const idx = this.customPracticeSets.findIndex(s => s.id === id)
+      if (idx >= 0) {
+        this.customPracticeSets.splice(idx, 1)
+        if (this.activePracticeSetId === id) {
+          this.activePracticeSetId = null
+        }
+        this.save()
+      }
+    },
+    renamePracticeSet(id, newName) {
+      const set = this.customPracticeSets.find(s => s.id === id)
+      if (set) {
+        set.name = newName || set.name
+        this.save()
+      }
+    },
+    addToPracticeSet(setId, item) {
+      const set = this.customPracticeSets.find(s => s.id === setId)
+      if (set && item) {
+        // 检查是否已存在相同字符
+        const exists = set.items.some(i => i.char === item.char)
+        if (!exists) {
+          set.items.push({
+            char: item.char,
+            pinyin: item.pinyin,
+            addedAt: Date.now()
+          })
+          this.save()
+        }
+      }
+    },
+    removeFromPracticeSet(setId, char) {
+      const set = this.customPracticeSets.find(s => s.id === setId)
+      if (set) {
+        set.items = set.items.filter(i => i.char !== char)
+        this.save()
+      }
+    },
+    setActivePracticeSet(id) {
+      this.activePracticeSetId = id
+      this.save()
+    },
+    clearActivePracticeSet() {
+      this.activePracticeSetId = null
+      this.save()
+    },
+    // 获取当前激活的练习集
+    getActivePracticeSet() {
+      if (!this.activePracticeSetId) return null
+      return this.customPracticeSets.find(s => s.id === this.activePracticeSetId) || null
     },
   },
 })
