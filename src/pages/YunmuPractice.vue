@@ -121,10 +121,62 @@
         </div>
       </div>
 
+      <!-- 限时挑战计时器 -->
+      <div v-if="settings.timeChallenge && session.started" class="timer-indicator" :class="{ 'timer-low': timeRemaining <= 10 }">
+        <div class="timer-text">{{ Math.floor(timeRemaining / 60) }}:{{ String(timeRemaining % 60).padStart(2, '0') }}</div>
+      </div>
+
       <!-- 连击提示 -->
       <div v-if="showCombo" class="combo-indicator" :class="{ 'combo-high': comboCount >= 10 }">
         <div class="combo-text">{{ comboCount }} 连击!</div>
         <div class="combo-stars">✨ ✨ ✨</div>
+      </div>
+
+      <!-- 限时挑战结果弹窗 -->
+      <div v-if="showTimeChallengeResult" class="stats-overlay" @click.self="closeTimeChallengeResult">
+        <div class="stats-modal">
+          <div class="stats-header">
+            <h3>⏱️ 限时挑战结果</h3>
+            <button class="close-btn" @click="closeTimeChallengeResult">&times;</button>
+          </div>
+          <div class="stats-content">
+            <div class="stats-summary">
+              <div class="stat-item">
+                <span class="stat-value">{{ timeChallengeResults?.correct || 0 }}</span>
+                <span class="stat-label">正确数</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">{{ timeChallengeResults?.total || 0 }}</span>
+                <span class="stat-label">总次数</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">{{ timeChallengeResults?.total > 0 ? Math.round((timeChallengeResults.correct / timeChallengeResults.total) * 100) : 0 }}%</span>
+                <span class="stat-label">正确率</span>
+              </div>
+            </div>
+            <div class="time-challenge-stats">
+              <div class="tcs-item">
+                <span class="tcs-label">挑战时长</span>
+                <span class="tcs-value">{{ settings.timeChallengeDuration }}秒</span>
+              </div>
+              <div class="tcs-item">
+                <span class="tcs-label">平均速度</span>
+                <span class="tcs-value">{{ timeChallengeResults?.duration > 0 ? Math.round((timeChallengeResults.total / timeChallengeResults.duration) * 60) : 0 }} 字/分</span>
+              </div>
+            </div>
+            <div class="challenge-rating" v-if="timeChallengeResults">
+              <div class="rating-stars">
+                <span v-for="n in 5" :key="n" class="star" :class="{ filled: n <= Math.ceil((timeChallengeResults.correct / Math.max(timeChallengeResults.total, 1)) * 5) }">★</span>
+              </div>
+              <p class="rating-text">
+                {{ timeChallengeResults.correct / Math.max(timeChallengeResults.total, 1) >= 0.9 ? '太棒了！完美挑战！' : 
+                   timeChallengeResults.correct / Math.max(timeChallengeResults.total, 1) >= 0.8 ? '表现不错，继续加油！' : 
+                   timeChallengeResults.correct / Math.max(timeChallengeResults.total, 1) >= 0.6 ? '还可以，多多练习！' : '继续加油，熟能生巧！' }}
+              </p>
+            </div>
+            <button class="clear-btn" @click="closeTimeChallengeResult">再来一次</button>
+          </div>
+        </div>
       </div>
 
       <!-- 成功粒子效果容器 -->
@@ -722,6 +774,107 @@ onBeforeUnmount(() => {
   }
 }
 
+/* 限时挑战计时器 */
+.timer-indicator {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 100;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  animation: timerPulse 2s ease-in-out infinite;
+}
+
+.timer-indicator.timer-low {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  animation: timerUrgent 0.5s ease-in-out infinite;
+}
+
+.timer-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes timerPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+  50% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6); }
+}
+
+@keyframes timerUrgent {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* 限时挑战结果样式 */
+.time-challenge-stats {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+  padding: 12px;
+  background: var(--theme-background-light-color);
+  border-radius: 8px;
+}
+
+.tcs-item {
+  flex: 1;
+  text-align: center;
+}
+
+.tcs-label {
+  display: block;
+  font-size: 12px;
+  color: var(--theme-text-color);
+  margin-bottom: 4px;
+}
+
+.tcs-value {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--theme-main-text-color);
+}
+
+.challenge-rating {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.rating-stars {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.rating-stars .star {
+  color: #ddd;
+  transition: color 0.3s;
+}
+
+.rating-stars .star.filled {
+  color: #ffd700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.rating-text {
+  font-size: 14px;
+  color: var(--theme-text-color);
+  margin: 0;
+}
+
+/* 盲打和限时按钮激活状态 */
+.el-button.is-active {
+  background: #409eff;
+  border-color: #409eff;
+  color: #fff;
+}
+
 /* 移动端适配 */
 @media (max-width: 600px) {
   .combo-indicator {
@@ -732,6 +885,19 @@ onBeforeUnmount(() => {
   }
   .combo-high .combo-text {
     font-size: 26px;
+  }
+  .timer-indicator {
+    width: 55px;
+    height: 55px;
+    top: 70px;
+    right: 10px;
+  }
+  .timer-text {
+    font-size: 16px;
+  }
+  .time-challenge-stats {
+    flex-direction: column;
+    gap: 8px;
   }
 }
 </style>
