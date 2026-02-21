@@ -19,15 +19,23 @@
                 v-for="c in corpora"
                 :key="c.id"
                 class="menuItem"
+                :class="{ custom: c.id.startsWith(CUSTOM_PREFIX) }"
                 @click="selectCorpus(c.id)"
               >
                 <span class="title">{{ c.title }}</span>
                 <button
-                  v-if="c.id.startsWith('custom-')"
+                  v-if="c.id.startsWith(CUSTOM_PREFIX)"
                   class="delBtn"
                   title="删除"
                   @click.stop="deleteDoc(c.id)"
-                >🗑️</button>
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
@@ -107,7 +115,7 @@
 <script setup>
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 import { useSettingsStore } from '../stores/settings.js'
-import { useWriterStore } from '../stores/writer.js'
+import { useWriterStore, CORPUS_IDS } from '../stores/writer.js'
 import Keyboard from '../components/Keyboard.vue'
 import TopStatusBar from '../components/TopStatusBar.vue'
 import SchemeSelector from '../components/SchemeSelector.vue'
@@ -115,6 +123,9 @@ import { LENGTH_BUCKETS } from '../data/words.js'
 import { extractChinese } from '../utils/text2pinyin.js'
 import { playKeySound } from '../utils/sound.js'
 import { keyByCode } from '../data/xiaohe.js'
+
+// 自定义文案 ID 前缀
+const CUSTOM_PREFIX = 'custom-'
 
 const settings = useSettingsStore()
 const writer = useWriterStore()
@@ -124,7 +135,12 @@ const showMenu = ref(false)
 const currentCorpusTitle = computed(() => corpora.value.find(c => c.id === writer.currentCorpusId)?.title || '选择文案')
 function toggleMenu() { showMenu.value = !showMenu.value }
 function selectCorpus(id) { writer.applyCorpus(id); showMenu.value = false }
-function deleteDoc(id) { writer.deleteCustomDoc(id) }
+function deleteDoc(id) {
+  const doc = writer.customDocs.find(d => d.id === id)
+  if (doc && confirm(`确定要删除自定义文本"${doc.title}"吗？`)) {
+    writer.deleteCustomDoc(id)
+  }
+}
 const cardItems = computed(() => writer.queue.slice(writer.lineStart, writer.lineStart + writer.windowSize))
 const currentInLine = computed(() => writer.charIdx - writer.lineStart)
 function codeToLetter(c) { return (c || '').replace('Key','') }
@@ -134,8 +150,6 @@ function letterClass(cardIndex, letterIndex) {
   return { done: isDone, hidden: !writer.showShuangpin && !isDone }
 }
 
-function onBucket(e) { /* removed */ }
-function onCorpus(e) { writer.applyCorpus(e.target.value) }
 function onPress(code) { return writer.submit(code) }
 
 // 导入文本弹窗逻辑
@@ -167,7 +181,6 @@ function onKeydownRestart(e) {
 // 处理键盘输入，即使键盘被隐藏也能工作
 function onKeyDown(e) {
   if (writer.hideKeyboard && keyByCode.has(e.code)) {
-    // 只有当键盘被隐藏时才处理输入，且必须是有效的按键
     const res = writer.submit(e.code) || { correct: false }
     if (!res?.ignore) {
       if (settings.sound) {
@@ -178,6 +191,9 @@ function onKeyDown(e) {
 }
 
 onMounted(() => {
+  settings.load()
+  writer.load()
+  writer.applyCorpus(writer.currentCorpusId)
   window.addEventListener('keydown', onKeydownRestart)
   window.addEventListener('keydown', onKeyDown)
 })
@@ -185,26 +201,21 @@ onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeydownRestart)
   window.removeEventListener('keydown', onKeyDown)
 })
-
-onMounted(() => {
-  settings.load()
-  writer.load()
-  writer.applyCorpus(writer.currentCorpusId)
-})
 </script>
 
 <style scoped>
-.pageCenter { min-height: calc(100vh - 52px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 12px; }
-.operate { display: flex; gap: 10px; align-items: center; padding: 10px 20px; }
+.pageCenter { min-height: calc(100dvh - 52px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 12px; }
+.operate { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; padding: 10px 12px; }
 .operate .select select { display: none; }
-.operate .select .dropdown { position: relative; display: inline-flex; align-items: center; gap: 6px; min-width: 220px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--theme-border-color); background: var(--theme-background-light-color); color: var(--theme-text-color); cursor: pointer; }
-.operate .select .dropdown .ddMenu { position: absolute; top: calc(100% + 6px); left: 0; min-width: 280px; max-height: 260px; overflow: auto; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 8px; box-shadow: 0 6px 16px rgba(0,0,0,0.18); padding: 6px; z-index: 20; display: block; }
-.operate .select .dropdown .ddMenu .menuItem { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 8px; border-radius: 6px; }
+.operate .select .dropdown { position: relative; display: inline-flex; align-items: center; gap: 6px; min-width: 220px; padding: 6px 10px; border-radius: 10px; border: 1px solid var(--theme-border-color); background: var(--theme-background-light-color); color: var(--theme-text-color); cursor: pointer; }
+.operate .select .dropdown .ddMenu { position: absolute; top: calc(100% + 6px); left: 0; right: 0; min-width: 0; max-height: 52dvh; overflow: auto; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 10px; box-shadow: 0 6px 16px rgba(0,0,0,0.18); padding: 6px; z-index: 20; display: block; }
+.operate .select .dropdown .ddMenu .menuItem { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 10px; border-radius: 8px; }
 .operate .select .dropdown .ddMenu .menuItem:hover { background: rgba(53,226,183,0.08); }
-.operate .select .dropdown .ddMenu .menuItem .delBtn { background: transparent; border: none; color: #d9534f; cursor: pointer; font-size: 16px; }
-.operate .select .dropdown .ddMenu .menuItem .delBtn:hover { color: #ff4d4f; }
+.operate .select .dropdown .ddMenu .menuItem.custom { padding-right: 6px; }
+.operate .select .dropdown .ddMenu .menuItem .delBtn { background: transparent; border: none; color: #d9534f; cursor: pointer; padding: 4px; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.operate .select .dropdown .ddMenu .menuItem .delBtn:hover { color: #ff4d4f; background: rgba(217,83,79,0.1); }
 .cardsWrap { width: 1040px; max-width: 96%; margin: 10px auto 10px; }
-.cards { display: flex; gap: 10px; justify-content: center; perspective: 900px; }
+.cards { display: flex; gap: 10px; justify-content: center; perspective: 900px; flex-wrap: wrap; }
 .card { position: relative; width: 96px; height: 124px; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 10px; box-shadow: 0 2px 0 rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; justify-content: space-around; padding: 8px 6px; transform-style: preserve-3d; overflow: hidden; }
 .card.current { border-color: var(--theme-menu-hover-color); box-shadow: 0 0 0 2px #35e2b733 inset, 0 0 10px #35e2b733; }
 .card.doneLatest { transform-origin: bottom center; animation: cardFall 0.48s cubic-bezier(0.22, 0.62, 0.2, 0.95) forwards; }
@@ -219,6 +230,16 @@ onMounted(() => {
 .card .keys .letter.hidden { opacity: 0; }
 .card .keys .letter { margin: 0 0px; }
 .card .keys .letter.done { color: var(--theme-menu-text-color); font-weight: 700; }
+
+@media (max-width: 520px) {
+  .cardsWrap { max-width: 100%; }
+  .cards { gap: 8px; }
+  .card { width: 88px; height: 116px; }
+  .card .py { font-size: 18px; }
+  .card .hz { font-size: 26px; }
+  .card .keys { font-size: 18px; }
+  .operate { position: sticky; top: 52px; z-index: 10; backdrop-filter: blur(10px); background: color-mix(in srgb, var(--theme-background-light-color) 85%, transparent); border-bottom: 1px solid var(--theme-border-color); }
+}
 
 /* 简易弹窗样式 */
 .modalMask { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; z-index: 40; }
