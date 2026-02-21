@@ -136,10 +136,12 @@ import SchemeSelector from '../components/SchemeSelector.vue'
 import { finalToKeyCodes, keyByCode, ranges } from '../data/xiaohe.js'
 import { useSettingsStore } from '../stores/settings.js'
 import { useSessionStore } from '../stores/session.js'
+import { useStatsStore } from '../stores/stats.js'
 import { playKeySound } from '../utils/sound.js'
 
 const settings = useSettingsStore()
 const session = useSessionStore()
+const stats = useStatsStore()
 
 const showStats = ref(false)
 
@@ -152,6 +154,7 @@ const lastCorrect = ref(false)
 onMounted(() => {
   settings.load()
   session.load()
+  stats.load()
   initAudio() // 初始化音频功能
 
   if (!session.started) {
@@ -239,12 +242,17 @@ function start() {
       return
     }
   }
+  stats.startSession()
   session.start()
 }
 
 function onPress(code) {
   if (!session.started) return { correct: false }
   const res = session.submitKeyCode(code)
+
+  // 记录统计
+  const target = session.currentTarget || session.lastTarget
+  stats.recordFinalPractice(target, res.correct)
 
   // 游戏化动效：连击计数
   if (res.correct) {
@@ -293,6 +301,8 @@ function onClearSelected() {
 }
 
 function reselect() {
+  // 结束统计会话
+  stats.endSession()
   // 退出练习，回到自选勾选模式
   session.reset()
   // 停止音频
@@ -314,6 +324,10 @@ function onKeyDown(e) {
   if (session.hideKeyboard && keyByCode.has(e.code)) {
     e.preventDefault()
     const res = session.submitKeyCode(e.code) || { correct: false }
+
+    // 记录统计
+    const target = session.currentTarget || session.lastTarget
+    stats.recordFinalPractice(target, res.correct)
 
     // 游戏化动效：连击计数
     if (res.correct) {

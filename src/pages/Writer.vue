@@ -116,6 +116,7 @@
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 import { useSettingsStore } from '../stores/settings.js'
 import { useWriterStore, CORPUS_IDS } from '../stores/writer.js'
+import { useStatsStore } from '../stores/stats.js'
 import Keyboard from '../components/Keyboard.vue'
 import TopStatusBar from '../components/TopStatusBar.vue'
 import SchemeSelector from '../components/SchemeSelector.vue'
@@ -129,6 +130,7 @@ const CUSTOM_PREFIX = 'custom-'
 
 const settings = useSettingsStore()
 const writer = useWriterStore()
+const stats = useStatsStore()
 const buckets = LENGTH_BUCKETS
 const corpora = computed(() => writer.corpora)
 const showMenu = ref(false)
@@ -150,7 +152,15 @@ function letterClass(cardIndex, letterIndex) {
   return { done: isDone, hidden: !writer.showShuangpin && !isDone }
 }
 
-function onPress(code) { return writer.submit(code) }
+function onPress(code) {
+  const res = writer.submit(code)
+  // 记录统计
+  const currentItem = writer.currentItem
+  if (currentItem) {
+    stats.recordCharPractice(currentItem.ch, res.correct)
+  }
+  return res
+}
 
 // 导入文本弹窗逻辑
 const showImport = ref(false)
@@ -167,7 +177,10 @@ function confirmImport() {
 }
 
 function restart() {
+  // 结束当前会话并开始新会话
+  stats.endSession()
   writer.restartCurrent()
+  stats.startSession()
 }
 
 function onKeydownRestart(e) {
@@ -182,6 +195,11 @@ function onKeydownRestart(e) {
 function onKeyDown(e) {
   if (writer.hideKeyboard && keyByCode.has(e.code)) {
     const res = writer.submit(e.code) || { correct: false }
+    // 记录统计
+    const currentItem = writer.currentItem
+    if (currentItem) {
+      stats.recordCharPractice(currentItem.ch, res.correct)
+    }
     if (!res?.ignore) {
       if (settings.sound) {
         playKeySound(res.correct ? 'ok' : 'bad', { volume: settings.soundVolume })
@@ -193,13 +211,18 @@ function onKeyDown(e) {
 onMounted(() => {
   settings.load()
   writer.load()
+  stats.load()
   writer.applyCorpus(writer.currentCorpusId)
+  // 开始统计会话
+  stats.startSession()
   window.addEventListener('keydown', onKeydownRestart)
   window.addEventListener('keydown', onKeyDown)
 })
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeydownRestart)
   window.removeEventListener('keydown', onKeyDown)
+  // 结束统计会话
+  stats.endSession()
 })
 </script>
 

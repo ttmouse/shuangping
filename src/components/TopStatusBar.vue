@@ -19,6 +19,12 @@
         @click="go('/writer')"
         title="双拼打字练习"
       >双拼打字练习</button>
+      <button
+        class="modeBtn"
+        :class="{ active: route.name === 'statistics' }"
+        @click="go('/statistics')"
+        title="练习统计"
+      >📊 统计</button>
     </div>
     <div class="right">
       <div class="accuracy" v-if="session.totalAttempts > 0" title="正确率">
@@ -61,22 +67,32 @@ function go(path) { if (route.path !== path) router.push(path) }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 16px;
+  padding: 8px 12px;
   background: var(--theme-background-light-color);
   border-bottom: 1px solid var(--theme-border-color);
   box-shadow: 0 2px 6px rgba(0,0,0,0.04);
   z-index: 30;
 }
 .topSpacer { height: 52px; }
-.left { display: flex; gap: 8px; align-items: center; }
-.right { display: flex; gap: 12px; align-items: center; }
+.left {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.left::-webkit-scrollbar { display: none; }
+.right { display: flex; gap: 10px; align-items: center; flex: 0 0 auto; }
 .modeBtn {
   padding: 6px 10px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid var(--theme-border-color);
   background: var(--theme-background-light-color);
   color: var(--theme-menu-text-color);
   cursor: pointer;
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 .modeBtn.active {
   border-color: var(--theme-menu-hover-color);
@@ -85,8 +101,14 @@ function go(path) { if (route.path !== path) router.push(path) }
 .modeBtn:hover { color: var(--theme-menu-hover-color); }
 .themeToggle { display: inline-flex; gap: 6px; align-items: center; color: var(--theme-text-color); font-size: 12px; }
 .themeToggle input { width: 14px; height: 14px; }
-.accuracy { display: flex; align-items: center; gap: 6px; padding: 4px 10px; background: var(--theme-background-color); border-radius: 6px; font-size: 12px; }
+.accuracy { display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: var(--theme-background-color); border-radius: 6px; font-size: 12px; }
 .acc-value { font-weight: 700; color: #67c23a; }
 .acc-label { color: var(--theme-text-color); }
+
+@media (max-width: 520px) {
+  .topStatus { padding: 8px 8px; }
+  .accuracy { display: none; }
+  .themeToggle span { display: none; }
+}
 </style>
 

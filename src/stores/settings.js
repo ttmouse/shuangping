@@ -2,6 +2,9 @@ import { defineStore } from 'pinia'
 
 const STORAGE_KEY = 'sp-settings'
 
+// 默认双拼方案
+export const DEFAULT_SCHEME = 'xiaohe'
+
 export const useSettingsStore = defineStore('settings', {
   state: () => ({
     theme: 'light',

@@ -5,6 +5,18 @@ import { extractChinese, toPinyinArray } from '../utils/text2pinyin.js'
 
 const STORAGE_KEY = 'sp-writer'
 
+// 预定义内置文案 ID 常量
+export const CORPUS_IDS = {
+  ROW1: 'builtin-row1',
+  ROW2: 'builtin-row2',
+  ROW3: 'builtin-row3',
+  ALL: 'builtin-all',
+  NASAL: 'builtin-nasal',
+}
+
+// 自定义文案 ID 前缀
+export const CUSTOM_PREFIX = 'custom-'
+
 export const useWriterStore = defineStore('writer', {
   state: () => ({
     bucketId: '1',
@@ -14,7 +26,7 @@ export const useWriterStore = defineStore('writer', {
     useCustom: false, // 是否处于自定义文本模式
     lastText: '', // 最近一次导入的原文（仅中文，最多1000字）
     // 文案管理
-    currentCorpusId: 'builtin-all',
+    currentCorpusId: CORPUS_IDS.ALL,
     customDocs: [], // [{ id, title, text }]
     // 流模式（按单字）
     queue: [], // [{ ch, pinyin, seq:[codes] }]
@@ -51,11 +63,11 @@ export const useWriterStore = defineStore('writer', {
     },
     corpora() {
       return [
-        { id: 'builtin-row1', title: '第一排按键（韵母）' },
-        { id: 'builtin-row2', title: '第二排按键（韵母）' },
-        { id: 'builtin-row3', title: '第三排按键（韵母）' },
-        { id: 'builtin-all', title: '全部按键（韵母）' },
-        { id: 'builtin-nasal', title: '前后鼻音专项' },
+        { id: CORPUS_IDS.ROW1, title: '第一排按键（韵母）' },
+        { id: CORPUS_IDS.ROW2, title: '第二排按键（韵母）' },
+        { id: CORPUS_IDS.ROW3, title: '第三排按键（韵母）' },
+        { id: CORPUS_IDS.ALL, title: '全部按键（韵母）' },
+        { id: CORPUS_IDS.NASAL, title: '前后鼻音专项' },
         ...this.customDocs.map(d => ({ id: d.id, title: d.title }))
       ]
     },
@@ -65,7 +77,12 @@ export const useWriterStore = defineStore('writer', {
       try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) Object.assign(this.$state, JSON.parse(raw)) } catch {}
       if (!LENGTH_BUCKETS.some(b => b.id === this.bucketId)) this.bucketId = '1'
       // 启动时若有当前文案，应用之
-      if (!this.currentCorpusId) this.currentCorpusId = 'builtin-all'
+      if (!this.currentCorpusId) this.currentCorpusId = CORPUS_IDS.ALL
+      // 确保 nextId 不小于 queue 中最大的 id，避免 id 冲突
+      if (this.queue.length > 0) {
+        const maxId = Math.max(...this.queue.map(item => item.id || 0))
+        if (this.nextId <= maxId) this.nextId = maxId + 1
+      }
     },
     save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.$state)) },
     _itemsFromCharsAndPinyins(chars, pinyins) {
@@ -114,10 +131,10 @@ export const useWriterStore = defineStore('writer', {
       this.save()
     },
     _builtinText(id) {
-      if (id === 'builtin-row1') return '秋风微凉，二人软语，月与云伴，乌衣巷口我也有缘。'
-      if (id === 'builtin-row2') return '大江东去，风拂更长，岸边少年，快意江湖，两个伙伴望海。'
-      if (id === 'builtin-row3') return '走在小路上，草色翠绿，追风而行，滨海鸟鸣，绵延不断。'
-      if (id === 'builtin-nasal') {
+      if (id === CORPUS_IDS.ROW1) return '秋风微凉，二人软语，月与云伴，乌衣巷口我也有缘。'
+      if (id === CORPUS_IDS.ROW2) return '大江东去，风拂更长，岸边少年，快意江湖，两个伙伴望海。'
+      if (id === CORPUS_IDS.ROW3) return '走在小路上，草色翠绿，追风而行，滨海鸟鸣，绵延不断。'
+      if (id === CORPUS_IDS.NASAL) {
         // 前后鼻音专项（-n / -ng 对照 + ong）
         return [
           // an vs ang
@@ -153,7 +170,7 @@ export const useWriterStore = defineStore('writer', {
       const text = chars.join('')
       if (!text) return null
       const title = text.slice(0, 10)
-      const id = 'custom-' + Date.now()
+      const id = CUSTOM_PREFIX + Date.now()
       this.customDocs.push({ id, title, text })
       this.save()
       return id
@@ -167,8 +184,8 @@ export const useWriterStore = defineStore('writer', {
       if (idx >= 0) {
         this.customDocs.splice(idx, 1)
         if (this.currentCorpusId === id) {
-          this.currentCorpusId = 'builtin-all'
-          this.applyCorpus('builtin-all')
+          this.currentCorpusId = CORPUS_IDS.ALL
+          this.applyCorpus(CORPUS_IDS.ALL)
         }
         this.save()
       }

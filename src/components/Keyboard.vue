@@ -1,5 +1,5 @@
 <template>
-  <div class="keyWrap">
+  <div class="keyWrap" data-testid="keyWrap">
     <div v-for="(row, ri) in rows" :key="ri" class="keyRow">
       <div
         v-for="code in row"
@@ -7,6 +7,7 @@
         class="keyBox"
         :class="boxClass(code)"
         @mousedown.prevent="onClick(code)"
+        @touchstart.prevent="onClick(code)"
       >
         <div class="keyCapital"><p>{{ keyByCode.get(code).label }}</p></div>
         <div class="keyAuxiliary" style="display:block;">
