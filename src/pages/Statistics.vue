@@ -86,6 +86,10 @@
       <div class="actions-section">
         <h3>数据管理</h3>
         <div class="action-buttons">
+          <button class="action-btn share-btn" @click="showShareCard = true">
+            <span class="btn-icon">📤</span>
+            分享成绩
+          </button>
           <button class="action-btn export-json" @click="exportJSON">
             <span class="btn-icon">📥</span>
             导出 JSON
@@ -100,6 +104,9 @@
           </button>
         </div>
       </div>
+
+      <!-- 分享卡片弹窗 -->
+      <ShareCard v-if="showShareCard" @close="showShareCard = false" />
 
       <!-- 练习历史 -->
       <div class="history-section" v-if="recentHistory.length">
@@ -131,11 +138,13 @@
 import { computed, onMounted, ref, nextTick } from 'vue'
 import { useStatsStore } from '../stores/stats.js'
 import TopStatusBar from '../components/TopStatusBar.vue'
+import ShareCard from '../components/ShareCard.vue'
 
 const stats = useStatsStore()
 const volumeChart = ref(null)
 const speedChart = ref(null)
 const accuracyChart = ref(null)
+const showShareCard = ref(false)
 
 const todayStats = computed(() => stats.todayStats)
 const todayAccuracy = computed(() => {
@@ -608,6 +617,17 @@ function clearStats() {
 .action-btn.clear-data:hover {
   background: #f56c6c;
   color: white;
+}
+
+.action-btn.share-btn {
+  background: linear-gradient(135deg, #35e2b7, #2aa88a);
+  border-color: transparent;
+  color: #0b1a14;
+  font-weight: 500;
+}
+
+.action-btn.share-btn:hover {
+  background: linear-gradient(135deg, #2aa88a, #35e2b7);
 }
 
 .btn-icon {

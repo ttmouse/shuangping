@@ -11,6 +11,9 @@
         <div class="achievement-title">解锁成就</div>
         <div class="achievement-name">{{ achievement.name }}</div>
         <div class="achievement-desc">{{ achievement.description }}</div>
+        <button v-if="isRare(achievement)" class="share-achievement-btn" @click="shareAchievement(achievement)">
+          📤 分享
+        </button>
       </div>
       <div class="achievement-shine"></div>
     </div>
@@ -27,11 +30,17 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['share'])
+
 const notifications = ref([])
 const RARE_ACHIEVEMENTS = ['ten-thousand', 'streak-30', 'combo-50', 'accuracy-95']
 
 function isRare(achievement) {
   return RARE_ACHIEVEMENTS.includes(achievement.id)
+}
+
+function shareAchievement(achievement) {
+  emit('share', achievement)
 }
 
 watch(() => props.newAchievements, (newVals) => {
@@ -140,6 +149,22 @@ watch(() => props.newAchievements, (newVals) => {
 .achievement-desc {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.7);
+}
+
+.share-achievement-btn {
+  margin-top: 8px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.share-achievement-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 /* Transition animations */

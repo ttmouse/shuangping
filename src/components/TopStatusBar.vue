@@ -31,6 +31,12 @@
         @click="go('/progress')"
         title="学习进度"
       >🎯 进度</button>
+      <button
+        class="modeBtn"
+        :class="{ active: route.name === 'leaderboard' }"
+        @click="go('/leaderboard')"
+        title="排行榜"
+      >🏆 排行</button>
     </div>
     <div class="right">
       <div class="accuracy" v-if="session.totalAttempts > 0" title="正确率">
