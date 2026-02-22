@@ -1,0 +1,20 @@
+{
+  "archived_at": "2026-02-22",
+  "completed_count": 1,
+  "todos": [
+    {
+      "id": "shuangping-006",
+      "title": "双拼练习工具 - 自定义文本删除功能",
+      "priority": "medium",
+      "tags": [
+        "shuangping",
+        "ui",
+        "feature"
+      ],
+      "created_at": "2026-02-22T00:36:00",
+      "completed": true,
+      "completed_at": "2026-02-22T17:07:00+08:00",
+      "processing": false
+    }
+  ]
+}
