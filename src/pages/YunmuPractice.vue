@@ -330,7 +330,7 @@ function start() {
       return
     }
   }
-  stats.startSession()
+  stats.startSession('yunmu')
   progress.startSession()
   session.start()
   

@@ -441,7 +441,7 @@ function restart() {
   // 结束当前会话并记录进度
   endPractice()
   writer.restartCurrent()
-  stats.startSession()
+  stats.startSession('writer')
   progress.startSession()
   // 重新启动限时挑战
   if (settings.timeChallenge) {
@@ -546,7 +546,7 @@ function closeTimeChallengeResult() {
   endPractice()
   // 重新开始练习
   writer.restartCurrent()
-  stats.startSession()
+  stats.startSession('writer')
   progress.startSession()
   // 重新启动限时挑战
   if (settings.timeChallenge) {
@@ -600,7 +600,7 @@ onMounted(() => {
   progress.load()
   writer.applyCorpus(writer.currentCorpusId)
   // 开始统计会话
-  stats.startSession()
+  stats.startSession('writer')
   progress.startSession()
   // 启动限时挑战计时器
   if (settings.timeChallenge) {
