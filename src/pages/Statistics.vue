@@ -57,6 +57,43 @@
         </div>
       </div>
 
+      <!-- 周对比分析 -->
+      <div class="weekly-progress-section" v-if="weeklyProgress">
+        <h2>本周对比上周</h2>
+        <div class="progress-grid">
+          <div class="progress-item">
+            <span class="progress-label">速度变化</span>
+            <span class="progress-value" :class="{ 'up': weeklyProgress.speedChange > 0, 'down': weeklyProgress.speedChange < 0 }">
+              {{ weeklyProgress.speedChange > 0 ? '+' : '' }}{{ weeklyProgress.speedChange }}%
+            </span>
+          </div>
+          <div class="progress-item">
+            <span class="progress-label">准确率变化</span>
+            <span class="progress-value" :class="{ 'up': weeklyProgress.accuracyChange > 0, 'down': weeklyProgress.accuracyChange < 0 }">
+              {{ weeklyProgress.accuracyChange > 0 ? '+' : '' }}{{ weeklyProgress.accuracyChange }}%
+            </span>
+          </div>
+          <div class="progress-item">
+            <span class="progress-label">练习量变化</span>
+            <span class="progress-value" :class="{ 'up': weeklyProgress.charsChange > 0, 'down': weeklyProgress.charsChange < 0 }">
+              {{ weeklyProgress.charsChange > 0 ? '+' : '' }}{{ weeklyProgress.charsChange }}%
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 时段分析 -->
+      <div class="time-slot-section">
+        <h2>时段分析</h2>
+        <div class="time-slot-grid">
+          <div v-for="(data, slot) in timeSlotAnalysis" :key="slot" class="time-slot-item" :class="{ 'active': data.sessions > 0 }">
+            <span class="slot-name">{{ slotNames[slot] }}</span>
+            <span class="slot-sessions">{{ data.sessions }} 场</span>
+            <span class="slot-accuracy" v-if="data.sessions > 0">{{ data.accuracy }}%</span>
+          </div>
+        </div>
+      </div>
+
       <!-- 图表区域 -->
       <div class="charts-section">
         <div class="chart-card">
@@ -82,6 +119,20 @@
         </div>
       </div>
 
+      <!-- 易错键热力图 -->
+      <div class="heatmap-section" v-if="errorHeatmap.length > 0">
+        <h2>易错键分析</h2>
+        <div class="heatmap-list">
+          <div v-for="[key, count] in errorHeatmap.slice(0, 10)" :key="key" class="heatmap-item">
+            <span class="heatmap-key">{{ key }}</span>
+            <div class="heatmap-bar-wrap">
+              <div class="heatmap-bar" :style="{ width: (count / errorHeatmap[0][1] * 100) + '%' }"></div>
+            </div>
+            <span class="heatmap-count">{{ count }}次</span>
+          </div>
+        </div>
+      </div>
+
       <!-- 操作按钮 -->
       <div class="actions-section">
         <h3>数据管理</h3>
@@ -97,6 +148,10 @@
           <button class="action-btn export-csv" @click="exportCSV">
             <span class="btn-icon">📄</span>
             导出 CSV
+          </button>
+          <button class="action-btn export-detailed" @click="exportDetailedCSV">
+            <span class="btn-icon">📋</span>
+            导出详细
           </button>
           <button class="action-btn clear-data" @click="clearStats">
             <span class="btn-icon">🗑️</span>
@@ -116,6 +171,7 @@
             <div class="history-info">
               <span class="history-date">{{ formatDate(item.date) }}</span>
               <span class="history-type">{{ getTypeLabel(item.type) }}</span>
+              <span class="history-practice-type" :class="item.practiceType">{{ getPracticeTypeLabel(item.practiceType) }}</span>
             </div>
             <div class="history-stats">
               <span v-if="item.chars !== undefined" class="history-chars">{{ item.chars }} 字</span>
@@ -152,12 +208,23 @@ const todayAccuracy = computed(() => {
   return t.chars > 0 ? Math.round((t.correct / t.chars) * 100) : 100
 })
 
+const weeklyProgress = computed(() => stats.getWeeklyProgress())
+const timeSlotAnalysis = computed(() => stats.timeSlotAnalysis)
+const errorHeatmap = computed(() => stats.errorHeatmap)
+
 const recentHistory = computed(() => {
   return stats.history
     .filter(h => h.type === 'session')
     .slice(-10)
     .reverse()
 })
+
+const slotNames = {
+  morning: '早晨 (6-12点)',
+  afternoon: '下午 (12-18点)',
+  evening: '晚上 (18-22点)',
+  night: '深夜 (22-6点)',
+}
 
 onMounted(() => {
   stats.load()
@@ -392,6 +459,14 @@ function getTypeLabel(type) {
   return labels[type] || type
 }
 
+function getPracticeTypeLabel(type) {
+  const labels = {
+    yunmu: '韵母',
+    writer: '打字',
+  }
+  return labels[type] || type
+}
+
 // 导出功能
 function exportJSON() {
   const data = stats.exportData()
@@ -402,6 +477,12 @@ function exportJSON() {
 function exportCSV() {
   const csv = stats.exportCSV()
   const filename = `shuangping-stats-${new Date().toISOString().slice(0, 10)}.csv`
+  stats.downloadFile(csv, filename, 'text/csv')
+}
+
+function exportDetailedCSV() {
+  const csv = stats.exportDetailedCSV()
+  const filename = `shuangping-detailed-${new Date().toISOString().slice(0, 10)}.csv`
   stats.downloadFile(csv, filename, 'text/csv')
 }
 
@@ -704,6 +785,200 @@ function clearStats() {
 
 .footer-space {
   height: 40px;
+}
+
+/* 周进度分析 */
+.weekly-progress-section {
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.weekly-progress-section h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--theme-main-text-color);
+  margin-bottom: 16px;
+}
+
+.progress-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.progress-item {
+  text-align: center;
+  padding: 16px;
+  background: var(--theme-background-color);
+  border-radius: 8px;
+}
+
+.progress-label {
+  display: block;
+  font-size: 12px;
+  color: var(--theme-text-color);
+  margin-bottom: 8px;
+}
+
+.progress-value {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.progress-value.up {
+  color: #67c23a;
+}
+
+.progress-value.down {
+  color: #f56c6c;
+}
+
+/* 时段分析 */
+.time-slot-section {
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.time-slot-section h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--theme-main-text-color);
+  margin-bottom: 16px;
+}
+
+.time-slot-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.time-slot-item {
+  text-align: center;
+  padding: 16px 12px;
+  background: var(--theme-background-color);
+  border-radius: 8px;
+  opacity: 0.6;
+}
+
+.time-slot-item.active {
+  opacity: 1;
+  border: 1px solid var(--theme-menu-hover-color);
+}
+
+.slot-name {
+  display: block;
+  font-size: 12px;
+  color: var(--theme-text-color);
+  margin-bottom: 8px;
+}
+
+.slot-sessions {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--theme-main-text-color);
+  margin-bottom: 4px;
+}
+
+.slot-accuracy {
+  display: block;
+  font-size: 14px;
+  color: #67c23a;
+}
+
+/* 热力图 */
+.heatmap-section {
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.heatmap-section h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--theme-main-text-color);
+  margin-bottom: 16px;
+}
+
+.heatmap-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.heatmap-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.heatmap-key {
+  width: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--theme-main-text-color);
+  text-align: center;
+}
+
+.heatmap-bar-wrap {
+  flex: 1;
+  height: 16px;
+  background: var(--theme-background-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.heatmap-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #f56c6c, #ff9f7f);
+  border-radius: 8px;
+  transition: width 0.3s;
+}
+
+.heatmap-count {
+  width: 60px;
+  text-align: right;
+  font-size: 13px;
+  color: var(--theme-text-color);
+}
+
+/* 导出详细按钮 */
+.action-btn.export-detailed {
+  background: #e6f7ff;
+  border-color: #91d5ff;
+  color: #1890ff;
+}
+
+.action-btn.export-detailed:hover {
+  background: #bae7ff;
+}
+
+/* 练习类型标签 */
+.history-practice-type {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--theme-background-light-color);
+  color: var(--theme-rich-text-color);
+}
+
+.history-practice-type.yunmu {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+
+.history-practice-type.writer {
+  background: #f6ffed;
+  color: #52c41a;
 }
 
 /* 响应式 */
