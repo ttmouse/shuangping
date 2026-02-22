@@ -29,10 +29,10 @@
                 <span class="title">{{ c.title }}</span>
                 <span v-if="c.itemCount !== undefined" class="item-count">{{ c.itemCount }} 字</span>
                 <button
-                  v-if="c.id.startsWith(CUSTOM_PREFIX)"
+                  v-if="c.id.startsWith(CUSTOM_PREFIX) || c.id.startsWith('set-')"
                   class="delBtn"
                   title="删除"
-                  @click.stop="deleteDoc(c.id)"
+                  @click.stop="c.id.startsWith('set-') ? deletePracticeSetFromDropdown(c.id) : deleteDoc(c.id)"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="3 6 5 6 21 6"></polyline>
@@ -401,6 +401,18 @@ function deletePracticeSet(id) {
   if (confirm('确定要删除这个练习集吗？')) {
     settings.deletePracticeSet(id)
     if (selectedSetId.value === id) selectedSetId.value = null
+  }
+}
+function deletePracticeSetFromDropdown(setIdWithPrefix) {
+  const setId = setIdWithPrefix.slice(4) // 移除 'set-' 前缀
+  const set = customPracticeSets.value.find(s => s.id === setId)
+  if (set && confirm(`确定要删除练习集"${set.name}"吗？`)) {
+    settings.deletePracticeSet(setId)
+    if (selectedSetId.value === setId) selectedSetId.value = null
+    // 如果当前正在使用该练习集，切换到默认文案
+    if (writer.currentCorpusId === setIdWithPrefix) {
+      writer.applyCorpus(CORPUS_IDS.ALL)
+    }
   }
 }
 function selectSet(id) { selectedSetId.value = id }
