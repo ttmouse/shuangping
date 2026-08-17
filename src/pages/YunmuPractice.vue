@@ -58,15 +58,14 @@
       </div>
 
       <div class="cardsWrap">
-        <div class="cards">
+        <div class="cards" :class="{ 'line-leaving': session.lineHold }">
           <div
             v-for="(f, idx) in upcoming"
             :key="idx + '-' + f"
             class="card"
             :class="{
               current: idx === currentIndex,
-              doneLatest: idx === currentIndex - 1,
-              donePast: idx < currentIndex - 1
+              done: idx < currentIndex
             }"
           >
             <div class="hz">{{ f }}</div>
@@ -631,50 +630,15 @@ onBeforeUnmount(() => {
 @media (max-width: 520px) {
   .operate.is-sticky { position: sticky; top: 52px; z-index: 10; backdrop-filter: blur(10px); background: color-mix(in srgb, var(--theme-background-light-color) 85%, transparent); border-bottom: 1px solid var(--theme-border-color); }
 }
-.cardsWrap { width: 1040px; max-width: 96%; margin: 10px auto 10px; }
+.cardsWrap { width: 1060px; max-width: 96%; margin: 10px auto 10px; }
 .cards { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; perspective: 900px; }
+.card { transition: opacity 0.4s ease, transform 0.4s ease; }
 .card { position: relative; width: 96px; height: 124px; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 10px; box-shadow: 0 2px 0 rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 6px; transform-style: preserve-3d; overflow: hidden; }
 .card.current { border-color: var(--theme-menu-hover-color); box-shadow: 0 0 0 2px #35e2b733 inset, 0 0 10px #35e2b733; }
-.card.doneLatest {
-  transform-origin: bottom center;
-  animation: cardSuccess 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-.card.donePast { opacity: 0; pointer-events: none; }
-
-/* 游戏化成功动效：缩放弹跳 + 光晕 + 粒子效果 */
-@keyframes cardSuccess {
-  0% {
-    transform: scale(1) rotate(0deg);
-    opacity: 1;
-    filter: brightness(1);
-  }
-  20% {
-    transform: scale(1.15) rotate(-3deg);
-    opacity: 1;
-    filter: brightness(1.3) drop-shadow(0 0 20px #67c23a);
-  }
-  40% {
-    transform: scale(1.08) rotate(2deg);
-    opacity: 0.9;
-    filter: brightness(1.2) drop-shadow(0 0 15px #67c23a);
-  }
-  60% {
-    transform: scale(1.12) rotate(-1deg);
-    opacity: 0.7;
-    filter: brightness(1.15) drop-shadow(0 0 10px #67c23a);
-  }
-  80% {
-    transform: scale(1.05) rotate(0deg);
-    opacity: 0.4;
-    filter: brightness(1.1);
-  }
-  100% {
-    transform: scale(0.9) translateY(-30px);
-    opacity: 0;
-    filter: brightness(1);
-  }
-}
+/* 已完成的字：原地变灰不消失，位置稳定便于记忆定位 */
+.card.done { opacity: 0.35; }
+/* 整批打完统一淡出换批，避免逐字位移 */
+.cards.line-leaving .card { opacity: 0; transform: translateY(-14px); }
 
 /* 当前卡片待输入时的微妙呼吸效果 */
 .card.current {

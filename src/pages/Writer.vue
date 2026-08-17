@@ -68,15 +68,14 @@
       </div>
 
       <div class="cardsWrap">
-        <div class="cards">
+        <div class="cards" :class="{ 'line-leaving': writer.lineHold }">
           <div
             v-for="(it, idx) in cardItems"
             :key="it.id"
             class="card"
             :class="{
               current: idx === currentInLine,
-              doneLatest: idx === currentInLine - 1,
-              donePast: idx < currentInLine - 1
+              done: idx < currentInLine
             }"
           >
             <div class="py" v-if="writer.showPinyin">{{ it.pinyin }}</div>
@@ -649,16 +648,14 @@ onBeforeUnmount(() => {
   color: var(--theme-text-color);
   margin-left: 8px;
 }
-.cardsWrap { width: 1040px; max-width: 96%; margin: 10px auto 10px; }
+.cardsWrap { width: 1060px; max-width: 96%; margin: 10px auto 10px; }
 .cards { display: flex; gap: 10px; justify-content: center; perspective: 900px; flex-wrap: wrap; }
 .card { position: relative; width: 96px; height: 124px; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 10px; box-shadow: 0 2px 0 rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; justify-content: space-around; padding: 8px 6px; transform-style: preserve-3d; overflow: hidden; }
 .card.current { border-color: var(--theme-menu-hover-color); box-shadow: 0 0 0 2px #35e2b733 inset, 0 0 10px #35e2b733; }
-.card.doneLatest { transform-origin: bottom center; animation: cardFall 0.48s cubic-bezier(0.22, 0.62, 0.2, 0.95) forwards; }
-.card.donePast { opacity: 0; visibility: hidden; pointer-events: none; }
-@keyframes cardFall {
-  0%   { transform: rotateX(0deg) translateY(0); opacity: 1; }
-  100% { transform: rotateX(88deg) translateY(26px) scale(0.96); opacity: 0; visibility: hidden; }
-}
+.card { transition: opacity 0.4s ease, transform 0.4s ease; }
+.card.done { opacity: 0.35; }
+/* 整行打完统一淡出换行，避免逐字位移 */
+.cards.line-leaving .card { opacity: 0; transform: translateY(-14px); }
 .card .py { font-size: 22px; color: var(--theme-rich-text-color); }
 .card .hz { font-size: 28px; font-weight: 700; color: var(--theme-main-text-color); line-height: 1; }
 .card .keys { font-size: 22px; color: #54709536; letter-spacing: 1px; }

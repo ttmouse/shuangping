@@ -154,33 +154,26 @@ export const useSessionStore = defineStore('session', {
       }
       const fallMs = 480
       if (this.pos < this.windowSize - 1) {
+        // 批内推进：只移动指针，队列保持原位（不滚动）
         this.lastTarget = this.currentTarget
         this.pos += 1
         this.currentTarget = this.queue[this.pos] || ''
-        setTimeout(() => {
-          const last = this.queue[this.queue.length - 1] || this.lastTarget || ''
-          const n = this._genOne(last)
-          this.queue = this.queue.slice(1).concat([n])
-          this.pos = Math.max(0, this.pos - 1)
-          this.currentTarget = this.queue[this.pos] || ''
-          this.save()
-        }, fallMs)
+        this.save()
       } else {
+        // 整批打完：统一换批（重填一整批），不再逐字弹出
         this.lastTarget = this.currentTarget
         this.lineHold = true
         this.pos = this.windowSize
         this.currentTarget = ''
+        this.save()
         setTimeout(() => {
-          const last = this.queue[this.queue.length - 1] || this.lastTarget || ''
-          const n = this._genOne(last)
-          this.queue = this.queue.slice(1).concat([n])
-          this.pos = this.windowSize - 1
-          this.currentTarget = this.queue[this.pos] || ''
+          this._fillBatch()
+          this.pos = 0
+          this.currentTarget = this.queue[0] || ''
           this.lineHold = false
           this.save()
         }, fallMs)
       }
-      this.save()
     },
     submitKeyCode(code) {
       if (this.lineHold && !this.currentTarget) return { correct: false, ignore: true }

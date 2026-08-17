@@ -316,7 +316,7 @@ export const useWriterStore = defineStore('writer', {
           // 若到达行末，延时切换到下一行（等待倒下动画完成）
           if (this.charIdx % this.windowSize === 0) {
             this.lineHold = true
-            const holdMs = 820
+            const holdMs = 500
             setTimeout(() => {
               // 裁剪已完成的行，保持内存稳定
               this.queue = this.queue.slice(this.charIdx)
