@@ -21,6 +21,12 @@
       >双拼打字练习</button>
       <button
         class="modeBtn"
+        :class="{ active: route.name === 'practice-modes' }"
+        @click="go('/practice-modes')"
+        title="常规打字练习"
+      >打字练习</button>
+      <button
+        class="modeBtn"
         :class="{ active: route.name === 'statistics' }"
         @click="go('/statistics')"
         title="练习统计"

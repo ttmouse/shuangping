@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 const Projects = () => import('../pages/Projects.vue')
 const YunmuPractice = () => import('../pages/YunmuPractice.vue')
 const Writer = () => import('../pages/Writer.vue')
+const PracticeModes = () => import('../pages/PracticeModes.vue')
 const Statistics = () => import('../pages/Statistics.vue')
 const Progress = () => import('../pages/Progress.vue')
 const Leaderboard = () => import('../pages/Leaderboard.vue')
@@ -11,6 +12,7 @@ const routes = [
   { path: '/', name: 'home', component: Projects },
   { path: '/yunmu-practice', name: 'yunmu-practice', component: YunmuPractice },
   { path: '/writer', name: 'writer', component: Writer },
+  { path: '/practice-modes', name: 'practice-modes', component: PracticeModes },
   { path: '/statistics', name: 'statistics', component: Statistics },
   { path: '/progress', name: 'progress', component: Progress },
   { path: '/leaderboard', name: 'leaderboard', component: Leaderboard },
