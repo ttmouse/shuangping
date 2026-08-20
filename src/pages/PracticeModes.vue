@@ -105,9 +105,14 @@
             </div>
           </div>
           <div class="resultActions">
-            <button class="btn primary" @click="restart">再来一次</button>
-            <button class="btn" @click="switchMode(nextMode)">换个模式</button>
+            <button ref="restartBtnRef" class="btn primary" @click="restart">
+              再来一次 <span class="shortcut">(空格)</span>
+            </button>
+            <button class="btn" @click="switchMode(nextMode)">
+              换个模式 <span class="shortcut">(M)</span>
+            </button>
           </div>
+          <p class="modalHint">ESC 返回开始 · M 切换模式</p>
         </div>
       </div>
 
@@ -135,7 +140,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref, watch, nextTick } from 'vue'
 import TopStatusBar from '../components/TopStatusBar.vue'
 import AchievementNotification from '../components/AchievementNotification.vue'
 import { WORDS } from '../data/words.js'
@@ -194,6 +199,17 @@ const groupIdx = ref(0)
 const digitIdx = ref(0)
 
 const newAchievements = ref([])
+
+// 完成浮层「再来一次」按钮引用（自动聚焦以支持键盘操作）
+const restartBtnRef = ref(null)
+
+// 完成时自动聚焦主按钮，方便直接空格/回车再来一次
+watch(completed, async (v) => {
+  if (v) {
+    await nextTick()
+    restartBtnRef.value?.focus()
+  }
+})
 
 const currentItem = computed(() => cnQueue.value[charIdx.value])
 const sentence = computed(() => cnQueue.value)
@@ -441,6 +457,25 @@ function restart() {
 // 物理键盘输入
 function onKeyDown(e) {
   if (e.repeat) return
+
+  // 完成浮层：支持键盘操作（参考 localhost:3002 的完成浮层快捷键）
+  if (completed.value) {
+    if (e.code === 'Space' || e.code === 'Enter') {
+      e.preventDefault()
+      restart()
+    } else if (e.key.toLowerCase() === 'm') {
+      e.preventDefault()
+      switchMode(nextMode.value)
+    } else if (e.code === 'Escape') {
+      e.preventDefault()
+      // 返回开始遮罩
+      endSession()
+      started.value = false
+      completed.value = false
+    }
+    return
+  }
+
   if (!started.value) {
     e.preventDefault()
     start()
@@ -663,6 +698,12 @@ onBeforeUnmount(() => {
 .rValue { display: block; font-size: 26px; font-weight: 700; color: var(--theme-main-text-color); }
 .rLabel { font-size: 12px; color: var(--theme-text-color); }
 .resultActions { display: flex; gap: 10px; }
+.resultActions .btn .shortcut { font-size: 12px; opacity: 0.75; margin-left: 2px; }
+.resultActions .btn:focus-visible {
+  outline: 2px solid var(--theme-menu-hover-color);
+  outline-offset: 2px;
+}
+.modalHint { margin: 14px 0 0; font-size: 12px; color: var(--theme-rich-text-color); }
 .btn {
   flex: 1;
   padding: 10px 12px;
