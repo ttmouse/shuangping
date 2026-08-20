@@ -17,4 +17,3 @@ export const EN_WORDS = [
   'always', 'around', 'before', 'behind', 'believe', 'better', 'beyond', 'change', 'child', 'children',
 ]
 
-export const EN_WORDS_PER_SESSION = 30

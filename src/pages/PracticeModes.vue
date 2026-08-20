@@ -49,15 +49,30 @@
           </div>
         </template>
 
-        <!-- 英文单词 -->
+        <!-- 英文单词（参考 localhost:3002 的整句流式练习） -->
         <template v-if="mode === 'english'">
           <div class="enStage">
-            <div class="enWord">
-              <template v-for="(l, i) in currentWord" :key="i">
-                <span class="enLetter" :class="{ typed: i < letterIdx, current: i === letterIdx }">{{ l }}</span>
-              </template>
+            <div class="enSentence">
+              <div
+                v-for="(w, wi) in enSentence"
+                :key="wi"
+                class="word-box"
+                :class="{ active: wi === wordIdx, completed: wi < wordIdx }"
+              >
+                <template v-for="(l, li) in w" :key="li">
+                  <span
+                    class="letter"
+                    :class="letterClass(wi, li)"
+                  >{{ l }}</span>
+                </template>
+              </div>
             </div>
-            <div class="enProgress">第 {{ wordIdx + 1 }} / {{ enQueue.length }} 个单词</div>
+            <div class="enProgress">
+              第 {{ sentenceIdx + 1 }} / {{ enQueue.length }} 句
+              <span v-if="wordIdx < enSentence.length">· 第 {{ wordIdx + 1 }} / {{ enSentence.length }} 词</span>
+              <span v-else>· 本句完成</span>
+              <span class="enHint">（空格/回车 进入下一词）</span>
+            </div>
           </div>
         </template>
 
@@ -73,22 +88,6 @@
             <div class="numHint">用键盘数字行输入，熟悉手指位置</div>
           </div>
         </template>
-
-        <!-- 状态栏 -->
-        <div class="sessionStats">
-          <div class="stat">
-            <span class="statValue">{{ accuracy }}%</span>
-            <span class="statLabel">正确率</span>
-          </div>
-          <div class="stat">
-            <span class="statValue">{{ speed }}</span>
-            <span class="statLabel">字/分</span>
-          </div>
-          <div class="stat">
-            <span class="statValue">{{ correctCount }}<small>/{{ totalCount }}</small></span>
-            <span class="statLabel">正确/总按键</span>
-          </div>
-        </div>
       </div>
 
       <!-- 完成弹窗 -->
@@ -115,6 +114,22 @@
       <div class="footerSpace" />
     </div>
 
+    <!-- 底部固定统计栏 -->
+    <div v-if="started && !completed" class="sessionStats">
+      <div class="stat">
+        <span class="statValue">{{ accuracy }}%</span>
+        <span class="statLabel">正确率</span>
+      </div>
+      <div class="stat">
+        <span class="statValue">{{ speed }}</span>
+        <span class="statLabel">字/分</span>
+      </div>
+      <div class="stat">
+        <span class="statValue">{{ correctCount }}<small>/{{ totalCount }}</small></span>
+        <span class="statLabel">正确/总按键</span>
+      </div>
+    </div>
+
     <AchievementNotification :new-achievements="newAchievements" />
   </div>
 </template>
@@ -124,7 +139,7 @@ import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 import TopStatusBar from '../components/TopStatusBar.vue'
 import AchievementNotification from '../components/AchievementNotification.vue'
 import { WORDS } from '../data/words.js'
-import { EN_WORDS, EN_WORDS_PER_SESSION } from '../data/englishWords.js'
+import { EN_WORDS } from '../data/englishWords.js'
 import { extractChinese, toPinyinArray } from '../utils/text2pinyin.js'
 import { keyByCode } from '../data/xiaohe.js'
 import { useSettingsStore } from '../stores/settings.js'
@@ -165,10 +180,13 @@ const charIdx = ref(0)
 const codeIdx = ref(0)
 const cnText = ref('')
 
-// 英文状态
-const enQueue = ref([]) // [word]
+// 英文状态（参考 localhost:3002：整句单词流练习）
+const enQueue = ref([]) // [{ words: ['the','quick',...] }, ...] 句子数组
+const sentenceIdx = ref(0)
 const wordIdx = ref(0)
 const letterIdx = ref(0)
+const currentInput = ref('') // 当前词已输入内容（含错误字符，用于覆盖修正显示）
+const wordCompleted = ref(false)
 
 // 数字状态
 const numQueue = ref([]) // [group] group: "4829"
@@ -179,7 +197,8 @@ const newAchievements = ref([])
 
 const currentItem = computed(() => cnQueue.value[charIdx.value])
 const sentence = computed(() => cnQueue.value)
-const currentWord = computed(() => enQueue.value[wordIdx.value] || '')
+const enSentence = computed(() => enQueue.value[sentenceIdx.value]?.words || [])
+const currentWord = computed(() => enSentence.value[wordIdx.value] || '')
 const currentGroup = computed(() => numQueue.value[groupIdx.value] || '')
 
 const accuracy = computed(() => {
@@ -233,7 +252,32 @@ function buildChineseQueue() {
 }
 
 function buildEnglishQueue() {
-  return shuffle(EN_WORDS).slice(0, EN_WORDS_PER_SESSION)
+  // 参考 localhost:3002：把单词随机组成若干句（每句 4~7 词），整句流式练习
+  const words = shuffle(EN_WORDS)
+  const sentences = []
+  let i = 0
+  while (i < words.length && sentences.length < 6) {
+    const n = 4 + Math.floor(Math.random() * 4) // 4~7
+    const slice = words.slice(i, i + n)
+    if (slice.length < 3) break
+    sentences.push({ words: slice })
+    i += n
+  }
+  return sentences
+}
+
+// 单词内字母状态（参考 localhost:3002：correct/current/incorrect）
+function letterClass(wi, li) {
+  if (wi < wordIdx.value) return 'correct' // 已完成词
+  if (wi > wordIdx.value) return '' // 未到词
+  // 当前词
+  if (li < letterIdx.value) return 'correct'
+  if (li === letterIdx.value) {
+    // 当前位置有错误输入时显示 incorrect
+    if (currentInput.value.length > letterIdx.value) return 'incorrect'
+    return 'current'
+  }
+  return ''
 }
 
 function buildNumberQueue() {
@@ -256,8 +300,11 @@ function start() {
     codeIdx.value = 0
   } else if (mode.value === 'english') {
     enQueue.value = buildEnglishQueue()
+    sentenceIdx.value = 0
     wordIdx.value = 0
     letterIdx.value = 0
+    currentInput.value = ''
+    wordCompleted.value = false
   } else {
     numQueue.value = buildNumberQueue()
     groupIdx.value = 0
@@ -314,18 +361,30 @@ function submitCode(code) {
       }
     }
   } else if (mode.value === 'english') {
+    // 参考 localhost:3002：逐字母输入；词完成后按空格/回车推进
     const word = currentWord.value
+    if (!word) return { correct: false }
     if (letterIdx.value < word.length && code.startsWith('Key')) {
       expected = 'Key' + word[letterIdx.value].toUpperCase()
       correct = expected === code
       if (correct) {
+        // 覆盖修正：错误后继续输入正确字符时，丢弃中间错误字符（与参考一致）
+        if (currentInput.value.length > letterIdx.value) {
+          currentInput.value = currentInput.value.slice(0, letterIdx.value) + word[letterIdx.value]
+        } else {
+          currentInput.value += word[letterIdx.value]
+        }
         letterIdx.value++
         if (letterIdx.value >= word.length) {
-          wordIdx.value++
-          letterIdx.value = 0
-          if (wordIdx.value >= enQueue.value.length) {
-            finish()
-          }
+          wordCompleted.value = true // 词已完成，等待空格推进
+        }
+      } else {
+        // 错误输入：位置不前进，仅填充错误字符用于显示
+        const wrongChar = code.replace('Key', '').toLowerCase()
+        if (currentInput.value.length <= letterIdx.value) {
+          currentInput.value += wrongChar
+        } else {
+          currentInput.value = currentInput.value.slice(0, letterIdx.value) + wrongChar
         }
       }
     }
@@ -387,10 +446,53 @@ function onKeyDown(e) {
     start()
     return
   }
+  // 英文模式：空格/回车推进下一词，退格回退（参考 localhost:3002）
+  if (mode.value === 'english') {
+    if (e.code === 'Space' || e.code === 'Enter') {
+      e.preventDefault()
+      const word = currentWord.value
+      if (!word) return
+      if (letterIdx.value >= word.length) {
+        // 词已完成，推进到下一词
+        wordIdx.value++
+        letterIdx.value = 0
+        currentInput.value = ''
+        wordCompleted.value = false
+        if (wordIdx.value >= enSentence.value.length) {
+          // 本句完成，进入下一句
+          sentenceIdx.value++
+          wordIdx.value = 0
+          if (sentenceIdx.value >= enQueue.value.length) {
+            finish()
+          }
+        }
+      } else {
+        // 词未完成时空格 → 错误音效
+        if (settings.sound) playKeySound('bad', { volume: settings.soundVolume })
+      }
+      return
+    }
+    if (e.code === 'Backspace') {
+      e.preventDefault()
+      if (currentInput.value.length > 0) {
+        currentInput.value = currentInput.value.slice(0, -1)
+        // 若回退到正确位置之前，同步回退 letterIdx
+        if (currentInput.value.length < letterIdx.value) {
+          letterIdx.value = currentInput.value.length
+          wordCompleted.value = false
+        }
+      }
+      return
+    }
+    const code = e.code
+    if (!code.startsWith('Key')) return
+    e.preventDefault()
+    submitCode(code)
+    return
+  }
   const code = e.code
   const handled =
     (mode.value === 'chinese' && keyByCode.has(code)) ||
-    (mode.value === 'english' && code.startsWith('Key')) ||
     (mode.value === 'numbers' && (/^Digit|^Numpad/.test(code)))
   if (!handled) return
   e.preventDefault()
@@ -467,13 +569,47 @@ onBeforeUnmount(() => {
 .cnHint .py { font-size: 20px; color: var(--theme-highlight-text-color); }
 .cnHint .seq { font-size: 26px; font-weight: 700; color: var(--theme-menu-text-color); letter-spacing: 2px; }
 
-/* 英文单词 */
-.enStage { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-.enWord { display: flex; gap: 6px; font-size: 52px; font-weight: 700; flex-wrap: wrap; justify-content: center; }
-.enLetter { opacity: 0.35; color: var(--theme-text-color); }
-.enLetter.typed { opacity: 0.75; }
-.enLetter.current { opacity: 1; color: var(--theme-main-text-color); border-bottom: 3px solid var(--theme-menu-hover-color); }
-.enProgress, .numProgress { font-size: 14px; color: var(--theme-text-color); }
+/* 英文单词（参考 localhost:3002 整句流式练习） */
+.enStage { display: flex; flex-direction: column; align-items: center; gap: 18px; width: 100%; }
+.enSentence {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 14px 10px;
+  max-width: 100%;
+  padding: 20px 16px;
+}
+.word-box {
+  display: inline-flex;
+  gap: 2px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1.3;
+  background: var(--theme-background-light-color);
+  border: 2px solid transparent;
+  transition: border-color .15s ease, opacity .2s ease, background .15s ease;
+}
+.word-box.active {
+  border-color: var(--theme-menu-hover-color);
+  box-shadow: 0 0 0 2px #35e2b733 inset;
+}
+.word-box.completed {
+  opacity: 0.4;
+  background: transparent;
+}
+.word-box .letter { color: var(--theme-text-color); opacity: 0.35; transition: color .12s ease, opacity .12s ease; }
+.word-box .letter.correct { color: var(--theme-main-text-color); opacity: 1; }
+.word-box .letter.current {
+  color: var(--theme-menu-hover-color);
+  opacity: 1;
+  border-bottom: 3px solid var(--theme-menu-hover-color);
+}
+.word-box .letter.incorrect { color: #f56c6c; opacity: 1; }
+.enProgress { font-size: 14px; color: var(--theme-text-color); }
+.enHint { font-size: 13px; color: var(--theme-rich-text-color); margin-left: 8px; }
 
 /* 键盘数字 */
 .numStage { display: flex; flex-direction: column; align-items: center; gap: 14px; }
@@ -483,13 +619,27 @@ onBeforeUnmount(() => {
 .numDigit.current { opacity: 1; color: var(--theme-main-text-color); transform: scale(1.1); border-bottom: 3px solid var(--theme-menu-hover-color); }
 .numHint { font-size: 13px; color: var(--theme-rich-text-color); }
 
-/* 会话状态栏 */
-.sessionStats { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+/* 会话状态栏（固定在页面底部） */
+.sessionStats {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--theme-background-light-color) 92%, transparent);
+  border-top: 1px solid var(--theme-border-color);
+  backdrop-filter: blur(8px);
+}
 .stat {
   min-width: 96px;
   text-align: center;
-  padding: 10px 14px;
-  background: var(--theme-background-light-color);
+  padding: 8px 14px;
+  background: var(--theme-background-color);
   border: 1px solid var(--theme-border-color);
   border-radius: 10px;
 }
@@ -525,7 +675,7 @@ onBeforeUnmount(() => {
 }
 .btn.primary { background: var(--theme-menu-text-color); border-color: var(--theme-menu-text-color); color: #fff; font-weight: 600; }
 
-.footerSpace { height: 24px; }
+.footerSpace { height: 96px; }
 
 @media (max-width: 600px) {
   .cnSentence { font-size: 24px; }
