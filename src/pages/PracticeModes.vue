@@ -126,7 +126,6 @@ import AchievementNotification from '../components/AchievementNotification.vue'
 import { WORDS } from '../data/words.js'
 import { EN_WORDS, EN_WORDS_PER_SESSION } from '../data/englishWords.js'
 import { extractChinese, toPinyinArray } from '../utils/text2pinyin.js'
-import { syllableToKeyCodes } from '../utils/shuangpin.js'
 import { keyByCode } from '../data/xiaohe.js'
 import { useSettingsStore } from '../stores/settings.js'
 import { useStatsStore } from '../stores/stats.js'
@@ -141,7 +140,7 @@ const MODES = [
 
 // 中文全屏练习的内置语料（可读性优先）
 const CN_SENTENCES = [
-  '中文输入双拼练习，提升速度与准确，保持节奏与专注。',
+  '中文输入拼音练习，提升速度与准确，保持节奏与专注。',
   '秋风微凉，二人软语，月与云伴，乌衣巷口我也有缘。',
   '大江东去，风拂更长，岸边少年，快意江湖，两个伙伴望海。',
   '走在小路上，草色翠绿，追风而行，滨海鸟鸣，绵延不断。',
@@ -208,6 +207,13 @@ function shuffle(arr) {
   return a
 }
 
+function pinyinToKeyCodes(py) {
+  // 全拼模式：每个拼音字母对应一个键（如 zhong -> z h o n g）
+  return Array.from((py || '').toLowerCase())
+    .filter(ch => /^[a-z]$/.test(ch))
+    .map(ch => 'Key' + ch.toUpperCase())
+}
+
 function buildChineseQueue() {
   // 从内置语料 + 随机词库拼出至少 18 个可练习字符（跳过无拼音字符）
   let text = CN_SENTENCES[Math.floor(Math.random() * CN_SENTENCES.length)]
@@ -220,7 +226,7 @@ function buildChineseQueue() {
   const pys = toPinyinArray(chars)
   const queue = []
   for (let i = 0; i < chars.length; i++) {
-    const seq = syllableToKeyCodes(pys[i] || '')
+    const seq = pinyinToKeyCodes(pys[i] || '')
     if (seq.length) queue.push({ ch: chars[i], pinyin: pys[i] || '', seq })
   }
   return queue
