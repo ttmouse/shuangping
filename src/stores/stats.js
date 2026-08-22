@@ -446,6 +446,12 @@ export const useStatsStore = defineStore('stats', {
       this.recordKeystroke(char, null, correct, 'char')
     },
 
+    // 记录易错键（统一按键位代码记录，如 'KeyJ'；显示时去掉前缀）
+    recordErrorKey(keyCode) {
+      if (!keyCode) return
+      this.errorHeatmapData[keyCode] = (this.errorHeatmapData[keyCode] || 0) + 1
+    },
+
     // 清除所有统计数据
     clearAllStats() {
       if (typeof confirm !== 'undefined' && !confirm('确定要清除所有练习统计数据吗？此操作不可恢复。')) return

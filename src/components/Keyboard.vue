@@ -10,7 +10,7 @@
         @touchstart.prevent="onClick(code)"
       >
         <div class="keyCapital"><p>{{ keyByCode.get(code).label }}</p></div>
-        <div class="keyAuxiliary" style="display:block;" v-if="!settings.blindMode">
+        <div class="keyAuxiliary" style="display:block;" v-if="showHints && !settings.blindMode">
           <p v-if="keyByCode.get(code).hint" class="red-text">{{ keyByCode.get(code).hint }}</p>
           <p v-for="(f, i) in keyByCode.get(code).finals" :key="i">{{ f }}</p>
         </div>
@@ -34,16 +34,20 @@ const props = defineProps({
   selectable: { type: Boolean, default: false },
   selectedCodes: { type: Array, default: () => [] },
   onToggle: { type: Function, required: false },
+  pressedCodes: { type: Object, default: null }, // 展示模式：外部按压状态（reactive Set）
+  flashCodes: { type: Object, default: null }, // 展示模式：外部闪光状态（reactive Map: code -> 'ok'|'bad'）
+  showHints: { type: Boolean, default: true }, // 是否显示双拼提示区
 })
 
 const flash = reactive(new Map()) // code -> 'ok' | 'bad' | undefined
 const pressed = reactive(new Set())
 
 function boxClass(code) {
+  const extFlash = props.flashCodes?.get?.(code)
   return {
-    pressed: pressed.has(code),
-    'flash-ok': flash.get(code) === 'ok',
-    'flash-bad': flash.get(code) === 'bad',
+    pressed: pressed.has(code) || props.pressedCodes?.has?.(code),
+    'flash-ok': flash.get(code) === 'ok' || extFlash === 'ok',
+    'flash-bad': flash.get(code) === 'bad' || extFlash === 'bad',
     selected: props.selectable && props.selectedCodes?.includes?.(code),
   }
 }
@@ -60,6 +64,8 @@ function onClick(code) {
     props.onToggle(code)
     return
   }
+  // 展示模式：不处理输入（输入由父组件统一接管）
+  if (props.pressedCodes || props.flashCodes) return
   if (props.handle) {
     const res = props.handle?.(code) || { correct: false }
     if (!res?.ignore) {
@@ -92,12 +98,17 @@ function onKeyUp(e) {
 }
 
 onMounted(() => {
-  window.addEventListener('keydown', onKeyDown)
-  window.addEventListener('keyup', onKeyUp)
+  // 展示模式（传入外部状态）时组件不监听键盘，输入与反馈均由父组件驱动
+  if (!props.pressedCodes && !props.flashCodes) {
+    window.addEventListener('keydown', onKeyDown)
+    window.addEventListener('keyup', onKeyUp)
+  }
 })
 onBeforeUnmount(() => {
-  window.removeEventListener('keydown', onKeyDown)
-  window.removeEventListener('keyup', onKeyUp)
+  if (!props.pressedCodes && !props.flashCodes) {
+    window.removeEventListener('keydown', onKeyDown)
+    window.removeEventListener('keyup', onKeyUp)
+  }
 })
 </script>
 

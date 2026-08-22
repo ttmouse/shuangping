@@ -3,45 +3,52 @@
     <div class="left">
       <button
         class="modeBtn"
-        :class="{ active: route.name === 'home' }"
-        @click="go('/')"
+        :class="{ active: route.name === 'projects' }"
+        @click="go('/projects')"
         title="首页"
+        data-nav
       >首页</button>
+      <button
+        class="modeBtn"
+        :class="{ active: route.name === 'practice-modes' }"
+        @click="go('/practice-modes')"
+        title="常规打字练习"
+        data-nav
+      >打字练习</button>
       <button
         class="modeBtn"
         :class="{ active: route.name === 'yunmu-practice' }"
         @click="go('/yunmu-practice')"
         title="声母韵母练习"
+        data-nav
       >声母韵母练习</button>
       <button
         class="modeBtn"
         :class="{ active: route.name === 'writer' }"
         @click="go('/writer')"
         title="双拼打字练习"
+        data-nav
       >双拼打字练习</button>
-      <button
-        class="modeBtn"
-        :class="{ active: route.name === 'practice-modes' }"
-        @click="go('/practice-modes')"
-        title="常规打字练习"
-      >打字练习</button>
       <button
         class="modeBtn"
         :class="{ active: route.name === 'statistics' }"
         @click="go('/statistics')"
         title="练习统计"
+        data-nav
       >📊 统计</button>
       <button
         class="modeBtn"
         :class="{ active: route.name === 'progress' }"
         @click="go('/progress')"
         title="学习进度"
+        data-nav
       >🎯 进度</button>
       <button
         class="modeBtn"
         :class="{ active: route.name === 'leaderboard' }"
         @click="go('/leaderboard')"
         title="排行榜"
+        data-nav
       >🏆 排行</button>
     </div>
     <div class="right">

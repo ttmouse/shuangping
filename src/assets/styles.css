@@ -104,3 +104,13 @@ a { color: var(--theme-menu-text-color); text-decoration: none; }
 
 /* 页脚间距 */
 .footerSpace { height: 36px; }
+
+/* 键盘导航焦点高亮（方向键移动到的目标） */
+[data-nav]:focus-visible {
+  outline: 2px solid var(--theme-menu-hover-color);
+  outline-offset: 2px;
+}
+[data-nav]:focus-visible.modeTab,
+[data-nav]:focus-visible.levelBtn {
+  box-shadow: 0 0 0 2px #35e2b733 inset;
+}

@@ -9,10 +9,11 @@ const Progress = () => import('../pages/Progress.vue')
 const Leaderboard = () => import('../pages/Leaderboard.vue')
 
 const routes = [
-  { path: '/', name: 'home', component: Projects },
+  { path: '/', redirect: '/practice-modes' },
+  { path: '/projects', name: 'projects', component: Projects },
+  { path: '/practice-modes', name: 'practice-modes', component: PracticeModes },
   { path: '/yunmu-practice', name: 'yunmu-practice', component: YunmuPractice },
   { path: '/writer', name: 'writer', component: Writer },
-  { path: '/practice-modes', name: 'practice-modes', component: PracticeModes },
   { path: '/statistics', name: 'statistics', component: Statistics },
   { path: '/progress', name: 'progress', component: Progress },
   { path: '/leaderboard', name: 'leaderboard', component: Leaderboard },

@@ -6,7 +6,7 @@
 
 ## 开发命令
 
-- `npm run dev` - 启动开发服务器，运行在 http://localhost:5173
+- `npm run dev` - 启动开发服务器，运行在 http://localhost:9527
 - `npm run build` - 构建生产版本到 dist 目录
 - `npm run preview` - 预览构建后的应用
 

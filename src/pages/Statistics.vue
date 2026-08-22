@@ -124,12 +124,19 @@
         <h2>易错键分析</h2>
         <div class="heatmap-list">
           <div v-for="[key, count] in errorHeatmap.slice(0, 10)" :key="key" class="heatmap-item">
-            <span class="heatmap-key">{{ key }}</span>
+            <span class="heatmap-key">{{ displayKey(key) }}</span>
             <div class="heatmap-bar-wrap">
               <div class="heatmap-bar" :style="{ width: (count / errorHeatmap[0][1] * 100) + '%' }"></div>
             </div>
             <span class="heatmap-count">{{ count }}次</span>
           </div>
+        </div>
+        <div class="heatmap-actions">
+          <button class="action-btn practice-btn" @click="startErrorKeysPractice">
+            <span class="btn-icon">⌨️</span>
+            易错键专项练习
+          </button>
+          <p class="heatmap-tip">将前 10 个易错键生成专项练习，在打字练习的字母键位模式下反复练</p>
         </div>
       </div>
 
@@ -211,6 +218,19 @@ const todayAccuracy = computed(() => {
 const weeklyProgress = computed(() => stats.getWeeklyProgress())
 const timeSlotAnalysis = computed(() => stats.timeSlotAnalysis)
 const errorHeatmap = computed(() => stats.errorHeatmap)
+
+// 易错键显示归一：'KeyJ' → 'J'（历史数据可能混有汉字/韵母，原样显示）
+function displayKey(k) {
+  return String(k || '').replace(/^Key/, '')
+}
+
+// 一键生成易错键专项练习：前 10 个易错键存入 localStorage，跳转打字练习字母模式
+function startErrorKeysPractice() {
+  const keys = errorHeatmap.value.slice(0, 10).map(([k]) => k.replace(/^Key/, '').toLowerCase())
+  if (!keys.length) return
+  try { localStorage.setItem('sp-error-keys', JSON.stringify(keys)) } catch {}
+  location.href = '/practice-modes?error=1'
+}
 
 const recentHistory = computed(() => {
   return stats.history

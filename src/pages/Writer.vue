@@ -342,6 +342,10 @@ function onPress(code) {
   const currentItem = writer.currentItem
   if (currentItem) {
     stats.recordCharPractice(currentItem.ch, res.correct)
+    // 记录易错键（期望键位）
+    if (!res.correct) {
+      stats.recordErrorKey(currentItem.seq[writer.codeIdx])
+    }
   }
   // 记录进度
   progress.recordKeystroke(res.correct)
@@ -569,6 +573,10 @@ function onKeyDown(e) {
     const currentItem = writer.currentItem
     if (currentItem) {
       stats.recordCharPractice(currentItem.ch, res.correct)
+      // 记录易错键（期望键位）
+      if (!res.correct) {
+        stats.recordErrorKey(currentItem.seq[writer.codeIdx])
+      }
     }
     // 记录进度
     progress.recordKeystroke(res.correct)
