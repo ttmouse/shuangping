@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { useStatsStore } from './stats.js'
 
 const STORAGE_KEY = 'sp-leaderboard'
 const USER_ID_KEY = 'sp-user-id'
@@ -191,33 +192,31 @@ export const useLeaderboardStore = defineStore('leaderboard', {
 
     // 获取当前用户统计
     getMyCurrentStats() {
-      // 从 stats store 获取数据
-      const statsRaw = localStorage.getItem('sp-stats')
-      let stats = { totalCharsTyped: 0, averageSpeed: 0, overallAccuracy: 0, streakDays: 0 }
-
-      try {
-        if (statsRaw) {
-          const parsed = JSON.parse(statsRaw)
-          stats = { ...stats, ...parsed }
-        }
-      } catch {}
+      // 直接从 stats store 读取（streakDays 是 getter，不在 sp-stats JSON 中，从 localStorage 读恒为 0）
+      const stats = useStatsStore()
+      const myStats = {
+        totalCharsTyped: stats.totalCharsTyped,
+        averageSpeed: stats.averageSpeed,
+        overallAccuracy: stats.overallAccuracy,
+        streakDays: stats.streakDays,
+      }
 
       // 计算综合得分
       const score = Math.floor(
-        stats.totalCharsTyped * 0.1 +
-        stats.averageSpeed * 50 +
-        stats.overallAccuracy * 10 +
-        stats.streakDays * 100
+        myStats.totalCharsTyped * 0.1 +
+        myStats.averageSpeed * 50 +
+        myStats.overallAccuracy * 10 +
+        myStats.streakDays * 100
       )
 
       return {
         id: this.userId,
         name: this.userName,
         avatar: this.userAvatar,
-        accuracy: stats.overallAccuracy || 0,
-        speed: stats.averageSpeed || 0,
-        totalChars: stats.totalCharsTyped || 0,
-        streakDays: stats.streakDays || 0,
+        accuracy: myStats.overallAccuracy || 0,
+        speed: myStats.averageSpeed || 0,
+        totalChars: myStats.totalCharsTyped || 0,
+        streakDays: myStats.streakDays || 0,
         lastPractice: Date.now(),
         score: score,
         isMe: true,

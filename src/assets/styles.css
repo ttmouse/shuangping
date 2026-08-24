@@ -53,6 +53,8 @@ a { color: var(--theme-menu-text-color); text-decoration: none; }
 /* 键盘 */
 .keyWrap { width: 1040px; max-width: 96%; margin: 10px auto 30px; display: grid; gap: 8px; }
 .keyRow { display: flex; gap: 8px; justify-content: center; }
+/* 底部 ZXCVBNM 行向左错开半格（键 90px + 间隙 8px = 98px，半格 ≈ 49px），模拟真实键盘错位 */
+.keyRow.shiftedLeft { margin-left: -49px; }
 .keyBox { position: relative; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 8px; width: 90px; height: 90px; display: block; box-shadow: 0 2px 0 rgba(0,0,0,0.03); transition: transform .05s ease, box-shadow .15s ease, border-color .15s ease; user-select: none; }
 .keyBox .keyCapital { position: absolute; top: 6px; left: 8px; }
 .keyBox .keyCapital p { margin: 0; font-weight: 700; color: var(--theme-text-color); font-size: 28px; line-height: 1; }

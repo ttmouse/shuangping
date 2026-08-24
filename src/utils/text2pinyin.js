@@ -25,3 +25,10 @@ export function toPinyinArray(chineseChars = []) {
   return res
 }
 
+export function toWordSyllables(text = '') {
+  // 整词转换：利用 pinyin-pro 词典正确处理多音字（如 银行→yin hang），返回逐字无声调音节数组
+  const opts = { toneType: 'none', type: 'array' }
+  const arr = pinyin(text, opts) || []
+  return arr.map(s => (s || '').replaceAll('ü','v').replaceAll('u:','v').replace(/[^a-z]/g, ''))
+}
+

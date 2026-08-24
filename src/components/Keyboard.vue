@@ -1,6 +1,6 @@
 <template>
   <div class="keyWrap" data-testid="keyWrap">
-    <div v-for="(row, ri) in rows" :key="ri" class="keyRow">
+    <div v-for="(row, ri) in rows" :key="ri" class="keyRow" :class="{ shiftedLeft: ri === rows.length - 1 }">
       <div
         v-for="code in row"
         :key="code"
@@ -14,7 +14,7 @@
           <p v-if="keyByCode.get(code).hint" class="red-text">{{ keyByCode.get(code).hint }}</p>
           <p v-for="(f, i) in keyByCode.get(code).finals" :key="i">{{ f }}</p>
         </div>
-        <div class="keyMnemonic" v-if="keyByCode.get(code).mnemonics?.length">
+        <div class="keyMnemonic" v-if="showHints && keyByCode.get(code).mnemonics?.length">
           <span v-for="(m,i) in keyByCode.get(code).mnemonics" :key="i">{{ m }}</span>
         </div>
       </div>

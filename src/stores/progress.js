@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { useStatsStore } from './stats.js'
 
 const STORAGE_KEY = 'sp-progress'
 const STORAGE_VERSION = '1.0'
@@ -487,32 +488,12 @@ export const useProgressStore = defineStore('progress', {
         .slice(0, 5)
     },
 
-    // 新增：获取连续练习天数
-    streakDays(state) {
-      if (!state.lastPracticeDate) return 0
-      
-      let streak = 0
-      const today = new Date()
-      const lastPractice = new Date(state.lastPracticeDate)
-      
-      // 检查今天或昨天是否有练习
-      const daysSinceLastPractice = Math.floor((today - lastPractice) / (1000 * 60 * 60 * 24))
-      if (daysSinceLastPractice > 1) return 0
-      
-      // 计算连续天数
-      for (let i = 0; i < 365; i++) {
-        const checkDate = new Date(today)
-        checkDate.setDate(checkDate.getDate() - i)
-        const dateKey = formatDateKey(checkDate)
-        
-        if (state.lastPracticeDate === dateKey || 
-            (i === 0 && daysSinceLastPractice <= 1)) {
-          streak++
-        } else if (i > 0) {
-          break
-        }
-      }
-      return streak
+    // 获取连续练习天数
+    // 原实现只用 lastPracticeDate（单个最近日期）回溯，昨天/前天的练习历史被覆盖后无法推断，
+    // 只要今天练过就恒为 1。改为委托 stats store，基于完整的每日练习历史 dailyStats 计算。
+    streakDays() {
+      const stats = useStatsStore()
+      return stats.streakDays
     },
 
     // 新增：获取今日目标完成度

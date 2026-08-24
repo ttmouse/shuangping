@@ -483,6 +483,13 @@ function getPracticeTypeLabel(type) {
   const labels = {
     yunmu: '韵母',
     writer: '打字',
+    practice: '练习',
+    chinese: '中文全屏',
+    english: '英文单词',
+    numbers: '键盘数字',
+    letters: '字母键位',
+    syllables: '拼音音节',
+    cards: '卡片',
   }
   return labels[type] || type
 }

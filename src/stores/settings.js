@@ -21,6 +21,11 @@ export const useSettingsStore = defineStore('settings', {
     currentScheme: 'xiaohe', // 当前双拼方案ID
     // 高级练习模式设置
     blindMode: false, // 盲打模式 - 隐藏键盘提示
+    cardHideLetters: true, // 卡片·默写模式：隐藏拼音字母提示，只显示横线位置
+    enMasteryMs: 600, // 英文掌握度判定阈值（平均每字母 ms）
+    enSlowMs: 1500, // 英文慢词阈值：平均每字母超过该值 → 视为掌握不好（与错词同权重）
+    enGrade: 'all', // 英文词库年级：'all' | 'g4' | 'g5' | 'g6'
+    cardContent: 'all', // 卡片模式内容源（含年级）：'all' | 'g4' | 'g5' | 'g6' | 'sentence' | 'mistake' | 'custom'
     timeChallenge: false, // 限时挑战模式
     timeChallengeDuration: 60, // 限时挑战时长（秒）
     // 自定义练习集
@@ -42,6 +47,11 @@ export const useSettingsStore = defineStore('settings', {
       this.theme = this.theme === 'light' ? 'dark' : 'light'
       this.applyTheme()
       this.save()
+    },
+    toggleSound() {
+      this.sound = !this.sound
+      this.save()
+      return this.sound
     },
     applyTheme() {
       const html = document.documentElement
@@ -85,6 +95,40 @@ export const useSettingsStore = defineStore('settings', {
     },
     setBlindMode(value) {
       this.blindMode = !!value
+      this.save()
+    },
+    // 卡片默写模式：隐藏/显示拼音字母提示
+    toggleCardHideLetters() {
+      this.cardHideLetters = !this.cardHideLetters
+      this.save()
+      return this.cardHideLetters
+    },
+    // 英文掌握度判定阈值（ms/字母）
+    setEnMasteryMs(value) {
+      const v = Number(value)
+      if (Number.isFinite(v) && v >= 100 && v <= 3000) {
+        this.enMasteryMs = Math.round(v)
+        this.save()
+      }
+    },
+    // 英文慢词阈值（ms/字母，超过视为掌握不好）
+    setEnSlowMs(value) {
+      const v = Number(value)
+      if (Number.isFinite(v) && v >= 200 && v <= 5000) {
+        this.enSlowMs = Math.round(v)
+        this.save()
+      }
+    },
+    // 英文词库年级
+    setEnGrade(id) {
+      if (['all', 'g4', 'g5', 'g6'].includes(id)) {
+        this.enGrade = id
+        this.save()
+      }
+    },
+    // 卡片模式内容源（含年级）
+    setCardContent(id) {
+      this.cardContent = id || 'all'
       this.save()
     },
     // 限时挑战

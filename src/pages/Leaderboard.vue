@@ -317,8 +317,9 @@ const isValidChallenge = computed(() => {
 })
 
 onMounted(() => {
-  leaderboard.init()
+  // 先加载 stats（getMyCurrentStats 依赖其 state），再初始化排行榜
   stats.load()
+  leaderboard.init()
   leaderboard.updateMyStats()
   leaderboard.checkChallenges(stats)
 })

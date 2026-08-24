@@ -208,9 +208,11 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useProgressStore } from '../stores/progress.js'
+import { useStatsStore } from '../stores/stats.js'
 import TopStatusBar from '../components/TopStatusBar.vue'
 
 const progress = useProgressStore()
+const stats = useStatsStore()
 const importInput = ref(null)
 const currentFilter = ref('all')
 
@@ -357,6 +359,8 @@ function handleImport(event) {
 
 onMounted(() => {
   progress.load()
+  // 连续练习天数由 stats.dailyStats 计算，需先加载
+  stats.load()
 })
 </script>
 
