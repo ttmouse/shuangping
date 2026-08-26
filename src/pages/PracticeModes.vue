@@ -2138,15 +2138,24 @@ onBeforeUnmount(() => {
   outline: none;
 }
 .storyItemWrap {
+  position: relative;
   display: flex;
-  align-items: stretch;
-  gap: 6px;
 }
 .storyItemWrap .storyItem {
   flex: 1;
+  width: 100%;
+}
+.storyItemWrap:hover .storyEdit,
+.storyItemWrap:hover .storyDel,
+.storyItemWrap:focus-within .storyEdit,
+.storyItemWrap:focus-within .storyDel {
+  opacity: 1;
 }
 .storyDel {
-  flex: none;
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
   width: 34px;
   border-radius: 10px;
   border: 1px solid var(--theme-border-color);
@@ -2155,9 +2164,14 @@ onBeforeUnmount(() => {
   font-size: 16px;
   line-height: 1;
   cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease;
 }
 .storyEdit {
-  flex: none;
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
   width: 34px;
   border-radius: 10px;
   border: 1px solid var(--theme-border-color);
@@ -2166,6 +2180,8 @@ onBeforeUnmount(() => {
   font-size: 15px;
   line-height: 1;
   cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease;
 }
 .storyEdit:hover {
   color: #3498db;
