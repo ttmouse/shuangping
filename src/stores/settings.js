@@ -35,6 +35,9 @@ export const useSettingsStore = defineStore('settings', {
     enTTSAccent: 'uk', // 英文发音口音：'uk'=英音（有道 type=2）| 'us'=美音（type=1）
     enAllDictation: false, // 全默写模式：所有英文单词默认隐藏字母（凭记忆打），不受掌握度影响
     enGrade: 'all', // 英文词库年级：'all' | 'g4' | 'g5' | 'g6'
+    enShowWordCn: true, // 英文·单词上方中文翻译是否显示（默认开）
+    enShowWordTime: false, // 英文·单词下方平均用时(ms)是否显示（默认关）
+    enRedoPractice: false, // 英文·错题重练：打错的单词是否重新入队重练（默认关：打错即过，无错题模式；开：错词进第二行重练）
     cardContent: 'all', // 卡片模式内容源（含年级）：'all' | 'g4' | 'g5' | 'g6' | 'sentence' | 'mistake' | 'custom'
     timeChallenge: false, // 限时挑战模式
     timeChallengeDuration: 60, // 限时挑战时长（秒）
@@ -155,6 +158,24 @@ export const useSettingsStore = defineStore('settings', {
       this.enAllDictation = !this.enAllDictation
       this.save()
       return this.enAllDictation
+    },
+    // 英文·单词上方中文翻译是否显示
+    toggleEnShowWordCn() {
+      this.enShowWordCn = !this.enShowWordCn
+      this.save()
+      return this.enShowWordCn
+    },
+    // 英文·单词下方平均用时(ms)是否显示
+    toggleEnShowWordTime() {
+      this.enShowWordTime = !this.enShowWordTime
+      this.save()
+      return this.enShowWordTime
+    },
+    // 英文·错词是否用第二行展示
+    toggleEnRedoPractice() {
+      this.enRedoPractice = !this.enRedoPractice
+      this.save()
+      return this.enRedoPractice
     },
     // 卡片默写模式：隐藏/显示拼音字母提示
     toggleCardHideLetters() {

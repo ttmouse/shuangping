@@ -4,22 +4,19 @@
 
     <div class="pageCenter">
       <div class="tipsTextContent">
-        <h1>常规打字练习</h1>
-        <h2>中文全屏 · 英文 · 键盘数字 · 字母键位 · 拼音音节 · 卡片，专项提升打字速度与键盘熟悉度。</h2>
-      </div>
-
-      <div class="modeTabs">
-        <button
-          v-for="m in MODES"
-          :key="m.id"
-          class="modeTab"
-          :class="{ active: mode === m.id }"
-          @click="switchMode(m.id)"
-          data-nav
-        >
-          <span class="modeIcon" v-html="m.icon"></span>
-          {{ m.label }}
-        </button>
+        <!-- 英文进行中：顶部显示进度/提示（替换无意义描述文案） -->
+        <template v-if="mode === 'english' && started">
+          <h1 class="enProgTitle">
+            第 {{ sentenceIdx + 1 }} / {{ enQueue.length }} 句
+            <span v-if="wordIdx < enSentence.length">· 第 {{ wordIdx + 1 }} / {{ enSentence.length }} 词</span>
+            <span v-else>· 本句完成</span>
+          </h1>
+          <h2 class="enProgHint">{{ enSentenceDone ? '（本句完成，按 空格/回车 进入下一句）' : ((dictWords.has(currentWord) || settings.enAllDictation) && !enHadError ? '（默写：看中文打英文，打错会显示单词）' : '（空格/回车 进入下一词）') }}</h2>
+        </template>
+        <template v-else>
+          <h1>{{ activeModeLabel }}</h1>
+          <h2>{{ activeModeDesc }}</h2>
+        </template>
       </div>
 
       <!-- 未开始且无配置区的模式：轻提示（不拦截输入，直接打字即开始） -->
@@ -33,40 +30,73 @@
         <template v-if="mode === 'english'">
           <div class="enStage" v-if="started">
             <div class="enSentenceCn" v-if="(enCustomMode || enStoryMode) && enSentenceCn">{{ enSentenceCn }}</div>
-            <div
-              class="enSentence"
-              :class="{ 'left-fade': enSentenceScrolled }"
-              ref="enSentenceRef"
-              @scroll="onEnSentenceScroll"
-            >
+            <div class="enSentenceWrap">
+              <!-- 第一行：正常词（不含重练词）；单行横向滚动 -->
               <div
-                v-for="(w, wi) in enSentence"
-                :key="wi"
-                class="word-col"
-                :class="{ active: wi === wordIdx, completed: wi < wordIdx, redo: enRedoSet.has(wi) }"
+                class="enSentence"
+                :class="{ 'left-fade': enSentenceScrolled, story: enStoryMode }"
+                ref="enSentenceRef"
+                @scroll="onEnSentenceScroll"
               >
-                <span class="word-cn">{{ EN_TRANSLATIONS[w] || '' }}</span>
-                <div class="word-box">
-                  <span class="word-letters">
-                    <template v-for="(l, li) in w" :key="li">
-                      <span
-                        class="letter"
-                        :class="letterClass(wi, li)"
-                      >{{ l }}</span>
-                    </template>
-                  </span>
-                </div>
-                <span
-                  class="word-time"
-                  :class="{ 'has-value': !!enWordAvgs[wi] }"
-                >{{ enWordAvgs[wi] ? enWordAvgs[wi] + 'ms' : '' }}</span>
+                <template v-for="(w, wi) in enSentence" :key="wi">
+                  <div
+                    v-if="!enRedoSet.has(wi)"
+                    class="word-col"
+                    :data-wi="wi"
+                    :class="{ active: wi === wordIdx, completed: wi < wordIdx, redo: enRedoSet.has(wi) }"
+                  >
+                    <span class="word-cn" v-if="settings.enShowWordCn">{{ EN_TRANSLATIONS[w] || '' }}</span>
+                    <div class="word-box">
+                      <span class="word-letters">
+                        <template v-for="(l, li) in w" :key="li">
+                          <span
+                            class="letter"
+                            :class="letterClass(wi, li)"
+                          >{{ l }}</span>
+                        </template>
+                      </span>
+                    </div>
+                    <span
+                      v-if="settings.enShowWordTime"
+                      class="word-time"
+                      :class="{ 'has-value': !!enWordAvgs[wi] }"
+                    >{{ enWordAvgs[wi] ? enWordAvgs[wi] + 'ms' : '' }}</span>
+                  </div>
+                </template>
+              </div>
+              <!-- 第二行：出错后自动补练的重练词（独立一行，紧凑横向滚动） -->
+              <div
+                class="enSentence enSentenceRedo"
+                ref="enSentenceRedoRef"
+              >
+                <template v-for="(w, wi) in enSentence" :key="wi">
+                  <div
+                    v-if="enRedoSet.has(wi)"
+                    class="word-col redo-row"
+                    :data-wi="wi"
+                    :class="{ active: wi === wordIdx, completed: wi < wordIdx, redo: true }"
+                  >
+                    <span class="word-cn">{{ EN_TRANSLATIONS[w] || '' }}</span>
+                    <div class="word-box">
+                      <span class="word-letters">
+                        <template v-for="(l, li) in w" :key="li">
+                          <span
+                            class="letter"
+                            :class="letterClass(wi, li)"
+                          >{{ l }}</span>
+                        </template>
+                      </span>
+                    </div>
+                    <span
+                      v-if="settings.enShowWordTime"
+                      class="word-time"
+                      :class="{ 'has-value': !!enWordAvgs[wi] }"
+                    >{{ enWordAvgs[wi] ? enWordAvgs[wi] + 'ms' : '' }}</span>
+                  </div>
+                </template>
               </div>
             </div>
             <div class="enProgress">
-              第 {{ sentenceIdx + 1 }} / {{ enQueue.length }} 句
-              <span v-if="wordIdx < enSentence.length">· 第 {{ wordIdx + 1 }} / {{ enSentence.length }} 词</span>
-              <span v-else>· 本句完成</span>
-              <span class="enHint">{{ enSentenceDone ? '（本句完成，按 空格/回车 进入下一句）' : ((dictWords.has(currentWord) || settings.enAllDictation) && !enHadError ? '（默写：看中文打英文，打错会显示单词）' : '（空格/回车 进入下一词）') }}</span>
               <button class="enActionBtn" :disabled="!enCanViewAnswer" @click="enViewAnswer" title="显示当前单词（计入完成统计）" data-nav><svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>答案</button>
               <button class="enActionBtn" @click="enRelisten" title="重读当前单词" data-nav><svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>重听</button>
             </div>
@@ -326,47 +356,126 @@
         :show-hints="false"
       />
 
-      <!-- 完成弹窗 -->
-      <div v-if="completed" class="overlay" @click.self="restart">
+      <!-- 完成页：英文为浮动评测卡（半透明遮罩 + 居中卡片），其余模式保持居中弹窗 -->
+      <div v-if="completed && mode === 'english'" class="overlay" @click.self="backToModeSelect">
+        <div class="resultModal resultPageInner">
+          <!-- 顶部条：返回 + 标题 -->
+          <div class="rpTopbar">
+            <button class="rpBack" @click="backToModeSelect" data-nav>
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+              返回
+            </button>
+            <div class="rpTitleRow">
+              <span class="rpTitle">练习完成</span>
+              <span class="rpSubtitle">英文 · 本次评测</span>
+            </div>
+          </div>
+
+          <!-- 主统计区：答对/又错徽章 + 时长/答题数 -->
+          <div class="rpSummary">
+            <div class="rpBadges">
+              <div class="rpBadge ok">
+                <span class="rpBadgeValue">{{ enFirstHitCount }}</span>
+                <span class="rpBadgeLabel">答对</span>
+              </div>
+              <div class="rpBadge wrong">
+                <span class="rpBadgeValue">{{ enWrongCount }}</span>
+                <span class="rpBadgeLabel">又错</span>
+              </div>
+            </div>
+            <div class="rpMeta">
+              <div class="rpMetaItem">
+                <span class="rpMetaLabel">练习时长</span>
+                <span class="rpMetaValue">{{ formatDuration(finalDuration) }}</span>
+              </div>
+              <div class="rpMetaItem">
+                <span class="rpMetaLabel">答题数</span>
+                <span class="rpMetaValue">{{ enWordCount }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 数据分析：5 项横排 -->
+          <div class="rpSection">
+            <div class="rpSectionTitle">数据分析</div>
+            <div class="rpChart">
+              <div class="rpStat">
+                <span class="rpStatValue">{{ enFirstHitRate }}%</span>
+                <span class="rpStatLabel">一次命中率</span>
+              </div>
+              <div class="rpStat">
+                <span class="rpStatValue">{{ accuracy }}%</span>
+                <span class="rpStatLabel">正确率</span>
+              </div>
+              <div class="rpStat">
+                <span class="rpStatValue">{{ enViewAnswers }}</span>
+                <span class="rpStatLabel">查看答案</span>
+              </div>
+              <div class="rpStat">
+                <span class="rpStatValue">{{ enRelistens }}</span>
+                <span class="rpStatLabel">重听次数</span>
+              </div>
+              <div class="rpStat">
+                <span class="rpStatValue">{{ enAvgWordTime }}<small>ms</small></span>
+                <span class="rpStatLabel">平均用时/词</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 纪录 -->
+          <div class="rpSection" v-if="finalDuration > 0">
+            <div class="rpSectionTitle">纪录</div>
+            <div class="recordBox" :class="{ new: isNewRecord }">
+              <template v-if="isNewRecord">
+                <span class="recordBadge">新纪录！</span>
+                <span class="recordText" v-if="prevBest !== null">本次用时 {{ formatDuration(finalDuration) }}，打破之前纪录 {{ formatDuration(prevBest) }}</span>
+                <span class="recordText" v-else>本次用时 {{ formatDuration(finalDuration) }} · 首次完成，纪录已建立</span>
+              </template>
+              <span class="recordText" v-else>本模式最佳纪录 {{ formatDuration(sessionBest) }} · 本次用时 {{ formatDuration(finalDuration) }}</span>
+            </div>
+          </div>
+
+          <!-- 本次错词：展示 + 刻意练习 -->
+          <div class="rpSection" v-if="sessionMistakes.length">
+            <div class="rpSectionTitle">本次错词（{{ sessionMistakes.length }} 个）</div>
+            <div class="sessionMistakeBox">
+              <div class="smChips">
+                <span v-for="w in sessionMistakes" :key="w" class="smChip">{{ w + (EN_TRANSLATIONS[w] ? '·' + EN_TRANSLATIONS[w] : '') }}</span>
+              </div>
+              <button class="btn primary" @click="startMistakePractice">刻意练习这 {{ sessionMistakes.length }} 个错词</button>
+            </div>
+          </div>
+
+          <!-- 底部操作 -->
+          <div class="rpActions">
+            <button ref="restartBtnRef" class="btn primary" @click="restart">
+              再来一次 <span class="shortcut">(空格)</span>
+            </button>
+            <button class="btn" @click="switchMode(nextMode)">
+              换个模式 <span class="shortcut">(M)</span>
+            </button>
+          </div>
+          <p class="modalHint">ESC 返回开始 · M 切换模式</p>
+        </div>
+      </div>
+
+      <!-- 其余模式完成弹窗（保持居中） -->
+      <div v-else-if="completed" class="overlay" @click.self="restart">
         <div class="resultModal">
           <h3>练习完成</h3>
-          <div class="resultStats" :class="{ en: mode === 'english' }">
-            <template v-if="mode === 'english'">
-              <div class="rStat">
-                <span class="rValue">{{ enFirstHitRate }}%</span>
-                <span class="rLabel">一次命中率</span>
-              </div>
-              <div class="rStat">
-                <span class="rValue">{{ accuracy }}%</span>
-                <span class="rLabel">正确率</span>
-              </div>
-              <div class="rStat">
-                <span class="rValue">{{ enViewAnswers }}</span>
-                <span class="rLabel">查看答案</span>
-              </div>
-              <div class="rStat">
-                <span class="rValue">{{ enRelistens }}</span>
-                <span class="rLabel">重听次数</span>
-              </div>
-              <div class="rStat">
-                <span class="rValue">{{ enAvgWordTime }}<small>ms</small></span>
-                <span class="rLabel">平均用时/词</span>
-              </div>
-            </template>
-            <template v-else>
-              <div class="rStat">
-                <span class="rValue">{{ accuracy }}%</span>
-                <span class="rLabel">正确率</span>
-              </div>
-              <div class="rStat">
-                <span class="rValue">{{ speed }}</span>
-                <span class="rLabel">字/分</span>
-              </div>
-              <div class="rStat">
-                <span class="rValue">{{ formatDuration(finalDuration) }}</span>
-                <span class="rLabel">总用时</span>
-              </div>
-            </template>
+          <div class="resultStats">
+            <div class="rStat">
+              <span class="rValue">{{ accuracy }}%</span>
+              <span class="rLabel">正确率</span>
+            </div>
+            <div class="rStat">
+              <span class="rValue">{{ speed }}</span>
+              <span class="rLabel">字/分</span>
+            </div>
+            <div class="rStat">
+              <span class="rValue">{{ formatDuration(finalDuration) }}</span>
+              <span class="rLabel">总用时</span>
+            </div>
           </div>
           <div class="recordBox" v-if="finalDuration > 0" :class="{ new: isNewRecord }">
             <template v-if="isNewRecord">
@@ -380,7 +489,7 @@
           <div class="sessionMistakeBox" v-if="sessionMistakes.length">
             <div class="smTitle">本次错词（{{ sessionMistakes.length }} 个）</div>
             <div class="smChips">
-              <span v-for="w in sessionMistakes" :key="w" class="smChip">{{ mode === 'english' ? w + (EN_TRANSLATIONS[w] ? '·' + EN_TRANSLATIONS[w] : '') : w }}</span>
+              <span v-for="w in sessionMistakes" :key="w" class="smChip">{{ w }}</span>
             </div>
             <button class="btn primary" @click="startMistakePractice">刻意练习这 {{ sessionMistakes.length }} 个错词</button>
           </div>
@@ -425,7 +534,7 @@
 
 <script setup>
 import { computed, onMounted, onBeforeUnmount, ref, reactive, watch, nextTick } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import TopStatusBar from '../components/TopStatusBar.vue'
 import AchievementNotification from '../components/AchievementNotification.vue'
 import Keyboard from '../components/Keyboard.vue'
@@ -449,26 +558,31 @@ const MODES = [
   {
     id: 'cards',
     label: '中文拼音',
+    desc: '打出词语/短句的拼音，音节自动切换，错卡自动重练',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>',
   },
   {
     id: 'english',
     label: '英文',
+    desc: '整句流式练习英文单词，支持词库/短文/自定义内容',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h10"/></svg>',
   },
   {
     id: 'numbers',
     label: '键盘数字',
+    desc: '数字键位专项练习，错组自动重练',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 9h16"/><path d="M4 15h16"/><path d="M10 3L8 21"/><path d="M16 3l-2 18"/></svg>',
   },
   {
     id: 'letters',
     label: '字母键位',
+    desc: '字母分区与易错键专项练习',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="9" width="8" height="8" rx="1.5"/><rect x="13" y="9" width="8" height="8" rx="1.5"/></svg>',
   },
   {
     id: 'syllables',
     label: '拼音音节',
+    desc: '拼音音节组合拼打练习',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2-5 3 10 3-8 2 3h5"/></svg>',
   },
 ]
@@ -511,6 +625,7 @@ const progress = useProgressStore()
 const goal = computed(() => progress.todayGoal)
 const mistakes = useMistakesStore()
 const route = useRoute()
+const router = useRouter()
 
 const mode = ref('cards')
 const started = ref(false)
@@ -683,8 +798,9 @@ function parseCustomEnglish(text) {
   const sentences = []
   let lastEnIndex = -1
   for (const line of lines) {
-    const words = (line.match(/[A-Za-z']+/g) || []).filter(w => w.length >= 1)
-    if (words.length >= 2) {
+    const words = (line.match(/[A-Za-z0-9':]+/g) || []).filter(w => w.length >= 1)
+    // 英文句判定：必须含英文字母（避免中文行里含 6:30 等数字被误判为英文）
+    if (words.length >= 2 && /[A-Za-z]/.test(line)) {
       sentences.push({ words: words.map(w => w.toLowerCase()), cn: '' })
       lastEnIndex = sentences.length - 1
     } else if (lastEnIndex >= 0) {
@@ -701,8 +817,9 @@ function parseCustomStory(text) {
   const sentences = []
   let last = -1
   for (const line of lines) {
-    const words = (line.match(/[A-Za-z']+/g) || []).filter(w => w.length >= 1)
-    if (words.length >= 2) {
+    const words = (line.match(/[A-Za-z0-9':]+/g) || []).filter(w => w.length >= 1)
+    // 英文句判定：必须含英文字母（避免中文行里含 6:30 等数字被误判为英文）
+    if (words.length >= 2 && /[A-Za-z]/.test(line)) {
       sentences.push({ en: line, cn: '' })
       last = sentences.length - 1
     } else if (last >= 0) {
@@ -710,7 +827,7 @@ function parseCustomStory(text) {
       sentences[last].cn = (sentences[last].cn ? sentences[last].cn + ' ' : '') + line
     }
   }
-  return sentences.filter(s => (s.en.match(/[A-Za-z']+/g) || []).length > 0)
+  return sentences.filter(s => (s.en.match(/[A-Za-z0-9':]+/g) || []).length > 0)
 }
 function startEnCustomPractice() {
   if (!enCustomText.value.trim()) return
@@ -796,6 +913,7 @@ function startMistakePractice() {
 function startEnWord() {
   enWordStartTime.value = Date.now()
   enWordKeystrokes.value = 0
+  enHadError.value = false // 每个新词开始时重置错误标记，避免残留影响下一个词的默写隐藏
   // 每个英文单词出现时朗读一遍（可设置关闭）；换句首词的朗读由整句朗读覆盖，不再单独读
   // 开启「整句后免单词预读」→ 所有单词输入前都不朗读（打错仍会纠音朗读）
   if (settings.enSpeakWords && !settings.enNoWordPreSpeak && !enSkipWordSpeak.value) speakEnglish(currentWord.value)
@@ -888,6 +1006,8 @@ const enViewAnswers = ref(0)
 const enRelistens = ref(0)
 const enWordTimeSum = ref(0) // 词总用时（ms）
 const enFirstHitRate = computed(() => enWordCount.value ? Math.round((enFirstHitCount.value / enWordCount.value) * 100) : 100)
+// 又错数 = 答错的词数（答题数 - 一次命中数）：与「答对」徽章配对，两者相加 = 答题数
+const enWrongCount = computed(() => Math.max(0, enWordCount.value - enFirstHitCount.value))
 const enAvgWordTime = computed(() => enWordCount.value ? Math.round(enWordTimeSum.value / enWordCount.value) : 0)
 // 「查看答案」可点条件：当前词处于默写隐藏（字母本就没有显示）且尚未揭示
 const enCanViewAnswer = computed(() => {
@@ -946,6 +1066,7 @@ const enSentenceCn = computed(() => enQueue.value[sentenceIdx.value]?.cn || '')
 // 单行布局：横向滚动 + 左侧淡出，自动把当前词滚到可视区
 // （放在 enSentence 之后，避免 watch 源在 setup 阶段先于声明求值）
 const enSentenceRef = ref(null)
+const enSentenceRedoRef = ref(null)
 // 左侧淡出只在实际滚动后出现（scrollLeft > 0）：
 // 未滚动时第一个词位于最左边，不能被遮罩淡出
 const enSentenceScrolled = ref(false)
@@ -953,14 +1074,16 @@ function onEnSentenceScroll() {
   const el = enSentenceRef.value
   enSentenceScrolled.value = !!el && el.scrollLeft > 0
 }
+// 滚动到当前词：普通词滚第一行，重练词滚第二行；用 data-wi 精确定位
 function scrollToCurrentWord() {
-  const el = enSentenceRef.value
+  const target = wordIdx.value
+  const isRedo = enRedoSet.value.has(target)
+  const el = (isRedo ? enSentenceRedoRef.value : enSentenceRef.value)
   if (!el) return
-  const words = el.querySelectorAll('.word-col')
-  const cur = words[wordIdx.value]
+  const cur = el.querySelector(`.word-col[data-wi="${target}"]`)
   if (!cur) return
-  const target = cur.offsetLeft - (el.clientWidth - cur.offsetWidth) + 48
-  el.scrollTo({ left: Math.max(0, target), behavior: 'smooth' })
+  const t = cur.offsetLeft - (el.clientWidth - cur.offsetWidth) + 48
+  el.scrollTo({ left: Math.max(0, t), behavior: 'smooth' })
 }
 // 当前词/句子/重练词数量变化时：滚动到当前词
 watch(
@@ -1032,6 +1155,10 @@ const nextMode = computed(() => {
   return MODES[(idx + 1) % MODES.length].id
 })
 
+// 当前模式的标题/描述（顶部标题区展示）
+const activeModeLabel = computed(() => MODES.find(m => m.id === mode.value)?.label || '常规打字练习')
+const activeModeDesc = computed(() => MODES.find(m => m.id === mode.value)?.desc || '')
+
 function formatDuration(sec) {
   sec = Math.max(0, Math.floor(sec || 0))
   const h = Math.floor(sec / 3600)
@@ -1068,7 +1195,7 @@ function buildEnglishQueue() {
   // 短文模式：直接返回所选短文的句子（英文句逐词 + 中文翻译）
   if (enStoryMode.value && selectedEnStory.value) {
     return selectedEnStory.value.sentences.map(s => ({
-      words: (s.en.match(/[A-Za-z']+/g) || []).map(w => w.toLowerCase()),
+      words: (s.en.match(/[A-Za-z0-9':]+/g) || []).map(w => w.toLowerCase()),
       cn: s.cn || '',
     })).filter(s => s.words.length > 0)
   }
@@ -1462,6 +1589,10 @@ function switchMode(id) {
   started.value = false
   completed.value = false
   endSession()
+  // 同步地址栏 query，让顶部导航高亮跟随（不 push，避免历史堆积）
+  if (route.name === 'practice-modes') {
+    router.replace({ path: '/practice-modes', query: { mode: id } })
+  }
 }
 
 // 退出当前会话并聚焦到模式 tab（Esc = 回到模式选择）
@@ -1470,7 +1601,7 @@ function backToModeSelect() {
   started.value = false
   completed.value = false
   nextTick(() => {
-    const tab = document.querySelector('.modeTab.active') || document.querySelector('.modeTab')
+    const tab = document.querySelector('.topStatus .modeBtn.active') || document.querySelector('.topStatus .modeBtn')
     ;(tab || document.querySelector('.modeBtn[data-nav]'))?.focus()
   })
 }
@@ -1511,8 +1642,8 @@ function submitCode(code) {
     if (!word) return { correct: false }
     if (letterIdx.value < word.length) {
       const ch = word[letterIdx.value]
-      // 支持撇号（it's / Uncle Tom's）等非字母字符：' → Quote 键；其余非字母视为无法输入
-      const expectKey = /[a-zA-Z]/.test(ch) ? 'Key' + ch.toUpperCase() : (ch === "'" ? 'Quote' : null)
+      // 支持撇号（it's / Uncle Tom's）等非字母字符：' → Quote 键；时间字符：数字 → Digit、冒号 → Semicolon；其余非字母视为无法输入
+      const expectKey = /[a-zA-Z]/.test(ch) ? 'Key' + ch.toUpperCase() : (ch === "'" ? 'Quote' : (/[0-9]/.test(ch) ? 'Digit' + ch : (ch === ':' ? 'Semicolon' : null)))
       if (!expectKey) return { correct: false }
       expected = expectKey
       correct = expected === code
@@ -1752,10 +1883,10 @@ function onKeyDown(e) {
     if (activeTag === 'TEXTAREA' || activeTag === 'INPUT') return
     // 方向键：键盘导航专用，不开始练习
     if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return
-    // 未开始按 Esc：把焦点带回模式 tab（若已在 tab 则回顶部导航）
+    // 未开始按 Esc：把焦点带回模式导航（顶部栏当前模式按钮）
     if (e.key === 'Escape') {
       e.preventDefault()
-      const tab = document.querySelector('.modeTab.active') || document.querySelector('.modeTab')
+      const tab = document.querySelector('.topStatus .modeBtn.active') || document.querySelector('.topStatus .modeBtn')
       if (document.activeElement !== tab && tab) tab.focus()
       else document.querySelector('.modeBtn[data-nav]')?.focus()
       return
@@ -1863,7 +1994,7 @@ function onKeyDown(e) {
         wordIdx.value++
         completedUnits.value++ // 完成一个词
         startEnWord()
-        if (enHadError.value) {
+        if (enHadError.value && settings.enRedoPractice) {
           // 错词重练：插回本句队尾再打一遍，并标记为重练词（样式区分）
           const s = enQueue.value[sentenceIdx.value]
           s.redoWords = s.redoWords || new Set()
@@ -1897,8 +2028,8 @@ function onKeyDown(e) {
       return
     }
     const code = e.code
-    // 英文单词可含撇号（it's / Uncle Tom's）：允许 Quote 键
-    if (!code.startsWith('Key') && code !== 'Quote') return
+    // 英文单词可含撇号（it's / Uncle Tom's）、时间字符（数字 + 冒号 7:30）：允许 Quote/Digit/Semicolon 键
+    if (!code.startsWith('Key') && code !== 'Quote' && !/^Digit/.test(code) && code !== 'Semicolon') return
     e.preventDefault()
     handleInput(code)
     return
@@ -1932,6 +2063,22 @@ function onKeyUp(e) {
   if (keyByCode.has(e.code)) keyPressed.delete(e.code)
 }
 
+// 从路由 query 应用模式（顶部导航切换到某模式时入口）；error=1 易错键专项优先
+function applyModeFromQuery() {
+  if (route.query.error === '1') {
+    mode.value = 'letters'
+    letterLevel.value = 'error'
+    return
+  }
+  const q = route.query.mode
+  if (q && MODES.some(m => m.id === q)) {
+    mode.value = q
+  } else if (!q) {
+    // 无 query（直接访问 /practice-modes）：默认中文拼音，并补写 query 保证顶部导航高亮一致
+    mode.value = 'cards'
+    router.replace({ path: '/practice-modes', query: { mode: 'cards' } })
+  }
+}
 onMounted(() => {
   settings.load()
   applyCardContent(settings.cardContent || 'all') // 恢复缓存的卡片内容源/年级
@@ -1948,10 +2095,18 @@ onMounted(() => {
   window.addEventListener('visibilitychange', onVisibilityChange)
   // 易错键专项练习入口（统计页跳转：/practice-modes?error=1）
   if (route.query.error === '1') {
-    mode.value = 'letters'
-    letterLevel.value = 'error'
+    applyModeFromQuery()
     start()
+  } else {
+    // 顶部导航切换到某模式：进入页面时按 query 选中对应模式
+    applyModeFromQuery()
   }
+})
+// 顶部导航切换模式时（query.mode 变化）重新应用，无需刷新页面
+watch(() => route.query.mode, () => {
+  if (route.name !== 'practice-modes') return
+  if (route.query.error === '1') return // error 专项已由 onMounted 处理
+  applyModeFromQuery()
 })
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeyDown)
@@ -1974,27 +2129,6 @@ onBeforeUnmount(() => {
   align-items: center;
   padding: 12px calc(12px + env(safe-area-inset-left)) calc(env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-right));
   position: relative;
-}
-
-.modeTabs { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 4px 0 16px; position: relative; z-index: 40; }
-.modeTab {
-  padding: 8px 16px;
-  border-radius: 10px;
-  border: 1px solid var(--theme-border-color);
-  background: var(--theme-background-light-color);
-  color: var(--theme-menu-text-color);
-  cursor: pointer;
-  font-size: 15px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.modeTab .modeIcon { display: inline-flex; width: 16px; height: 16px; flex: 0 0 auto; }
-.modeTab .modeIcon svg { width: 16px; height: 16px; }
-.modeTab.active {
-  border-color: var(--theme-menu-hover-color);
-  box-shadow: 0 0 0 2px #35e2b733 inset;
-  color: var(--theme-main-text-color);
 }
 
 .mask { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; z-index: 30; padding: 24px; background: transparent; }
@@ -2053,15 +2187,12 @@ onBeforeUnmount(() => {
 .enStage { display: flex; flex-direction: column; align-items: center; gap: 18px; width: 100%; }
 /* 自定义模式：当前句中文翻译（显示在句子上方） */
 .enSentenceCn {
-  font-size: 15px;
+  font-size: 22px;
+  font-weight: 500;
   color: var(--theme-rich-text-color, var(--theme-menu-text-color));
-  padding: 6px 14px;
-  border-radius: 10px;
-  background: var(--theme-background-light-color);
-  border: 1px solid var(--theme-border-color);
   max-width: 90%;
   text-align: center;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 /* 英文自定义内容面板 */
 .enCustomPanel {
@@ -2219,16 +2350,36 @@ onBeforeUnmount(() => {
 .enSentence {
   display: flex;
   flex-wrap: nowrap; /* 单行不换行：重练词追加在原行右侧 */
-  justify-content: flex-start;
+  justify-content: center; /* fallback：浏览器不支持 safe 时居中 */
+  justify-content: safe center; /* 内容不足时居中；过长需滚动时退回左对齐，避免裁掉第一个词 */
   align-items: center;
   gap: 10px;
   max-width: 100%;
+  flex-shrink: 0;
   padding: 20px 16px;
   overflow-x: auto; /* 横向滚动保持当前词可见 */
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
 .enSentence::-webkit-scrollbar { display: none; }
+/* 短文模式：一句话内单词间距更紧凑（单词模式保持默认 gap:10px） */
+.enSentence.story { gap: 6px; }
+.enSentence.story .word-box { padding: 6px 4px; }
+/* 两行容器：第一行（正常词）+ 第二行（重练词）。固定 height 为第二行预留空间，避免第一行上下抖动 */
+.enSentenceWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  height: 210px;
+}
+/* 第二行：出错后补练的重练词，与第一行同字号 */
+.enSentenceRedo {
+  padding: 8px 16px;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.enSentenceRedo .word-box { padding: 5px 10px; }
 /* 左侧淡出：只在句子实际横向滚动后出现（未滚动时第一个词不能淡出） */
 .enSentence.left-fade {
   mask-image: linear-gradient(to right, transparent 0, black 90px, black 100%);
@@ -2240,24 +2391,16 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 4px;
 }
-.word-col.active .word-box {
-  border-color: var(--theme-menu-hover-color);
-  box-shadow: 0 0 0 2px #35e2b733 inset;
-}
 .word-col.completed {
   opacity: 0.72;
-}
-.word-col.completed .word-box {
-  background: transparent;
 }
 .word-box {
   display: inline-flex;
   gap: 2px;
   padding: 6px 10px;
   border-radius: 8px;
-  background: var(--theme-background-light-color);
   border: 2px solid transparent;
-  transition: border-color .15s ease, opacity .2s ease, background .15s ease;
+  transition: border-color .15s ease, opacity .2s ease;
 }
 .word-letters {
   display: inline-flex;
@@ -2342,6 +2485,10 @@ onBeforeUnmount(() => {
 }
 .enProgress { font-size: 14px; color: var(--theme-text-color); display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 .enHint { font-size: 13px; color: var(--theme-rich-text-color); }
+/* 顶部进度标题（英文进行中）：略微收窄字号，避免与描述性 h1 一样大 */
+.enProgTitle { font-size: 18px; }
+.enProgTitle span { font-weight: normal; }
+.enProgHint { font-size: 13px; color: var(--theme-rich-text-color); }
 .enActionBtn {
   font-size: 12px;
   padding: 3px 8px;
@@ -2594,6 +2741,112 @@ onBeforeUnmount(() => {
   text-align: center;
 }
 .resultModal h3 { margin: 0 0 16px; font-size: 20px; }
+
+/* 英文模式浮动评测卡（半透明遮罩 + 居中卡片，参考「错题复盘完成」评测页布局） */
+.resultPageInner {
+  width: min(860px, 94vw);
+  max-width: 860px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  animation: rpIn 0.25s ease;
+}
+@keyframes rpIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+/* 顶部条：返回 + 标题在同一行 */
+.rpTopbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.rpBack {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-light-color);
+  color: var(--theme-menu-text-color);
+  cursor: pointer;
+  font-size: 14px;
+}
+.rpBack:focus-visible { outline: 2px solid var(--theme-menu-hover-color); outline-offset: 2px; }
+.rpTitleRow { text-align: center; }
+.rpTitle { display: block; font-size: 20px; font-weight: 700; color: var(--theme-main-text-color); }
+.rpSubtitle { display: block; font-size: 12px; color: var(--theme-text-color); margin-top: 2px; }
+/* 主统计区 */
+.rpSummary {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 22px;
+  border-radius: 14px;
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
+}
+.rpBadges { display: flex; gap: 14px; }
+.rpBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 84px;
+  padding: 12px 18px;
+  border-radius: 12px;
+}
+.rpBadge.ok { background: rgba(61, 179, 137, 0.12); color: #2c8f6a; }
+.rpBadge.wrong { background: rgba(245, 108, 108, 0.12); color: #e05353; }
+.rpBadgeValue { font-size: 32px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.rpBadgeLabel { font-size: 13px; margin-top: 6px; opacity: 0.85; }
+.rpMeta { display: flex; gap: 28px; align-items: center; }
+.rpMetaItem { text-align: right; }
+.rpMetaValue { display: block; font-size: 22px; font-weight: 700; color: var(--theme-main-text-color); font-variant-numeric: tabular-nums; }
+.rpMetaLabel { font-size: 12px; color: var(--theme-text-color); }
+/* 区块 */
+.rpSection {
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
+}
+.rpSectionTitle { font-size: 13px; font-weight: 700; color: var(--theme-main-text-color); margin-bottom: 12px; }
+/* 数据分析：5 列 */
+.rpChart { display: flex; gap: 12px; }
+.rpStat {
+  flex: 1;
+  padding: 14px 8px;
+  border-radius: 12px;
+  background: var(--theme-background-color);
+  border: 1px solid var(--theme-border-color);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.rpStatValue { font-size: 24px; font-weight: 700; color: var(--theme-main-text-color); font-variant-numeric: tabular-nums; }
+.rpStatValue small { font-size: 13px; color: var(--theme-text-color); }
+.rpStatLabel { font-size: 12px; color: var(--theme-text-color); }
+/* 底部操作 */
+.rpActions { display: flex; gap: 12px; margin-top: 4px; }
+.rpActions .btn { flex: 1; padding: 12px; font-size: 15px; }
+.rpActions .btn .shortcut { font-size: 12px; opacity: 0.75; margin-left: 4px; }
+.rpActions .btn:focus-visible { outline: 2px solid var(--theme-menu-hover-color); outline-offset: 2px; }
+@media (max-width: 640px) {
+  .resultPageInner { max-height: calc(100vh - 32px); }
+  .rpSummary { flex-direction: column; align-items: center; gap: 14px; }
+  .rpBadges { justify-content: center; }
+  .rpMeta { gap: 24px; }
+  .rpMetaItem { text-align: center; }
+  .rpChart { flex-wrap: wrap; }
+  .rpStat { flex: 1 1 30%; }
+}
+
 .resultStats { display: flex; gap: 12px; margin-bottom: 20px; }
 .enResultStats { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
 .enResultStats .rStat { min-width: 108px; flex: 1 1 auto; }

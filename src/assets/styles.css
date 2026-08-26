@@ -112,7 +112,6 @@ a { color: var(--theme-menu-text-color); text-decoration: none; }
   outline: 2px solid var(--theme-menu-hover-color);
   outline-offset: 2px;
 }
-[data-nav]:focus-visible.modeTab,
 [data-nav]:focus-visible.levelBtn {
   box-shadow: 0 0 0 2px #35e2b733 inset;
 }

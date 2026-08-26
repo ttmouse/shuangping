@@ -9,12 +9,16 @@
         data-nav
       >首页</button>
       <button
+        v-for="m in PRACTICE_MODES"
+        :key="m.id"
         class="modeBtn"
-        :class="{ active: route.name === 'practice-modes' }"
-        @click="go('/practice-modes')"
-        title="常规打字练习"
+        :class="{ active: isModeActive(m.id) }"
+        @click="goMode(m.id)"
+        :title="m.label"
         data-nav
-      >打字练习</button>
+      >
+        <span class="modeBtnIcon" v-html="m.icon"></span>{{ m.label }}
+      </button>
       <button
         class="modeBtn"
         :class="{ active: route.name === 'yunmu-practice' }"
@@ -100,125 +104,137 @@
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         </button>
-        <div v-if="showSettings" class="settingsPop">
-          <div class="setRow">
-            <span class="setLabel" title="抄写模式（显示字母，照着打）：不用回忆，所以要求打得快才算掌握">抄写·多快算掌握</span>
-            <span class="setCtrl">
-              <input
-                type="number"
-                :value="settings.enMasteryMs"
-                min="100"
-                max="3000"
-                step="100"
-                @change="setMasteryMs"
-              />
-              <span class="setUnit">ms/字母</span>
-            </span>
-          </div>
-          <div class="setRow">
-            <span class="setLabel" title="抄写模式平均每字母超过该值（即使没打错）→ 视为没掌握">抄写·多慢算生疏</span>
-            <span class="setCtrl">
-              <input
-                type="number"
-                :value="settings.enSlowMs"
-                min="200"
-                max="5000"
-                step="100"
-                @change="setSlowMs"
-              />
-              <span class="setUnit">ms/字母</span>
-            </span>
-          </div>
-          <div class="setRow">
-            <span class="setLabel" title="默写模式（隐藏字母，凭记忆打）：回忆要花时间，所以标准放宽">默写·多快算掌握</span>
-            <span class="setCtrl">
-              <input
-                type="number"
-                :value="settings.enMasteryMsDict"
-                min="100"
-                max="3000"
-                step="100"
-                @change="setMasteryMsDict"
-              />
-              <span class="setUnit">ms/字母</span>
-            </span>
-          </div>
-          <div class="setRow">
-            <span class="setLabel" title="平均每字母超过该值（即使无错）→ 视为掌握不好">默写·多慢算生疏</span>
-            <span class="setCtrl">
-              <input
-                type="number"
-                :value="settings.enSlowMsDict"
-                min="200"
-                max="5000"
-                step="100"
-                @change="setSlowMsDict"
-              />
-              <span class="setUnit">ms/字母</span>
-            </span>
-          </div>
-          <div class="setRow">
-            <span class="setLabel" title="慢词刻意练习阈值：平均每字母超过该值的词会自动收录，专项练到该值以内过关">慢词练习阈值</span>
-            <span class="setCtrl">
-              <input
-                type="number"
-                :value="settings.enPracticeMs"
-                min="100"
-                max="5000"
-                step="50"
-                @change="setPracticeMs"
-              />
-              <span class="setUnit">ms/字母</span>
-            </span>
-          </div>
-          <label class="setRow">
-            <span class="setLabel" title="英文模式：单词出现时朗读一遍；打错时也会再次朗读该词提示正确发音（浏览器内置语音）">单词发音</span>
-            <input type="checkbox" :checked="settings.enSpeakWords" @change="settings.toggleEnSpeakWords()" />
-          </label>
-          <label class="setRow">
-            <span class="setLabel" title="英文短文/自定义模式：进入新句子时整句作一次请求先试有道原声（与单词同音色），未收录的句子自动回退系统语音整句朗读">整句朗读</span>
-            <input type="checkbox" :checked="settings.enSpeakSentence" @change="settings.toggleEnSpeakSentence()" />
-          </label>
-          <label class="setRow" v-if="settings.enSpeakSentence">
-            <span class="setLabel" title="读完整句后：单词输入前不再逐个朗读（安静回想/试拼）；打错时的纠音朗读仍保留（建议短文模式使用）">整句后免单词预读</span>
-            <input type="checkbox" :checked="settings.enNoWordPreSpeak" @change="settings.toggleEnNoWordPreSpeak()" />
-          </label>
-          <div class="setRow setRowSound" v-if="settings.enSpeakWords">
-            <span class="setLabel" title="发音口音：有道词典 TTS，英音（type=2）或美音（type=1）">发音口音</span>
-            <select :value="settings.enTTSAccent" @change="onSelectTTSAccent">
-              <option value="uk">英音</option>
-              <option value="us">美音</option>
-            </select>
-          </div>
-          <label class="setRow">
-            <span class="setLabel" title="开启后：所有英文单词默认隐藏字母（全默写，凭记忆打），不再区分是否掌握；打错仍会显示单词">英文全默写</span>
-            <input type="checkbox" :checked="settings.enAllDictation" @change="settings.toggleEnAllDictation()" />
-          </label>
-          <label class="setRow">
-            <span class="setLabel" title="默写模式下当前录入位置的字母是否显示：默认不显示（回忆拼写，仅该位置下划线高亮）；勾选后显示字母">默写·显示当前字母</span>
-            <input type="checkbox" :checked="settings.enDictCurrentHint" @change="settings.toggleEnDictCurrentHint()" />
-          </label>
-          <label class="setRow">
-            <span class="setLabel" title="关闭后底部虚拟键盘不再显示（适合使用外接实体键盘的场景）；各练习页顶部的单独“隐藏键盘”开关仍可用">显示底部键盘</span>
-            <input type="checkbox" :checked="settings.showKeyboard" @change="settings.toggleShowKeyboard()" />
-          </label>
-          <label class="setRow">
-            <span class="setLabel">卡片隐藏字母</span>
-            <input type="checkbox" :checked="settings.cardHideLetters" @change="settings.toggleCardHideLetters()" />
-          </label>
-          <label class="setRow">
-            <span class="setLabel">盲打模式</span>
-            <input type="checkbox" :checked="settings.blindMode" @change="settings.toggleBlindMode()" />
-          </label>
-          <label class="setRow">
-            <span class="setLabel">音效</span>
-            <input type="checkbox" :checked="settings.sound" @change="settings.toggleSound()" />
-          </label>
-          <div class="setRow setRowSound">
-            <span class="setLabel">正确音效</span>
-            <select :value="settings.soundOkFile" @change="onSelectSound">
-              <option v-for="n in soundOptions" :key="n" :value="n">{{ n }}</option>
-            </select>
+        <!-- 设置浮层：居中大卡片 + 分组 -->
+        <div v-if="showSettings" class="settingsMask" @click.self="showSettings = false">
+          <div class="settingsPanel">
+            <div class="spHeader">
+              <span class="spTitle">设置</span>
+              <button class="spClose" title="关闭" @click="showSettings = false" data-nav>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>
+              </button>
+            </div>
+            <div class="spBody">
+              <!-- 组1：英文·掌握判定 -->
+              <div class="spGroup">
+                <div class="spGroupTitle">英文·掌握判定</div>
+                <div class="setRow">
+                  <span class="setLabel" title="抄写模式（显示字母，照着打）：不用回忆，所以要求打得快才算掌握">抄写·多快算掌握</span>
+                  <span class="setCtrl">
+                    <input type="number" :value="settings.enMasteryMs" min="100" max="3000" step="100" @change="setMasteryMs" />
+                    <span class="setUnit">ms/字母</span>
+                  </span>
+                </div>
+                <div class="setRow">
+                  <span class="setLabel" title="抄写模式平均每字母超过该值（即使没打错）→ 视为没掌握">抄写·多慢算生疏</span>
+                  <span class="setCtrl">
+                    <input type="number" :value="settings.enSlowMs" min="200" max="5000" step="100" @change="setSlowMs" />
+                    <span class="setUnit">ms/字母</span>
+                  </span>
+                </div>
+                <div class="setRow">
+                  <span class="setLabel" title="默写模式（隐藏字母，凭记忆打）：回忆要花时间，所以标准放宽">默写·多快算掌握</span>
+                  <span class="setCtrl">
+                    <input type="number" :value="settings.enMasteryMsDict" min="100" max="3000" step="100" @change="setMasteryMsDict" />
+                    <span class="setUnit">ms/字母</span>
+                  </span>
+                </div>
+                <div class="setRow">
+                  <span class="setLabel" title="平均每字母超过该值（即使无错）→ 视为掌握不好">默写·多慢算生疏</span>
+                  <span class="setCtrl">
+                    <input type="number" :value="settings.enSlowMsDict" min="200" max="5000" step="100" @change="setSlowMsDict" />
+                    <span class="setUnit">ms/字母</span>
+                  </span>
+                </div>
+                <div class="setRow">
+                  <span class="setLabel" title="慢词刻意练习阈值：平均每字母超过该值的词会自动收录，专项练到该值以内过关">慢词练习阈值</span>
+                  <span class="setCtrl">
+                    <input type="number" :value="settings.enPracticeMs" min="100" max="5000" step="50" @change="setPracticeMs" />
+                    <span class="setUnit">ms/字母</span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- 组2：英文·练习显示 -->
+              <div class="spGroup">
+                <div class="spGroupTitle">英文·练习显示</div>
+                <label class="setRow">
+                  <span class="setLabel" title="开启后：所有英文单词默认隐藏字母（全默写，凭记忆打），不再区分是否掌握；打错仍会显示单词">英文全默写</span>
+                  <input type="checkbox" :checked="settings.enAllDictation" @change="settings.toggleEnAllDictation()" />
+                </label>
+                <label class="setRow">
+                  <span class="setLabel" title="开启后显示每个英文单词上方的中文翻译；关闭后界面更简洁，专注拼写">单词·显示中文</span>
+                  <input type="checkbox" :checked="settings.enShowWordCn" @change="settings.toggleEnShowWordCn()" />
+                </label>
+                <label class="setRow">
+                  <span class="setLabel" title="开启后显示每个英文单词下方本词的平均用时(ms)；关闭后界面更简洁">单词·显示用时(ms)</span>
+                  <input type="checkbox" :checked="settings.enShowWordTime" @change="settings.toggleEnShowWordTime()" />
+                </label>
+                <label class="setRow">
+                  <span class="setLabel" title="默写模式下当前录入位置的字母是否显示：默认不显示（回忆拼写，仅该位置下划线高亮）；勾选后显示字母">默写·显示当前字母</span>
+                  <input type="checkbox" :checked="settings.enDictCurrentHint" @change="settings.toggleEnDictCurrentHint()" />
+                </label>
+                <label class="setRow">
+                  <span class="setLabel" title="开启后：打错的单词会重新入队、放到第二行重练（错题模式）；关闭后：打错即过，不重练错词">错题重练</span>
+                  <input type="checkbox" :checked="settings.enRedoPractice" @change="settings.toggleEnRedoPractice()" />
+                </label>
+              </div>
+
+              <!-- 组3：英文·发音 -->
+              <div class="spGroup">
+                <div class="spGroupTitle">英文·发音</div>
+                <label class="setRow">
+                  <span class="setLabel" title="英文模式：单词出现时朗读一遍；打错时也会再次朗读该词提示正确发音（浏览器内置语音）">单词发音</span>
+                  <input type="checkbox" :checked="settings.enSpeakWords" @change="settings.toggleEnSpeakWords()" />
+                </label>
+                <label class="setRow">
+                  <span class="setLabel" title="英文短文/自定义模式：进入新句子时整句作一次请求先试有道原声（与单词同音色），未收录的句子自动回退系统语音整句朗读">整句朗读</span>
+                  <input type="checkbox" :checked="settings.enSpeakSentence" @change="settings.toggleEnSpeakSentence()" />
+                </label>
+                <label class="setRow" v-if="settings.enSpeakSentence">
+                  <span class="setLabel" title="读完整句后：单词输入前不再逐个朗读（安静回想/试拼）；打错时的纠音朗读仍保留（建议短文模式使用）">整句后免单词预读</span>
+                  <input type="checkbox" :checked="settings.enNoWordPreSpeak" @change="settings.toggleEnNoWordPreSpeak()" />
+                </label>
+                <div class="setRow setRowSound" v-if="settings.enSpeakWords">
+                  <span class="setLabel" title="发音口音：有道词典 TTS，英音（type=2）或美音（type=1）">发音口音</span>
+                  <select :value="settings.enTTSAccent" @change="onSelectTTSAccent">
+                    <option value="uk">英音</option>
+                    <option value="us">美音</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- 组4：通用键盘 -->
+              <div class="spGroup">
+                <div class="spGroupTitle">通用键盘</div>
+                <label class="setRow">
+                  <span class="setLabel" title="关闭后底部虚拟键盘不再显示（适合使用外接实体键盘的场景）；各练习页顶部的单独“隐藏键盘”开关仍可用">显示底部键盘</span>
+                  <input type="checkbox" :checked="settings.showKeyboard" @change="settings.toggleShowKeyboard()" />
+                </label>
+                <label class="setRow">
+                  <span class="setLabel">卡片隐藏字母</span>
+                  <input type="checkbox" :checked="settings.cardHideLetters" @change="settings.toggleCardHideLetters()" />
+                </label>
+                <label class="setRow">
+                  <span class="setLabel">盲打模式</span>
+                  <input type="checkbox" :checked="settings.blindMode" @change="settings.toggleBlindMode()" />
+                </label>
+              </div>
+
+              <!-- 组5：声音 -->
+              <div class="spGroup">
+                <div class="spGroupTitle">声音</div>
+                <label class="setRow">
+                  <span class="setLabel">音效</span>
+                  <input type="checkbox" :checked="settings.sound" @change="settings.toggleSound()" />
+                </label>
+                <div class="setRow setRowSound">
+                  <span class="setLabel">正确音效</span>
+                  <select :value="settings.soundOkFile" @change="onSelectSound">
+                    <option v-for="n in soundOptions" :key="n" :value="n">{{ n }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -264,6 +280,46 @@ function setSlowMsDict(e) { settings.setEnSlowMsDict(e.target.value) }
 function setPracticeMs(e) { settings.setEnPracticeMs(e.target.value) }
 function setEnGrade(e) { settings.setEnGrade(e.target.value) }
 function go(path) { if (route.path !== path) router.push(path) }
+
+// 练习模式导航（点击进入常规打字页并选中对应模式；与 PracticeModes 的 MODES 一一对应）
+const PRACTICE_MODES = [
+  {
+    id: 'cards',
+    label: '中文拼音',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>',
+  },
+  {
+    id: 'english',
+    label: '英文',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h10"/></svg>',
+  },
+  {
+    id: 'numbers',
+    label: '键盘数字',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 9h16"/><path d="M4 15h16"/><path d="M10 3L8 21"/><path d="M16 3l-2 18"/></svg>',
+  },
+  {
+    id: 'letters',
+    label: '字母键位',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="9" width="8" height="8" rx="1.5"/><rect x="13" y="9" width="8" height="8" rx="1.5"/></svg>',
+  },
+  {
+    id: 'syllables',
+    label: '拼音音节',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2-5 3 10 3-8 2 3h5"/></svg>',
+  },
+]
+// 当前是否高亮某个练习模式：位于打字练习页且 query.mode 匹配（无 query 时默认 cards）
+function isModeActive(id) {
+  if (route.name !== 'practice-modes') return false
+  const q = route.query.mode
+  if (q) return q === id
+  return id === 'cards'
+}
+// 点击模式导航：进入打字练习页并写入 query.mode，让页内选中对应模式
+function goMode(id) {
+  router.push({ path: '/practice-modes', query: { mode: id } })
+}
 
 // 正确音效选择（移入设置面板）
 async function loadSounds() {
@@ -375,6 +431,8 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
 }
 .modeBtn:hover { color: var(--theme-menu-hover-color); }
 .btnIcon { width: 15px; height: 15px; flex: 0 0 auto; }
+.modeBtnIcon { display: inline-flex; width: 15px; height: 15px; flex: 0 0 auto; }
+.modeBtnIcon svg { width: 15px; height: 15px; }
 .gradeSelect {
   padding: 6px 10px;
   border-radius: 8px;
@@ -413,20 +471,70 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
   color: var(--theme-menu-hover-color);
 }
 .iconBtn.active { transform: rotate(40deg); }
-.settingsPop {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  z-index: 70;
-  width: 250px;
-  padding: 12px;
+.settingsMask {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.settingsPanel {
+  width: min(640px, 100%);
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
   background: var(--theme-background-color);
   border: 1px solid var(--theme-border-color);
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  border-radius: 14px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.2);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+}
+.spHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--theme-border-color);
+  position: sticky;
+  top: 0;
+  background: var(--theme-background-color);
+}
+.spTitle { font-size: 16px; font-weight: 700; color: var(--theme-main-text-color); }
+.spClose {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--theme-text-color);
+  cursor: pointer;
+}
+.spClose:hover { background: var(--theme-background-light-color); }
+.spBody {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.spGroup { display: flex; flex-direction: column; gap: 10px; }
+.spGroupTitle {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--theme-text-color);
+  letter-spacing: 0.5px;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed var(--theme-border-color);
+}
+@media (max-width: 600px) {
+  .settingsMask { padding: 12px; }
+  .settingsPanel { max-height: calc(100vh - 24px); }
+  .spBody { padding: 14px 14px; }
 }
 .setRow {
   display: flex;
