@@ -47,22 +47,22 @@
         <h2>学习统计</h2>
         <div class="stats-grid">
           <div class="stat-card">
-            <span class="stat-icon">🔥</span>
+            <span class="stat-icon"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2c.6 2.2-1.6 3.2-1.6 5.2a2.6 2.6 0 0 0 5.2 0c0-1.4-.5-2.4-1-3.4C9.8 5 8.8 4 8 2z"/><path d="M6.5 10.5a2.5 2.5 0 0 0 3 0"/></svg></span>
             <span class="stat-value">{{ streakDays }}</span>
             <span class="stat-label">连续练习天数</span>
           </div>
           <div class="stat-card">
-            <span class="stat-icon">📚</span>
+            <span class="stat-icon"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 4.5h12v7H2z"/><path d="M2 7h12M10.5 7V9"/></svg></span>
             <span class="stat-value">{{ progress.totalPracticeSessions }}</span>
             <span class="stat-label">总练习次数</span>
           </div>
           <div class="stat-card">
-            <span class="stat-icon">⏱️</span>
+            <span class="stat-icon"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg></span>
             <span class="stat-value">{{ Math.round(progress.learningTimeTotal) }}</span>
             <span class="stat-label">学习时长(分钟)</span>
           </div>
           <div class="stat-card">
-            <span class="stat-icon">📅</span>
+            <span class="stat-icon"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 4.5h12v7H2z"/><path d="M2 7h12M5 4.5 8 7l3-2.5"/></svg></span>
             <span class="stat-value">{{ progress.dailyGoals.completedDates.length }}</span>
             <span class="stat-label">完成目标天数</span>
           </div>
@@ -71,24 +71,24 @@
 
       <!-- 今日目标：实时进度指引 -->
       <div class="goal-card">
-        <h2>今日目标 <small class="goal-status" :class="{ done: goal.allDone }">{{ goal.allDone ? '🎉 已达成' : '进行中' }}</small></h2>
+        <h2>今日目标 <small class="goal-status" :class="{ done: goal.allDone }">{{ goal.allDone ? '已达成' : '进行中' }}</small></h2>
         <div class="goal-grid">
           <div class="goal-line" :class="{ done: goal.timeDoneFlag }">
-            <span class="goal-name">⏱️ 练习时长</span>
+            <span class="goal-name"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg> 练习时长</span>
             <span class="goal-bar"><span class="goal-fill" :style="{ width: goal.timePercent + '%' }"></span></span>
             <span class="goal-num">{{ goal.timeDone }} / {{ goal.timeTarget }} 分钟</span>
           </div>
           <div class="goal-line" :class="{ done: goal.accuracyDone }">
-            <span class="goal-name">🎯 正确率</span>
+            <span class="goal-name"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><circle cx="8" cy="8" r="1.8"/></svg> 正确率</span>
             <span class="goal-num">{{ goal.accuracy }}% <small>（目标 ≥{{ goal.accuracyTarget }}%）</small></span>
           </div>
           <div class="goal-line" :class="{ done: goal.sessionDoneFlag }">
-            <span class="goal-name">🔁 练习次数</span>
+            <span class="goal-name"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 2.5V6H10"/></svg> 练习次数</span>
             <span class="goal-num">{{ goal.sessionDone }} / {{ goal.sessionTarget }} 次</span>
           </div>
           <div class="goal-line" :class="{ done: goal.mistakesDone }">
-            <span class="goal-name">✏️ 错词清零</span>
-            <span class="goal-num">{{ goal.mistakesDone ? '已清完 ✅' : '还有 ' + goal.mistakes + ' 个错词待练' }}</span>
+            <span class="goal-name"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 11 4 9l-2 3h12"/><path d="M5 9h6"/></svg> 错词清零</span>
+            <span class="goal-num">{{ goal.mistakesDone ? '已清完' : '还有 ' + goal.mistakes + ' 个错词待练' }}</span>
           </div>
         </div>
       </div>
@@ -178,7 +178,7 @@
               <span class="unlocked-date">{{ formatUnlockDate(achievement.id) }}</span>
             </div>
             <div class="achievement-lock" v-else>
-              <span class="lock-icon">🔒</span>
+              <span class="lock-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="7" width="9" height="6" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg></span>
             </div>
           </div>
         </div>
@@ -203,15 +203,15 @@
       <!-- 操作按钮 -->
       <div class="actions-section">
         <button class="action-btn export" @click="exportProgress">
-          <span class="btn-icon">📤</span>
+          <span class="btn-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 11V3m0 0L5 6m3-3 3 3"/><path d="M2.5 12v1h11v-1"/></svg></span>
           导出进度
         </button>
         <button class="action-btn import" @click="triggerImport">
-          <span class="btn-icon">📥</span>
+          <span class="btn-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 3v8m0 0 3-3m-3 3L5 8"/><path d="M2.5 12v1h11v-1"/></svg></span>
           导入进度
         </button>
         <button class="action-btn reset" @click="resetProgress">
-          <span class="btn-icon">🔄</span>
+          <span class="btn-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 2.5V6H10"/></svg></span>
           重置进度
         </button>
       </div>
@@ -284,13 +284,13 @@ const filteredAchievements = computed(() => {
 const streakDays = computed(() => progress.streakDays)
 
 const PATH_ICONS = {
-  basics: '🌱',
-  intermediate: '📈',
-  advanced: '🏆'
+  basics: '基',
+  intermediate: '中',
+  advanced: '高'
 }
 
 function getPathIcon(pathId) {
-  return PATH_ICONS[pathId] || '📚'
+  return PATH_ICONS[pathId] || '基'
 }
 
 function isPathCompleted(pathId) {

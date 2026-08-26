@@ -47,7 +47,7 @@
         </div>
         <SchemeSelector />
         <button class="el-button el-button--small" @click="openImport">导入文本</button>
-        <button class="el-button el-button--small" @click="openPracticeSetManager">📚 练习集</button>
+        <button class="el-button el-button--small" @click="openPracticeSetManager">练习集</button>
         <label><input type="checkbox" :checked="writer.showPinyin" @change="e=>writer.setShowPinyin(e.target.checked)"/> 拼音显示</label>
         <label><input type="checkbox" :checked="writer.showShuangpin" @change="e=>writer.setShowShuangpin(e.target.checked)"/> 双拼编码显示</label>
         <label><input type="checkbox" :checked="writer.hideKeyboard" @change="e=>writer.setHideKeyboard(e.target.checked)"/> 隐藏键盘</label>
@@ -56,14 +56,14 @@
           :class="{ 'is-active': settings.blindMode }"
           @click="toggleBlindMode"
         >
-          {{ settings.blindMode ? '👁️ 盲打中' : '盲打模式' }}
+          {{ settings.blindMode ? ' 盲打中' : '盲打模式' }}
         </button>
         <button
           class="el-button el-button--small"
           :class="{ 'is-active': settings.timeChallenge }"
           @click="toggleTimeChallenge"
         >
-          {{ settings.timeChallenge ? '⏱️ 限时中' : '限时挑战' }}
+          {{ settings.timeChallenge ? '⏱ 限时中' : '限时挑战' }}
         </button>
       </div>
 
@@ -92,7 +92,7 @@
         </div>
       </div>
 
-      <Keyboard v-if="!writer.hideKeyboard" :handle="onPress" />
+      <Keyboard v-if="settings.showKeyboard && !writer.hideKeyboard" :handle="onPress" />
 
       <div class="footerSpace" />
     </div>
@@ -118,7 +118,7 @@
     <!-- 练习集管理弹窗 -->
     <div v-if="showPracticeSetManager" class="modalMask" @click.self="closePracticeSetManager">
       <div class="modal practice-set-modal">
-        <h3>📚 自定义练习集管理</h3>
+        <h3>自定义练习集管理</h3>
         <div class="practice-set-content">
           <!-- 左侧：练习集列表 -->
           <div class="set-list">
@@ -197,7 +197,7 @@
     <!-- 练习完成浮层（仅自定义/内置文案） -->
     <div v-if="writer.completed" class="modalMask" @click.self="restart">
       <div class="modal completion-modal">
-        <h3>🎉 练习完成</h3>
+        <h3>练习完成</h3>
         <p>已完成当前文案的全部文字练习。</p>
         <div class="completion-stats" v-if="stats">
           <div class="comp-stat">
@@ -211,7 +211,7 @@
         </div>
         <div class="modalFooter">
           <button class="el-button el-button--small share" @click="showShareCard = true">
-            <span>📤 分享成绩</span>
+            <span>分享成绩</span>
           </button>
           <div class="actions">
             <button class="el-button el-button--small primary" @click="restart">重新开始</button>
@@ -228,7 +228,7 @@
     <!-- 限时挑战结果弹窗 -->
     <div v-if="showTimeChallengeResult" class="modalMask" @click.self="closeTimeChallengeResult">
       <div class="modal">
-        <h3>⏱️ 限时挑战结果</h3>
+        <h3>⏱ 限时挑战结果</h3>
         <div class="stats-summary">
           <div class="stat-item">
             <span class="stat-value">{{ timeChallengeResults?.correct || 0 }}</span>
@@ -255,7 +255,7 @@
         </div>
         <div class="challenge-rating" v-if="timeChallengeResults">
           <div class="rating-stars">
-            <span v-for="n in 5" :key="n" class="star" :class="{ filled: n <= Math.ceil((timeChallengeResults.correct / Math.max(timeChallengeResults.total, 1)) * 5) }">★</span>
+            <span v-for="n in 5" :key="n" class="star" :class="{ filled: n <= Math.ceil((timeChallengeResults.correct / Math.max(timeChallengeResults.total, 1)) * 5) }"></span>
           </div>
           <p class="rating-text">
             {{ timeChallengeResults.correct / Math.max(timeChallengeResults.total, 1) >= 0.9 ? '太棒了！完美挑战！' :
@@ -265,7 +265,7 @@
         </div>
         <div class="modalFooter">
           <button class="el-button el-button--small share" @click="showShareCard = true">
-            <span>📤 分享</span>
+            <span>分享</span>
           </button>
           <div class="actions">
             <button class="el-button el-button--small primary" @click="closeTimeChallengeResult">再来一次</button>

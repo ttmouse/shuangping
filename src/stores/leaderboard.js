@@ -22,14 +22,14 @@ function getUserId() {
 
 // 模拟其他用户数据
 const MOCK_USERS = [
-  { id: 'mock_1', name: '打字小能手', avatar: '⚡' },
-  { id: 'mock_2', name: '双拼达人', avatar: '🎯' },
-  { id: 'mock_3', name: '键盘侠', avatar: '⌨️' },
-  { id: 'mock_4', name: '速度之王', avatar: '🚀' },
-  { id: 'mock_5', name: '准确率100', avatar: '💯' },
-  { id: 'mock_6', name: '练习狂魔', avatar: '🔥' },
-  { id: 'mock_7', name: '新手小白', avatar: '🌱' },
-  { id: 'mock_8', name: '进步神速', avatar: '📈' },
+  { id: 'mock_1', name: '打字小能手', avatar: '能' },
+  { id: 'mock_2', name: '双拼达人', avatar: '拼' },
+  { id: 'mock_3', name: '键盘侠', avatar: '⌨' },
+  { id: 'mock_4', name: '速度之王', avatar: '速' },
+  { id: 'mock_5', name: '准确率100', avatar: '准' },
+  { id: 'mock_6', name: '练习狂魔', avatar: '练' },
+  { id: 'mock_7', name: '新手小白', avatar: '新' },
+  { id: 'mock_8', name: '进步神速', avatar: '进' },
 ]
 
 // 生成模拟排行榜数据
@@ -53,7 +53,7 @@ export const useLeaderboardStore = defineStore('leaderboard', {
     // 当前用户数据
     userId: '',
     userName: '',
-    userAvatar: '🎯',
+    userAvatar: '',
 
     // 排行榜数据
     dailyRanking: [],
@@ -373,16 +373,16 @@ export const useLeaderboardStore = defineStore('leaderboard', {
       const typeName = typeNames[challenge.type] || '双拼挑战'
       const unit = units[challenge.type] || ''
       
-      return `🎯 ${this.userName} 向你发起${typeName}！\n目标：${challenge.target}${unit}\n一起来双拼练习吧！⌨️`
+      return ` ${this.userName} 向你发起${typeName}！\n目标：${challenge.target}${unit}\n一起来双拼练习吧！⌨`
     },
 
     // 生成挑战分享卡片数据
     generateChallengeCardData(challenge) {
       const typeNames = { accuracy: '准确率挑战', speed: '速度挑战', streak: '连续练习', chars: '练习字数' }
-      const icons = { accuracy: '🎯', speed: '⚡', streak: '🔥', chars: '📝' }
+      const icons = { accuracy: '准', speed: '速', streak: '连', chars: '字' }
       
       return {
-        title: `${icons[challenge.type] || '🎯'} ${typeNames[challenge.type] || '双拼挑战'}`,
+        title: `${icons[challenge.type] || ''} ${typeNames[challenge.type] || '双拼挑战'}`,
         target: challenge.target,
         from: this.userName,
         progress: challenge.progress || 0,

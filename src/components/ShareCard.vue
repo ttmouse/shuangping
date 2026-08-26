@@ -55,7 +55,7 @@
 
           <div class="card-footer">
             <div class="card-brand">
-              <span class="brand-icon">⌨️</span>
+              <span class="brand-icon"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1.5" y="4" width="13" height="8" rx="1.5"/><path d="M4 6.5h.01M6.5 6.5h.01M9 6.5h.01M4 9.5h.01M6.5 9.5h.01M9 9.5h.01"/></svg></span>
               <span class="brand-text">双拼练习</span>
             </div>
             <div class="card-qrcode" v-if="showQRCode">
@@ -90,11 +90,11 @@
       <!-- 分享选项 -->
       <div class="share-options">
         <button class="share-btn primary" @click="downloadCard">
-          <span class="btn-icon">💾</span>
+          <span class="btn-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 11V3m0 0L5 6m3-3 3 3"/><path d="M2.5 12v1h11v-1"/></svg></span>
           保存图片
         </button>
         <button class="share-btn" @click="copyToClipboard">
-          <span class="btn-icon">📋</span>
+          <span class="btn-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="5" width="8" height="8" rx="1.5"/><path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5"/></svg></span>
           复制文本
         </button>
       </div>
@@ -110,15 +110,12 @@
             <span class="social-name">X</span>
           </button>
           <button class="social-btn weibo" @click="shareToWeibo" title="分享到微博">
-            <span class="social-icon">🐦</span>
             <span class="social-name">微博</span>
           </button>
           <button class="social-btn qq" @click="shareToQQ" title="分享到QQ">
-            <span class="social-icon">🐧</span>
             <span class="social-name">QQ</span>
           </button>
           <button class="social-btn native" @click="shareNative" v-if="canShareNative" title="系统分享">
-            <span class="social-icon">🔗</span>
             <span class="social-name">更多</span>
           </button>
         </div>
@@ -175,7 +172,7 @@ const userName = computed(() => {
 })
 
 const userAvatar = computed(() => {
-  return localStorage.getItem('sp-avatar') || '🎯'
+  return localStorage.getItem('sp-avatar') || '双'
 })
 
 const displayStats = computed(() => {
@@ -210,14 +207,14 @@ const formatDate = computed(() => {
 
 const shareText = computed(() => {
   const s = displayStats.value
-  let text = `🎯 我的双拼练习成绩\n`
+  let text = `我的双拼练习成绩\n`
   text += `准确率: ${s.accuracy}% | 速度: ${s.speed}字/分\n`
   text += `今日练习: ${s.chars}字符 | 连续${displayStreak.value}天\n`
   text += `累计练习: ${s.totalChars}字符\n`
   if (recentAchievements.value.length) {
-    text += `🏆 最近成就: ${recentAchievements.value.slice(0, 3).map(a => a.name).join(', ')}\n`
+    text += `最近成就: ${recentAchievements.value.slice(0, 3).map(a => a.name).join(', ')}\n`
   }
-  text += `一起来练习双拼吧！⌨️`
+  text += `一起来练习双拼吧！`
   return text
 })
 
@@ -403,7 +400,7 @@ async function renderCardToCanvas(element) {
 
   ctx.fillStyle = isDark ? '#ffffff' : '#1a1a1a'
   ctx.font = '14px sans-serif'
-  ctx.fillText('⌨️ 双拼练习', 20, rect.height - 20)
+  ctx.fillText('双拼练习', 20, rect.height - 20)
 
   return canvas
 }

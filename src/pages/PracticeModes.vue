@@ -5,7 +5,7 @@
     <div class="pageCenter">
       <div class="tipsTextContent">
         <h1>常规打字练习</h1>
-        <h2>中文全屏 · 英文单词 · 键盘数字 · 字母键位 · 拼音音节 · 卡片，专项提升打字速度与键盘熟悉度。</h2>
+        <h2>中文全屏 · 英文 · 键盘数字 · 字母键位 · 拼音音节 · 卡片，专项提升打字速度与键盘熟悉度。</h2>
       </div>
 
       <div class="modeTabs">
@@ -67,14 +67,16 @@
               <span v-if="wordIdx < enSentence.length">· 第 {{ wordIdx + 1 }} / {{ enSentence.length }} 词</span>
               <span v-else>· 本句完成</span>
               <span class="enHint">{{ enSentenceDone ? '（本句完成，按 空格/回车 进入下一句）' : ((dictWords.has(currentWord) || settings.enAllDictation) && !enHadError ? '（默写：看中文打英文，打错会显示单词）' : '（空格/回车 进入下一词）') }}</span>
+              <button class="enActionBtn" :disabled="!enCanViewAnswer" @click="enViewAnswer" title="显示当前单词（计入完成统计）" data-nav><svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>答案</button>
+              <button class="enActionBtn" @click="enRelisten" title="重读当前单词" data-nav><svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>重听</button>
             </div>
           </div>
           <div class="enStage" v-if="!started">
             <!-- 英文内容类型：单词 / 短文 / 自定义 -->
             <div class="enSectionTabs">
-              <button class="enSectionTab" :class="{ active: enSection === 'words' }" @click="enSection = 'words'" data-nav>📖 单词</button>
-              <button class="enSectionTab" :class="{ active: enSection === 'stories' }" @click="enSection = 'stories'" data-nav>📚 短文</button>
-              <button class="enSectionTab" :class="{ active: enSection === 'custom' }" @click="enSection = 'custom'" data-nav>📋 自定义</button>
+              <button class="enSectionTab" :class="{ active: enSection === 'words' }" @click="enSection = 'words'" data-nav>单词</button>
+              <button class="enSectionTab" :class="{ active: enSection === 'stories' }" @click="enSection = 'stories'" data-nav>短文</button>
+              <button class="enSectionTab" :class="{ active: enSection === 'custom' }" @click="enSection = 'custom'" data-nav>自定义</button>
             </div>
             <template v-if="enSection === 'words'">
             <!-- 英文错题本：打错的词（error/slow）自动收录，可一键专练 -->
@@ -97,7 +99,7 @@
             <div class="mistakePanel enMistakePanel">
               <template v-if="enSlowList.length">
                 <div class="slowBar">
-                  <span class="slowBarTitle">🐢 慢词刻意练习</span>
+                  <span class="slowBarTitle">慢词刻意练习</span>
                   <span class="slowBarMeta">{{ enSlowList.length }} 个词待练快（平均耗时 &gt; {{ settings.enPracticeMs || 300 }}ms/字母）</span>
                 </div>
                 <div class="mistakeOpts">
@@ -108,12 +110,33 @@
                   <button class="btn" @click="clearEnSlowWords" data-nav>清空</button>
                 </div>
               </template>
-              <div v-else class="mistakeEmpty">🐢 暂无慢词——平均耗时超过 {{ settings.enPracticeMs || 300 }}ms/字母 的词会自动收录，刻意练到变快。</div>
+              <div v-else class="mistakeEmpty">暂无慢词——平均耗时超过 {{ settings.enPracticeMs || 300 }}ms/字母 的词会自动收录，刻意练到变快。</div>
             </div>
             </template>
             <template v-else-if="enSection === 'stories'">
             <div class="storyPanel">
-              <div class="storyPanelTitle">📚 内置短文</div>
+              <div class="storyPanelTitle">
+                <span>短文</span>
+                <button class="btn storyAddBtn" @click="openCustomEditor" data-nav>＋ 新增自定义</button>
+              </div>
+              <div v-if="customEditorOpen" class="customEditor">
+                <input v-model="newCustomTitle" placeholder="给这组内容起个名字（可留空）" class="customTitleInput" />
+                <textarea v-model="newCustomText" placeholder="粘贴英文内容（可中英对照，每句一行，中文行自动配为翻译）" rows="4"></textarea>
+                <div class="customOpts">
+                  <button class="btn" :disabled="!newCustomText.trim()" @click="saveCustomStory" data-nav>{{ editingCustomId ? '保存修改' : '保存并加入' }}</button>
+                  <button class="btn" @click="customEditorOpen = false" data-nav>取消</button>
+                </div>
+              </div>
+              <div v-if="enCustomStoryList.length" class="storyList">
+                <div v-for="s in enCustomStoryList" :key="s.id" class="storyItemWrap">
+                  <button class="storyItem" @click="startEnStory(s)" data-nav>
+                    <span class="storyTitle">{{ s.title }}</span>
+                    <span class="storyMeta">{{ s.sentences.length }} 句 · 自定义{{ s.firstLine ? ' · ' + s.firstLine.slice(0, 28) + (s.firstLine.length > 28 ? '…' : '') : '' }}</span>
+                  </button>
+                  <button class="storyEdit" title="编辑" @click="editCustomStory(s.id)">✎</button>
+                  <button class="storyDel" title="删除" @click="removeEnCustomStory(s.id)">×</button>
+                </div>
+              </div>
               <div class="storyList">
                 <button
                   v-for="s in EN_STORIES"
@@ -131,7 +154,7 @@
             <template v-else>
             <!-- 自定义内容：粘贴自己的英文练习（支持中英双语，自动配对翻译） -->
             <div class="customPanel enCustomPanel">
-              <div class="customTitle">📋 自定义内容</div>
+              <div class="customTitle">自定义内容</div>
               <textarea
                 v-model="enCustomText"
                 placeholder="粘贴英文内容（可中英对照，如：&#10;It's sunny and warm today.&#10;今天天气晴朗又暖和。）"
@@ -221,7 +244,7 @@
                 :class="{ active: settings.cardHideLetters }"
                 @click="settings.toggleCardHideLetters()"
                 data-nav
-              >{{ settings.cardHideLetters ? '🔒 隐藏字母' : '👁 显示拼音' }}</button>
+              >{{ settings.cardHideLetters ? '隐藏字母' : '显示拼音' }}</button>
             </div>
 
             <!-- 自定义词表输入面板 -->
@@ -283,7 +306,7 @@
                 <div class="ankiProgress">第 {{ cardIdx + 1 }} / {{ cardQueue.length }} 张卡</div>
               </div>
               <div class="numHint">
-                <template v-if="cardAdvancePending">✅ 本卡完成，按 空格/回车 进入下一张</template>
+                <template v-if="cardAdvancePending">本卡完成，按 空格/回车 进入下一张</template>
                 <template v-else>
                   {{ cardType === 'word' ? '打出词语的拼音，音节自动切换' : cardType === 'sentence' ? '逐字打出整句拼音，错卡自动重练' : cardType === 'mistake' ? '专练错题本里的词，错得越多越常出现' : '刻意练习：反复打熟你指定的词' }}
                   <template v-if="hideLetters">（隐藏字母：输入正确后展示并保留横线，错误标红）</template>
@@ -297,7 +320,7 @@
 
       <!-- 键盘（受控展示模式：按压/闪光由页面驱动，输入由页面统一处理） -->
       <Keyboard
-        v-if="started"
+        v-if="started && settings.showKeyboard"
         :pressed-codes="keyPressed"
         :flash-codes="flashState"
         :show-hints="false"
@@ -306,24 +329,48 @@
       <!-- 完成弹窗 -->
       <div v-if="completed" class="overlay" @click.self="restart">
         <div class="resultModal">
-          <h3>🎉 练习完成</h3>
-          <div class="resultStats">
-            <div class="rStat">
-              <span class="rValue">{{ accuracy }}%</span>
-              <span class="rLabel">正确率</span>
-            </div>
-            <div class="rStat">
-              <span class="rValue">{{ speed }}</span>
-              <span class="rLabel">字/分</span>
-            </div>
-            <div class="rStat">
-              <span class="rValue">{{ formatDuration(finalDuration) }}</span>
-              <span class="rLabel">总用时</span>
-            </div>
+          <h3>练习完成</h3>
+          <div class="resultStats" :class="{ en: mode === 'english' }">
+            <template v-if="mode === 'english'">
+              <div class="rStat">
+                <span class="rValue">{{ enFirstHitRate }}%</span>
+                <span class="rLabel">一次命中率</span>
+              </div>
+              <div class="rStat">
+                <span class="rValue">{{ accuracy }}%</span>
+                <span class="rLabel">正确率</span>
+              </div>
+              <div class="rStat">
+                <span class="rValue">{{ enViewAnswers }}</span>
+                <span class="rLabel">查看答案</span>
+              </div>
+              <div class="rStat">
+                <span class="rValue">{{ enRelistens }}</span>
+                <span class="rLabel">重听次数</span>
+              </div>
+              <div class="rStat">
+                <span class="rValue">{{ enAvgWordTime }}<small>ms</small></span>
+                <span class="rLabel">平均用时/词</span>
+              </div>
+            </template>
+            <template v-else>
+              <div class="rStat">
+                <span class="rValue">{{ accuracy }}%</span>
+                <span class="rLabel">正确率</span>
+              </div>
+              <div class="rStat">
+                <span class="rValue">{{ speed }}</span>
+                <span class="rLabel">字/分</span>
+              </div>
+              <div class="rStat">
+                <span class="rValue">{{ formatDuration(finalDuration) }}</span>
+                <span class="rLabel">总用时</span>
+              </div>
+            </template>
           </div>
           <div class="recordBox" v-if="finalDuration > 0" :class="{ new: isNewRecord }">
             <template v-if="isNewRecord">
-              <span class="recordBadge">🏆 新纪录！</span>
+              <span class="recordBadge">新纪录！</span>
               <span class="recordText" v-if="prevBest !== null">本次用时 {{ formatDuration(finalDuration) }}，打破之前纪录 {{ formatDuration(prevBest) }}</span>
               <span class="recordText" v-else>本次用时 {{ formatDuration(finalDuration) }} · 首次完成，纪录已建立</span>
             </template>
@@ -331,22 +378,11 @@
           </div>
           <!-- 本次错词：展示 + 刻意练习 -->
           <div class="sessionMistakeBox" v-if="sessionMistakes.length">
-            <div class="smTitle">✏️ 本次错词（{{ sessionMistakes.length }} 个）</div>
+            <div class="smTitle">本次错词（{{ sessionMistakes.length }} 个）</div>
             <div class="smChips">
               <span v-for="w in sessionMistakes" :key="w" class="smChip">{{ mode === 'english' ? w + (EN_TRANSLATIONS[w] ? '·' + EN_TRANSLATIONS[w] : '') : w }}</span>
             </div>
             <button class="btn primary" @click="startMistakePractice">刻意练习这 {{ sessionMistakes.length }} 个错词</button>
-          </div>
-          <!-- 今日目标达成情况 -->
-          <div class="goalResult" :class="{ done: goal.allDone }">
-            <template v-if="goal.allDone">🎉 今日目标全部达成：时长 {{ goal.timeDone }}/{{ goal.timeTarget }}分钟 · 正确率 {{ goal.accuracy }}% · 练习 {{ goal.sessionDone }}/{{ goal.sessionTarget }}次 · 错词清零</template>
-            <template v-else>
-              今日目标还差：
-              <span v-if="!goal.timeDoneFlag">时长 {{ goal.timeDone }}/{{ goal.timeTarget }}分钟</span>
-              <span v-if="!goal.accuracyDone">正确率 {{ goal.accuracy }}%（要 {{ goal.accuracyTarget }}%）</span>
-              <span v-if="!goal.sessionDoneFlag">练习 {{ goal.sessionDone }}/{{ goal.sessionTarget }}次</span>
-              <span v-if="!goal.mistakesDone">错词 {{ goal.mistakes }}个待练</span>
-            </template>
           </div>
           <div class="resultActions">
             <button ref="restartBtnRef" class="btn primary" @click="restart">
@@ -412,12 +448,12 @@ import { playKeySound } from '../utils/sound.js'
 const MODES = [
   {
     id: 'cards',
-    label: '卡片',
+    label: '中文拼音',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>',
   },
   {
     id: 'english',
-    label: '英文单词',
+    label: '英文',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h10"/></svg>',
   },
   {
@@ -444,8 +480,8 @@ const CONTENT_TYPES = [
   { id: 'g5', name: '五年级', cardType: 'word', grade: 'g5' },
   { id: 'g6', name: '六年级', cardType: 'word', grade: 'g6' },
   { id: 'sentence', name: '短句', cardType: 'sentence', grade: null },
-  { id: 'mistake', name: '📕 错题本', cardType: 'mistake', grade: null },
-  { id: 'custom', name: '✍️ 自定义', cardType: 'custom', grade: null },
+  { id: 'mistake', name: '错题本', cardType: 'mistake', grade: null },
+  { id: 'custom', name: '自定义', cardType: 'custom', grade: null },
 ]
 
 // 英文词库年级（选项在顶部栏）
@@ -561,6 +597,87 @@ function saveEnCustom() {
   try { localStorage.setItem(EN_CUSTOM_KEY, enCustomText.value) } catch {}
 }
 // 解析粘贴内容：英文行（≥2 个英文词）作为句子，紧接其后的中文行配对为该句翻译
+// 短文 tab 的多自定义条目管理：每篇独立标题+内容，可增删，本地持久化
+const EN_CUSTOM_STORIES_KEY = 'shuangping:en-custom-stories'
+const enCustomStories = ref([])
+const customEditorOpen = ref(false)
+const editingCustomId = ref(null) // null=新增；非 null=编辑该条
+const newCustomTitle = ref('')
+const newCustomText = ref('')
+function saveEnCustomStories() {
+  try { localStorage.setItem(EN_CUSTOM_STORIES_KEY, JSON.stringify(enCustomStories.value)) } catch {}
+}
+function loadEnCustomStories() {
+  try {
+    const raw = localStorage.getItem(EN_CUSTOM_STORIES_KEY)
+    if (raw) {
+      const arr = JSON.parse(raw)
+      if (Array.isArray(arr)) enCustomStories.value = arr
+    }
+  } catch {}
+}
+
+// 每篇自定义 → 短文结构（保留原句，供整句流式+中文对照；标题缺省按序号命名）
+function enCustomStoryOf(c, idx) {
+  const sents = parseCustomStory(c.text)
+  return {
+    id: c.id,
+    grade: 'custom',
+    title: c.title || `自定义 ${idx + 1}`,
+    titleCn: '自己粘贴的内容',
+    firstLine: sents[0]?.en || '',
+    sentences: sents,
+  }
+}
+const enCustomStoryList = computed(() => enCustomStories.value.map((c, i) => enCustomStoryOf(c, i)))
+function openCustomEditor() {
+  // 新增模式：清空输入
+  newCustomTitle.value = ''
+  newCustomText.value = ''
+  editingCustomId.value = null
+  customEditorOpen.value = true
+}
+function editCustomStory(id) {
+  const c = enCustomStories.value.find(x => x.id === id)
+  if (!c) return
+  newCustomTitle.value = c.title || ''
+  newCustomText.value = c.text || ''
+  editingCustomId.value = id
+  customEditorOpen.value = true
+}
+function saveCustomStory() {
+  const text = newCustomText.value.trim()
+  if (!text) return
+  if (editingCustomId.value) {
+    // 编辑：覆盖原条目（保留 id，练习中的引用不受影响）
+    const c = enCustomStories.value.find(x => x.id === editingCustomId.value)
+    if (c) {
+      c.title = newCustomTitle.value.trim()
+      c.text = text
+      saveEnCustomStories()
+      newCustomTitle.value = ''
+      newCustomText.value = ''
+      editingCustomId.value = null
+      customEditorOpen.value = false
+      return
+    }
+  }
+  enCustomStories.value.push({
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+    title: newCustomTitle.value.trim(),
+    text,
+  })
+  saveEnCustomStories()
+  newCustomTitle.value = ''
+  newCustomText.value = ''
+  editingCustomId.value = null
+  customEditorOpen.value = false
+}
+function removeEnCustomStory(id) {
+  enCustomStories.value = enCustomStories.value.filter(c => c.id !== id)
+  saveEnCustomStories()
+}
+
 function parseCustomEnglish(text) {
   const lines = (text || '').split(/\n+/).map(l => l.trim()).filter(Boolean)
   const sentences = []
@@ -576,6 +693,24 @@ function parseCustomEnglish(text) {
     }
   }
   return sentences.filter(s => s.words.length > 0)
+}
+
+// 自定义内容 → 短文结构（保留原句大小写/标点，供短文模式整句流式+中文对照）
+function parseCustomStory(text) {
+  const lines = (text || '').split(/\n+/).map(l => l.trim()).filter(Boolean)
+  const sentences = []
+  let last = -1
+  for (const line of lines) {
+    const words = (line.match(/[A-Za-z']+/g) || []).filter(w => w.length >= 1)
+    if (words.length >= 2) {
+      sentences.push({ en: line, cn: '' })
+      last = sentences.length - 1
+    } else if (last >= 0) {
+      // 中文行：追加为最近英文句的翻译
+      sentences[last].cn = (sentences[last].cn ? sentences[last].cn + ' ' : '') + line
+    }
+  }
+  return sentences.filter(s => (s.en.match(/[A-Za-z']+/g) || []).length > 0)
 }
 function startEnCustomPractice() {
   if (!enCustomText.value.trim()) return
@@ -678,7 +813,7 @@ function speakWholeSentence() {
   if (!settings.enSpeakSentence) return
   const words = enSentence.value
   if (words.length < 2) return
-  speakSentence(words, settings.enTTSAccent || 'uk')
+  speakSentence(words, settings.enTTSAccent || 'uk', enStoryMode.value ? 2 : 1)
 }
 function speakEnglish(word, force = false) {
   if (!word) return
@@ -746,6 +881,31 @@ const isCustomPanel = computed(() => mode.value === 'cards' && cardType.value ==
 
 // 各模式的错题重练标记：当前单元（词/数字/字母/音节）是否出过错
 const enHadError = ref(false)
+// 英文会话统计（完成弹窗展示）：一次命中率 / 查看答案 / 重听 / 平均每词用时
+const enWordCount = ref(0) // 完成词数（含重练）
+const enFirstHitCount = ref(0) // 一次命中：该词完成时无打错且未查看答案
+const enViewAnswers = ref(0)
+const enRelistens = ref(0)
+const enWordTimeSum = ref(0) // 词总用时（ms）
+const enFirstHitRate = computed(() => enWordCount.value ? Math.round((enFirstHitCount.value / enWordCount.value) * 100) : 100)
+const enAvgWordTime = computed(() => enWordCount.value ? Math.round(enWordTimeSum.value / enWordCount.value) : 0)
+// 「查看答案」可点条件：当前词处于默写隐藏（字母本就没有显示）且尚未揭示
+const enCanViewAnswer = computed(() => {
+  const w = currentWord.value
+  return !!w && (dictWords.value.has(w) || settings.enAllDictation) && !enHadError.value
+})
+function enViewAnswer() {
+  if (!enCanViewAnswer.value) return
+  const w = currentWord.value
+  enViewAnswers.value++
+  enHadError.value = true // 复用打错揭示机制：当前词立即显示；完成时判错、不算一次命中
+}
+function enRelisten() {
+  const w = currentWord.value
+  if (!w) return
+  enRelistens.value++
+  speakEnglish(w, true) // force=true：同词重听也朗读
+}
 const numHadError = ref(false)
 const letterHadError = ref(false)
 const sylHadError = ref(false)
@@ -1278,6 +1438,11 @@ function start() {
   correctCount.value = 0
   completedUnits.value = 0
   enHadError.value = numHadError.value = letterHadError.value = sylHadError.value = false
+  enWordCount.value = 0
+  enFirstHitCount.value = 0
+  enViewAnswers.value = 0
+  enRelistens.value = 0
+  enWordTimeSum.value = 0
   completed.value = false
   sessionStart.value = Date.now()
   started.value = true
@@ -1662,6 +1827,10 @@ function onKeyDown(e) {
         const avg = enWordKeystrokes.value > 0 ? Math.max(0, elapsed) / enWordKeystrokes.value : Infinity
         enLastWordAvg.value = Number.isFinite(avg) ? Math.round(avg) : 0 // 显示本词平均耗时
         enWordAvgs.value[wordIdx.value] = enLastWordAvg.value // 记录到该词位置（显示在词下方）
+        // 英文会话统计累积
+        enWordCount.value++
+        enWordTimeSum.value += Math.max(0, elapsed)
+        if (!enHadError.value) enFirstHitCount.value++
         const isDictation = dictWords.value.has(word) || settings.enAllDictation // 该词以默写（隐藏字母）方式展示
         const mMs = isDictation ? enMasteryMsDict.value : enMasteryMs.value
         const sMs = isDictation ? enSlowMsDict.value : enSlowMs.value
@@ -1770,6 +1939,7 @@ onMounted(() => {
   progress.load()
   mistakes.load()
   loadEnCustom() // 加载英文自定义内容
+  loadEnCustomStories() // 加载短文自定义条目
   window.addEventListener('keydown', onKeyDown)
   window.addEventListener('keydown', onNavKeydown)
   window.addEventListener('keyup', onKeyUp)
@@ -1940,6 +2110,70 @@ onBeforeUnmount(() => {
   font-size: 14px;
   font-weight: 700;
   color: var(--theme-main-text-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.storyAddBtn {
+  font-size: 12px;
+  padding: 4px 10px;
+}
+.customEditor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border: 1px dashed var(--theme-border-color);
+  border-radius: 10px;
+  background: var(--theme-background-color);
+}
+.customTitleInput {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-color);
+  color: var(--theme-main-text-color);
+  font-size: 14px;
+  outline: none;
+}
+.storyItemWrap {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+}
+.storyItemWrap .storyItem {
+  flex: 1;
+}
+.storyDel {
+  flex: none;
+  width: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--theme-border-color);
+  background: transparent;
+  color: var(--theme-menu-text-color);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+.storyEdit {
+  flex: none;
+  width: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--theme-border-color);
+  background: transparent;
+  color: var(--theme-menu-text-color);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+}
+.storyEdit:hover {
+  color: #3498db;
+  border-color: #3498db;
+}
+.storyDel:hover {
+  color: #e74c3c;
+  border-color: #e74c3c;
 }
 .storyList {
   display: flex;
@@ -2090,8 +2324,25 @@ onBeforeUnmount(() => {
   background: color-mix(in srgb, #f56c6c 16%, transparent);
   border-radius: 3px;
 }
-.enProgress { font-size: 14px; color: var(--theme-text-color); }
-.enHint { font-size: 13px; color: var(--theme-rich-text-color); margin-left: 8px; }
+.enProgress { font-size: 14px; color: var(--theme-text-color); display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.enHint { font-size: 13px; color: var(--theme-rich-text-color); }
+.enActionBtn {
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-color);
+  color: var(--theme-main-text-color);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.enActionBtn svg { flex: none; }
+.enActionBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
 
 /* 键盘数字 */
 .numStage { display: flex; flex-direction: column; align-items: center; gap: 14px; }
@@ -2158,7 +2409,7 @@ onBeforeUnmount(() => {
   position: relative;
 }
 .ankiCard.redo::after {
-  content: '🔄 重练';
+  content: '重练';
   position: absolute;
   top: 10px;
   right: 14px;
@@ -2321,13 +2572,15 @@ onBeforeUnmount(() => {
 .resultModal {
   background: var(--theme-background-color);
   border-radius: 12px;
-  width: 360px;
-  max-width: 90vw;
+  width: min(520px, 92vw);
+  min-width: 320px;
   padding: 24px;
   text-align: center;
 }
 .resultModal h3 { margin: 0 0 16px; font-size: 20px; }
 .resultStats { display: flex; gap: 12px; margin-bottom: 20px; }
+.enResultStats { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+.enResultStats .rStat { min-width: 108px; flex: 1 1 auto; }
 .rStat { flex: 1; padding: 12px; background: var(--theme-background-light-color); border-radius: 8px; }
 .rValue { display: block; font-size: 26px; font-weight: 700; color: var(--theme-main-text-color); }
 .rLabel { font-size: 12px; color: var(--theme-text-color); }

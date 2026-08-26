@@ -4,7 +4,7 @@
 
     <div class="page-content">
       <div class="header">
-        <h1>🏆 排行榜</h1>
+        <h1>排行榜</h1>
         <p class="subtitle">与双拼练习者们一较高下</p>
       </div>
 
@@ -15,15 +15,15 @@
           <div class="rank-name">{{ myStats.name }}</div>
           <div class="rank-stats">
             <span class="rank-stat">
-              <span class="stat-icon">📊</span>
+              <span class="stat-icon"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 14V8m5 6V4m5 10V6"/><path d="M1.5 14h13"/></svg></span>
               {{ myStats.accuracy }}%
             </span>
             <span class="rank-stat">
-              <span class="stat-icon">⚡</span>
+              <span class="stat-icon"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8.5 1.5 3 9h4l-1 6L12 7H8l.5-5.5z"/></svg></span>
               {{ myStats.speed }}字/分
             </span>
             <span class="rank-stat">
-              <span class="stat-icon">🔥</span>
+              <span class="stat-icon"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2c.6 2.2-1.6 3.2-1.6 5.2a2.6 2.6 0 0 0 5.2 0c0-1.4-.5-2.4-1-3.4C9.8 5 8.8 4 8 2z"/><path d="M6.5 10.5a2.5 2.5 0 0 0 3 0"/></svg></span>
               {{ myStats.streakDays }}天
             </span>
           </div>
@@ -65,7 +65,7 @@
           >
             <div class="col-rank">
               <span class="rank-badge" :class="`rank-${user.rank}`" v-if="user.rank <= 3">
-                {{ ['🥇', '🥈', '🥉'][user.rank - 1] }}
+                <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="6" r="3.5"/><path d="M5.5 8.5 4.5 14l3.5-1.8L11.5 14l-1-5.5"/></svg>
               </span>
               <span v-else class="rank-number">{{ user.rank }}</span>
             </div>
@@ -86,7 +86,7 @@
       <div class="quick-share-section" v-if="myStats">
         <div class="quick-share-card">
           <div class="quick-share-text">
-            <span class="share-emoji">🏆</span>
+            <span class="share-emoji"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 11 11 5m0 0H6.5M11 5v4.5"/></svg></span>
             <span>我在双拼练习中排名第 <strong>#{{ myAllTimeRank || '-' }}</strong>，准确率 {{ myStats.accuracy }}%，速度 {{ myStats.speed }} 字/分！</span>
           </div>
           <button class="quick-share-btn" @click="openShareCard">
@@ -98,7 +98,7 @@
       <!-- 挑战区域 -->
       <div class="challenges-section">
         <div class="section-header">
-          <h2>🎯 我的挑战</h2>
+          <h2>我的挑战</h2>
           <button class="create-btn" @click="showCreateChallenge = true">
             + 创建挑战
           </button>
@@ -123,14 +123,14 @@
             </div>
             <div class="challenge-actions">
               <button class="share-challenge-btn" @click="shareChallenge(challenge)" title="分享挑战">
-                📤
+                <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 11 11 5m0 0H6.5M11 5v4.5"/></svg>
               </button>
             </div>
           </div>
         </div>
 
         <div class="empty-state" v-else>
-          <div class="empty-icon">🎯</div>
+          <div class="empty-icon"><svg viewBox="0 0 16 16" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 5.5 5 3.5h6l2 2V11a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 3 11V5.5z"/><path d="M3.2 8h3l1 1.5h1.6l1-1.5h3"/></svg></div>
           <div class="empty-text">暂无进行中的挑战</div>
           <button class="create-btn-large" @click="showCreateChallenge = true">
             创建新挑战
@@ -147,7 +147,7 @@
               class="history-item"
               :class="challenge.status"
             >
-              <span class="history-icon">{{ challenge.status === 'completed' ? '✅' : '❌' }}</span>
+              <span class="history-icon">{{ challenge.status === 'completed' ? '✓' : '✗' }}</span>
               <span class="history-title">{{ getChallengeTitle(challenge) }}</span>
               <span class="history-date">{{ formatDate(challenge.completedAt || challenge.createdAt) }}</span>
             </div>
@@ -227,12 +227,12 @@
         <div class="modal-body">
           <div class="share-preview">
             <div class="share-card">
-              <div class="share-title">🎯 {{ shareChallengeData?.from }} 向你发起挑战</div>
+              <div class="share-title">{{ shareChallengeData?.from }} 向你发起挑战</div>
               <div class="share-content">
                 <div class="challenge-type">{{ getChallengeTypeName(shareChallengeData?.type) }}</div>
                 <div class="challenge-target">目标: {{ shareChallengeData?.target }}</div>
               </div>
-              <div class="share-footer">一起来双拼练习吧！⌨️</div>
+              <div class="share-footer">一起来双拼练习吧！</div>
             </div>
           </div>
           <div class="share-link">
@@ -243,8 +243,8 @@
             <span class="share-label">分享到:</span>
             <div class="social-btns">
               <button class="social-btn twitter" @click="shareToTwitter" title="分享到 X">𝕏</button>
-              <button class="social-btn weibo" @click="shareToWeibo" title="分享到微博">🐦</button>
-              <button class="social-btn qq" @click="shareToQQ" title="分享到QQ">🐧</button>
+              <button class="social-btn weibo" @click="shareToWeibo" title="分享到微博">微</button>
+              <button class="social-btn qq" @click="shareToQQ" title="分享到QQ">Q</button>
             </div>
           </div>
         </div>
@@ -282,10 +282,10 @@ const tabs = [
 ]
 
 const challengeTypes = [
-  { id: 'accuracy', name: '准确率挑战', icon: '🎯' },
-  { id: 'speed', name: '速度挑战', icon: '⚡' },
-  { id: 'streak', name: '连续练习', icon: '🔥' },
-  { id: 'chars', name: '练习字数', icon: '📝' },
+  { id: 'accuracy', name: '准确率挑战', icon: '准' },
+  { id: 'speed', name: '速度挑战', icon: '速' },
+  { id: 'streak', name: '连续练习', icon: '连' },
+  { id: 'chars', name: '练习字数', icon: '字' },
 ]
 
 const newChallenge = ref({
@@ -325,8 +325,8 @@ onMounted(() => {
 })
 
 function getChallengeIcon(type) {
-  const icons = { accuracy: '🎯', speed: '⚡', streak: '🔥', chars: '📝' }
-  return icons[type] || '🎯'
+  const icons = { accuracy: '准', speed: '速', streak: '连', chars: '字' }
+  return icons[type] || '准'
 }
 
 function getChallengeTitle(challenge) {
@@ -396,19 +396,19 @@ function copyShareLink() {
 }
 
 function shareToTwitter() {
-  const text = encodeURIComponent(`🎯 ${shareChallengeData.value?.from || '我'} 向你发起双拼挑战：${getChallengeTypeName(shareChallengeData.value?.type)}，目标 ${shareChallengeData.value?.target}！一起来练习吧！`)
+  const text = encodeURIComponent(`${shareChallengeData.value?.from || '我'} 向你发起双拼挑战：${getChallengeTypeName(shareChallengeData.value?.type)}，目标 ${shareChallengeData.value?.target}！一起来练习吧！`)
   const url = `https://twitter.com/intent/tweet?text=${text}`
   window.open(url, '_blank', 'width=600,height=400')
 }
 
 function shareToWeibo() {
-  const text = encodeURIComponent(`🎯 ${shareChallengeData.value?.from || '我'} 向你发起双拼挑战：${getChallengeTypeName(shareChallengeData.value?.type)}，目标 ${shareChallengeData.value?.target}！一起来练习吧！`)
+  const text = encodeURIComponent(`${shareChallengeData.value?.from || '我'} 向你发起双拼挑战：${getChallengeTypeName(shareChallengeData.value?.type)}，目标 ${shareChallengeData.value?.target}！一起来练习吧！`)
   const url = `https://service.weibo.com/share/share.php?title=${text}&url=${encodeURIComponent(window.location.origin)}`
   window.open(url, '_blank', 'width=600,height=400')
 }
 
 function shareToQQ() {
-  const text = encodeURIComponent(`🎯 ${shareChallengeData.value?.from || '我'} 向你发起双拼挑战`)
+  const text = encodeURIComponent(`${shareChallengeData.value?.from || '我'} 向你发起双拼挑战`)
   const desc = encodeURIComponent(`${getChallengeTypeName(shareChallengeData.value?.type)}，目标 ${shareChallengeData.value?.target}！一起来练习双拼吧！`)
   const url = `https://connect.qq.com/widget/shareqq/index.html?title=${text}&summary=${desc}&url=${encodeURIComponent(window.location.origin)}`
   window.open(url, '_blank', 'width=600,height=400')

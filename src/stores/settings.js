@@ -15,6 +15,7 @@ export const useSettingsStore = defineStore('settings', {
     soundOkFile: '',
     soundList: [],
     // UI preferences
+    showKeyboard: true, // 显示底部虚拟键盘（设置菜单可关；外接实体键盘时可隐藏）
     yunmuShowShuangpin: true,
     yunmuAutoSpeak: false, // 自动朗读功能
     // Double pinyin scheme
@@ -111,6 +112,12 @@ export const useSettingsStore = defineStore('settings', {
       this.enDictCurrentHint = !this.enDictCurrentHint
       this.save()
       return this.enDictCurrentHint
+    },
+    // 显示/隐藏底部虚拟键盘（全局）
+    toggleShowKeyboard() {
+      this.showKeyboard = !this.showKeyboard
+      this.save()
+      return this.showKeyboard
     },
     // 整句后免单词预读：单词输入前不再朗读（打错纠音保留）
     toggleEnNoWordPreSpeak() {

@@ -11,22 +11,22 @@
       <!-- 概览卡片 -->
       <div class="overview-cards">
         <div class="stat-card">
-          <div class="stat-icon">📊</div>
+          <div class="stat-icon"><svg viewBox="0 0 16 16" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><circle cx="8" cy="8" r="1.8"/></svg></div>
           <div class="stat-value">{{ stats.overallAccuracy }}%</div>
           <div class="stat-label">总体准确率</div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">⚡</div>
+          <div class="stat-icon"><svg viewBox="0 0 16 16" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8.5 1.5 3 9h4l-1 6L12 7H8l.5-5.5z"/></svg></div>
           <div class="stat-value">{{ stats.averageSpeed }}</div>
           <div class="stat-label">平均速度 (字/分)</div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">🔥</div>
+          <div class="stat-icon"><svg viewBox="0 0 16 16" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2c.6 2.2-1.6 3.2-1.6 5.2a2.6 2.6 0 0 0 5.2 0c0-1.4-.5-2.4-1-3.4C9.8 5 8.8 4 8 2z"/><path d="M6.5 10.5a2.5 2.5 0 0 0 3 0"/></svg></div>
           <div class="stat-value">{{ stats.streakDays }}</div>
           <div class="stat-label">连续练习天数</div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">⏱️</div>
+          <div class="stat-icon"><svg viewBox="0 0 16 16" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg></div>
           <div class="stat-value">{{ formatTime(stats.totalPracticeTime) }}</div>
           <div class="stat-label">总练习时长</div>
         </div>
@@ -133,7 +133,7 @@
         </div>
         <div class="heatmap-actions">
           <button class="action-btn practice-btn" @click="startErrorKeysPractice">
-            <span class="btn-icon">⌨️</span>
+            <span class="btn-icon">⌨</span>
             易错键专项练习
           </button>
           <p class="heatmap-tip">将前 10 个易错键生成专项练习，在打字练习的字母键位模式下反复练</p>
@@ -145,23 +145,23 @@
         <h3>数据管理</h3>
         <div class="action-buttons">
           <button class="action-btn share-btn" @click="showShareCard = true">
-            <span class="btn-icon">📤</span>
+            <span class="btn-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 11 11 5m0 0H6.5M11 5v4.5"/></svg></span>
             分享成绩
           </button>
           <button class="action-btn export-json" @click="exportJSON">
-            <span class="btn-icon">📥</span>
+            <span class="btn-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 11V3m0 0L5 6m3-3 3 3"/><path d="M2.5 12v1h11v-1"/></svg></span>
             导出 JSON
           </button>
           <button class="action-btn export-csv" @click="exportCSV">
-            <span class="btn-icon">📄</span>
+            <span class="btn-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 11V3m0 0L5 6m3-3 3 3"/><path d="M2.5 12v1h11v-1"/></svg></span>
             导出 CSV
           </button>
           <button class="action-btn export-detailed" @click="exportDetailedCSV">
-            <span class="btn-icon">📋</span>
+            <span class="btn-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 11V3m0 0L5 6m3-3 3 3"/><path d="M2.5 12v1h11v-1"/></svg></span>
             导出详细
           </button>
           <button class="action-btn clear-data" @click="clearStats">
-            <span class="btn-icon">🗑️</span>
+            <span class="btn-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 4.5h11M6.5 6.5v5m3-5v5M4 4.5 4.5 13h7l.5-8.5M6.8 2.5h2.4l.8 2H6z"/></svg></span>
             清除数据
           </button>
         </div>

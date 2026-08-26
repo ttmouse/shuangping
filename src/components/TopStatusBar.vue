@@ -62,7 +62,7 @@
     </div>
     <!-- 今日目标：顶部栏常驻，随时指引进展（三达标：时长/正确率/错词清零） -->
     <div class="goalTop" :class="{ all: goal.allDone }" title="今日目标：练满时长 + 正确率达到 + 错词清零">
-      <span class="goalTopTitle">🎯 今日目标</span>
+      <span class="goalTopTitle"><svg class="btnIcon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><circle cx="8" cy="8" r="2"/></svg>今日目标</span>
       <span class="goalTopTime" :class="{ done: goal.timeDoneFlag }">
         <span class="goalTopBar"><span class="goalTopFill" :style="{ width: goal.timePercent + '%' }"></span></span>
         {{ goal.timeDone }}/{{ goal.timeTarget }}分
@@ -70,7 +70,7 @@
       <span class="goalTopItem" :class="{ done: goal.accuracyDone }">{{ goal.accuracy }}%</span>
       <span class="goalTopItem" :class="{ done: goal.mistakesDone }">错{{ goal.mistakes }}</span>
       <span class="goalTopItem" :class="{ done: goal.sessionDoneFlag }">练{{ goal.sessionDone }}/{{ goal.sessionTarget }}次</span>
-      <span class="goalTopAll" v-if="goal.allDone">🎉</span>
+      <span class="goalTopAll" v-if="goal.allDone"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 8.5 3.5 3.5L13 5"/></svg></span>
     </div>
     <div class="right">
       <div class="accuracy" v-if="session.totalAttempts > 0" title="正确率">
@@ -197,6 +197,10 @@
           <label class="setRow">
             <span class="setLabel" title="默写模式下当前录入位置的字母是否显示：默认不显示（回忆拼写，仅该位置下划线高亮）；勾选后显示字母">默写·显示当前字母</span>
             <input type="checkbox" :checked="settings.enDictCurrentHint" @change="settings.toggleEnDictCurrentHint()" />
+          </label>
+          <label class="setRow">
+            <span class="setLabel" title="关闭后底部虚拟键盘不再显示（适合使用外接实体键盘的场景）；各练习页顶部的单独“隐藏键盘”开关仍可用">显示底部键盘</span>
+            <input type="checkbox" :checked="settings.showKeyboard" @change="settings.toggleShowKeyboard()" />
           </label>
           <label class="setRow">
             <span class="setLabel">卡片隐藏字母</span>

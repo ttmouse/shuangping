@@ -32,23 +32,23 @@
           :class="{ 'is-weak': session.weakMode }"
           @click="session.toggleWeakMode()"
         >
-          {{ session.weakMode ? '✅ 错题强化中' : '错题强化' }}
+          {{ session.weakMode ? ' 错题强化中' : '错题强化' }}
         </button>
         <button 
           class="el-button el-button--small" 
           :class="{ 'is-active': settings.blindMode }"
           @click="toggleBlindMode"
         >
-          {{ settings.blindMode ? '👁️ 盲打中' : '盲打模式' }}
+          {{ settings.blindMode ? ' 盲打中' : '盲打模式' }}
         </button>
         <button 
           class="el-button el-button--small" 
           :class="{ 'is-active': settings.timeChallenge }"
           @click="toggleTimeChallenge"
         >
-          {{ settings.timeChallenge ? '⏱️ 限时中' : '限时挑战' }}
+          {{ settings.timeChallenge ? '⏱ 限时中' : '限时挑战' }}
         </button>
-        <button class="el-button el-button--small" @click="showStats = true">📊 错误统计</button>
+        <button class="el-button el-button--small" @click="showStats = true">错误统计</button>
         <!-- 自选模式：开始与重新选择的切换 -->
         <template v-if="session.rangeId === 'custom'">
           <button v-if="!session.started" class="el-button el-button--small" @click="start">开始</button>
@@ -81,7 +81,7 @@
         </div>
       </div>
 
-      <Keyboard v-if="!selectMode && !session.hideKeyboard" data-testid="keyboard" :handle="onPress" />
+      <Keyboard v-if="!selectMode && settings.showKeyboard && !session.hideKeyboard" data-testid="keyboard" :handle="onPress" />
       <Keyboard v-else-if="selectMode" data-testid="keyboard" :selectable="true" :selected-codes="session.selectedKeyCodes" :on-toggle="onToggleKey" />
 
       <!-- 错误统计弹窗 -->
@@ -128,14 +128,14 @@
       <!-- 连击提示 -->
       <div v-if="showCombo" class="combo-indicator" :class="{ 'combo-high': comboCount >= 10 }">
         <div class="combo-text">{{ comboCount }} 连击!</div>
-        <div class="combo-stars">✨ ✨ ✨</div>
+        <div class="combo-stars">  </div>
       </div>
 
       <!-- 限时挑战结果弹窗 -->
       <div v-if="showTimeChallengeResult" class="stats-overlay" @click.self="closeTimeChallengeResult">
         <div class="stats-modal">
           <div class="stats-header">
-            <h3>⏱️ 限时挑战结果</h3>
+            <h3>⏱ 限时挑战结果</h3>
             <button class="close-btn" @click="closeTimeChallengeResult">&times;</button>
           </div>
           <div class="stats-content">
@@ -165,7 +165,7 @@
             </div>
             <div class="challenge-rating" v-if="timeChallengeResults">
               <div class="rating-stars">
-                <span v-for="n in 5" :key="n" class="star" :class="{ filled: n <= Math.ceil((timeChallengeResults.correct / Math.max(timeChallengeResults.total, 1)) * 5) }">★</span>
+                <span v-for="n in 5" :key="n" class="star" :class="{ filled: n <= Math.ceil((timeChallengeResults.correct / Math.max(timeChallengeResults.total, 1)) * 5) }"></span>
               </div>
               <p class="rating-text">
                 {{ timeChallengeResults.correct / Math.max(timeChallengeResults.total, 1) >= 0.9 ? '太棒了！完美挑战！' : 
@@ -174,7 +174,7 @@
               </p>
             </div>
             <button class="clear-btn" @click="closeTimeChallengeResult">再来一次</button>
-            <button class="share-btn" @click="showShareCard = true">📤 分享成绩</button>
+            <button class="share-btn" @click="showShareCard = true">分享成绩</button>
           </div>
         </div>
       </div>
@@ -189,7 +189,7 @@
           :key="n"
           class="particle"
           :style="{ animationDelay: (n * 0.1) + 's' }"
-        >★</div>
+        ></div>
       </div>
 
       <!-- 成就通知 -->

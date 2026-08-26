@@ -100,11 +100,11 @@
             <span class="contact-text">Twitter</span>
           </a>
           <a href="mailto:ttmouseg@gmail.com" class="contact-link">
-            <span class="contact-icon">📧</span>
+            <span class="contact-icon"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1.5" y="3.5" width="13" height="9" rx="1.5"/><path d="m2.5 5 5.5 4 5.5-4"/></svg></span>
             <span class="contact-text">Email</span>
           </a>
           <div class="contact-link">
-            <span class="contact-icon">💬</span>
+            <span class="contact-icon"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5c-3.3 0-6 2.2-6 5 0 1.6.8 3 2.1 3.9-.3 1.1-1 2-2.1 2.6.9 0 1.7-.2 2.4-.6.9.5 2 .8 3.6.8 3.3 0 6-2.2 6-5S11.3 2.5 8 2.5z"/></svg></span>
             <span class="contact-text">WeChat: ttmouse</span>
           </div>
         </div>
@@ -124,7 +124,7 @@ import { ref, computed, onMounted } from 'vue'
     description: '专业的双拼输入法练习平台，支持多种方案和语音反馈',
     category: 'learning',
     status: 'active',
-    icon: '⌨️',
+    icon: '⌨',
     tech: ['Vue 3', 'Web Audio API', 'Pinia'],
     route: '/yunmu-practice',
     highlights: ['8种双拼方案', '自动语音朗读', 'Figma风格界面']
@@ -135,7 +135,7 @@ import { ref, computed, onMounted } from 'vue'
     description: '追踪双拼学习进度，查看成就和学习路径',
     category: 'learning',
     status: 'active',
-    icon: '📊',
+    icon: '',
     tech: ['Vue 3', 'Pinia', 'LocalStorage'],
     route: '/progress',
     highlights: ['进度追踪', '成就系统', '学习路径']
@@ -146,7 +146,7 @@ import { ref, computed, onMounted } from 'vue'
     description: '浏览器话术助手与短句管理，支持多关键词高亮与AND匹配',
     category: 'tools',
     status: 'active',
-    icon: '💬',
+    icon: '',
     tech: ['Browser Extension', 'JavaScript', 'CSS'],
     externalUrl: 'https://github.com/ttmouse/chat-list',
     highlights: ['多关键词高亮', 'AND匹配', '预览浮层交互', '悬浮动作按钮']
@@ -157,7 +157,7 @@ import { ref, computed, onMounted } from 'vue'
     description: '基于 FunASR 的 macOS 语音转文字应用，支持全局快捷键与离线识别',
     category: 'ai',
     status: 'active',
-    icon: '🎤',
+    icon: '',
     tech: ['FunASR', 'PyQt6', 'Python', 'PyAudio'],
     externalUrl: 'https://github.com/ttmouse/Wispr-Flow-CN',
     highlights: ['全局快捷键录音', '自动文本粘贴', '离线识别', '系统托盘与历史记录']
@@ -168,7 +168,7 @@ import { ref, computed, onMounted } from 'vue'
     description: '将设计原则转化为可用提示词，辅助AI创作并理解设计原则',
     category: 'ai',
     status: 'active',
-    icon: '🎨',
+    icon: '',
     tech: ['Prompt Engineering', 'Design Principles', 'Vercel'],
     externalUrl: 'https://designprompt.vercel.app',
     highlights: ['设计原则到提示词', 'AI创作辅助', '学习设计原则']
@@ -179,7 +179,7 @@ import { ref, computed, onMounted } from 'vue'
     description: 'Chrome 扩展，AI生成上下文回复，支持多供应商与自定义风格',
     category: 'ai',
     status: 'active',
-    icon: '🤖',
+    icon: '',
     tech: ['React 18', 'TypeScript', 'Vite', 'CRXJS'],
     externalUrl: 'https://github.com/ttmouse/twitter-reply-assistant',
     highlights: ['AI智能回复', '内容扩写', '多模型供应商', '预设/自定义风格', '一键操作']
@@ -190,7 +190,7 @@ import { ref, computed, onMounted } from 'vue'
     description: 'Chrome 插件，自动记录关注/粉丝变化，支持每日自动运行与趋势分析',
     category: 'tools',
     status: 'active',
-    icon: '📈',
+    icon: '',
     tech: ['Chrome Extension', 'JavaScript', 'Storage/Alarms/Notifications API'],
     externalUrl: 'https://github.com/ttmouse/twitter_followers_status',
     highlights: ['一键记录', '每日自动抓取', '增长率分析', 'CSV导出']
@@ -201,7 +201,7 @@ import { ref, computed, onMounted } from 'vue'
       description: '智能表单构建工具，通过AI快速生成和优化表单设计',
       category: 'tools',
       status: 'active',
-      icon: '📋',
+      icon: '',
       tech: ['AI', 'Form Builder', 'React'],
       externalUrl: 'https://subformai.vercel.app',
       highlights: ['AI表单生成', '拖拽式设计', '智能验证']
@@ -213,7 +213,7 @@ import { ref, computed, onMounted } from 'vue'
     description: '不同字符序列的循环 Loading 效果合集',
     category: 'tools',
     status: 'active',
-    icon: '🌀',
+    icon: '',
     tech: ['Web', 'Unicode'],
     externalUrl: 'https://loadingorb.vercel.app/',
     highlights: ['字符序列动画', '多样风格', '轻量浏览']
@@ -225,7 +225,7 @@ import { ref, computed, onMounted } from 'vue'
     description: '静态网页示例项目（HTML）',
     category: 'tools',
     status: 'active',
-    icon: '🧩',
+    icon: '',
     tech: ['HTML'],
     externalUrl: 'https://github.com/ttmouse/figma-4096',
     highlights: []
@@ -251,7 +251,7 @@ async function loadGithubRepos() {
         description: r.description || 'GitHub 开源仓库',
         category: 'tools',
         status: 'active',
-        icon: '📦',
+        icon: '',
         tech: [],
         externalUrl: url,
         highlights: []
@@ -394,7 +394,7 @@ function addProject(project) {
     description: project.description,
     category: project.category || 'tools',
     status: project.status || 'coming-soon',
-    icon: project.icon || '📦',
+    icon: project.icon || '',
     tech: project.tech || [],
     route: project.route,
     badge: project.badge,

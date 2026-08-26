@@ -69,7 +69,7 @@ export const useWriterStore = defineStore('writer', {
         { id: CORPUS_IDS.ROW3, title: '第三排按键（韵母）' },
         { id: CORPUS_IDS.ALL, title: '全部按键（韵母）' },
         { id: CORPUS_IDS.NASAL, title: '前后鼻音专项' },
-        { id: CORPUS_IDS.ERROR_RETRY, title: '🔄 错误字重练' },
+        { id: CORPUS_IDS.ERROR_RETRY, title: ' 错误字重练' },
       ]
       // 添加自定义练习集
       try {
@@ -79,7 +79,7 @@ export const useWriterStore = defineStore('writer', {
           if (settings.customPracticeSets?.length) {
             list.push({ id: 'separator', title: '─── 自定义练习集 ───', disabled: true })
             settings.customPracticeSets.forEach(set => {
-              list.push({ id: `set-${set.id}`, title: `📚 ${set.name}`, itemCount: set.items?.length || 0 })
+              list.push({ id: `set-${set.id}`, title: `${set.name}`, itemCount: set.items?.length || 0 })
             })
           }
         }
