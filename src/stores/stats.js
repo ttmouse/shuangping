@@ -278,6 +278,12 @@ export const useStatsStore = defineStore('stats', {
         const rawHistory = localStorage.getItem(HISTORY_KEY)
         if (rawHistory) {
           this.history = JSON.parse(rawHistory)
+          // 清理历史遗留的按键级记录（旧版本把每键记录混入 history，只保留会话记录）
+          if (this.history.some(h => h.type !== 'session')) {
+            this.history = this.history.filter(h => h.type === 'session')
+            // 写回干净数据（防止每次加载都重复清理脏数据）
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(this.history.slice(-100)))
+          }
         }
       } catch {}
       try {
@@ -326,6 +332,11 @@ export const useStatsStore = defineStore('stats', {
       if (!this.sessionStartTime) return
 
       const duration = Math.floor((Date.now() - this.sessionStartTime) / 1000)
+      // 空会话（没输入任何字符，如误触开始立即退出）不记录
+      if (this.sessionChars === 0) {
+        this.sessionStartTime = null
+        return
+      }
       const today = getTodayKey()
       const sessionSpeed = duration > 0 ? Math.round((this.sessionChars / duration) * 60) : 0
 
@@ -379,9 +390,14 @@ export const useStatsStore = defineStore('stats', {
         timestamp: Date.now(),
       })
 
-      // 清理旧历史
+      // 清理旧历史：优先保留当天的会话记录（保证「历史当天次数」与目标/统计一致），
+      // 当天不足 100 条时再挤出最早的非当天记录（日期按本地时间判断）
       if (this.history.length > 100) {
-        this.history = this.history.slice(-100)
+        const todayStr = formatDateKey(new Date()) // YYYY-MM-DD（本地）
+        const sessions = this.history.filter(h => h.type === 'session')
+        const todaySessions = sessions.filter(s => formatDateKey(new Date(s.date)) === todayStr)
+        const others = this.history.filter(h => !(h.type === 'session' && formatDateKey(new Date(h.date)) === todayStr))
+        this.history = [...todaySessions, ...others].slice(-100)
       }
       if (this.detailedHistory.length > 500) {
         this.detailedHistory = this.detailedHistory.slice(-500)
@@ -419,21 +435,9 @@ export const useStatsStore = defineStore('stats', {
           this.errorHeatmapData[expected] = (this.errorHeatmapData[expected] || 0) + 1
         }
       }
-
-      // 记录到历史
-      this.history.push({
-        id: Date.now(),
-        date: new Date().toISOString(),
-        type,
-        expected,
-        actual,
-        correct,
-      })
-
-      // 限制历史长度
-      if (this.history.length > 100) {
-        this.history = this.history.slice(-100)
-      }
+      // 按键级明细不再写入 history：
+      // 该数组保留会话记录（type='session'，统计页/导出只用它），
+      // 按键记录（每键一条）会瞬间挤爆 100 条上限，把会话记录顶掉
     },
 
     // 记录韵母练习

@@ -17,6 +17,12 @@ export const EN_TRANSLATIONS = {
   today: '今天', tomorrow: '明天', yesterday: '昨天', beautiful: '美丽的', important: '重要的', experience: '经历', knowledge: '知识', technology: '科技', together: '一起', another: '另一个',
   between: '在…之间', through: '穿过', country: '国家', should: '应该', always: '总是', around: '周围', before: '在…之前', behind: '在…后面', believe: '相信', better: '更好的',
   beyond: '超出', change: '改变', child: '孩子', children: '孩子们',
+  // ===== 扩展常用词（自定义内容/课文常见） =====
+  farm: '农场', 'tom\'s': '汤姆的', breakfast: '早餐', car: '汽车', are: '是', many: '许多',
+  animals: '动物', ten: '十', cows: '奶牛', twelve: '十二', hens: '母鸡', horses: '马',
+  strong: '强壮的', little: '小的', lambs: '羊羔', very: '非常', much: '很多',
+  lunch: '午餐', tomatoes: '西红柿', carrots: '胡萝卜', yummy: '好吃的',
+  afternoon: '下午', vegetable: '蔬菜', garden: '花园', pick: '摘', home: '家',
   // ===== 四年级 =====
   sunny: '晴朗的', rainy: '下雨的', cloudy: '多云的', windy: '有风的', snowy: '下雪的', warm: '温暖的', cool: '凉爽的', hot: '热的', cold: '冷的',
   classroom: '教室', library: '图书馆', playground: '操场', computer: '电脑', teacher: '老师', student: '学生', desk: '书桌', chair: '椅子', blackboard: '黑板', schoolbag: '书包', notebook: '笔记本',

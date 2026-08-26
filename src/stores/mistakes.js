@@ -44,6 +44,14 @@ export const useMistakesStore = defineStore('mistakes', {
       this.items[text] = it
       this.save()
     },
+    // 从错题本移除（打对消除）
+    removeWord(text) {
+      if (!text) return
+      if (this.items[text]) {
+        delete this.items[text]
+        this.save()
+      }
+    },
     // 清空错题本
     clear() {
       this.items = {}

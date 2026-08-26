@@ -428,11 +428,17 @@ export const useProgressStore = defineStore('progress', {
     learningTimeTotal: 0,          // 总学习时长（分钟）
     stageAttempts: {},             // 各阶段尝试次数 { stageId: { attempts, bestAccuracy, bestSpeed } }
     skillMastery: {},              // 技能掌握度 { skillId: { level, progress, lastPracticed } }
-    dailyGoals: {                  // 每日目标
-      charsTarget: 500,
-      timeTarget: 30,
+    dailyGoals: {                  // 每日目标（四达标：时长 + 正确率 + 错词清零 + 练习次数）
+      timeTarget: 15,            // 练习时长目标（分钟）
+      accuracyTarget: 95,        // 正确率目标（%）
+      sessionTarget: 10,         // 练习次数目标（完成的练习会话数）
+      mistakeClear: true,        // 是否要求错词清零
       completedDates: []
-    }
+    },
+    // 今日错词清单：{ '2026-08-25': ['词1', ...] }
+    // 打错时记录、练对时移除；手动清空错题本不影响此清单（防作弊），
+    // 目标「错词清零」只看这里，必须靠练对消除
+    dailyWrongWords: {}
   }),
 
   getters: {
@@ -496,12 +502,52 @@ export const useProgressStore = defineStore('progress', {
       return stats.streakDays
     },
 
-    // 新增：获取今日目标完成度
-    dailyGoalProgress(state) {
+    // 今日目标完成度（实时进度，供练习页目标条 / 完成弹窗 / 进度页使用）
+    // 三达标：练习时长 ≥ timeTarget 分钟、正确率 ≥ accuracyTarget%、错词（卡片+英文）清零
+    todayGoal(state) {
+      const stats = useStatsStore()
+      const today = getTodayKey()
+      const ds = stats.dailyStats[today] || { chars: 0, correct: 0, time: 0 }
+      const timeDone = Math.round((ds.time || 0) / 60) // 分钟（向下取整到分钟）
+      const accuracy = ds.chars > 0 ? Math.round((ds.correct / ds.chars) * 100) : 100
+      // 错词数：今日错词清单（打错进、练对出；手动清空不影响）
+      const mistakes = (state.dailyWrongWords[today] || []).length
+      const timeTarget = state.dailyGoals.timeTarget || 15
+      const accuracyTarget = state.dailyGoals.accuracyTarget || 95
+      const sessionTarget = state.dailyGoals.sessionTarget || 10
+      const needMistakeClear = state.dailyGoals.mistakeClear !== false
+      // 今日练习次数：与统计页历史记录同一数据源（sp-history 当天 session 条数），
+      // 保证顶部/进度页/历史三处一致（dailyStats.sessions 可能被历史 bug 污染）
+      let sessionDone = 0
+      try {
+        const h = JSON.parse(localStorage.getItem('sp-history') || '[]')
+        sessionDone = h.filter(x => x.type === 'session' && toLocalDay(x.date) === today).length
+      } catch {}
       return {
-        charsTarget: state.dailyGoals.charsTarget,
-        timeTarget: state.dailyGoals.timeTarget,
-        isCompletedToday: state.dailyGoals.completedDates.includes(getTodayKey())
+        timeTarget,
+        accuracyTarget,
+        sessionTarget,
+        timeDone,
+        accuracy,
+        mistakes,
+        sessionDone,
+        timeDoneFlag: timeDone >= timeTarget,
+        accuracyDone: accuracy >= accuracyTarget,
+        sessionDoneFlag: sessionDone >= sessionTarget,
+        mistakesDone: !needMistakeClear || mistakes === 0,
+        allDone: timeDone >= timeTarget && accuracy >= accuracyTarget && sessionDone >= sessionTarget && (!needMistakeClear || mistakes === 0),
+        timePercent: Math.min(100, Math.round((timeDone / timeTarget) * 100)),
+        completedToday: state.dailyGoals.completedDates.includes(today),
+      }
+    },
+
+    // 获取今日目标完成度（兼容旧调用）
+    dailyGoalProgress(state) {
+      const g = this.todayGoal
+      return {
+        charsTarget: 0,
+        timeTarget: g.timeTarget,
+        isCompletedToday: g.completedToday,
       }
     },
 
@@ -582,8 +628,8 @@ export const useProgressStore = defineStore('progress', {
     // 新增：检查并完成每日目标
     checkDailyGoal(charsTyped, timeSpent) {
       const today = getTodayKey()
-      if (charsTyped >= this.dailyGoals.charsTarget && 
-          timeSpent >= this.dailyGoals.timeTarget) {
+      const goal = this.todayGoal
+      if (goal.allDone) {
         if (!this.dailyGoals.completedDates.includes(today)) {
           this.dailyGoals.completedDates.push(today)
           this.save()
@@ -591,6 +637,26 @@ export const useProgressStore = defineStore('progress', {
         }
       }
       return false
+    },
+
+    // 记录今日错词（打错时调用；手动清空错题本不调用，防止作弊）
+    recordDailyWrongWord(word) {
+      if (!word) return
+      const today = getTodayKey()
+      const list = this.dailyWrongWords[today] || []
+      if (!list.includes(word)) {
+        list.push(word)
+        this.dailyWrongWords[today] = list
+        this.save()
+      }
+    },
+    // 今日错词练对后移除（打对自动调用）
+    clearDailyWrongWord(word) {
+      if (!word) return
+      const today = getTodayKey()
+      const list = (this.dailyWrongWords[today] || []).filter(w => w !== word)
+      this.dailyWrongWords[today] = list
+      this.save()
     },
 
     // 开始会话
@@ -816,4 +882,10 @@ function formatDateKey(date) {
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
   return `${year}-${month}-${day}`
+}
+
+// 历史记录存的是 UTC ISO 时间，转成本地日期（YYYY-MM-DD）再判断当天
+function toLocalDay(iso) {
+  if (!iso) return ''
+  return formatDateKey(new Date(iso))
 }

@@ -1,6 +1,7 @@
-// 英文复杂词的词根结构表（仅收录结构清晰的复合词/派生词）
-// 用于英文练习提示区按词根渲染不同深浅灰色，帮助记忆
+// 英文复杂词的词根结构表（仅收录结构清晰的复合词/派生词，共 108 词）
+// 用于英文练习提示区按词根渲染不同色相的灰色，帮助记忆
 // 格式：{ word: [[text, type], ...] }，type: 'prefix' | 'root' | 'suffix'
+// 注意：各段 text 拼接必须等于原词（含拼写变化，如 eighty = eigh+ty）
 export const WORD_SEGMENTS = {
   // ===== 通用高频 =====
   experience: [['ex', 'prefix'], ['peri', 'root'], ['ence', 'suffix']],
@@ -20,6 +21,15 @@ export const WORD_SEGMENTS = {
   behind: [['be', 'prefix'], ['hind', 'root']],
   before: [['be', 'prefix'], ['fore', 'root']],
   around: [['a', 'prefix'], ['round', 'root']],
+  about: [['a', 'prefix'], ['bout', 'root']],
+  beyond: [['be', 'prefix'], ['yond', 'root']],
+  together: [['to', 'prefix'], ['gether', 'root']],
+  better: [['bett', 'root'], ['er', 'suffix']],
+  practice: [['pract', 'root'], ['ice', 'suffix']],
+  evening: [['even', 'root'], ['ing', 'suffix']],
+  afternoon: [['after', 'root'], ['noon', 'root']],
+  breakfast: [['break', 'root'], ['fast', 'root']],
+  bread: [['b', 'root'], ['read', 'root']],
   keyboard: [['key', 'root'], ['board', 'root']],
   yesterday: [['yester', 'root'], ['day', 'root']],
   tomorrow: [['to', 'prefix'], ['morrow', 'root']],
@@ -37,6 +47,16 @@ export const WORD_SEGMENTS = {
   chicken: [['chick', 'root'], ['en', 'suffix']],
   teacher: [['teach', 'root'], ['er', 'suffix']],
   student: [['stud', 'root'], ['ent', 'suffix']],
+  sunny: [['sun', 'root'], ['ny', 'suffix']],
+  rainy: [['rain', 'root'], ['y', 'suffix']],
+  cloudy: [['cloud', 'root'], ['y', 'suffix']],
+  windy: [['wind', 'root'], ['y', 'suffix']],
+  snowy: [['snow', 'root'], ['y', 'suffix']],
+  noodles: [['noodle', 'root'], ['s', 'suffix']],
+  vegetables: [['vegetable', 'root'], ['s', 'suffix']],
+  shoes: [['shoe', 'root'], ['s', 'suffix']],
+  socks: [['sock', 'root'], ['s', 'suffix']],
+  parents: [['parent', 'root'], ['s', 'suffix']],
   // ===== 五年级 =====
   basketball: [['basket', 'root'], ['ball', 'root']],
   football: [['foot', 'root'], ['ball', 'root']],
@@ -54,6 +74,19 @@ export const WORD_SEGMENTS = {
   tired: [['tir', 'root'], ['ed', 'suffix']],
   hungry: [['hungr', 'root'], ['y', 'suffix']],
   thirsty: [['thirst', 'root'], ['y', 'suffix']],
+  english: [['engl', 'root'], ['ish', 'suffix']],
+  maths: [['math', 'root'], ['s', 'suffix']],
+  chinese: [['chin', 'root'], ['ese', 'suffix']],
+  happy: [['happ', 'root'], ['y', 'suffix']],
+  dumpling: [['dump', 'root'], ['ling', 'suffix']],
+  twenty: [['twen', 'root'], ['ty', 'suffix']],
+  thirty: [['thir', 'root'], ['ty', 'suffix']],
+  forty: [['for', 'root'], ['ty', 'suffix']],
+  fifty: [['fif', 'root'], ['ty', 'suffix']],
+  sixty: [['six', 'root'], ['ty', 'suffix']],
+  seventy: [['seven', 'root'], ['ty', 'suffix']],
+  eighty: [['eigh', 'root'], ['ty', 'suffix']],
+  ninety: [['nine', 'root'], ['ty', 'suffix']],
   // ===== 六年级 =====
   environment: [['en', 'prefix'], ['viron', 'root'], ['ment', 'suffix']],
   pollution: [['pollut', 'root'], ['ion', 'suffix']],
@@ -72,4 +105,17 @@ export const WORD_SEGMENTS = {
   holiday: [['holi', 'root'], ['day', 'root']],
   subway: [['sub', 'prefix'], ['way', 'root']],
   airport: [['air', 'root'], ['port', 'root']],
+  collect: [['col', 'prefix'], ['lect', 'root']],
+  health: [['heal', 'root'], ['th', 'suffix']],
+  medicine: [['medic', 'root'], ['ine', 'suffix']],
+  doctor: [['doct', 'root'], ['or', 'suffix']],
+  hospital: [['hospit', 'root'], ['al', 'suffix']],
+  dentist: [['dent', 'root'], ['ist', 'suffix']],
+  worried: [['worri', 'root'], ['ed', 'suffix']],
+  surprised: [['sur', 'prefix'], ['pris', 'root'], ['ed', 'suffix']],
+  famous: [['fam', 'root'], ['ous', 'suffix']],
+  village: [['vill', 'root'], ['age', 'suffix']],
+  factory: [['fact', 'root'], ['ory', 'suffix']],
+  museum: [['muse', 'root'], ['um', 'suffix']],
+  usually: [['usual', 'root'], ['ly', 'suffix']],
 }

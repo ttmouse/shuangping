@@ -41,7 +41,7 @@
             <span class="today-label">字符</span>
           </div>
           <div class="today-item">
-            <span class="today-value">{{ todayStats.sessions || 0 }}</span>
+            <span class="today-value">{{ todaySessions }}</span>
             <span class="today-label">场次</span>
           </div>
           <div class="today-item">
@@ -170,23 +170,28 @@
       <!-- 分享卡片弹窗 -->
       <ShareCard v-if="showShareCard" @close="showShareCard = false" />
 
-      <!-- 练习历史 -->
-      <div class="history-section" v-if="recentHistory.length">
+      <!-- 练习历史（按天分组，每天显示次数与明细，和顶部/进度页当天次数对齐） -->
+      <div class="history-section" v-if="historyByDay.length">
         <h3>最近练习记录</h3>
-        <div class="history-list">
-          <div v-for="item in recentHistory" :key="item.id" class="history-item">
-            <div class="history-info">
-              <span class="history-date">{{ formatDate(item.date) }}</span>
-              <span class="history-type">{{ getTypeLabel(item.type) }}</span>
-              <span class="history-practice-type" :class="item.practiceType">{{ getPracticeTypeLabel(item.practiceType) }}</span>
-            </div>
-            <div class="history-stats">
-              <span v-if="item.chars !== undefined" class="history-chars">{{ item.chars }} 字</span>
-              <span v-if="item.speed" class="history-speed">{{ item.speed }} 字/分</span>
-              <span v-if="item.duration" class="history-duration">{{ formatDuration(item.duration) }}</span>
-              <span v-if="item.correct !== undefined" class="history-accuracy" :class="{ 'good': item.correct/item.chars >= 0.9 }">
-                {{ item.chars > 0 ? Math.round(item.correct/item.chars*100) : 100 }}%
-              </span>
+        <div class="history-day" v-for="(day, di) in historyByDay" :key="di">
+          <div class="history-day-head">
+            <span class="history-day-date">{{ formatDay(day.date) }}</span>
+            <span class="history-day-count" :class="{ today: day.isToday }">共 {{ day.items.length }} 次{{ day.isToday ? '（今日）' : '' }}</span>
+          </div>
+          <div class="history-list">
+            <div v-for="item in day.items" :key="item.id" class="history-item">
+              <div class="history-info">
+                <span class="history-date">{{ formatClock(item.date) }}</span>
+                <span class="history-practice-type" :class="item.practiceType">{{ getPracticeTypeLabel(item.practiceType) }}</span>
+              </div>
+              <div class="history-stats">
+                <span v-if="item.chars !== undefined" class="history-chars">{{ item.chars }} 字</span>
+                <span v-if="item.speed" class="history-speed">{{ item.speed }} 字/分</span>
+                <span v-if="item.duration" class="history-duration">{{ formatDuration(item.duration) }}</span>
+                <span v-if="item.correct !== undefined" class="history-accuracy" :class="{ 'good': item.correct/item.chars >= 0.9 }">
+                  {{ item.chars > 0 ? Math.round(item.correct/item.chars*100) : 100 }}%
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -235,8 +240,37 @@ function startErrorKeysPractice() {
 const recentHistory = computed(() => {
   return stats.history
     .filter(h => h.type === 'session')
-    .slice(-10)
+    .slice(-20)
     .reverse()
+})
+
+// 历史按天分组（最新在前，最多最近 7 天）：每天显示次数，与顶部/进度页当天次数对齐
+// 历史日期为 UTC ISO，统一转本地日期比较
+function toLocalDay(iso) {
+  if (!iso) return ''
+  const d = new Date(iso)
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')
+}
+const historyByDay = computed(() => {
+  const todayStr = toLocalDay(new Date().toISOString())
+  const sessions = stats.history.filter(h => h.type === 'session').reverse()
+  const groups = []
+  for (const s of sessions) {
+    const day = toLocalDay(s.date)
+    if (!day) continue
+    let g = groups[groups.length - 1]
+    if (!g || g.date !== day) {
+      g = { date: day, isToday: day === todayStr, items: [] }
+      groups.push(g)
+    }
+    g.items.push(s)
+  }
+  return groups.slice(0, 7)
+})
+// 今日场次：与顶部目标/历史记录同一数据源（历史当天 session 条数）
+const todaySessions = computed(() => {
+  const todayStr = toLocalDay(new Date().toISOString())
+  return stats.history.filter(h => h.type === 'session' && toLocalDay(h.date) === todayStr).length
 })
 
 const slotNames = {
@@ -468,6 +502,17 @@ function formatDuration(seconds) {
 function formatDate(isoString) {
   const date = new Date(isoString)
   return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`
+}
+
+// 按天分组日期头：'YYYY-MM-DD' → '8/25'
+function formatDay(dateStr) {
+  const [, m, d] = (dateStr || '').split('-')
+  return `${Number(m)}/${Number(d)}`
+}
+// 记录内只显示时分（注意：formatTime(秒) 已被时长显示占用，此处用 formatClock）
+function formatClock(isoString) {
+  const date = new Date(isoString)
+  return `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`
 }
 
 function getTypeLabel(type) {
@@ -756,6 +801,26 @@ function clearStats() {
   color: var(--theme-main-text-color);
   margin-bottom: 16px;
 }
+
+/* 按天分组 */
+.history-day { margin-bottom: 18px; }
+.history-day:last-child { margin-bottom: 0; }
+.history-day-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.history-day-date { font-size: 13px; font-weight: 700; color: var(--theme-main-text-color); }
+.history-day-count {
+  font-size: 12px;
+  color: var(--theme-menu-text-color);
+  padding: 2px 10px;
+  border-radius: 12px;
+  background: var(--theme-background-color);
+  border: 1px solid var(--theme-border-color);
+}
+.history-day-count.today { color: #3db389; border-color: #3db389; }
 
 .history-list {
   display: flex;

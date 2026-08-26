@@ -69,6 +69,30 @@
         </div>
       </div>
 
+      <!-- 今日目标：实时进度指引 -->
+      <div class="goal-card">
+        <h2>今日目标 <small class="goal-status" :class="{ done: goal.allDone }">{{ goal.allDone ? '🎉 已达成' : '进行中' }}</small></h2>
+        <div class="goal-grid">
+          <div class="goal-line" :class="{ done: goal.timeDoneFlag }">
+            <span class="goal-name">⏱️ 练习时长</span>
+            <span class="goal-bar"><span class="goal-fill" :style="{ width: goal.timePercent + '%' }"></span></span>
+            <span class="goal-num">{{ goal.timeDone }} / {{ goal.timeTarget }} 分钟</span>
+          </div>
+          <div class="goal-line" :class="{ done: goal.accuracyDone }">
+            <span class="goal-name">🎯 正确率</span>
+            <span class="goal-num">{{ goal.accuracy }}% <small>（目标 ≥{{ goal.accuracyTarget }}%）</small></span>
+          </div>
+          <div class="goal-line" :class="{ done: goal.sessionDoneFlag }">
+            <span class="goal-name">🔁 练习次数</span>
+            <span class="goal-num">{{ goal.sessionDone }} / {{ goal.sessionTarget }} 次</span>
+          </div>
+          <div class="goal-line" :class="{ done: goal.mistakesDone }">
+            <span class="goal-name">✏️ 错词清零</span>
+            <span class="goal-num">{{ goal.mistakesDone ? '已清完 ✅' : '还有 ' + goal.mistakes + ' 个错词待练' }}</span>
+          </div>
+        </div>
+      </div>
+
       <!-- 学习路径 -->
       <div class="learning-path">
         <h2>学习路径</h2>
@@ -212,6 +236,7 @@ import { useStatsStore } from '../stores/stats.js'
 import TopStatusBar from '../components/TopStatusBar.vue'
 
 const progress = useProgressStore()
+const goal = computed(() => progress.todayGoal)
 const stats = useStatsStore()
 const importInput = ref(null)
 const currentFilter = ref('all')
@@ -851,6 +876,76 @@ onMounted(() => {
 .stat-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 今日目标卡片：实时进度指引 */
+.goal-card {
+  margin-top: 24px;
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 16px;
+  padding: 20px;
+}
+.goal-card h2 {
+  margin: 0 0 16px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.goal-status {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--theme-menu-text-color);
+  padding: 2px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--theme-border-color);
+}
+.goal-status.done {
+  color: #2c8f6a;
+  border-color: #3db389;
+}
+.goal-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.goal-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--theme-text-color);
+}
+.goal-name {
+  width: 90px;
+  flex: 0 0 auto;
+  font-weight: 600;
+}
+.goal-bar {
+  flex: 1;
+  height: 10px;
+  border-radius: 5px;
+  background: var(--theme-border-color);
+  overflow: hidden;
+}
+.goal-fill {
+  display: block;
+  height: 100%;
+  background: var(--theme-menu-hover-color);
+  border-radius: 5px;
+  transition: width .3s ease;
+}
+.goal-num {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.goal-line.done .goal-name, .goal-line.done .goal-num {
+  color: #3db389;
+}
+.goal-line.done .goal-fill {
+  background: #3db389;
 }
 
 .stat-icon {

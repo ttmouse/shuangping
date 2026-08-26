@@ -60,6 +60,18 @@
         排行
       </button>
     </div>
+    <!-- 今日目标：顶部栏常驻，随时指引进展（三达标：时长/正确率/错词清零） -->
+    <div class="goalTop" :class="{ all: goal.allDone }" title="今日目标：练满时长 + 正确率达到 + 错词清零">
+      <span class="goalTopTitle">🎯 今日目标</span>
+      <span class="goalTopTime" :class="{ done: goal.timeDoneFlag }">
+        <span class="goalTopBar"><span class="goalTopFill" :style="{ width: goal.timePercent + '%' }"></span></span>
+        {{ goal.timeDone }}/{{ goal.timeTarget }}分
+      </span>
+      <span class="goalTopItem" :class="{ done: goal.accuracyDone }">{{ goal.accuracy }}%</span>
+      <span class="goalTopItem" :class="{ done: goal.mistakesDone }">错{{ goal.mistakes }}</span>
+      <span class="goalTopItem" :class="{ done: goal.sessionDoneFlag }">练{{ goal.sessionDone }}/{{ goal.sessionTarget }}次</span>
+      <span class="goalTopAll" v-if="goal.allDone">🎉</span>
+    </div>
     <div class="right">
       <div class="accuracy" v-if="session.totalAttempts > 0" title="正确率">
         <span class="acc-value">{{ session.accuracy }}%</span>
@@ -90,7 +102,7 @@
         </button>
         <div v-if="showSettings" class="settingsPop">
           <div class="setRow">
-            <span class="setLabel">掌握阈值</span>
+            <span class="setLabel" title="抄写模式（显示字母，照着打）：不用回忆，所以要求打得快才算掌握">抄写·多快算掌握</span>
             <span class="setCtrl">
               <input
                 type="number"
@@ -104,7 +116,7 @@
             </span>
           </div>
           <div class="setRow">
-            <span class="setLabel" title="平均每字母超过该值（即使无错）→ 视为掌握不好">慢词阈值</span>
+            <span class="setLabel" title="抄写模式平均每字母超过该值（即使没打错）→ 视为没掌握">抄写·多慢算生疏</span>
             <span class="setCtrl">
               <input
                 type="number"
@@ -117,6 +129,75 @@
               <span class="setUnit">ms/字母</span>
             </span>
           </div>
+          <div class="setRow">
+            <span class="setLabel" title="默写模式（隐藏字母，凭记忆打）：回忆要花时间，所以标准放宽">默写·多快算掌握</span>
+            <span class="setCtrl">
+              <input
+                type="number"
+                :value="settings.enMasteryMsDict"
+                min="100"
+                max="3000"
+                step="100"
+                @change="setMasteryMsDict"
+              />
+              <span class="setUnit">ms/字母</span>
+            </span>
+          </div>
+          <div class="setRow">
+            <span class="setLabel" title="平均每字母超过该值（即使无错）→ 视为掌握不好">默写·多慢算生疏</span>
+            <span class="setCtrl">
+              <input
+                type="number"
+                :value="settings.enSlowMsDict"
+                min="200"
+                max="5000"
+                step="100"
+                @change="setSlowMsDict"
+              />
+              <span class="setUnit">ms/字母</span>
+            </span>
+          </div>
+          <div class="setRow">
+            <span class="setLabel" title="慢词刻意练习阈值：平均每字母超过该值的词会自动收录，专项练到该值以内过关">慢词练习阈值</span>
+            <span class="setCtrl">
+              <input
+                type="number"
+                :value="settings.enPracticeMs"
+                min="100"
+                max="5000"
+                step="50"
+                @change="setPracticeMs"
+              />
+              <span class="setUnit">ms/字母</span>
+            </span>
+          </div>
+          <label class="setRow">
+            <span class="setLabel" title="英文模式：单词出现时朗读一遍；打错时也会再次朗读该词提示正确发音（浏览器内置语音）">单词发音</span>
+            <input type="checkbox" :checked="settings.enSpeakWords" @change="settings.toggleEnSpeakWords()" />
+          </label>
+          <label class="setRow">
+            <span class="setLabel" title="英文短文/自定义模式：进入新句子时整句作一次请求先试有道原声（与单词同音色），未收录的句子自动回退系统语音整句朗读">整句朗读</span>
+            <input type="checkbox" :checked="settings.enSpeakSentence" @change="settings.toggleEnSpeakSentence()" />
+          </label>
+          <label class="setRow" v-if="settings.enSpeakSentence">
+            <span class="setLabel" title="读完整句后：单词输入前不再逐个朗读（安静回想/试拼）；打错时的纠音朗读仍保留（建议短文模式使用）">整句后免单词预读</span>
+            <input type="checkbox" :checked="settings.enNoWordPreSpeak" @change="settings.toggleEnNoWordPreSpeak()" />
+          </label>
+          <div class="setRow setRowSound" v-if="settings.enSpeakWords">
+            <span class="setLabel" title="发音口音：有道词典 TTS，英音（type=2）或美音（type=1）">发音口音</span>
+            <select :value="settings.enTTSAccent" @change="onSelectTTSAccent">
+              <option value="uk">英音</option>
+              <option value="us">美音</option>
+            </select>
+          </div>
+          <label class="setRow">
+            <span class="setLabel" title="开启后：所有英文单词默认隐藏字母（全默写，凭记忆打），不再区分是否掌握；打错仍会显示单词">英文全默写</span>
+            <input type="checkbox" :checked="settings.enAllDictation" @change="settings.toggleEnAllDictation()" />
+          </label>
+          <label class="setRow">
+            <span class="setLabel" title="默写模式下当前录入位置的字母是否显示：默认不显示（回忆拼写，仅该位置下划线高亮）；勾选后显示字母">默写·显示当前字母</span>
+            <input type="checkbox" :checked="settings.enDictCurrentHint" @change="settings.toggleEnDictCurrentHint()" />
+          </label>
           <label class="setRow">
             <span class="setLabel">卡片隐藏字母</span>
             <input type="checkbox" :checked="settings.cardHideLetters" @change="settings.toggleCardHideLetters()" />
@@ -148,12 +229,16 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useSettingsStore } from '../stores/settings.js'
 import { useSessionStore } from '../stores/session.js'
+import { useProgressStore } from '../stores/progress.js'
 import { setSoundURLs, loadCustomSounds } from '../utils/sound.js'
 
 const route = useRoute()
 const router = useRouter()
 const settings = useSettingsStore()
 const session = useSessionStore()
+const progress = useProgressStore()
+// 今日目标实时进度（顶部栏常驻显示）
+const goal = computed(() => progress.todayGoal)
 
 // 英文词库难度选项
 const EN_GRADES = [
@@ -170,6 +255,9 @@ const soundOptions = ref([])
 function toggleTheme() { settings.toggleTheme() }
 function setMasteryMs(e) { settings.setEnMasteryMs(e.target.value) }
 function setSlowMs(e) { settings.setEnSlowMs(e.target.value) }
+function setMasteryMsDict(e) { settings.setEnMasteryMsDict(e.target.value) }
+function setSlowMsDict(e) { settings.setEnSlowMsDict(e.target.value) }
+function setPracticeMs(e) { settings.setEnPracticeMs(e.target.value) }
 function setEnGrade(e) { settings.setEnGrade(e.target.value) }
 function go(path) { if (route.path !== path) router.push(path) }
 
@@ -195,6 +283,11 @@ function onSelectSound(e) {
   applySound()
 }
 
+// 发音口音（有道 TTS：英音/美音）
+function onSelectTTSAccent(e) {
+  settings.setEnTTSAccent(e.target.value)
+}
+
 // 点击设置面板外部时关闭
 function onDocClick(e) {
   if (!showSettings.value) return
@@ -204,6 +297,7 @@ function onDocClick(e) {
 onMounted(() => {
   document.addEventListener('click', onDocClick)
   loadSounds()
+  progress.load()
 })
 onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
 </script>
@@ -215,7 +309,7 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
   height: 52px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 12px;
   padding: 8px 12px;
   background: var(--theme-background-light-color);
   border-bottom: 1px solid var(--theme-border-color);
@@ -230,9 +324,34 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 .left::-webkit-scrollbar { display: none; }
 .right { display: flex; gap: 10px; align-items: center; flex: 0 0 auto; }
+/* 今日目标（顶部栏常驻）：紧凑条 */
+.goalTop {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--theme-background-color);
+  border: 1px solid var(--theme-border-color);
+  font-size: 12px;
+  color: var(--theme-text-color);
+  white-space: nowrap;
+}
+.goalTop.all { border-color: #3db389; }
+.goalTopTitle { font-weight: 700; color: var(--theme-main-text-color); }
+.goalTopTime { display: inline-flex; align-items: center; gap: 5px; font-variant-numeric: tabular-nums; }
+.goalTopBar { width: 44px; height: 6px; border-radius: 3px; background: var(--theme-border-color); overflow: hidden; display: inline-block; }
+.goalTopFill { display: block; height: 100%; background: var(--theme-menu-hover-color); border-radius: 3px; transition: width .3s ease; }
+.goalTopItem { font-variant-numeric: tabular-nums; }
+.goalTop .done { color: #3db389; font-weight: 600; }
+.goalTopItem { }
+.goalTopAll { font-size: 14px; }
 .modeBtn {
   display: inline-flex;
   align-items: center;
@@ -343,6 +462,17 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
 }
 .setRowSound select:focus { border-color: var(--theme-menu-hover-color); }
 
+@media (max-width: 1100px) {
+  .goalTopTitle { display: none; }
+}
+@media (max-width: 900px) {
+  .goalTopItem { display: none; }
+  .goalTopBar { width: 34px; }
+}
+@media (max-width: 700px) {
+  .goalTop { padding: 4px 8px; }
+  .goalTopAll { display: none; }
+}
 @media (max-width: 520px) {
   .topStatus { padding: 8px 8px; }
   .accuracy { display: none; }

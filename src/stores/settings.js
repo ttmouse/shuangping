@@ -22,8 +22,17 @@ export const useSettingsStore = defineStore('settings', {
     // 高级练习模式设置
     blindMode: false, // 盲打模式 - 隐藏键盘提示
     cardHideLetters: true, // 卡片·默写模式：隐藏拼音字母提示，只显示横线位置
-    enMasteryMs: 600, // 英文掌握度判定阈值（平均每字母 ms）
-    enSlowMs: 1500, // 英文慢词阈值：平均每字母超过该值 → 视为掌握不好（与错词同权重）
+    enMasteryMs: 500, // 英文提示模式（显示字母抄写）掌握阈值 ms/字母：抄写无回忆成本，须真正快才算掌握
+    enSlowMs: 1300, // 英文提示模式慢词阈值：平均每字母超过 → 视为掌握不好（与错词同权重）
+    enPracticeMs: 300, // 慢词刻意练习阈值 ms/字母：超过则收录，刻意练习练到该值以内过关
+    enMasteryMsDict: 1000, // 英文默写模式（隐藏字母回忆拼写）掌握阈值 ms/字母：回忆含思考时间，阈值放宽
+    enSlowMsDict: 2500, // 英文默写模式慢词阈值：平均每字母超过（想不起来）→ 视为掌握不好
+    enDictCurrentHint: false, // 默写模式·当前字母显示：默认关闭（字母不显示，仅下划线高亮提示位置）；打开后当前字母也显示
+    enSpeakWords: true, // 英文单词发音：单词出现/打错时朗读（有道词典 TTS 接口）
+    enSpeakSentence: true, // 英文整句朗读：进入新句子时整句作一次请求先试有道原声（与单词同音色），失败回退系统语音连读；多词句生效
+    enNoWordPreSpeak: false, // 整句后免单词预读：读完整句后，单词输入前不再逐个朗读；打错纠音朗读仍保留
+    enTTSAccent: 'uk', // 英文发音口音：'uk'=英音（有道 type=2）| 'us'=美音（type=1）
+    enAllDictation: false, // 全默写模式：所有英文单词默认隐藏字母（凭记忆打），不受掌握度影响
     enGrade: 'all', // 英文词库年级：'all' | 'g4' | 'g5' | 'g6'
     cardContent: 'all', // 卡片模式内容源（含年级）：'all' | 'g4' | 'g5' | 'g6' | 'sentence' | 'mistake' | 'custom'
     timeChallenge: false, // 限时挑战模式
@@ -97,13 +106,56 @@ export const useSettingsStore = defineStore('settings', {
       this.blindMode = !!value
       this.save()
     },
+    // 默写模式·当前字母提示
+    toggleEnDictCurrentHint() {
+      this.enDictCurrentHint = !this.enDictCurrentHint
+      this.save()
+      return this.enDictCurrentHint
+    },
+    // 整句后免单词预读：单词输入前不再朗读（打错纠音保留）
+    toggleEnNoWordPreSpeak() {
+      this.enNoWordPreSpeak = !this.enNoWordPreSpeak
+      this.save()
+      return this.enNoWordPreSpeak
+    },
+    // 英文整句朗读：进入新句子时先朗读整句
+    toggleEnSpeakSentence() {
+      this.enSpeakSentence = !this.enSpeakSentence
+      this.save()
+      return this.enSpeakSentence
+    },
+    // 英文单词发音
+    toggleEnSpeakWords() {
+      this.enSpeakWords = !this.enSpeakWords
+      this.save()
+      return this.enSpeakWords
+    },
+    // 英文发音口音（'uk'=英音 | 'us'=美音）
+    setEnTTSAccent(accent) {
+      this.enTTSAccent = accent === 'us' ? 'us' : 'uk'
+      this.save()
+    },
+    // 慢词刻意练习阈值（ms/字母）
+    setEnPracticeMs(value) {
+      const v = Number(value)
+      if (Number.isFinite(v) && v >= 100 && v <= 5000) {
+        this.enPracticeMs = Math.round(v)
+        this.save()
+      }
+    },
+    // 全默写模式：所有英文单词隐藏字母
+    toggleEnAllDictation() {
+      this.enAllDictation = !this.enAllDictation
+      this.save()
+      return this.enAllDictation
+    },
     // 卡片默写模式：隐藏/显示拼音字母提示
     toggleCardHideLetters() {
       this.cardHideLetters = !this.cardHideLetters
       this.save()
       return this.cardHideLetters
     },
-    // 英文掌握度判定阈值（ms/字母）
+    // 英文提示模式掌握阈值（ms/字母）
     setEnMasteryMs(value) {
       const v = Number(value)
       if (Number.isFinite(v) && v >= 100 && v <= 3000) {
@@ -111,11 +163,27 @@ export const useSettingsStore = defineStore('settings', {
         this.save()
       }
     },
-    // 英文慢词阈值（ms/字母，超过视为掌握不好）
+    // 英文提示模式慢词阈值（ms/字母）
     setEnSlowMs(value) {
       const v = Number(value)
       if (Number.isFinite(v) && v >= 200 && v <= 5000) {
         this.enSlowMs = Math.round(v)
+        this.save()
+      }
+    },
+    // 英文默写模式掌握阈值（ms/字母，回忆含思考时间，阈值放宽）
+    setEnMasteryMsDict(value) {
+      const v = Number(value)
+      if (Number.isFinite(v) && v >= 100 && v <= 3000) {
+        this.enMasteryMsDict = Math.round(v)
+        this.save()
+      }
+    },
+    // 英文默写模式慢词阈值（ms/字母，想不起来）
+    setEnSlowMsDict(value) {
+      const v = Number(value)
+      if (Number.isFinite(v) && v >= 200 && v <= 5000) {
+        this.enSlowMsDict = Math.round(v)
         this.save()
       }
     },
