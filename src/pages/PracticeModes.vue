@@ -1993,14 +1993,14 @@ function onKeyDown(e) {
         // 词已完成，推进到下一词
         wordIdx.value++
         completedUnits.value++ // 完成一个词
+        const hadError = enHadError.value // 在 startEnWord 重置前保存错误状态
         startEnWord()
-        if (enHadError.value && settings.enRedoPractice) {
+        if (hadError && settings.enRedoPractice) {
           // 错词重练：插回本句队尾再打一遍，并标记为重练词（样式区分）
           const s = enQueue.value[sentenceIdx.value]
           s.redoWords = s.redoWords || new Set()
           s.redoWords.add(s.words.length) // push 前的长度即新词索引
           s.words.push(word)
-          enHadError.value = false
         }
         letterIdx.value = 0
         currentInput.value = ''
