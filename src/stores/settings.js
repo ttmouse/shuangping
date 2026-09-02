@@ -38,6 +38,9 @@ export const useSettingsStore = defineStore('settings', {
     enShowWordCn: true, // 英文·单词上方中文翻译是否显示（默认开）
     enShowWordTime: false, // 英文·单词下方平均用时(ms)是否显示（默认关）
     enRedoPractice: false, // 英文·错题重练：打错的单词是否重新入队重练（默认关：打错即过，无错题模式；开：错词进第二行重练）
+    enGentleMode: false, // 英文·宽松模式：输入过程中不判错，整词完成后统一判断；支持 Backspace 自由修改
+    enColorMode: 'word-root', // 英文·着色模式：'word-root'=词根着色（不同深浅灰色区分前缀/词根/后缀）| 'syllable'=音节着色（不同色相区分发音块）| 'off'=关闭着色
+    enShowPunct: false, // 英文·句中标点：句子练习时是否在词间展示逗号/句号等标点（默认关；开后在词与词之间显示原句标点）
     cardContent: 'all', // 卡片模式内容源（含年级）：'all' | 'g4' | 'g5' | 'g6' | 'sentence' | 'mistake' | 'custom'
     timeChallenge: false, // 限时挑战模式
     timeChallengeDuration: 60, // 限时挑战时长（秒）
@@ -176,6 +179,25 @@ export const useSettingsStore = defineStore('settings', {
       this.enRedoPractice = !this.enRedoPractice
       this.save()
       return this.enRedoPractice
+    },
+    // 英文·宽松模式：输入过程中不判错，整词完成后统一判断
+    toggleEnGentleMode() {
+      this.enGentleMode = !this.enGentleMode
+      this.save()
+      return this.enGentleMode
+    },
+    // 英文·着色模式：'word-root' | 'syllable' | 'off'
+    setEnColorMode(mode) {
+      if (['word-root', 'syllable', 'off'].includes(mode)) {
+        this.enColorMode = mode
+        this.save()
+      }
+    },
+    // 英文·句中标点显示
+    toggleEnShowPunct() {
+      this.enShowPunct = !this.enShowPunct
+      this.save()
+      return this.enShowPunct
     },
     // 卡片默写模式：隐藏/显示拼音字母提示
     toggleCardHideLetters() {

@@ -103,7 +103,7 @@
         <h3>导入自定义中文文本</h3>
         <textarea
           v-model="importText"
-          placeholder="粘贴中文文本（仅中文会被用于练习，最多 1000 字）"
+          placeholder="粘贴中文文本（仅中文会被用于练习，最多 1000 字）。\n台词/剧本格式会自动忽略行首的「角色名：」，如 莫妮卡：没什么好说的！"
         />
         <div class="modalFooter">
           <div class="tip">中文计数：{{ hanCount }}/1000</div>
@@ -294,7 +294,7 @@ import SchemeSelector from '../components/SchemeSelector.vue'
 import AchievementNotification from '../components/AchievementNotification.vue'
 import ShareCard from '../components/ShareCard.vue'
 import { LENGTH_BUCKETS } from '../data/words.js'
-import { extractChinese } from '../utils/text2pinyin.js'
+import { extractChinese, stripDialogPrefix } from '../utils/text2pinyin.js'
 import { playKeySound } from '../utils/sound.js'
 import { keyByCode } from '../data/xiaohe.js'
 
@@ -369,7 +369,7 @@ const showImport = ref(false)
 const importText = ref('')
 const hanCount = computed(() => extractChinese(importText.value).length)
 function openImport() {
-  importText.value = writer.lastText || ''
+  importText.value = stripDialogPrefix(writer.lastText || '')
   showImport.value = true
 }
 function closeImport() { showImport.value = false }

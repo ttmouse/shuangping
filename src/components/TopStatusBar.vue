@@ -81,15 +81,6 @@
         <span class="acc-value">{{ session.accuracy }}%</span>
         <span class="acc-label">正确率</span>
       </div>
-      <select
-        v-if="route.name === 'practice-modes'"
-        class="gradeSelect"
-        :value="settings.enGrade"
-        @change="setEnGrade"
-        title="英文词库难度"
-      >
-        <option v-for="g in EN_GRADES" :key="g.id" :value="g.id">{{ g.name }}</option>
-      </select>
       <button class="iconBtn" :title="isDark ? '切换到明亮模式' : '切换到暗色模式'" @click="toggleTheme">
         <svg v-if="isDark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/></svg>
         <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -169,6 +160,14 @@
                   <span class="setLabel" title="开启后显示每个英文单词下方本词的平均用时(ms)；关闭后界面更简洁">单词·显示用时(ms)</span>
                   <input type="checkbox" :checked="settings.enShowWordTime" @change="settings.toggleEnShowWordTime()" />
                 </label>
+                <div class="setRow">
+                  <span class="setLabel" title="单词字母着色模式：词根着色（按前缀/词根/后缀分组上色）、音节着色（按自然拼读发音块上色）或关闭">着色模式</span>
+                  <span class="setCtrl setChips">
+                    <button class="chipBtn" :class="{ active: settings.enColorMode === 'word-root' }" @click="settings.setEnColorMode('word-root')" title="按前缀/词根/后缀分组上色">词根</button>
+                    <button class="chipBtn" :class="{ active: settings.enColorMode === 'syllable' }" @click="settings.setEnColorMode('syllable')" title="按自然拼读发音块上色">音节</button>
+                    <button class="chipBtn" :class="{ active: settings.enColorMode === 'off' }" @click="settings.setEnColorMode('off')" title="不显示着色">关</button>
+                  </span>
+                </div>
                 <label class="setRow">
                   <span class="setLabel" title="默写模式下当前录入位置的字母是否显示：默认不显示（回忆拼写，仅该位置下划线高亮）；勾选后显示字母">默写·显示当前字母</span>
                   <input type="checkbox" :checked="settings.enDictCurrentHint" @change="settings.toggleEnDictCurrentHint()" />
@@ -176,6 +175,14 @@
                 <label class="setRow">
                   <span class="setLabel" title="开启后：打错的单词会重新入队、放到第二行重练（错题模式）；关闭后：打错即过，不重练错词">错题重练</span>
                   <input type="checkbox" :checked="settings.enRedoPractice" @change="settings.toggleEnRedoPractice()" />
+                </label>
+                <label class="setRow">
+                  <span class="setLabel" title="宽松模式：输入过程中不判错，可自由修改；整词完成后统一判断对错">宽松模式</span>
+                  <input type="checkbox" :checked="settings.enGentleMode" @change="settings.toggleEnGentleMode()" />
+                </label>
+                <label class="setRow">
+                  <span class="setLabel" title="句子练习时是否在词与词之间展示原句的逗号/句号等标点（默认关；开后在练习中显示标点，标点不参与输入）">句中标点</span>
+                  <input type="checkbox" :checked="settings.enShowPunct" @change="settings.toggleEnShowPunct()" />
                 </label>
               </div>
 
@@ -260,14 +267,6 @@ const progress = useProgressStore()
 // 今日目标实时进度（顶部栏常驻显示）
 const goal = computed(() => progress.todayGoal)
 
-// 英文词库难度选项
-const EN_GRADES = [
-  { id: 'all', name: '全部词库' },
-  { id: 'g4', name: '四年级' },
-  { id: 'g5', name: '五年级' },
-  { id: 'g6', name: '六年级' },
-]
-
 const isDark = computed(() => settings.theme === 'dark')
 const showSettings = ref(false)
 const soundOptions = ref([])
@@ -278,7 +277,6 @@ function setSlowMs(e) { settings.setEnSlowMs(e.target.value) }
 function setMasteryMsDict(e) { settings.setEnMasteryMsDict(e.target.value) }
 function setSlowMsDict(e) { settings.setEnSlowMsDict(e.target.value) }
 function setPracticeMs(e) { settings.setEnPracticeMs(e.target.value) }
-function setEnGrade(e) { settings.setEnGrade(e.target.value) }
 function go(path) { if (route.path !== path) router.push(path) }
 
 // 练习模式导航（点击进入常规打字页并选中对应模式；与 PracticeModes 的 MODES 一一对应）
@@ -404,7 +402,7 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
   white-space: nowrap;
 }
 .goalTop.all { border-color: #3db389; }
-.goalTopTitle { font-weight: 700; color: var(--theme-main-text-color); }
+.goalTopTitle { display: inline-flex; align-items: center; gap: 4px; font-weight: 700; color: var(--theme-main-text-color); }
 .goalTopTime { display: inline-flex; align-items: center; gap: 5px; font-variant-numeric: tabular-nums; }
 .goalTopBar { width: 44px; height: 6px; border-radius: 3px; background: var(--theme-border-color); overflow: hidden; display: inline-block; }
 .goalTopFill { display: block; height: 100%; background: var(--theme-menu-hover-color); border-radius: 3px; transition: width .3s ease; }
@@ -433,19 +431,6 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
 .btnIcon { width: 15px; height: 15px; flex: 0 0 auto; }
 .modeBtnIcon { display: inline-flex; width: 15px; height: 15px; flex: 0 0 auto; }
 .modeBtnIcon svg { width: 15px; height: 15px; }
-.gradeSelect {
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 1px solid var(--theme-border-color);
-  background: var(--theme-background-light-color);
-  color: var(--theme-menu-text-color);
-  font-size: 12px;
-  cursor: pointer;
-  outline: none;
-}
-.gradeSelect:focus {
-  border-color: var(--theme-menu-hover-color);
-}
 .accuracy { display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: var(--theme-background-color); border-radius: 6px; font-size: 12px; }
 .acc-value { font-weight: 700; color: #67c23a; }
 .acc-label { color: var(--theme-text-color); }
@@ -561,6 +546,23 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
 .setCtrl input[type="number"]:focus { border-color: var(--theme-menu-hover-color); }
 .setUnit { font-size: 11px; opacity: 0.7; }
 .setRow input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--theme-menu-hover-color); cursor: pointer; }
+.setChips { gap: 4px; }
+.chipBtn {
+  padding: 3px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-color);
+  color: var(--theme-menu-text-color);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all .12s ease;
+}
+.chipBtn.active {
+  border-color: var(--theme-menu-hover-color);
+  background: var(--theme-menu-hover-color);
+  color: #fff;
+  box-shadow: 0 0 0 1px var(--theme-menu-hover-color);
+}
 .setRowSound select {
   padding: 4px 8px;
   border-radius: 6px;
@@ -588,6 +590,5 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
 @media (max-width: 520px) {
   .topStatus { padding: 8px 8px; }
   .accuracy { display: none; }
-  .gradeSelect { max-width: 90px; }
 }
 </style>

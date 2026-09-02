@@ -41,7 +41,7 @@
           :key="tab.id"
           class="tab-btn"
           :class="{ active: activeTab === tab.id }"
-          @click="activeTab = tab.id"
+          @click="switchTab(tab.id)"
         >
           {{ tab.name }}
         </button>
@@ -257,16 +257,20 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useLeaderboardStore } from '../stores/leaderboard.js'
 import { useStatsStore } from '../stores/stats.js'
 import TopStatusBar from '../components/TopStatusBar.vue'
 import ShareCard from '../components/ShareCard.vue'
 
+const route = useRoute()
+const router = useRouter()
 const leaderboard = useLeaderboardStore()
 const stats = useStatsStore()
 
-const activeTab = ref('score')
+// 从 URL 恢复 tab，默认综合排名
+const activeTab = ref(route.query.tab && ['score', 'speed', 'accuracy', 'streak'].includes(route.query.tab) ? route.query.tab : 'score')
 const showCreateChallenge = ref(false)
 const showShareChallenge = ref(false)
 const showShareCard = ref(false)
@@ -322,6 +326,19 @@ onMounted(() => {
   leaderboard.init()
   leaderboard.updateMyStats()
   leaderboard.checkChallenges(stats)
+})
+
+// tab 切换时同步到 URL
+function switchTab(id) {
+  activeTab.value = id
+  router.replace({ query: { ...route.query, tab: id } })
+}
+
+// 浏览器前进/后退时恢复 tab 状态
+watch(() => route.query.tab, (tab) => {
+  if (tab && ['score', 'speed', 'accuracy', 'streak'].includes(tab) && tab !== activeTab.value) {
+    activeTab.value = tab
+  }
 })
 
 function getChallengeIcon(type) {

@@ -152,7 +152,7 @@
               :key="filter.key"
               class="filter-btn"
               :class="{ active: currentFilter === filter.key }"
-              @click="currentFilter = filter.key"
+              @click="switchFilter(filter.key)"
             >
               {{ filter.label }}
             </button>
@@ -230,16 +230,20 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useProgressStore } from '../stores/progress.js'
 import { useStatsStore } from '../stores/stats.js'
 import TopStatusBar from '../components/TopStatusBar.vue'
 
+const route = useRoute()
+const router = useRouter()
 const progress = useProgressStore()
 const goal = computed(() => progress.todayGoal)
 const stats = useStatsStore()
 const importInput = ref(null)
-const currentFilter = ref('all')
+// 从 URL 恢复成就筛选，默认「全部」
+const currentFilter = ref(route.query.filter || 'all')
 
 const RARE_ACHIEVEMENTS = ['ten-thousand', 'streak-30', 'combo-50', 'accuracy-95']
 const EPIC_ACHIEVEMENTS = ['fifty-thousand', 'accuracy-100', 'speed-150', 'streak-100', 'combo-100', 'advanced-complete']
@@ -386,6 +390,19 @@ onMounted(() => {
   progress.load()
   // 连续练习天数由 stats.dailyStats 计算，需先加载
   stats.load()
+})
+
+// 成就筛选切换时同步到 URL
+function switchFilter(key) {
+  currentFilter.value = key
+  router.replace({ query: { ...route.query, filter: key } })
+}
+
+// 浏览器前进/后退时恢复筛选状态
+watch(() => route.query.filter, (filter) => {
+  if (filter && filter !== currentFilter.value) {
+    currentFilter.value = filter
+  }
 })
 </script>
 

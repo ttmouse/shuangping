@@ -3,10 +3,25 @@ import { pinyin } from 'pinyin-pro'
 
 const HAN_RE = /[\u4E00-\u9FFF]/
 
+// 行首「角色名 + 冒号」前缀，如 "Monica: "、"莫妮卡："
+// 英文名：字母开头，可含空格/点/连字符/撇号；中文名：1-8 个汉字
+const DIALOG_PREFIX_RE = /^(?:[A-Za-z][A-Za-z0-9 .'_-]{0,29}|[\u4E00-\u9FFF]{1,8})\s*[:：]\s*/
+
+// 剥离每行行首的角色名与冒号，仅用于练习内容，不影响原文
+// 例："莫妮卡：没什么好说的！" → "没什么好说的！"
+// 例："Monica: There's nothing to tell!" → "There's nothing to tell!"
+export function stripDialogPrefix(text = '') {
+  return String(text).split(/\r?\n/).map(line => line.replace(DIALOG_PREFIX_RE, '')).join('\n')
+}
+
 export function extractChinese(text = '') {
   const out = []
-  for (const ch of Array.from(text)) {
-    if (HAN_RE.test(ch)) out.push(ch)
+  // 逐行剥离「角色名：」前缀，避免把对话台词里的人名/冒号混入练习
+  for (const line of String(text).split(/\r?\n/)) {
+    const cleaned = line.replace(DIALOG_PREFIX_RE, '')
+    for (const ch of Array.from(cleaned)) {
+      if (HAN_RE.test(ch)) out.push(ch)
+    }
   }
   return out
 }
