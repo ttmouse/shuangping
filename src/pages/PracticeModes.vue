@@ -931,6 +931,7 @@ function goToNextCourse() {
    packBrowseLevel.value = 'courses'
    started.value = false
    completed.value = false
+   currentCourse.value = null
  }
 
 
