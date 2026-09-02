@@ -2695,8 +2695,12 @@ function onKeyDown(e) {
       switchMode(nextMode.value)
     } else if (e.code === 'Escape') {
       e.preventDefault()
-      // 回到模式选择
-      backToModeSelect()
+      // 课包课程完成 → 回课程列表；其他模式 → 回模式选择
+      if (activePack.value && currentCourse.value) {
+        backToCourseList()
+      } else {
+        backToModeSelect()
+      }
     }
     return
   }
@@ -2733,10 +2737,14 @@ function onKeyDown(e) {
     return
   }
 
-  // 练习中 Esc 退出：回到模式选择（焦点落到当前模式 tab）
+  // 练习中 Esc 退出：课包课程 → 回课程列表；其他模式 → 回模式选择
   if (e.key === 'Escape') {
     e.preventDefault()
-    backToModeSelect()
+    if (activePack.value && currentCourse.value) {
+      backToCourseList()
+    } else {
+      backToModeSelect()
+    }
     return
   }
   // 卡片模式：整卡拼音打完等待空格/回车进入下一张（期间忽略其他按键）
