@@ -755,3 +755,4 @@ node_modules/vue-router/dist/vue-router.prod.cjs
 node_modules/vue-router/vetur/attributes.json
 node_modules/vue-router/vetur/tags.json
 .alma-snapshots
+.reasonix/

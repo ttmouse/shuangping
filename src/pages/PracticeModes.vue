@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <TopStatusBar v-show="!(mode === 'english' && started && activePack)" />
+    <TopStatusBar v-show="!(mode === 'english' && started && activePack)" :started="started" />
 
     <div class="pageCenter">
       <div class="tipsTextContent">
@@ -49,7 +49,7 @@
       </div>
 
       <!-- 课包课程：右上角模式切换 chip（句乐部样式：🔒 初级）—— 定位在页面右上角 -->
-      <div v-if="mode === 'english' && started && julebuFullQueue.length && !activePack" class="enModeBox" @click.stop>
+      <div v-if="mode === 'english' && started && julebuFullQueue.length" class="enModeBox" @click.stop>
         <button
           class="enModeChip"
           :class="{ open: enModePanelOpen }"
@@ -182,8 +182,7 @@
             <div class="enSectionTabs">
               <button class="enSectionTab" :class="{ active: enSection === 'words' }" @click="showEnWordsTab" data-nav>单词</button>
               <button class="enSectionTab" :class="{ active: enSection === 'stories' }" @click="showEnStoriesTab" data-nav>短文</button>
-              <button class="enSectionTab" :class="{ active: enSection === 'custom' }" @click="showEnCustomTab" data-nav>自定义</button>
-            </div>
+              </div>
             <template v-if="enSection === 'words'">
             <div class="enGradeRow">
               <select class="enGradeSelect" :value="settings.enGrade" @change="onEnGradeChange" title="英文词库年级">
@@ -245,103 +244,97 @@
               <div v-else class="mistakeEmpty">暂无错题——短文里打错的英文单词会自动记到这里，专练到记住为止。</div>
             </div>
             <div class="storyPanel" :class="{ 'storyPanelWide': packBrowseLevel === 'courses' }">
-              <div class="storyPanelTitle">
-                <span>短文</span>
-                <button class="btn storyAddBtn" @click="openCustomEditor" data-nav>＋ 新增自定义</button>
-              </div>
-              <div v-if="customEditorOpen" class="customEditor">
-                <input v-model="newCustomTitle" placeholder="给这组内容起个名字（可留空）" class="customTitleInput" />
-                <textarea v-model="newCustomText" placeholder="粘贴英文内容（可中英对照，每句一行，中文行自动配为翻译）" rows="4"></textarea>
-                <div class="customOpts">
-                  <button class="btn" :disabled="!newCustomText.trim()" @click="saveCustomStory" data-nav>{{ editingCustomId ? '保存修改' : '保存并加入' }}</button>
-                  <button class="btn" @click="customEditorOpen = false" data-nav>取消</button>
+              <!-- 课包课程列表：独立视图，隐藏其他内容 -->
+              <template v-if="packBrowseLevel === 'courses' && activePack">
+                <div class="packBrowser">
+                  <div class="packTitle">
+                    <button class="btn storyBackBtn" @click="backToPacks" data-nav>
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                      返回课包
+                    </button>
+                    <span class="packTitleText">{{ activePack.title }}</span>
+                    <span v-if="courseLoading" class="packLoadingTip">加载课程…</span>
+                  </div>
+                  <div v-if="activePack.description" class="packDesc">{{ activePack.description }}</div>
+                  <div v-if="packError" class="packError">{{ packError }}</div>
+                  <div v-if="packCoursesLoading" class="packEmpty">课程加载中…</div>
+                  <div v-else class="storyList courseGrid">
+                    <button
+                      v-for="c in (activePack.courses || [])"
+                      :key="c.id"
+                      class="storyItem courseCard"
+                      :disabled="courseLoading"
+                      @click="startJulebuCourse(c)"
+                      data-nav
+                    >
+                      <span class="courseOrder">#{{ c.order }}</span>
+                      <span class="storyTitle courseTitle">{{ c.title }}</span>
+                      <span v-if="c.subtitle" class="storySubtitle">{{ c.subtitle }}</span>
+                      <span class="storyMeta">
+                        <span v-if="courseProgress[activePack.slug]?.[c.file]?.completed" class="courseDone" title="已练习完成">✓ 已完成</span>
+                        <span v-else>点击开始练习</span>
+                      </span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <div v-if="enCustomStoryList.length" class="storyList">
-                <div v-for="s in enCustomStoryList" :key="s.id" class="storyItemWrap">
-                  <button class="storyItem" @click="startEnStory(s)" data-nav>
-                    <span class="storyTitle">{{ s.title }}</span>
-                    <span class="storyMeta">{{ s.sentences.length }} 句 · 自定义{{ s.firstLine ? ' · ' + s.firstLine.slice(0, 28) + (s.firstLine.length > 28 ? '…' : '') : '' }}</span>
-                  </button>
-                  <button class="storyEdit" title="编辑" @click="editCustomStory(s.id)">✎</button>
-                  <button class="storyDel" title="删除" @click="removeEnCustomStory(s.id)">×</button>
+              </template>
+              <!-- 非课包浏览：短文列表 + 课包列表 -->
+              <template v-else>
+                <div class="storyPanelTitle">
+                  <span>短文</span>
+                  <button class="btn storyAddBtn" @click="openCustomEditor" data-nav>＋ 新增自定义</button>
                 </div>
-              </div>
-              <!-- 主题课包（julebu 课程）浏览：课包列表 → 课程列表 → 选课练习 -->
-              <div class="packBrowser" v-if="!packBrowseLevel || packBrowseLevel === 'packs'">
-                <div class="packTitle">
-                  <span>主题课包</span>
-                  <button v-if="!packList.length && !packLoading" class="btn storyAddBtn" @click="loadCoursePackRegistry" data-nav>加载课包</button>
-                  <button v-else-if="packLoading" class="btn" disabled data-nav>加载中…</button>
+                <div v-if="customEditorOpen" class="customEditor">
+                  <input v-model="newCustomTitle" placeholder="给这组内容起个名字（可留空）" class="customTitleInput" />
+                  <textarea v-model="newCustomText" placeholder="粘贴英文内容（可中英对照，每句一行，中文行自动配为翻译）" rows="4"></textarea>
+                  <div class="customOpts">
+                    <button class="btn" :disabled="!newCustomText.trim()" @click="saveCustomStory" data-nav>{{ editingCustomId ? '保存修改' : '保存并加入' }}</button>
+                    <button class="btn" @click="customEditorOpen = false" data-nav>取消</button>
+                  </div>
                 </div>
-                <div v-if="packError" class="packError">{{ packError }}</div>
-                <div v-if="!packList.length && !packLoading" class="packEmpty">点击"加载课包"获取主题课程（850 基础词等）</div>
-                <div v-if="packList.length" class="storyList">
-                  <button v-for="p in packList" :key="p.slug" class="storyItem" @click="openCoursePack(p)" data-nav>
-                    <span class="storyTitle">{{ p.title }}</span>
-                    <span class="storyMeta">{{ p.courseCount || '' }} 课 · 主题课包 ›</span>
-                  </button>
+                <div v-if="enCustomStoryList.length" class="storyList">
+                  <div v-for="s in enCustomStoryList" :key="s.id" class="storyItemWrap">
+                    <button class="storyItem" @click="startEnStory(s)" data-nav>
+                      <span class="storyTitle">{{ s.title }}</span>
+                      <span class="storyMeta">{{ s.sentences.length }} 句 · 自定义{{ s.firstLine ? ' · ' + s.firstLine.slice(0, 28) + (s.firstLine.length > 28 ? '…' : '') : '' }}</span>
+                    </button>
+                    <button class="storyEdit" title="编辑" @click="editCustomStory(s.id)">✎</button>
+                    <button class="storyDel" title="删除" @click="removeEnCustomStory(s.id)">×</button>
+                  </div>
                 </div>
-              </div>
-              <div class="packBrowser" v-else-if="packBrowseLevel === 'courses' && activePack">
-                <div class="packTitle">
-                  <button class="btn storyAddBtn" @click="backToPacks" data-nav>‹ 返回课包</button>
-                  <span class="packTitleText">{{ activePack.title }}</span>
-                  <span v-if="courseLoading" class="packLoadingTip">加载课程…</span>
+                <!-- 主题课包（julebu 课程）浏览：课包列表 -->
+                <div class="packBrowser">
+                  <div class="packTitle">
+                    <span>主题课包</span>
+                    <button v-if="!packList.length && !packLoading" class="btn storyAddBtn" @click="loadCoursePackRegistry" data-nav>加载课包</button>
+                    <button v-else-if="packLoading" class="btn" disabled data-nav>加载中…</button>
+                  </div>
+                  <div v-if="packError" class="packError">{{ packError }}</div>
+                  <div v-if="!packList.length && !packLoading" class="packEmpty">点击"加载课包"获取主题课程（850 基础词等）</div>
+                  <div v-if="packList.length" class="storyList">
+                    <button v-for="p in packList" :key="p.slug" class="storyItem" @click="openCoursePack(p)" data-nav>
+                      <span class="storyTitle">{{ p.title }}</span>
+                      <span class="storyMeta">{{ p.courseCount || '' }} 课 · 主题课包 ›</span>
+                    </button>
+                  </div>
                 </div>
-                <div v-if="activePack.description" class="packDesc">{{ activePack.description }}</div>
-                <div v-if="packError" class="packError">{{ packError }}</div>
-                <div v-if="packCoursesLoading" class="packEmpty">课程加载中…</div>
-                <div v-else class="storyList courseGrid">
+                <div class="storyList" v-if="EN_STORIES.length">
+                  <div class="packBuiltinLabel">内置短文</div>
                   <button
-                    v-for="c in (activePack.courses || [])"
-                    :key="c.id"
-                    class="storyItem courseCard"
-                    :disabled="courseLoading"
-                    @click="startJulebuCourse(c)"
+                    v-for="s in EN_STORIES"
+                    :key="s.id"
+                    class="storyItem"
+                    @click="startEnStory(s)"
                     data-nav
                   >
-                    <span class="courseOrder">#{{ c.order }}</span>
-                    <span class="storyTitle courseTitle">{{ c.title }}</span>
-                    <span v-if="c.subtitle" class="storySubtitle">{{ c.subtitle }}</span>
-                    <span class="storyMeta">
-                      <span v-if="courseProgress[activePack.slug]?.[c.file]?.completed" class="courseDone" title="已练习完成">✓ 已完成</span>
-                      <span v-else>点击开始练习</span>
-                    </span>
+                    <span class="storyTitle">{{ s.title }}</span>
+                    <span class="storyMeta">{{ gradeLabel(s.grade) }} · {{ s.sentences.length }} 句 · {{ s.titleCn }}</span>
                   </button>
                 </div>
-              </div>
-              <div class="storyList" v-if="EN_STORIES.length">
-                <div class="packBuiltinLabel">内置短文</div>
-                <button
-                  v-for="s in EN_STORIES"
-                  :key="s.id"
-                  class="storyItem"
-                  @click="startEnStory(s)"
-                  data-nav
-                >
-                  <span class="storyTitle">{{ s.title }}</span>
-                  <span class="storyMeta">{{ gradeLabel(s.grade) }} · {{ s.sentences.length }} 句 · {{ s.titleCn }}</span>
-                </button>
-              </div>
+              </template>
             </div>
             </template>
-            <template v-else>
-            <!-- 自定义内容：粘贴自己的英文练习（支持中英双语，自动配对翻译） -->
-            <div class="customPanel enCustomPanel">
-              <div class="customTitle">自定义内容</div>
-              <textarea
-                v-model="enCustomText"
-                placeholder="粘贴英文内容（可中英对照，如：&#10;It's sunny and warm today.&#10;今天天气晴朗又暖和。）"
-                rows="5"
-              ></textarea>
-              <div class="customOpts">
-                <button class="btn" :disabled="!enCustomText.trim()" @click="startEnCustomPractice" data-nav>用这些内容练习</button>
-                <button class="btn" @click="saveEnCustom" data-nav>保存内容</button>
-              </div>
-            </div>
-            </template>
-            <div class="numHint">从右上角选择词库开始，或按任意键开始</div>
+            <div class="numHint" v-if="enSection === 'words'">从右上角选择词库开始，或按任意键开始</div>
           </div>
         </template>
 
@@ -2689,6 +2682,8 @@ function onKeyDown(e) {
     if (activeTag === 'TEXTAREA' || activeTag === 'INPUT') return
     // 方向键：键盘导航专用，不开始练习
     if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return
+    // 短文浏览模式：不在此处按任意键开始，需点选具体课程/短文
+    if (mode.value === 'english' && enSection.value === 'stories') return
     // 未开始按 Esc：把焦点带回模式导航（顶部栏当前模式按钮）
     if (e.key === 'Escape') {
       e.preventDefault()
@@ -3066,7 +3061,7 @@ onBeforeUnmount(() => {
 .enStage { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; width: 100%; flex: 1; }
 /* 自定义模式：当前句中文翻译（显示在句子上方） */
 .enSentenceCn {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 500;
   color: var(--theme-rich-text-color, var(--theme-menu-text-color));
   max-width: 90%;
@@ -3087,21 +3082,32 @@ onBeforeUnmount(() => {
 /* 英文内容类型切换：单词 / 短文 */
 .enSectionTabs {
   display: flex;
-  gap: 10px;
+  gap: 6px;
+  padding: 4px;
+  background: var(--theme-background-light-color);
+  border-radius: 999px;
+  border: 1px solid var(--theme-border-color);
 }
 .enSectionTab {
-  padding: 8px 20px;
-  border-radius: 10px;
-  border: 1px solid var(--theme-border-color);
-  background: var(--theme-background-light-color);
+  padding: 7px 20px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
   color: var(--theme-menu-text-color);
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
+  transition: all .2s ease;
+}
+.enSectionTab:hover {
+  color: var(--theme-main-text-color);
+  background: color-mix(in srgb, var(--theme-menu-text-color) 8%, transparent);
 }
 .enSectionTab.active {
-  border-color: var(--theme-menu-hover-color);
-  box-shadow: 0 0 0 2px #35e2b733 inset;
-  color: var(--theme-main-text-color);
+  background: var(--theme-menu-text-color);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 /* 词库年级选择器：单词 tab 内，紧接在 tab 下方 */
 .enGradeRow {
@@ -3128,12 +3134,11 @@ onBeforeUnmount(() => {
   max-width: 94vw;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 20px;
+  gap: 16px;
+  padding: 24px;
   background: var(--theme-background-light-color);
   border: 1px solid var(--theme-border-color);
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
 }
 .storyPanelTitle {
   font-size: 14px;
@@ -3151,6 +3156,24 @@ onBeforeUnmount(() => {
 .storyAddBtn {
   font-size: 12px;
   padding: 4px 10px;
+}
+.storyBackBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-color);
+  color: var(--theme-menu-text-color);
+  cursor: pointer;
+  transition: all .15s ease;
+  flex-shrink: 0;
+}
+.storyBackBtn:hover {
+  border-color: var(--theme-menu-hover-color);
+  background: color-mix(in srgb, var(--theme-menu-hover-color) 6%, var(--theme-background-color));
 }
 .customEditor {
   display: flex;
@@ -3227,13 +3250,13 @@ onBeforeUnmount(() => {
 .storyList {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 .storyItem {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 10px 14px;
+  gap: 3px;
+  padding: 12px 16px;
   border-radius: 10px;
   border: 1px solid var(--theme-border-color);
   background: var(--theme-background-color);
@@ -3241,9 +3264,11 @@ onBeforeUnmount(() => {
   font-size: 15px;
   cursor: pointer;
   text-align: left;
+  transition: all .15s ease;
 }
 .storyItem:hover {
   border-color: var(--theme-menu-hover-color);
+  background: color-mix(in srgb, var(--theme-menu-hover-color) 4%, var(--theme-background-color));
 }
 .storyMeta {
   font-size: 12px;
@@ -3267,12 +3292,18 @@ onBeforeUnmount(() => {
 }
 .courseGrid .courseCard {
   position: relative;
-  gap: 3px;
+  gap: 4px;
   min-height: 108px;
-  padding: 26px 14px 10px;
+  padding: 28px 14px 12px;
   border-radius: 12px;
   justify-content: center;
   overflow: hidden;
+  transition: all .18s ease;
+  cursor: pointer;
+}
+.courseGrid .courseCard:hover {
+  border-color: var(--theme-menu-hover-color);
+  background: color-mix(in srgb, var(--theme-menu-hover-color) 6%, var(--theme-background-light-color));
 }
 .courseOrder {
   position: absolute;
@@ -3298,20 +3329,20 @@ onBeforeUnmount(() => {
 .packBrowser {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   margin: 6px 0 12px;
 }
 .packDesc {
-  font-size: 12.5px;
-  line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.6;
   color: var(--theme-menu-text-color);
-  padding: 4px 2px 2px;
+  padding: 2px 2px 4px;
 }
 .packTitle {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
 }
 .packTitleText {
@@ -3408,7 +3439,10 @@ onBeforeUnmount(() => {
   padding: 6px 10px;
   border-radius: 8px;
   border: 2px solid transparent;
-  transition: border-color .15s ease, opacity .2s ease;
+  transition: border-color .15s ease, opacity .2s ease, background .15s ease;
+}
+.word-col.active .word-box {
+  background: color-mix(in srgb, var(--theme-menu-hover-color) 6%, transparent);
 }
 .word-letters {
   display: inline-flex;
@@ -3526,9 +3560,11 @@ onBeforeUnmount(() => {
   min-width: 0;
 }
 .enProgTitle {
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--theme-main-text-color);
 }
-.enProgTitle span { font-weight: normal; }
+.enProgTitle span { font-weight: normal; color: var(--theme-text-secondary, #6b7280); }
 /* 右上角模式切换（句乐部样式：紫色半透明 chip，点击弹面板）
    定位父级 .app（全屏 flex 列容器）：练习进行中时固定右上角 */
 .enModeBox {
@@ -3541,17 +3577,18 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 10px;
-  border-radius: 10px;
-  border: none;
-  background: color-mix(in srgb, var(--theme-accent-color, #ac47ff) 12%, transparent);
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--theme-accent-color, #ac47ff) 20%, transparent);
+  background: color-mix(in srgb, var(--theme-accent-color, #ac47ff) 10%, transparent);
   color: var(--theme-accent-color, #ac47ff);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: background .15s;
+  transition: all .15s ease;
+  backdrop-filter: blur(8px);
 }
-.enModeChip:hover { background: color-mix(in srgb, var(--theme-accent-color, #ac47ff) 20%, transparent); }
+.enModeChip:hover { background: color-mix(in srgb, var(--theme-accent-color, #ac47ff) 18%, transparent); }
 .enModeChip.open { background: color-mix(in srgb, var(--theme-accent-color, #ac47ff) 20%, transparent); }
 .enModeLock { flex-shrink: 0; }
 .enModeCaret { flex-shrink: 0; opacity: .8; transition: transform .15s; }
@@ -3559,14 +3596,14 @@ onBeforeUnmount(() => {
 /* 下拉面板 */
 .enModePanel {
   position: absolute;
-  top: calc(100% + 6px);
+  top: calc(100% + 8px);
   right: 0;
   min-width: 220px;
   padding: 8px;
   border-radius: 12px;
   border: 1px solid var(--theme-border-color);
   background: var(--theme-background-color, var(--card, #fff));
-  box-shadow: 0 8px 28px rgba(0,0,0,.16);
+  box-shadow: 0 12px 32px rgba(0,0,0,.12);
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -3671,6 +3708,11 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  transition: all .15s ease;
+}
+.enActionBtn:hover:not(:disabled) {
+  border-color: var(--theme-menu-hover-color);
+  background: color-mix(in srgb, var(--theme-menu-hover-color) 6%, var(--theme-background-color));
 }
 .enActionBtn svg { flex: none; }
 .enActionBtn:disabled {
@@ -3739,7 +3781,7 @@ onBeforeUnmount(() => {
   background: var(--theme-background-light-color);
   border: 1px solid var(--theme-border-color);
   border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   position: relative;
 }
 .ankiCard.redo::after {
@@ -3763,12 +3805,12 @@ onBeforeUnmount(() => {
   max-width: 94vw;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 20px;
+  gap: 16px;
+  padding: 24px;
   background: var(--theme-background-light-color);
   border: 1px solid var(--theme-border-color);
   border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 .customPanel textarea {
   width: 100%;
@@ -3823,12 +3865,11 @@ onBeforeUnmount(() => {
   max-width: 94vw;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 20px;
+  gap: 16px;
+  padding: 24px;
   background: var(--theme-background-light-color);
   border: 1px solid var(--theme-border-color);
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
 }
 .mistakeList {
   display: flex;
@@ -3841,10 +3882,15 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 10px;
+  padding: 6px 12px;
   background: var(--theme-background-color);
   border: 1px solid var(--theme-border-color);
-  border-radius: 8px;
+  border-radius: 999px;
+  transition: all .15s ease;
+}
+.mistakeItem:hover {
+  border-color: transparent;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 .mistakeWord { font-size: 15px; font-weight: 600; color: var(--theme-main-text-color); }
 .mistakeCn { font-style: normal; font-weight: 400; font-size: 12px; color: var(--theme-menu-text-color); margin-left: 4px; }
@@ -3896,6 +3942,7 @@ onBeforeUnmount(() => {
   background: var(--theme-background-color);
   border: 1px solid var(--theme-border-color);
   border-radius: 10px;
+  transition: all .15s ease;
 }
 .statValue { display: block; font-size: 22px; font-weight: 700; color: var(--theme-main-text-color); font-variant-numeric: tabular-nums; }
 .statValue small { font-size: 13px; color: var(--theme-text-color); }

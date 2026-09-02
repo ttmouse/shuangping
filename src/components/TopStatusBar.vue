@@ -1,6 +1,23 @@
 <template>
-  <div class="topStatus">
-    <div class="left">
+  <div class="topStatus" :class="{ courseMode: !!course }">
+    <!-- 课包课程练习：顶部栏替换为课程面包屑导航（不再显示模式入口/今日目标/正确率） -->
+    <template v-if="course">
+      <div class="left courseLeft">
+        <button class="courseBackBtn" title="回到课程列表" @click="course.onBack" data-nav>‹ 课程列表</button>
+        <div class="courseBreadcrumb">
+          <span class="courseCrumbPack" :title="course.packTitle">{{ course.packTitle }}</span>
+          <span class="courseCrumbSep">›</span>
+          <span class="courseCrumbCourse" :title="course.courseTitle">{{ course.courseTitle }}</span>
+        </div>
+        <div class="courseNav">
+          <button class="courseNavBtn" :disabled="course.index <= 0" @click="course.onPrev" title="上一课" data-nav>‹</button>
+          <span class="courseNavPos">{{ course.position }}</span>
+          <button class="courseNavBtn" :disabled="course.index >= course.total - 1" @click="course.onNext" title="下一课" data-nav>›</button>
+        </div>
+      </div>
+    </template>
+    <!-- 常规页面：左侧模式导航入口（练习中隐藏） -->
+    <div v-show="!started" v-else class="left">
       <button
         class="modeBtn"
         :class="{ active: route.name === 'projects' }"
@@ -65,7 +82,7 @@
       </button>
     </div>
     <!-- 今日目标：顶部栏常驻，随时指引进展（三达标：时长/正确率/错词清零） -->
-    <div class="goalTop" :class="{ all: goal.allDone }" title="今日目标：练满时长 + 正确率达到 + 错词清零">
+    <div v-if="!course" class="goalTop" :class="{ all: goal.allDone }" title="今日目标：练满时长 + 正确率达到 + 错词清零">
       <span class="goalTopTitle"><svg class="btnIcon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><circle cx="8" cy="8" r="2"/></svg>今日目标</span>
       <span class="goalTopTime" :class="{ done: goal.timeDoneFlag }">
         <span class="goalTopBar"><span class="goalTopFill" :style="{ width: goal.timePercent + '%' }"></span></span>
@@ -77,7 +94,7 @@
       <span class="goalTopAll" v-if="goal.allDone"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 8.5 3.5 3.5L13 5"/></svg></span>
     </div>
     <div class="right">
-      <div class="accuracy" v-if="session.totalAttempts > 0" title="正确率">
+      <div class="accuracy" v-if="!course && session.totalAttempts > 0" title="正确率">
         <span class="acc-value">{{ session.accuracy }}%</span>
         <span class="acc-label">正确率</span>
       </div>
@@ -258,6 +275,14 @@ import { useSettingsStore } from '../stores/settings.js'
 import { useSessionStore } from '../stores/session.js'
 import { useProgressStore } from '../stores/progress.js'
 import { setSoundURLs, loadCustomSounds } from '../utils/sound.js'
+
+// 课包课程练习：传入非空对象时，顶部栏切换为课程面包屑导航
+// { packTitle, courseTitle, position, index, total, onPrev, onNext, onBack }
+// started：练习进行中时简化导航，只保留目标/正确率/设置
+const props = defineProps({
+  course: { type: Object, default: null },
+  started: { type: Boolean, default: false },
+})
 
 const route = useRoute()
 const router = useRouter()

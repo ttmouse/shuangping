@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "packs": [
+    {
+      "slug": "850-basic-words",
+      "id": "tornfg3hhvzw8ynjqpt9hvl4",
+      "title": "句乐部的简单英语表达课：从 850 个词开始说英语",
+      "description": "850 个基础词，1746 个练习句",
+      "courseCount": 85
+    },
+    {
+      "slug": "pep5-grade5",
+      "id": "xh3j92d30er3ac36tw21gvnk",
+      "title": "【人教版】五年级上册 PEP 课本同步",
+      "description": "与人教版（PEP）五年级上册教材完全同步",
+      "courseCount": 26
+    },
+    {
+      "slug": "friends-s1",
+      "id": "h6strcfzggztz1gg5gbfhudh",
+      "title": "老友记第一季（对话版无拆解）",
+      "description": "前15课拆100句，后24课整集一课。9889 句对话练习",
+      "courseCount": 39
+    }
+  ]
+}

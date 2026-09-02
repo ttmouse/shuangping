@@ -1,26 +1,37 @@
-/* 主题变量（参考目标站） */
+/* 主题变量 */
 :root {
-  --theme-background-color: #ededed;
+  --theme-background-color: #f0f2f5;
   --theme-background-light-color: #fff;
-  --theme-box-background-color: #cde7d2;
+  --theme-box-background-color: #dce8e0;
   --theme-box-textContent-color: #fff;
-  --theme-main-text-color: #2aaf8e;
-  --theme-text-color: #2b2b2b;
-  --theme-highlight-text-color: #c07c17;
-  --theme-border-color: #c7c8cc;
-  --theme-rich-text-color: #a0b6c9;
-  --theme-menu-text-color: #2aaf8e;
-  --theme-menu-hover-color: #35e2b7;
+  --theme-main-text-color: #1a9a7a;
+  --theme-text-color: #1f2937;
+  --theme-text-secondary: #6b7280;
+  --theme-highlight-text-color: #b8860b;
+  --theme-border-color: #e2e5ea;
+  --theme-rich-text-color: #94a3b8;
+  --theme-menu-text-color: #1a9a7a;
+  --theme-menu-hover-color: #2ec4a0;
+  --theme-accent-color: #1a9a7a;
+  --theme-success: #2e9e5b;
+  --theme-error: #d9534f;
+  --theme-warning: #e6a23c;
 }
 html.dark {
-  --theme-background-color: linear-gradient(0deg, #0f172a, #020420);
+  --theme-background-color: #0f172a;
   --theme-background-light-color: #1e293b;
-  --theme-box-background-color: #04290b;
-  --theme-box-textContent-color: #050d2b;
-  --theme-text-color: #94a3b8;
-  --theme-border-color: #27324b;
-  --theme-rich-text-color: #52678b;
-  --theme-menu-text-color: #2aaf8e;
+  --theme-box-background-color: #0a2e14;
+  --theme-box-textContent-color: #0c1a30;
+  --theme-text-color: #cbd5e1;
+  --theme-text-secondary: #64748b;
+  --theme-border-color: #334155;
+  --theme-rich-text-color: #64748b;
+  --theme-menu-text-color: #2ec4a0;
+  --theme-menu-hover-color: #3ddbbc;
+  --theme-accent-color: #2ec4a0;
+  --theme-success: #34d399;
+  --theme-error: #f87171;
+  --theme-warning: #fbbf24;
 }
 * { box-sizing: border-box; }
 html, body, #app { height: 100%; }
