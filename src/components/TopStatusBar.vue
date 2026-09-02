@@ -1,6 +1,6 @@
 <template>
   <div class="topStatus" :class="{ courseMode: !!course }">
-    <!-- 课包课程练习：顶部栏替换为课程面包屑导航（不再显示模式入口/今日目标/正确率） -->
+    <!-- 课包课程练习：顶部栏替换为课程面包屑导航（模式入口隐藏，但今日目标/正确率仍显示） -->
     <template v-if="course">
       <div class="left courseLeft">
         <button class="courseBackBtn" title="回到课程列表" @click="course.onBack" data-nav>‹ 课程列表</button>
@@ -81,8 +81,9 @@
         排行
       </button>
     </div>
+    <!-- 练习中四指标：居中展示 -->
     <!-- 今日目标：顶部栏常驻，随时指引进展（三达标：时长/正确率/错词清零） -->
-    <div v-if="!course" class="goalTop" :class="{ all: goal.allDone }" title="今日目标：练满时长 + 正确率达到 + 错词清零">
+    <div class="goalTop" :class="{ all: goal.allDone }" title="今日目标：练满时长 + 正确率达到 + 错词清零">
       <span class="goalTopTitle"><svg class="btnIcon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><circle cx="8" cy="8" r="2"/></svg>今日目标</span>
       <span class="goalTopTime" :class="{ done: goal.timeDoneFlag }">
         <span class="goalTopBar"><span class="goalTopFill" :style="{ width: goal.timePercent + '%' }"></span></span>
@@ -94,7 +95,7 @@
       <span class="goalTopAll" v-if="goal.allDone"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 8.5 3.5 3.5L13 5"/></svg></span>
     </div>
     <div class="right">
-      <div class="accuracy" v-if="!course && session.totalAttempts > 0" title="正确率">
+      <div class="accuracy" v-if="session.totalAttempts > 0" title="正确率">
         <span class="acc-value">{{ session.accuracy }}%</span>
         <span class="acc-label">正确率</span>
       </div>
@@ -459,6 +460,10 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
 .accuracy { display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: var(--theme-background-color); border-radius: 6px; font-size: 12px; }
 .acc-value { font-weight: 700; color: #67c23a; }
 .acc-label { color: var(--theme-text-color); }
+.psItem { text-align: center; padding: 3px 10px; background: var(--theme-background-color); border: 1px solid var(--theme-border-color); border-radius: 8px; min-width: 48px; }
+.psValue { display: block; font-size: 15px; font-weight: 700; color: var(--theme-main-text-color); font-variant-numeric: tabular-nums; line-height: 1.3; }
+.psValue small { font-size: 11px; color: var(--theme-text-color); }
+.psLabel { font-size: 10px; color: var(--theme-text-color); line-height: 1.2; }
 
 /* 设置图标 + 弹出面板 */
 .settingsWrap { position: relative; }
@@ -600,6 +605,69 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
   max-width: 120px;
 }
 .setRowSound select:focus { border-color: var(--theme-menu-hover-color); }
+
+/* 课包课程面包屑导航（课程进行中替换左侧导航） */
+.courseMode .left { gap: 4px; }
+.courseBackBtn {
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--theme-border-color);
+  background: transparent;
+  color: var(--theme-menu-text-color);
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.courseBackBtn:hover { color: var(--theme-main-text-color); background: var(--theme-background-color); }
+.courseBreadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  color: var(--theme-menu-text-color);
+  min-width: 0;
+}
+.courseCrumbPack {
+  font-weight: 600;
+  color: var(--theme-main-text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
+.courseCrumbSep { color: var(--theme-menu-text-color); flex-shrink: 0; font-size: 16px; }
+.courseCrumbCourse {
+  color: var(--theme-accent-color, #ac47ff);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+.courseNav {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.courseNavBtn {
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--theme-menu-text-color);
+  font-size: 15px;
+  cursor: pointer;
+  line-height: 1.4;
+}
+.courseNavBtn:disabled { opacity: 0.3; cursor: default; }
+.courseNavBtn:hover:not(:disabled) { color: var(--theme-main-text-color); background: var(--theme-background-color); }
+.courseNavPos {
+  font-size: 13px;
+  color: var(--theme-menu-text-color);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
 
 @media (max-width: 1100px) {
   .goalTopTitle { display: none; }

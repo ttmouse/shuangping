@@ -1,23 +1,11 @@
 <template>
   <div class="app">
-    <TopStatusBar v-show="!(mode === 'english' && started && activePack)" :started="started" />
+    <TopStatusBar :course="courseBar" :started="started" />
 
     <div class="pageCenter">
       <div class="tipsTextContent">
         <!-- 英文进行中：顶部显示进度/提示（替换无意义描述文案） -->
         <template v-if="mode === 'english' && started">
-          <!-- 课包课程面包屑导航（内联在头部信息区，非独立栏） -->
-          <div v-if="activePack && julebuFullQueue.length" class="courseCrumb">
-            <span class="courseCrumbPack" :title="activePack.title">{{ activePack.title }}</span>
-            <span class="courseCrumbSep">›</span>
-            <span class="courseCrumbCourse" :title="currentCourse?.title || ''">{{ currentCourse?.title || '' }}</span>
-            <span class="courseCrumbNav">
-              <button class="courseCrumbBtn" :disabled="currentCourseIndex <= 0" @click="goToPrevCourse" title="上一课">‹</button>
-              <span class="courseCrumbPos">{{ currentCoursePosition }}</span>
-              <button class="courseCrumbBtn" :disabled="currentCourseIndex < 0 || currentCourseIndex >= (activePack.courses?.length || 0) - 1" @click="goToNextCourse" title="下一课">›</button>
-              <button class="courseCrumbBtn courseCrumbList" @click="backToCourseList" title="回到课程列表">课程列表</button>
-            </span>
-          </div>
           <div class="enProgHeader">
             <h1 class="enProgTitle">
               第
@@ -644,23 +632,23 @@
       <div class="footerSpace" />
     </div>
 
-    <!-- 底部固定统计栏 -->
-    <div v-if="started && !completed" class="sessionStats">
-      <div class="stat">
-        <span class="statValue">{{ accuracy }}%</span>
-        <span class="statLabel">正确率</span>
+    <!-- 底部四指标（无背景，纯文本） -->
+    <div v-if="started && !completed" class="bottomStats">
+      <div class="bsItem">
+        <span class="bsValue">{{ accuracy }}%</span>
+        <span class="bsLabel">正确率</span>
       </div>
-      <div class="stat">
-        <span class="statValue">{{ speed }}</span>
-        <span class="statLabel">字/分</span>
+      <div class="bsItem">
+        <span class="bsValue">{{ speed }}</span>
+        <span class="bsLabel">字/分</span>
       </div>
-      <div class="stat">
-        <span class="statValue">{{ correctCount }}<small>/{{ totalCount }}</small></span>
-        <span class="statLabel">正确/总按键</span>
+      <div class="bsItem">
+        <span class="bsValue">{{ correctCount }}<small>/{{ totalCount }}</small></span>
+        <span class="bsLabel">按键</span>
       </div>
-      <div class="stat">
-        <span class="statValue">{{ formatDuration(elapsedSec) }}</span>
-        <span class="statLabel">用时</span>
+      <div class="bsItem">
+        <span class="bsValue">{{ formatDuration(elapsedSec) }}</span>
+        <span class="bsLabel">用时</span>
       </div>
     </div>
 
@@ -841,6 +829,20 @@ const courseLoading = ref(false) // 正在加载某课（进入练习前）
 const currentCourseDict = ref({})
 // 难度分级：beginner(初级全量) | intermediate(中级去词) | advanced(高级仅句) | custom(自定义勾选)
 // 仅 julebu 课包课程显示；farm/自定义不受影响
+const EN_DIFFICULTY_KEY = 'sp-en-difficulty'
+const EN_CUSTOM_TYPES_KEY = 'sp-en-custom-types'
+function loadEnDifficulty() {
+  try {
+    const v = localStorage.getItem(EN_DIFFICULTY_KEY)
+    if (v) enDifficulty.value = v
+  } catch {}
+}
+function loadEnCustomTypes() {
+  try {
+    const v = localStorage.getItem(EN_CUSTOM_TYPES_KEY)
+    if (v) enCustomTypes.value = JSON.parse(v)
+  } catch {}
+}
 const enDifficulty = ref('beginner')
 const DIFFICULTY_OPTIONS = [
   { key: 'beginner', label: '初级', desc: '单词 + 短语 + 整句' },
@@ -893,6 +895,20 @@ const currentCoursePosition = computed(() => {
   const total = activePack.value?.courses?.length || 0
   if (idx < 0 || !total) return ''
   return `第 ${idx + 1} / ${total} 课`
+})
+// 课包课程面包屑导航数据（传给 TopStatusBar 的 course prop）
+const courseBar = computed(() => {
+  if (!activePack.value || !currentCourse.value || !julebuFullQueue.value.length) return null
+  return {
+    packTitle: activePack.value.title,
+    courseTitle: currentCourse.value.title,
+    position: currentCoursePosition.value,
+    index: currentCourseIndex.value,
+    total: activePack.value.courses?.length || 0,
+    onPrev: goToPrevCourse,
+    onNext: goToNextCourse,
+    onBack: backToCourseList,
+  }
 })
 // 课包课程导航：上一课/下一课/回到课程列表
 function goToPrevCourse() {
@@ -1028,7 +1044,6 @@ function backToPacks() {
     currentCourseDict.value = buildCourseDict(data)
     extraCn.value = {}
     // 缓存全量队列；story 先给全量（startEnStory 内 buildEnglishQueue 会读它）
-    enDifficulty.value = 'beginner'
     enModePanelOpen.value = false
     julebuFullQueue.value = statementsToQueue(data)
     currentCourse.value = course
@@ -1102,6 +1117,9 @@ function startEnStory(story) {
   if (story.source !== 'julebu') {
     julebuFullQueue.value = []
     currentCourseDict.value = {}
+  } else {
+    // 课包课程：应用已缓存的难度（刷新后恢复高级/中级等）
+    applyDifficultyQueue()
   }
   start()
 }
@@ -2215,6 +2233,14 @@ watch(enGrade, (id, old) => {
   }
 })
 
+// 难度缓存：切换时自动保存
+watch(enDifficulty, (v) => {
+  try { localStorage.setItem(EN_DIFFICULTY_KEY, v) } catch {}
+})
+watch(enCustomTypes, (v) => {
+  try { localStorage.setItem(EN_CUSTOM_TYPES_KEY, JSON.stringify(v)) } catch {}
+}, { deep: true })
+
 // 卡片一键选择内容源：词语类（全部/四/五/六）与短句点击即开始；错题本/自定义先开面板
 function selectContent(id) {
   const c = CONTENT_TYPES.find(x => x.id === id)
@@ -2935,6 +2961,8 @@ onMounted(() => {
   mistakes.load()
   loadEnCustom() // 加载英文自定义内容
   loadEnCustomStories() // 加载短文自定义条目
+  loadEnDifficulty() // 恢复难度缓存
+  loadEnCustomTypes() // 恢复自定义类型缓存
   window.addEventListener('keydown', onKeyDown)
   window.addEventListener('keydown', onNavKeydown)
   window.addEventListener('keyup', onKeyUp)
@@ -3920,34 +3948,6 @@ onBeforeUnmount(() => {
 .mistakeEmpty { color: var(--theme-text-color); font-size: 14px; text-align: center; padding: 20px 0; }
 
 /* 会话状态栏（固定在页面底部） */
-.sessionStats {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 40;
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
-  background: color-mix(in srgb, var(--theme-background-light-color) 92%, transparent);
-  border-top: 1px solid var(--theme-border-color);
-  backdrop-filter: blur(8px);
-}
-.stat {
-  min-width: 96px;
-  text-align: center;
-  padding: 8px 14px;
-  background: var(--theme-background-color);
-  border: 1px solid var(--theme-border-color);
-  border-radius: 10px;
-  transition: all .15s ease;
-}
-.statValue { display: block; font-size: 22px; font-weight: 700; color: var(--theme-main-text-color); font-variant-numeric: tabular-nums; }
-.statValue small { font-size: 13px; color: var(--theme-text-color); }
-.statLabel { font-size: 12px; color: var(--theme-text-color); }
-
 /* 完成弹窗 */
 .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 24px; }
 .resultModal {
@@ -4113,6 +4113,24 @@ onBeforeUnmount(() => {
 
 .footerSpace { height: 96px; }
 
+/* 底部四指标（无背景，纯文本） */
+.bottomStats {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+}
+.bsItem { text-align: center; min-width: 72px; }
+.bsValue { display: block; font-size: 18px; font-weight: 700; color: var(--theme-main-text-color); font-variant-numeric: tabular-nums; }
+.bsValue small { font-size: 12px; color: var(--theme-text-color); }
+.bsLabel { font-size: 11px; color: var(--theme-text-color); }
+
 @media (max-width: 600px) {
   .word-letters { font-size: 32px; }
   .numGroup { font-size: 40px; }
@@ -4123,71 +4141,4 @@ onBeforeUnmount(() => {
   .ankiSyl { font-size: 22px; }
   .ankiCard { min-height: 190px; padding: 20px 14px; }
 }
- .courseCrumb {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-bottom: 4px;
-  font-size: 12px;
-  color: var(--theme-menu-text-color);
-  flex-wrap: wrap;
-}
-.courseCrumbPack {
-  font-weight: 600;
-  color: var(--theme-main-text-color);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 180px;
-}
-.courseCrumbSep {
-  color: var(--theme-menu-text-color);
-  flex-shrink: 0;
-}
-.courseCrumbCourse {
-  color: var(--theme-accent-color, #ac47ff);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-right: auto;
-}
-.courseCrumbNav {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-shrink: 0;
-  margin-left: auto;
-}
-.courseCrumbBtn {
-  padding: 2px 6px;
-  border-radius: 4px;
-  border: none;
-  background: transparent;
-  color: var(--theme-menu-text-color);
-  font-size: 12px;
-  cursor: pointer;
-  line-height: 1.4;
-}
-.courseCrumbBtn:disabled {
-  opacity: 0.3;
-  cursor: default;
-}
-.courseCrumbBtn:hover:not(:disabled) {
-  color: var(--theme-main-text-color);
-  background: var(--theme-background-light-color);
-}
-.courseCrumbPos {
-  font-size: 11px;
-  color: var(--theme-menu-text-color);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-.courseCrumbList {
-  margin-left: 4px;
-  padding: 2px 7px;
-  border: 1px solid var(--theme-border-color);
-  border-radius: 4px;
-  font-size: 11px;
-}
-
 </style>
