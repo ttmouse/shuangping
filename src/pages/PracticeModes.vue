@@ -2266,12 +2266,12 @@ function letterClass(wi, li) {
   // 无需输入的可忽略标点（句号/逗号/问号）：固定按已完成淡色展示，不参与输入高亮/等待
   if (isPunctCh && EN_OPTIONAL_PUNCT.has(ch) && li >= enCoreLen(word)) return { 'punct-done': true }
   if (li < letterIdx.value) {
-    // 宽松模式：已输入的字母不标绿色（正常显示，不加正确/错误样式）
-    // 但重练单词（默写状态）已输入的字母标绿色
+    // 宽松模式：已输入字母正常显示（用主文字色；词根灰/半透明色太淡）
+    // 不标"正确绿"、也不标"错误红"——宽松模式只提示、不纠错
     if (settings.enGentleMode) {
       if (isPunctCh) return { 'punct-done': true }
       if (dict) return { correct: true }
-      return settings.enColorMode === 'syllable' ? sylCls : segCls
+      return { correct: true }
     }
     // 标点字符：已输入（正确）→ 标记完成
     if (isPunctCh) return { 'punct-done': true }
