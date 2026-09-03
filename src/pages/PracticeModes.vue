@@ -49,36 +49,103 @@
           <span>{{ enDifficultyLabel }}</span>
           <svg class="enModeCaret" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
         </button>
-        <!-- 下拉面板：档位 + 自定义类型勾选 -->
-        <div v-if="enModePanelOpen" class="enModePanel">
-          <div class="enModePresets">
+        <span class="enModeSep">|</span>
+        <button
+          class="enModeDicChip"
+          :class="{ dictation: enDictationMode }"
+          @click="toggleEnDictationMode()"
+          data-nav
+          title="切换练习模式"
+        ><svg class="enModeDicIcon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 14-2 2-2-2"/><path d="M18 8v8"/></svg><span>{{ enDictationMode ? '听写' : '中译英' }}</span></button>
+        <span class="enModeSep">|</span>
+        <div class="enModeDispBox">
+          <button
+            class="enModeDispChip"
+            :class="{ open: enDispPanelOpen }"
+            @click="enDispPanelOpen = !enDispPanelOpen"
+            data-nav
+            title="显示模式"
+          >
+            <svg class="enModeDispIcon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/></svg>
+            <span>{{ enDispLabel }}</span>
+            <svg class="enModeDispCaret" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div v-if="enDispPanelOpen" class="enModeDispPanel">
             <button
-              v-for="opt in DIFFICULTY_OPTIONS"
+              v-for="opt in EN_DISPLAY_OPTIONS"
               :key="opt.key"
-              class="enModePreset"
-              :class="{ active: enDifficulty === opt.key }"
-              @click="switchEnDifficulty(opt.key)"
+              class="enModeDispOpt"
+              :class="{ active: settings.enDisplayMode === opt.key }"
+              @click="settings.setEnDisplayMode(opt.key); enDispPanelOpen = false"
               data-nav
             >
-              <span class="enModePresetLabel">{{ opt.label }}</span>
-              <span class="enModePresetDesc">{{ opt.desc }}</span>
+              <span class="enModeDispOptLabel">{{ opt.label }}</span>
+              <span class="enModeDispOptDesc">{{ opt.desc }}</span>
             </button>
           </div>
-          <div v-if="enDifficulty === 'custom'" class="enModeCustom">
-            <div class="enModeCustomHint">勾选要练的类型：</div>
-            <div class="enModeCustomOpts">
-              <button
-                v-for="opt in CUSTOM_TYPE_OPTIONS"
-                :key="opt.key"
-                class="enCustomTypeBtn"
-                :class="{ on: enCustomTypes[opt.key] }"
-                @click="toggleCustomType(opt.key)"
-                data-nav
-              >{{ opt.label }}</button>
-            </div>
-
-            <div class="enModeCustomCount">当前 {{ enQueue.length }} 条</div>
-          </div>
+        </div>
+        <span class="enModeSep">|</span>
+        <span class="enModeOptChips">
+          <span class="enModeOptChipWrap">
+            <button
+              class="enModeDicChip"
+              :class="{ dictation: settings.enShowWordCn }"
+              @click="settings.toggleEnShowWordCn()"
+              data-nav
+              title="单词上方显示中文释义"
+            ><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/></svg><span>{{ settings.enShowWordCn ? '释义' : '隐藏' }}</span></button>
+          </span>
+          <span class="enModeSep">|</span>
+          <span class="enModeOptChipWrap">
+            <button
+              class="enModeDicChip"
+              :class="{ dictation: settings.enRedoPractice }"
+              @click="settings.toggleEnRedoPractice()"
+              data-nav
+              title="打错的单词重新入队重练"
+            ><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg><span>{{ settings.enRedoPractice ? '重练' : '跳过' }}</span></button>
+          </span>
+          <span class="enModeSep">|</span>
+          <span class="enModeOptChipWrap">
+            <button
+              class="enModeDicChip"
+              :class="{ dictation: settings.enGentleMode }"
+              @click="settings.toggleEnGentleMode()"
+              data-nav
+              title="输入过程中不判错，整词完成后统一判断"
+            ><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg><span>{{ settings.enGentleMode ? '宽松' : '严格' }}</span></button>
+          </span>
+        </span>
+        <!-- 下拉面板：档位 + 自定义类型勾选 -->
+        <div v-if="enModePanelOpen" class="enModePanel">
+          <button
+            v-for="opt in DIFFICULTY_OPTIONS_WITH_COUNT"
+            :key="opt.key"
+            class="enModeDispOpt"
+            :class="{ active: enDifficulty === opt.key }"
+            :disabled="!opt.count"
+            @click="switchEnDifficulty(opt.key)"
+            data-nav
+          >
+            <span class="enModeDispOptRow">
+              <span class="enModeDispOptLabel">{{ opt.label }}</span>
+              <span class="enModeDispOptMeta">{{ opt.count }}</span>
+            </span>
+            <span class="enModeDispOptDesc">{{ opt.desc }}</span>
+          </button>
+          <div class="enModeDictateDivider"></div>
+          <button
+            v-for="opt in CUSTOM_TYPE_OPTIONS_FILTERED"
+            :key="opt.key"
+            class="enModeDispOpt"
+            @click="selectCustomType(opt.key)"
+            data-nav
+          >
+            <span class="enModeDispOptRow">
+              <span class="enModeDispOptLabel">{{ opt.label }}</span>
+              <span class="enModeDispOptMeta">{{ opt.count }}</span>
+            </span>
+          </button>
         </div>
       </div>
 
@@ -92,7 +159,7 @@
         <!-- 英文/错词本：已开始 → 共用练习界面 -->
         <template v-if="isEnglishOrMistake && started">
           <div class="enStage">
-            <div class="enSentenceCn" v-if="!enSentenceDone && (enCustomMode || enStoryMode) && enSentenceCn">{{ enSentenceCn }}</div>
+            <div class="enSentenceCn" v-if="!enSentenceDone && (enCustomMode || enStoryMode) && enSentenceCn && !enDictationMode">{{ enSentenceCn }}</div>
             <!-- 评级弹层（复刻官网 comboPopup：Perfect/Great + combo；独立浮层不占位） -->
             <Transition name="combo-pop" appear>
               <div
@@ -110,6 +177,7 @@
                 v-for="(g, gi) in enSentenceGroups"
                 :key="gi"
                 class="spGroup"
+                :class="{ plain: !g.role }"
                 :style="{
                   borderColor: g.color + '80',
                   '--sp-chip': g.color,
@@ -972,17 +1040,57 @@ function loadEnCustomTypes() {
     if (v) enCustomTypes.value = JSON.parse(v)
   } catch {}
 }
+function saveEnCustomTypes() {
+  try { localStorage.setItem(EN_CUSTOM_TYPES_KEY, JSON.stringify(enCustomTypes.value)) } catch {}
+}
+const enDictationMode = ref(false) // false=中译英, true=听写
+const EN_DICTATION_KEY = 'sp-en-dictation'
+function loadEnDictationMode() {
+  try {
+    const v = localStorage.getItem(EN_DICTATION_KEY)
+    if (v === 'true') enDictationMode.value = true
+  } catch {}
+}
+function saveEnDictationMode() {
+  try { localStorage.setItem(EN_DICTATION_KEY, enDictationMode.value ? 'true' : '') } catch {}
+}
+function toggleEnDictationMode() {
+  enDictationMode.value = !enDictationMode.value
+  saveEnDictationMode()
+}
+
 const enDifficulty = ref('beginner')
 const DIFFICULTY_OPTIONS = [
   { key: 'beginner', label: '初级', desc: '单词 + 短语 + 整句' },
   { key: 'intermediate', label: '中级', desc: '短语 + 整句' },
   { key: 'advanced', label: '高级', desc: '仅整句' },
-  { key: 'custom', label: '自定义', desc: '按需勾选类型' },
+]
+const CUSTOM_TYPE_OPTIONS_FILTERED = computed(() =>
+  CUSTOM_TYPE_OPTIONS.filter(o => o.key !== 'sentence').map(opt => {
+    const count = julebuFullQueue.value.filter(s => s.type === opt.key).length
+    return { ...opt, count }
+  })
+)
+const DIFFICULTY_OPTIONS_WITH_COUNT = computed(() =>
+  DIFFICULTY_OPTIONS.map(opt => {
+    const count = filterQueueByDifficulty(julebuFullQueue.value, opt.key).length
+    return { ...opt, count }
+  })
+)
+const EN_DISPLAY_OPTIONS = [
+  { key: 'smart', label: '智能', desc: '按掌握度自动切换' },
+  { key: 'guide', label: '看答案', desc: '始终显示字母，逐字母指引输入' },
+  { key: 'dictation', label: '全默写', desc: '始终隐藏字母，凭记忆拼写' },
 ]
 // 自定义勾选：sentence句子 / chunk组合语块 / phrase语块 / word短语单词
 const enCustomTypes = ref({ sentence: true, chunk: true, phrase: true, word: true })
 const julebuFullQueue = ref([]) // 当前课的原始全量队列（切难度时过滤用，不重复 fetch）
 const enModePanelOpen = ref(false) // 右上角模式 chip 的下拉面板
+const enDispPanelOpen = ref(false) // 显示模式下拉面板
+const enDispLabel = computed(() => {
+  const opt = EN_DISPLAY_OPTIONS.find(o => o.key === settings.enDisplayMode)
+  return opt ? opt.label : '智能'
+})
 // chip 上显示当前档位名（自定义时按勾选数动态显示）
 const enDifficultyLabel = computed(() => {
   if (enDifficulty.value === 'custom') {
@@ -1062,7 +1170,6 @@ function goToNextCourse() {
    completed.value = false
    currentCourse.value = null
  }
-
 
 // 切到短文 tab：进入课包浏览态并懒加载注册表
 function showEnWordsTab() {
@@ -1227,6 +1334,23 @@ function toggleCustomType(typeKey) {
   applyDifficultyQueue()
   restart()
 }
+function selectCustomType(typeKey) {
+  if (!selectedEnStory.value || !julebuFullQueue.value.length) return
+  // 设为全关，只开当前类型
+  const sel = {}
+  for (const k of Object.keys(enCustomTypes.value)) {
+    sel[k] = k === typeKey
+  }
+  enCustomTypes.value = sel
+  saveEnCustomTypes()
+  // 复用 switchEnDifficulty 的逻辑：设 custom 难度 + applyQueue + restart
+  enDifficulty.value = 'custom'
+  applyDifficultyQueue()
+  enModePanelOpen.value = false
+  restart()
+}
+const enHasOtherTypes = (key) => Object.keys(enCustomTypes.value).some(k => k !== key && enCustomTypes.value[k])
+const enHasMultipleTypes = computed(() => Object.values(enCustomTypes.value).filter(Boolean).length > 1)
 // 完成/退出练习时收起模式面板，避免残留
 function closeEnModePanel() {
   enModePanelOpen.value = false
@@ -1847,7 +1971,9 @@ const enSentenceGroups = computed(() => {
   if (!meta) return []
   const wds = meta.wordDetails || []
   const comps = (meta.sentenceStructure || []).filter(c => typeof c.start === 'number')
-  if (!wds.length || !comps.length) return []
+  // 无词级词典就真没东西可解析；有词但官网没给成分结构（如老友记"对话版无拆解"包）时，
+  // 不早退——全部词平铺成一整组无框词卡（词性下划线/释义/音标照常，无主语谓语分组框）
+  if (!wds.length) return []
   // 官网结构区间 [start,end] 索引的是“纯词序列”（wordDetails 不含标点，如
   // "No , I am not the teacher" 逗号前后带空格）。若把原句标点切成独立 token，
   // 全部区间会错位一格（逗号被当成主语）。这里按空白拆词，把每个词后紧跟的
@@ -1899,6 +2025,16 @@ const enSentenceGroups = computed(() => {
       posCn: POS_CN[pos] || (pos ? pos.toLowerCase() : ''),
       posColor: POS_COLORS[pos] || '#9ca3af',
     }
+  }
+  // 词/语块级拆解练习（官网把整句按难度拆开挂同一源句，如 "do you have…" 的 do/you/have…）：
+  // 完成态只平铺当前练习的词卡本身（词性/释义/音标照常），不把整个源句的成分结构图弹出来
+  if (s && s.fullSentence === false) {
+    const words = enSentence.value
+      .filter(w => !isPunct(w))
+      .map(w => mkWord(String(unitText(w)).trim(), ''))
+      .filter(w => w.word)
+    if (!words.length) return []
+    return [{ role: '', type: '', color: '#64748b', explanation: '', words }]
   }
   // 词按成分区间分组成 keep 顺序（未覆盖区间的词塞进最后组 / 独立组）
   const groups = []
@@ -2154,6 +2290,8 @@ function buildEnglishQueue() {
       }
       // julebu 课包：附带逐词解析元数据（词性/成分），整句完成态展示用
       if (s.meta) q.meta = s.meta
+      // 官网按难度拆出的 word/chunk/phrase 级单元：整句完成态不该弹源句成分结构图
+      if (typeof s.fullSentence === 'boolean') q.fullSentence = s.fullSentence
       return q
     }).filter(s => s.words.length > 0)
   }
@@ -2319,7 +2457,7 @@ function letterClass(wi, li) {
     // 标点字符：当前位置（等待输入）→ 高亮提示
     if (isPunctCh) return { 'punct-current': true }
     // 默写模式：可关闭当前字母内容提示，但该位置下划线仍高亮（提示输入位置）
-    if (dict && !settings.enDictCurrentHint) return { 'dict-current': true }
+    if (!settings.enDictCurrentHint) return { 'dict-current': true }
     return { current: true }
   }
   // 当前词内未输入字母：按着色模式渲染
@@ -3183,6 +3321,24 @@ function onKeyDown(e) {
           letterIdx.value = currentInput.value.length
           wordCompleted.value = false
         }
+        // 宽松模式：同步记录，保证完成/显示一致
+        if (settings.enGentleMode) enGentleInputs.value[wordIdx.value] = currentInput.value
+      } else if (settings.enGentleMode && !enSentenceDone.value && wordIdx.value > 0) {
+        // 宽松模式：当前词还没输入时退格 = 撤回上一个已完成的词，从它已输入的内容末尾继续改
+        // （跳过被自动跳过的可忽略标点词，如独立的 , . ?）
+        let target = wordIdx.value - 1
+        while (target > 0 && enCore(unitText(enSentence.value[target])).length === 0) target--
+        const prevUnit = enSentence.value[target]
+        if (prevUnit && enCore(unitText(prevUnit)).length > 0) {
+          wordIdx.value = target
+          const typed = enGentleInputs.value[target] || ''
+          currentInput.value = typed
+          letterIdx.value = typed.length
+          wordCompleted.value = false
+          enHadError.value = false
+          enWordStartTime.value = Date.now()
+          enWordKeystrokes.value = 0
+        }
       }
       return
     }
@@ -3261,6 +3417,7 @@ onMounted(() => {
   loadEnCustomStories() // 加载短文自定义条目
   loadEnDifficulty() // 恢复难度缓存
   loadEnCustomTypes() // 恢复自定义类型缓存
+  loadEnDictationMode() // 恢复听写/中译英模式
   window.addEventListener('keydown', onKeyDown)
   window.addEventListener('keydown', onNavKeydown)
   window.addEventListener('keyup', onKeyUp)
@@ -3389,11 +3546,12 @@ onBeforeUnmount(() => {
 .enSentenceCn {
   font-size: 24px;
   font-weight: 500;
-  color: var(--theme-rich-text-color, var(--theme-menu-text-color));
+  color: #444444;                   /* 与主英文词 spWord 一致的深灰（浅色模式） */
   max-width: 90%;
   text-align: center;
   line-height: 1.4;
 }
+.dark .enSentenceCn, [data-theme='dark'] .enSentenceCn { color: #e2e8f0; }  /* 暗色模式浅色文字 */
 /* 完成态结构图下方的整句中文（占满整行，与卡片堆留距） */
 .spParse .spCn {
   flex-basis: 100%;
@@ -3763,9 +3921,12 @@ onBeforeUnmount(() => {
   gap: 4px;
 }
 .word-col.completed .letter.correct {
-  color: #666;
-  opacity: 0.85;
+  color: #444444;               /* 已完成词：与主文本一致的深灰（浅色模式） */
+  opacity: 1;
 }
+.dark .word-col.completed .letter.correct,
+[data-theme='dark'] .word-col.completed .letter.correct { color: #e2e8f0; }  /* 暗色模式浅色 */
+[data-theme='light'] .word-col.completed .letter.correct { color: #444444; }
 .word-box {
   display: inline-flex;
   gap: 2px;
@@ -3773,9 +3934,6 @@ onBeforeUnmount(() => {
   border-radius: 8px;
   border: 2px solid transparent;
   transition: border-color .15s ease, opacity .2s ease, background .15s ease;
-}
-.word-col.active .word-box {
-  background: color-mix(in srgb, var(--theme-menu-hover-color) 6%, transparent);
 }
 .word-letters {
   display: inline-flex;
@@ -3822,7 +3980,9 @@ onBeforeUnmount(() => {
   opacity: 0.17;
   border-bottom-color: var(--theme-text-color);
 }
-.word-box .letter { color: var(--theme-text-color); opacity: 0.17; border-bottom: 5px solid transparent; transition: color .12s ease, opacity .12s ease, border-color .12s ease; }
+/* 字母槽线常驻：未输入/已输入/标点等都保留同一条底部线（输入前后样式一致）。
+   仅在正在输入的那一格(current/dict-current)短暂用主题色强调，打完后回归常线 */
+.word-box .letter { color: var(--theme-text-color); opacity: 0.17; border-bottom: 5px solid color-mix(in srgb, var(--theme-text-color) 30%, transparent); transition: color .12s ease, opacity .12s ease, border-color .12s ease; }
 /* 标点字符（并入单词）：灰色显示，不参与着色/默写隐藏 */
 .word-box .letter.punct { color: var(--text-muted, #999); opacity: 0.55; }
 /* 标点字符：已输入（正确）→ 深灰实色 */
@@ -3863,27 +4023,25 @@ onBeforeUnmount(() => {
   opacity: 0.95;
 }
 .word-box .letter.current {
-  /* 当前位置：粗下划线 + 背景高亮标记，字母保持低调与已输入字母区分 */
-  color: var(--theme-text-color);
-  opacity: 0.4;
-  border-bottom: 5px solid var(--theme-menu-hover-color);
-  background: color-mix(in srgb, var(--theme-menu-hover-color) 16%, transparent);
+  /* 当前位置：半透文字 + 淡背景 + 中性线 */
+  color: color-mix(in srgb, var(--theme-main-text-color) 20%, transparent);
+  opacity: 1;
+  border-bottom: 5px solid var(--theme-border-color);
+  background: color-mix(in srgb, var(--theme-border-color) 12%, transparent);
   border-radius: 3px;
 }
 .word-box .letter.dict-current {
-  /* 默写·关闭当前字母提示：字母内容不显示（透明），但下划线高亮提醒输入位置 */
-  color: transparent;
+  /* 默写·关闭当前字母提示：半透字母 + 淡背景 + 主题色线定位输入位置 */
+  color: color-mix(in srgb, var(--theme-main-text-color) 20%, transparent);
   opacity: 1;
   border-bottom: 5px solid var(--theme-menu-hover-color);
-  background: color-mix(in srgb, var(--theme-menu-hover-color) 16%, transparent);
+  background: color-mix(in srgb, var(--theme-menu-hover-color) 12%, transparent);
   border-radius: 3px;
 }
 .word-box .letter.incorrect {
   color: #f56c6c;
   opacity: 1;
   border-bottom: 5px solid #f56c6c;
-  background: color-mix(in srgb, #f56c6c 16%, transparent);
-  border-radius: 3px;
 }
 .enProgress { font-size: 14px; color: var(--theme-text-color); display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: auto; }
 .enHint { font-size: 13px; color: var(--theme-rich-text-color); }
@@ -3905,6 +4063,9 @@ onBeforeUnmount(() => {
   top: 56px;
   right: 16px;
   z-index: 80;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 .enModeChip {
   display: inline-flex;
@@ -3912,20 +4073,207 @@ onBeforeUnmount(() => {
   gap: 5px;
   padding: 5px 12px;
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--theme-accent-color, #ac47ff) 20%, transparent);
-  background: color-mix(in srgb, var(--theme-accent-color, #ac47ff) 10%, transparent);
-  color: var(--theme-accent-color, #ac47ff);
+  border: 1px solid var(--theme-border-color);
+  background: var(--theme-surface-color, rgba(128,128,128,.06));
+  color: var(--theme-main-text-color);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: all .15s ease;
   backdrop-filter: blur(8px);
 }
-.enModeChip:hover { background: color-mix(in srgb, var(--theme-accent-color, #ac47ff) 18%, transparent); }
-.enModeChip.open { background: color-mix(in srgb, var(--theme-accent-color, #ac47ff) 20%, transparent); }
+.enModeChip:hover { background: var(--theme-mistake-bg, rgba(128,128,128,.1)); }
+.enModeChip.open { background: var(--theme-mistake-bg, rgba(128,128,128,.12)); }
 .enModeLock { flex-shrink: 0; }
 .enModeCaret { flex-shrink: 0; opacity: .8; transition: transform .15s; }
 .enModeChip.open .enModeCaret { transform: rotate(180deg); }
+/* 模式分隔符 | */
+.enModeSep {
+  color: var(--theme-border-color);
+  font-size: 13px;
+  opacity: .5;
+  user-select: none;
+}
+/* 听写/中译英切换按钮 */
+.enModeDicChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--theme-border-color);
+  background: transparent;
+  color: var(--theme-text-secondary, #6b7280);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .15s ease;
+  backdrop-filter: blur(8px);
+}
+.enModeDicChip:hover {
+  background: var(--theme-mistake-bg, rgba(128,128,128,.08));
+}
+.enModeDicChip.dictation {
+  background: var(--theme-mistake-bg, rgba(128,128,128,.1));
+  color: var(--theme-main-text-color);
+  font-weight: 600;
+}
+/* 显示模式下拉 */
+.enModeDispBox {
+  position: relative;
+  display: inline-flex;
+}
+.enModeDispChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 10px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--theme-border-color);
+  background: transparent;
+  color: var(--theme-text-secondary, #6b7280);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .15s ease;
+  backdrop-filter: blur(8px);
+}
+.enModeDispChip:hover {
+  background: var(--theme-mistake-bg, rgba(128,128,128,.08));
+}
+.enModeDispChip.open {
+  background: var(--theme-mistake-bg, rgba(128,128,128,.1));
+  color: var(--theme-main-text-color);
+}
+/* 开关选项芯片组 */
+.enModeOptChips {
+  display: inline-flex;
+  gap: 4px;
+}
+.enModeOptChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 8px;
+  height: 26px;
+  border-radius: 999px;
+  border: 1px solid var(--theme-border-color);
+  background: transparent;
+  color: var(--theme-text-secondary, #6b7280);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.enModeOptChip:hover {
+  background: var(--theme-mistake-bg, rgba(128,128,128,.08));
+  color: var(--theme-main-text-color);
+}
+.enModeOptChip.on {
+  background: var(--theme-mistake-bg, rgba(128,128,128,.1));
+  color: var(--theme-main-text-color);
+  font-weight: 600;
+  border-color: var(--theme-text-secondary, #6b7280);
+}
+.enModeDispCaret {
+  flex-shrink: 0;
+  opacity: .7;
+  transition: transform .15s;
+}
+.enModeDispChip.open .enModeDispCaret {
+  transform: rotate(180deg);
+}
+/* 下拉面板分隔线 */
+.enModeDictateDivider {
+  border-top: 1px dashed var(--theme-border-color);
+  margin: 2px 0;
+}
+/* 开关选项组 */
+.enModeOpts {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 2px 0;
+}
+.enModeOpt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--theme-main-text-color);
+  transition: background .15s;
+}
+.enModeOpt:hover {
+  background: var(--theme-mistake-bg, rgba(128,128,128,.06));
+}
+.enModeOpt input[type="checkbox"] {
+  accent-color: var(--theme-accent-color, #ac47ff);
+}
+.enModeDispPanel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 160px;
+  padding: 6px;
+  border-radius: 10px;
+  border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-color, var(--card, #fff));
+  box-shadow: 0 8px 24px rgba(0,0,0,.1);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.enModeDispOpt {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+.enModeDispOpt:hover {
+  background: var(--theme-mistake-bg, rgba(128,128,128,.1));
+}
+.enModeDispOpt.active {
+  background: color-mix(in srgb, var(--theme-accent-color, #ac47ff) 14%, transparent);
+}
+.enModeDispOptLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--theme-main-text-color);
+}
+.enModeDispOpt.active .enModeDispOptLabel {
+  color: var(--theme-main-text-color);
+}
+.enModeDispOptDesc {
+  font-size: 11px;
+  color: #999;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.enModeDispOptRow {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+}
+.enModeDispOptMeta {
+  margin-left: auto;
+  font-size: 11px;
+  color: #bbb;
+  font-weight: 500;
+}
+.enModeDispOpt:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
 /* 下拉面板 */
 .enModePanel {
   position: absolute;
@@ -3941,71 +4289,7 @@ onBeforeUnmount(() => {
   flex-direction: column;
   gap: 6px;
 }
-.enModePresets {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.enModePreset {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 7px 10px;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--theme-main-text-color);
-  font-size: 13px;
-  cursor: pointer;
-  text-align: left;
-}
-.enModePreset:hover { background: var(--theme-mistake-bg, rgba(128,128,128,.1)); }
-.enModePreset.active {
-  background: color-mix(in srgb, var(--theme-accent-color, #ac47ff) 14%, transparent);
-  font-weight: 600;
-}
-.enModePresetDesc {
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--theme-menu-text-color);
-}
-.enModeCustom {
-  border-top: 1px dashed var(--theme-border-color);
-  padding-top: 8px;
-  margin-top: 2px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.enModeCustomHint {
-  font-size: 12px;
-  color: var(--theme-menu-text-color);
-}
-.enModeCustomOpts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.enCustomTypeBtn {
-  border: 1px solid var(--theme-border-color);
-  background: var(--theme-background-color);
-  color: var(--theme-menu-text-color);
-  padding: 3px 12px;
-  border-radius: 999px;
-  font-size: 12px;
-  cursor: pointer;
-}
-.enCustomTypeBtn.on {
-  background: var(--theme-accent-color, #ac47ff);
-  border-color: var(--theme-accent-color, #ac47ff);
-  color: #fff;
-  font-weight: 600;
-}
-.enModeCustomCount {
-  font-size: 12px;
-  color: var(--theme-menu-text-color);
-}
+
 /* 句子跳转：当前句号可点击进入直接输入模式 */
 .enJumpSentence {
   display: inline-block;
@@ -4123,6 +4407,13 @@ onBeforeUnmount(() => {
   background: color-mix(in srgb, var(--theme-background-light-color) 38%, transparent);
 }
 .spGroup:hover { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10); }
+/* 无成分结构的整句（如 friends 对话版无拆解）：词卡平铺，不套组框 */
+.spGroup.plain {
+  border: none;
+  background: transparent;
+  padding: 2px 2px 6px;
+  box-shadow: none;
+}
 .spChip {
   position: absolute;
   left: 50%;
@@ -4297,8 +4588,6 @@ onBeforeUnmount(() => {
   border: 1px dashed var(--theme-border-color);
   cursor: default;
 }
-
-
 
 /* 键盘数字 */
 .numStage { display: flex; flex-direction: column; align-items: center; gap: 14px; }

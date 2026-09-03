@@ -89,6 +89,7 @@ export function statementsToQueue(courseData) {
   const stmts = [...(courseData.statements || [])].sort((a, b) => (a.order || 0) - (b.order || 0))
   // sentenceId → 关联 sentence（含 wordDetails/sentenceStructure）
   const sentById = new Map((courseData.sentences || []).map(s => [s.id, s]))
+  const tokCount = (txt) => (String(txt || '').toLowerCase().match(/[a-z0-9']+/g) || []).length
   return stmts.map(s => {
     const item = {
       type: inferStatementType(s),
@@ -97,6 +98,10 @@ export function statementsToQueue(courseData) {
       phonetic: s.phonetic || s.soundmark || '',
     }
     const sent = s.sentenceId ? sentById.get(s.sentenceId) : null
+    // 官网把整句按难度拆成 word/chunk/phrase/sentence 多条 statement（挂在同一源句上）。
+    // 只有 statement 词数与源句一致才是"整句级"练习；词/语块级练习完成时
+    // 不应渲染整个源句的成分结构图（前端据此只平铺当前词卡）。
+    item.fullSentence = !!sent && tokCount(s.english) > 0 && tokCount(s.english) === tokCount(sent.english)
     if (sent && (sent.wordDetails?.length || sent.sentenceStructure?.length)) {
       item.meta = {
         sentenceId: s.sentenceId,
