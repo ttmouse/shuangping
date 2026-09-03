@@ -21,6 +21,69 @@
       "title": "老友记第一季（对话版无拆解）",
       "description": "前15课拆100句，后24课整集一课。9889 句对话练习",
       "courseCount": 39
+    },
+    {
+      "slug": "pep5b-grade5",
+      "id": "g4en3qgqu1nl4m4gn81vhsiy",
+      "title": "【人教版】五年级下册 PEP 课本同步",
+      "description": "与人教版（PEP）五年级下册教材完全同步",
+      "courseCount": 28
+    },
+    {
+      "slug": "pep4b-grade4",
+      "id": "tcpq69cts6p1mkjockylva35",
+      "title": "【人教版】四年级下册 PEP 课本同步",
+      "description": "与人教版（PEP）四年级下册教材完全同步",
+      "courseCount": 28
+    },
+    {
+      "slug": "pep4a-grade4",
+      "id": "d0pzeckyv6xyko87av3aenwa",
+      "title": "【人教版】四年级上册 PEP 课本同步",
+      "description": "与人教版教材完全同步",
+      "courseCount": 26
+    },
+    {
+      "slug": "pep7a-grade7",
+      "id": "tw58l7ftrxkta5kc252ypxol",
+      "title": "【人教版】七年级上册 课本同步",
+      "description": "与人教版教材完全同步",
+      "courseCount": 30
+    },
+    {
+      "slug": "pep6a-grade6",
+      "id": "mfta8rk9wr12kp50nwdaddp4",
+      "title": "【人教版】六年级上册 PEP 课本同步",
+      "description": "与人教版教材完全同步",
+      "courseCount": 28
+    },
+    {
+      "slug": "pep6b-grade6",
+      "id": "vhkwcngvfsi2enh8i4mmihzs",
+      "title": "【人教版】六年级下册 PEP 课本同步",
+      "description": "与人教版教材完全同步",
+      "courseCount": 18
+    },
+    {
+      "slug": "pep7b-grade7",
+      "id": "nzpxidc8lphzvuu6n5c8sqju",
+      "title": "【人教版】七年级下册 课本同步",
+      "description": "与人教版教材完全同步",
+      "courseCount": 24
+    },
+    {
+      "slug": "pep8a-grade8",
+      "id": "bxc8flud9b755dh82njteu5l",
+      "title": "【人教版】八年级上册 课本同步",
+      "description": "与人教版教材完全同步",
+      "courseCount": 24
+    },
+    {
+      "slug": "pep8b-grade8",
+      "id": "b4g9rg8wsp5sbzd8tret2cj2",
+      "title": "【人教版】八年级下册 课本同步",
+      "description": "与人教版教材完全同步",
+      "courseCount": 30
     }
   ]
 }

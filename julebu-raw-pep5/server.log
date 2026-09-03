@@ -1,6 +1,0 @@
-capture-server listening on http://127.0.0.1:8931
-[capture] "GET /status HTTP/1.1" 200 -
-[capture] "OPTIONS /save?file=U01-Unit1-words-raw.json HTTP/1.1" 204 -
-[capture] "POST /save?file=U01-Unit1-words-raw.json HTTP/1.1" 200 -
-[capture] "OPTIONS /save?file=U01-Unit1-PartB-examples-raw.json HTTP/1.1" 204 -
-[capture] "POST /save?file=U01-Unit1-PartB-examples-raw.json HTTP/1.1" 200 -

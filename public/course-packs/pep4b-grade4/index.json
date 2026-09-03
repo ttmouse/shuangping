@@ -1,0 +1,177 @@
+{
+  "id": "tcpq69cts6p1mkjockylva35",
+  "slug": "pep4b-grade4",
+  "title": "【人教版】四年级下册 PEP 课本同步",
+  "description": "与人教版（PEP）四年级下册英语教材完全同步。熟练掌握单元重点。",
+  "courseCount": 28,
+  "courses": [
+    {
+      "order": 1,
+      "id": "whq03ygpzaywcdgle6838fc7",
+      "title": "Unit 1 My school-【单词】",
+      "file": "U1-words.json"
+    },
+    {
+      "order": 2,
+      "id": "nioe70ftv9ryg871znqmtmbg",
+      "title": "Unit 1 My school-Part A--【例句】",
+      "file": "U1-partA.json"
+    },
+    {
+      "order": 3,
+      "id": "ovjs37ksrl3xzd4q7t7c3imn",
+      "title": "Unit 1 My school-Part B--【例句】",
+      "file": "U1-partB.json"
+    },
+    {
+      "order": 4,
+      "id": "ykcpr4yh7gj3v4v58xag6ur6",
+      "title": "Unit 1 My school-Part C--【例句】",
+      "file": "U1-partC.json"
+    },
+    {
+      "order": 5,
+      "id": "biu5dmb2wfxhl8oe9g2m7s5o",
+      "title": "Unit 2 What time is it?-【单词】",
+      "file": "U2-words.json"
+    },
+    {
+      "order": 6,
+      "id": "kq2okp3552apidesqxpckzfs",
+      "title": "Unit 2 What time is it?-Part A--【例句】",
+      "file": "U2-partA.json"
+    },
+    {
+      "order": 7,
+      "id": "iwmzbusq55u7yy2o0mya7v4r",
+      "title": "Unit 2 What time is it?-Part B--【例句】",
+      "file": "U2-partB.json"
+    },
+    {
+      "order": 8,
+      "id": "rfc1azlyk9lse7nfc5pr8ihw",
+      "title": "Unit 2 What time is it?-Part C--【例句】",
+      "file": "U2-partC.json"
+    },
+    {
+      "order": 9,
+      "id": "vmcz55uyjmpydgd1kfkn4v6a",
+      "title": "Unit 3 Weather-【单词】",
+      "file": "U3-words.json"
+    },
+    {
+      "order": 10,
+      "id": "pa605zp5fvmjq4wiikmbxjj2",
+      "title": "Unit 3 Weather-Part A--【例句】",
+      "file": "U3-partA.json"
+    },
+    {
+      "order": 11,
+      "id": "d3d2q4spxk4tpjncgkts2mh2",
+      "title": "Unit 3 Weather-Part B--【例句】",
+      "file": "U3-partB.json"
+    },
+    {
+      "order": 12,
+      "id": "jlo50kcwvvhzu2lw54xsu544",
+      "title": "Unit 3 Weather-Part C--【例句】",
+      "file": "U3-partC.json"
+    },
+    {
+      "order": 13,
+      "id": "hexwu5e4s3s0qvdv63r0msso",
+      "title": "Unit 4 At the farm-【单词】",
+      "file": "U4-words.json"
+    },
+    {
+      "order": 14,
+      "id": "ya40co0t03t4dwizciq23oav",
+      "title": "Unit 4 At the farm-Part A--【例句】",
+      "file": "U4-partA.json"
+    },
+    {
+      "order": 15,
+      "id": "xwssbqk9ggpyclcp6ziklc4b",
+      "title": "Unit 4 At the farm-Part B--【例句】",
+      "file": "U4-partB.json"
+    },
+    {
+      "order": 16,
+      "id": "gn4h3ccnireo1w3kqkxgqa96",
+      "title": "Unit 4 At the farm-Part C--【例句】",
+      "file": "U4-partC.json"
+    },
+    {
+      "order": 17,
+      "id": "aohscnlwes4chvrs8xf0getn",
+      "title": "Unit 5 My clothes-【单词】",
+      "file": "U5-words.json"
+    },
+    {
+      "order": 18,
+      "id": "bc6mrkstsezlze53k8mws7om",
+      "title": "Unit 5 My clothes-Part A--【例句】",
+      "file": "U5-partA.json"
+    },
+    {
+      "order": 19,
+      "id": "wiqvvzp978zckru2hkd8j7tg",
+      "title": "Unit 5 My clothes-Part B--【例句】",
+      "file": "U5-partB.json"
+    },
+    {
+      "order": 20,
+      "id": "yt2ouoa7ny47waoi7pze2hmv",
+      "title": "Unit 5 My clothes-Part C--【例句】",
+      "file": "U5-partC.json"
+    },
+    {
+      "order": 21,
+      "id": "xnim0d5odibi4pmo32uoz7st",
+      "title": "Unit 6 Shopping-【单词】",
+      "file": "U6-words.json"
+    },
+    {
+      "order": 22,
+      "id": "bf3ni8vr5hp64z7sj5772s1j",
+      "title": "Unit 6 Shopping-Part A--【例句】",
+      "file": "U6-partA.json"
+    },
+    {
+      "order": 23,
+      "id": "sxmjk5627vb6xhpnqwpbpwxs",
+      "title": "Unit 6 Shopping-Part B--【例句】",
+      "file": "U6-partB.json"
+    },
+    {
+      "order": 24,
+      "id": "mtlz56tkqeef0y56coortng0",
+      "title": "Unit 6 Shopping-Part C--【例句】",
+      "file": "U6-partC.json"
+    },
+    {
+      "order": 25,
+      "id": "rao3xylm009b33w7zrojjuqf",
+      "title": "Review Units 1-3-【单词】",
+      "file": "RV1-3.json"
+    },
+    {
+      "order": 26,
+      "id": "ur7f5bixlxgk4hrygmablvd4",
+      "title": "Recycle 1--【例句】",
+      "file": "REC1.json"
+    },
+    {
+      "order": 27,
+      "id": "jec21damnzb35p1bi6kdnkiv",
+      "title": "Review Units 4-6-【单词】",
+      "file": "RV4-6.json"
+    },
+    {
+      "order": 28,
+      "id": "w3tysc3jtzlwynrjx5p19lbg",
+      "title": "Recycle 2--【例句】",
+      "file": "REC2.json"
+    }
+  ]
+}

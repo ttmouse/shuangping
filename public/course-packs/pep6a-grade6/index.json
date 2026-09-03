@@ -1,0 +1,177 @@
+{
+  "id": "mfta8rk9wr12kp50nwdaddp4",
+  "slug": "pep6a-grade6",
+  "title": "【人教版】六年级上册 PEP 课本同步",
+  "description": "与人教版（PEP）六年级上册英语教材完全同步。熟练掌握单元重点。",
+  "courseCount": 28,
+  "courses": [
+    {
+      "order": 1,
+      "id": "cdjvghvseclr5bco6yolozb8",
+      "title": "Unit 1 How can I get there?-【单词】",
+      "file": "L01.json"
+    },
+    {
+      "order": 2,
+      "id": "bixnlmxhse127aqyh1488u3e",
+      "title": "Unit 1 How can I get there?-Part A--【例句】",
+      "file": "L02.json"
+    },
+    {
+      "order": 3,
+      "id": "vk913h8ivgzqc56aexn8pvz8",
+      "title": "Unit 1 How can I get there?-Part B--【例句】",
+      "file": "L03.json"
+    },
+    {
+      "order": 4,
+      "id": "ywjq238a6rfb07q0ib1qu0gb",
+      "title": "Unit 1 How can I get there?-Part C--【例句】",
+      "file": "L04.json"
+    },
+    {
+      "order": 5,
+      "id": "ocmaj4y91xus5omhz385jcsl",
+      "title": "Unit 2 Ways to go to school-【单词】",
+      "file": "L05.json"
+    },
+    {
+      "order": 6,
+      "id": "x4nsysp274zak8frcqz9dk4o",
+      "title": "Unit 2 Ways to go to school-Part A--【例句】",
+      "file": "L06.json"
+    },
+    {
+      "order": 7,
+      "id": "biyvlt33te8ux1vj8pejeh9u",
+      "title": "Unit 2 Ways to go to school-Part B--【例句】",
+      "file": "L07.json"
+    },
+    {
+      "order": 8,
+      "id": "rvrasbqq3wmao0mqh6bong02",
+      "title": "Unit 2 Ways to go to school-Part C--【例句】",
+      "file": "L08.json"
+    },
+    {
+      "order": 9,
+      "id": "zh9nbppfp8vf45zf6d5kb0ja",
+      "title": "Unit 3 My weekend plan-【单词】",
+      "file": "L09.json"
+    },
+    {
+      "order": 10,
+      "id": "axo50q032v38jajq2i4pqoh3",
+      "title": "Unit 3 My weekend plan-Part A--【例句】",
+      "file": "L10.json"
+    },
+    {
+      "order": 11,
+      "id": "rgh8lgs8w3i5su79wleet0y8",
+      "title": "Unit 3 My weekend plan-Part B--【例句】",
+      "file": "L11.json"
+    },
+    {
+      "order": 12,
+      "id": "g3cg7mbibzqj0139lj965i9d",
+      "title": "Unit 3 My weekend plan-Part C--【例句】",
+      "file": "L12.json"
+    },
+    {
+      "order": 13,
+      "id": "iycksfgmozkqzzt0wdclhpje",
+      "title": "Unit 4 I have a pen pal-【单词】",
+      "file": "L13.json"
+    },
+    {
+      "order": 14,
+      "id": "azdaasdhmj2wqz7lxpgwb6vo",
+      "title": "Unit 4 I have a pen pal-Part A--【例句】",
+      "file": "L14.json"
+    },
+    {
+      "order": 15,
+      "id": "flimw62v7ffub4n9f724p9x0",
+      "title": "Unit 4 I have a pen pal-Part B--【例句】",
+      "file": "L15.json"
+    },
+    {
+      "order": 16,
+      "id": "tbt8ffcxwr7pu77ggdoo89pe",
+      "title": "Unit 4 I have a pen pal-Part C--【例句】",
+      "file": "L16.json"
+    },
+    {
+      "order": 17,
+      "id": "mohj24bajbeq59ho4ywav0gj",
+      "title": "Unit 5 What does he do?-【单词】",
+      "file": "L17.json"
+    },
+    {
+      "order": 18,
+      "id": "m6pno1awggofp2tmm0dvliv3",
+      "title": "Unit 5 What does he do?-Part A--【例句】",
+      "file": "L18.json"
+    },
+    {
+      "order": 19,
+      "id": "yzahnjjixs3muifixkwvoaev",
+      "title": "Unit 5 What does he do?-Part B--【例句】",
+      "file": "L19.json"
+    },
+    {
+      "order": 20,
+      "id": "u7xbmfkt0ulo2qwlttxnbiwi",
+      "title": "Unit 5 What does he do?-Part C--【例句】",
+      "file": "L20.json"
+    },
+    {
+      "order": 21,
+      "id": "ccpu8358iuhntxad59ittvjq",
+      "title": "Unit 6 How do you feel?-【单词】",
+      "file": "L21.json"
+    },
+    {
+      "order": 22,
+      "id": "epqrwva9sucxr04uu8q8qvn9",
+      "title": "Unit 6 How do you feel?-Part A--【例句】",
+      "file": "L22.json"
+    },
+    {
+      "order": 23,
+      "id": "a2ado9emf54hbv2o2k8k61g6",
+      "title": "Unit 6 How do you feel?-Part B--【例句】",
+      "file": "L23.json"
+    },
+    {
+      "order": 24,
+      "id": "l0ye9lpj1jcpm9nuek8gvz5u",
+      "title": "Unit 6 How do you feel?-Part C--【例句】",
+      "file": "L24.json"
+    },
+    {
+      "order": 25,
+      "id": "dcq81tl3x4j5gbl2w886cqtg",
+      "title": "Review Units 1-3-【单词】",
+      "file": "L25.json"
+    },
+    {
+      "order": 26,
+      "id": "fbgodazl6ivl3yj9hqy6wii9",
+      "title": "Recycle 1--【例句】",
+      "file": "L26.json"
+    },
+    {
+      "order": 27,
+      "id": "wr110oflbnyd5lh4mb21bgqe",
+      "title": "Review Units 4-6-【单词】",
+      "file": "L27.json"
+    },
+    {
+      "order": 28,
+      "id": "i49l9gw0i2ixoalcgl0l6mae",
+      "title": "Recycle 2--【例句】",
+      "file": "L28.json"
+    }
+  ]
+}

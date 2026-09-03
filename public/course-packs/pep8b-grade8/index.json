@@ -1,0 +1,189 @@
+{
+  "id": "b4g9rg8wsp5sbzd8tret2cj2",
+  "slug": "pep8b-grade8",
+  "title": "【人教版】八年级下册 课本同步",
+  "description": "与人教版八年级下册教材完全同步。熟练掌握单元重点。",
+  "courseCount": 30,
+  "courses": [
+    {
+      "order": 1,
+      "id": "q0i5o5rk4q53h6bj8fe1rk1w",
+      "title": "Unit 1 What’s the matter?【单词】",
+      "file": "L01.json"
+    },
+    {
+      "order": 2,
+      "id": "y6dlz9pm2vr133wqqka91mvg",
+      "title": "Unit 1 What’s the matter?【例句】",
+      "file": "L02.json"
+    },
+    {
+      "order": 3,
+      "id": "ecxhtmjimh85fbz3p5nown2x",
+      "title": "Unit 1 What’s the matter?【例句】",
+      "file": "L03.json"
+    },
+    {
+      "order": 4,
+      "id": "n8476175r2usawozmamhk0oq",
+      "title": "Unit 2 I’ll help to clean up the city parks.【单词】",
+      "file": "L04.json"
+    },
+    {
+      "order": 5,
+      "id": "o52xwr4w2ub2j3yowe66vl1g",
+      "title": "Unit 2 I’ll help to clean up the city parks.【例句】",
+      "file": "L05.json"
+    },
+    {
+      "order": 6,
+      "id": "yi2sil94juemjw919zb9pzco",
+      "title": "Unit 2 I’ll help to clean up the city parks.【例句】",
+      "file": "L06.json"
+    },
+    {
+      "order": 7,
+      "id": "w5ewl5no3bkslxl7wsx585rw",
+      "title": "Unit 3 Could you please clean your room?【单词】",
+      "file": "L07.json"
+    },
+    {
+      "order": 8,
+      "id": "ya0qh07i7q549byklxgrgg8i",
+      "title": "Unit 3 Could you please clean your room?【例句】",
+      "file": "L08.json"
+    },
+    {
+      "order": 9,
+      "id": "knexwvz4fi12axix51v9up4n",
+      "title": "Unit 3 Could you please clean your room?【例句】",
+      "file": "L09.json"
+    },
+    {
+      "order": 10,
+      "id": "pxykcfvtybp4fl3497r6f7ru",
+      "title": "Unit 4 Why don’t you talk to your parents?【单词】",
+      "file": "L10.json"
+    },
+    {
+      "order": 11,
+      "id": "jmi05gaxagi0qhhunqrhuf4l",
+      "title": "Unit 4 Why don’t you talk to your parents?【例句】",
+      "file": "L11.json"
+    },
+    {
+      "order": 12,
+      "id": "oiogri82coprpa21uuksa0iq",
+      "title": "Unit 4 Why don’t you talk to your parents?【例句】",
+      "file": "L12.json"
+    },
+    {
+      "order": 13,
+      "id": "cnpo1o1c1733mnup0aftcyoo",
+      "title": "Unit 5 What were you doing when the rainstorm came?【单词】",
+      "file": "L13.json"
+    },
+    {
+      "order": 14,
+      "id": "vyt93ngoexn3sun7f61dgsce",
+      "title": "Unit 5 What were you doing when the rainstorm came?【例句】",
+      "file": "L14.json"
+    },
+    {
+      "order": 15,
+      "id": "w0n6asrbuxk05tbov1zsg7u1",
+      "title": "Unit 5 What were you doing when the rainstorm came?【例句】",
+      "file": "L15.json"
+    },
+    {
+      "order": 16,
+      "id": "gr8vljtvuluaj948vfkcts1v",
+      "title": "Unit 6 An old man tried to move the mountains.【单词】",
+      "file": "L16.json"
+    },
+    {
+      "order": 17,
+      "id": "s5jw6njegnnpu3euit895a5v",
+      "title": "Unit 6 An old man tried to move the mountains.【例句】",
+      "file": "L17.json"
+    },
+    {
+      "order": 18,
+      "id": "gffje1gro93r8o408i4a8rtq",
+      "title": "Unit 6 An old man tried to move the mountains.【例句】",
+      "file": "L18.json"
+    },
+    {
+      "order": 19,
+      "id": "m7u08vix3p1159tte7pita8p",
+      "title": "Unit 7 What’s the highest mountain in the world?【单词】",
+      "file": "L19.json"
+    },
+    {
+      "order": 20,
+      "id": "j7eznikj4zkwjdfgwnrl0stj",
+      "title": "Unit 7 What’s the highest mountain in the world?【例句】",
+      "file": "L20.json"
+    },
+    {
+      "order": 21,
+      "id": "gl5o8far2ovr2096qw98k59x",
+      "title": "Unit 7 What’s the highest mountain in the world?【例句】",
+      "file": "L21.json"
+    },
+    {
+      "order": 22,
+      "id": "vcm7t64v71v60lynpvsjd9wu",
+      "title": "Unit 8 Have you read Treasure Island yet?【单词】",
+      "file": "L22.json"
+    },
+    {
+      "order": 23,
+      "id": "dvsno534exsu8vtpkjy2xzj8",
+      "title": "Unit 8 Have you read Treasure Island yet?【例句】",
+      "file": "L23.json"
+    },
+    {
+      "order": 24,
+      "id": "qgic0181whedwc65ymtcfypu",
+      "title": "Unit 8 Have you read Treasure Island yet?【例句】",
+      "file": "L24.json"
+    },
+    {
+      "order": 25,
+      "id": "b4jn1wftdfof1s17n60xdgwk",
+      "title": "Unit 9 Have you ever been to a museum?【单词】",
+      "file": "L25.json"
+    },
+    {
+      "order": 26,
+      "id": "wiml5yk6stxsv65nnmz3dykv",
+      "title": "Unit 9 Have you ever been to a museum?【例句】",
+      "file": "L26.json"
+    },
+    {
+      "order": 27,
+      "id": "pogmq2qwxrdmb1j7qpu2s9rp",
+      "title": "Unit 9 Have you ever been to a museum?【例句】",
+      "file": "L27.json"
+    },
+    {
+      "order": 28,
+      "id": "jy0a86kgqqk4ehibatjz4d5e",
+      "title": "Unit 10 I’ve had this bike for three years.【单词】",
+      "file": "L28.json"
+    },
+    {
+      "order": 29,
+      "id": "olwmrox8sskmuzh0lqpvohuh",
+      "title": "Unit 10 I’ve had this bike for three years.【例句】",
+      "file": "L29.json"
+    },
+    {
+      "order": 30,
+      "id": "y3it0901wd4dljrjggpzf3og",
+      "title": "Unit 10 I’ve had this bike for three years.【例句】",
+      "file": "L30.json"
+    }
+  ]
+}

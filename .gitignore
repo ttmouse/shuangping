@@ -756,3 +756,27 @@ node_modules/vue-router/vetur/attributes.json
 node_modules/vue-router/vetur/tags.json
 .alma-snapshots
 .reasonix/
+
+# === 课程数据（不纳入 git：体积大 + 可从 julebu 重新抓取）===
+# 原始抓取中间产物（App 不读，仅数据源备份）
+/julebu-raw/
+/julebu-raw-friends/
+/julebu-raw-pep5/
+/julebu-raw-pep5b/
+/julebu-raw-batch/
+/julebu-raw-friends-s2/
+/julebu-raw-friends-s3/
+/julebu-raw-friends-s4/
+/julebu-raw-friends-s5/
+/julebu-raw-friends-s6/
+/julebu-raw-friends2/
+/julebu-raw-pep4a/
+/julebu-raw-pep4b/
+/julebu-raw-pep6a/
+/julebu-raw-pep6b/
+/julebu-raw-pep7a/
+/julebu-raw-pep7b/
+/julebu-raw-pep8a/
+/julebu-raw-pep8b/
+/julebu-raw-pep9/
+.DS_Store

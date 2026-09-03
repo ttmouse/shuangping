@@ -1,0 +1,117 @@
+{
+  "id": "vhkwcngvfsi2enh8i4mmihzs",
+  "slug": "pep6b-grade6",
+  "title": "【人教版】六年级下册 PEP 课本同步",
+  "description": "与人教版（PEP）六年级下册英语教材完全同步。熟练掌握单元重点。",
+  "courseCount": 18,
+  "courses": [
+    {
+      "order": 1,
+      "id": "uuf361xvf1ofb1zdkbauoxfp",
+      "title": "Unit 1 How tall are you?-【单词】",
+      "file": "L01.json"
+    },
+    {
+      "order": 2,
+      "id": "fxa2shi82h73lbmbn1dh0k0i",
+      "title": "Unit 1 How tall are you?-Part A--【例句】",
+      "file": "L02.json"
+    },
+    {
+      "order": 3,
+      "id": "mlh5vg16s4olnejuazoyuz16",
+      "title": "Unit 1 How tall are you?-Part B--【例句】",
+      "file": "L03.json"
+    },
+    {
+      "order": 4,
+      "id": "x77p1rwlg3iwsi719bjocwzr",
+      "title": "Unit 1 How tall are you?-Part C--【例句】",
+      "file": "L04.json"
+    },
+    {
+      "order": 5,
+      "id": "ahiwmv106y92zfypfqohp7sm",
+      "title": "Unit 2 Last weekend-【单词】",
+      "file": "L05.json"
+    },
+    {
+      "order": 6,
+      "id": "v1f9l2c7wlx78vfq30g3p773",
+      "title": "Unit 2 Last weekend-Part A--【例句】",
+      "file": "L06.json"
+    },
+    {
+      "order": 7,
+      "id": "jzs87lcuj5vrx99rqnaq7rda",
+      "title": "Unit 2 Last weekend-Part B--【例句】",
+      "file": "L07.json"
+    },
+    {
+      "order": 8,
+      "id": "xif5rr21o625dshzk7fnppsy",
+      "title": "Unit 2 Last weekend-Part C--【例句】",
+      "file": "L08.json"
+    },
+    {
+      "order": 9,
+      "id": "krhq7cve1xf7rdnox53kx7kh",
+      "title": "Unit 3 Where did you go?-【单词】",
+      "file": "L09.json"
+    },
+    {
+      "order": 10,
+      "id": "ubmkuspfcnskwtf5ca31042u",
+      "title": "Unit 3 Where did you go?-Part A--【例句】",
+      "file": "L10.json"
+    },
+    {
+      "order": 11,
+      "id": "draq479e6zdvcd2c5xsxr6rh",
+      "title": "Unit 3 Where did you go?-Part B--【例句】",
+      "file": "L11.json"
+    },
+    {
+      "order": 12,
+      "id": "t8pu6zoo302ma77qitws46gy",
+      "title": "Unit 3 Where did you go?-Part C--【例句】",
+      "file": "L12.json"
+    },
+    {
+      "order": 13,
+      "id": "kqz7e4oc0hj7v50kaxkv13o5",
+      "title": "Unit 4 Then and now-【单词】",
+      "file": "L13.json"
+    },
+    {
+      "order": 14,
+      "id": "k3vww0a4c00fu8z5q5do8mdg",
+      "title": "Unit 4 Then and now-Part A--【例句】",
+      "file": "L14.json"
+    },
+    {
+      "order": 15,
+      "id": "wi8dkdv669wf6apmu4mmbouv",
+      "title": "Unit 4 Then and now-Part B--【例句】",
+      "file": "L15.json"
+    },
+    {
+      "order": 16,
+      "id": "m77liqkdqghya8tbnz0mtxov",
+      "title": "Unit 4 Then and now-Part C--【例句】",
+      "file": "L16.json"
+    },
+    {
+      "order": 17,
+      "id": "sgwhkfrmbl9k1x7413co61cb",
+      "title": "Review Units 1-4--【单词】",
+      "file": "L17.json"
+    },
+    {
+      "order": 18,
+      "id": "laanta83vdsv0o9bbyzz5amk",
+      "title": "Recycle Mike’s happy days--【例句】",
+      "file": "L18.json"
+    }
+  ]
+}

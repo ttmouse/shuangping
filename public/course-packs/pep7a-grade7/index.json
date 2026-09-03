@@ -1,0 +1,189 @@
+{
+  "id": "tw58l7ftrxkta5kc252ypxol",
+  "slug": "pep7a-grade7",
+  "title": "【人教版】七年级上册 课本同步",
+  "description": "与人教版七年级上册教材完全同步。熟练掌握单元重点。",
+  "courseCount": 30,
+  "courses": [
+    {
+      "order": 1,
+      "id": "p9t0h3e23ijx54gqyahvkl1h",
+      "title": "Starter Unit 1 Hello!【单词】",
+      "file": "L01.json"
+    },
+    {
+      "order": 2,
+      "id": "ixfln0wlzisbrkl3mx7g7zmb",
+      "title": "Starter Unit 2 Keep Tidy!【单词】",
+      "file": "L02.json"
+    },
+    {
+      "order": 3,
+      "id": "k62tsbbud5jfulioaig6bvo1",
+      "title": "Starter Unit 3 Welcome!【单词】",
+      "file": "L03.json"
+    },
+    {
+      "order": 4,
+      "id": "bj1i2m70deozt0qj9t2oqoya",
+      "title": "Unit 1 You and Me【单词】",
+      "file": "L04.json"
+    },
+    {
+      "order": 5,
+      "id": "r6tu3q21beyyk4gog7fv3zjb",
+      "title": "Unit 2 We’re Family!【单词】",
+      "file": "L05.json"
+    },
+    {
+      "order": 6,
+      "id": "bzyxrfzme2v6dkxf5v9uaaqb",
+      "title": "Unit 3 My School【单词】",
+      "file": "L06.json"
+    },
+    {
+      "order": 7,
+      "id": "v7duuqho12h7la7yrjxgwa4j",
+      "title": "Unit 4 My Favourite Subject【单词】",
+      "file": "L07.json"
+    },
+    {
+      "order": 8,
+      "id": "v1uld7n9t0uyajwptvtvtrq2",
+      "title": "Unit 5 Fun Clubs【单词】",
+      "file": "L08.json"
+    },
+    {
+      "order": 9,
+      "id": "tff8d7q2qby76340cni4byyp",
+      "title": "Unit 6 A Day in the Life【单词】",
+      "file": "L09.json"
+    },
+    {
+      "order": 10,
+      "id": "w7patdnrobzw7cb7bhgqh21q",
+      "title": "Unit 7 Happy Birthday!【单词】",
+      "file": "L10.json"
+    },
+    {
+      "order": 11,
+      "id": "ogff14jrt1b6kk84dviwpiib",
+      "title": "Starter Unit 1 Hello!【例句】",
+      "file": "L11.json"
+    },
+    {
+      "order": 12,
+      "id": "ia86n48lkou7rshlhzw84jj5",
+      "title": "Starter Unit 1 Hello!【例句】",
+      "file": "L12.json"
+    },
+    {
+      "order": 13,
+      "id": "lllqhie7ngw1u4iodno9poev",
+      "title": "Starter Unit 2 Keep Tidy!【例句】",
+      "file": "L13.json"
+    },
+    {
+      "order": 14,
+      "id": "sqizk67um50ok57xqbgtjy7v",
+      "title": "Starter Unit 2 Keep Tidy!【例句】",
+      "file": "L14.json"
+    },
+    {
+      "order": 15,
+      "id": "fm8nr5wpkllxe1czpexas6un",
+      "title": "Starter Unit 3 Welcome!【例句】",
+      "file": "L15.json"
+    },
+    {
+      "order": 16,
+      "id": "ssfzvmwebpqzafe5vtlk6rqi",
+      "title": "Starter Unit 3 Welcome!【例句】",
+      "file": "L16.json"
+    },
+    {
+      "order": 17,
+      "id": "dgt83c9z6rczl82q8gbsv69z",
+      "title": "Unit 1 You and Me【例句】",
+      "file": "L17.json"
+    },
+    {
+      "order": 18,
+      "id": "xrjv6nq2xlhvbyizzjubfbxd",
+      "title": "Unit 1 You and Me【例句】",
+      "file": "L18.json"
+    },
+    {
+      "order": 19,
+      "id": "ri5zdkb15c3nf21qupvpevfb",
+      "title": "Unit 2 We're Family!【例句】",
+      "file": "L19.json"
+    },
+    {
+      "order": 20,
+      "id": "baf20shtpk7bm97elf8dm86g",
+      "title": "Unit 2 We're Family!【例句】",
+      "file": "L20.json"
+    },
+    {
+      "order": 21,
+      "id": "ikhd7sig2tji4cmd1hs0ngq8",
+      "title": "Unit 3 My School【例句】",
+      "file": "L21.json"
+    },
+    {
+      "order": 22,
+      "id": "w6y5idq68b84vz605vp99vx8",
+      "title": "Unit 3 My School【例句】",
+      "file": "L22.json"
+    },
+    {
+      "order": 23,
+      "id": "w50qnxp2gtct1ysew1a20qa3",
+      "title": "Unit 4 My Favourite Subject【例句】",
+      "file": "L23.json"
+    },
+    {
+      "order": 24,
+      "id": "q4zhmqk3yqv7y56m992xgkeo",
+      "title": "Unit 4 My Favourite Subject【例句】",
+      "file": "L24.json"
+    },
+    {
+      "order": 25,
+      "id": "i0a0556utwpa905qbp7u7mnn",
+      "title": "Unit 5 Fun Clubs【例句】",
+      "file": "L25.json"
+    },
+    {
+      "order": 26,
+      "id": "t4o3a3m077ef2lkd3t4vnec3",
+      "title": "Unit 5 Fun Clubs【例句】",
+      "file": "L26.json"
+    },
+    {
+      "order": 27,
+      "id": "annbwxyt3i4uc1sht0knlm55",
+      "title": "Unit 6 A Day in the Life【例句】",
+      "file": "L27.json"
+    },
+    {
+      "order": 28,
+      "id": "bu2yyi0fri73mybh5wxibz79",
+      "title": "Unit 6 A Day in the Life【例句】",
+      "file": "L28.json"
+    },
+    {
+      "order": 29,
+      "id": "v2sa2gatmjbce9kgpt5ilwkm",
+      "title": "Unit 7 Happy Birthday!【例句】",
+      "file": "L29.json"
+    },
+    {
+      "order": 30,
+      "id": "msr2rojzhwoufm2qsmy7ocqa",
+      "title": "Unit 7 Happy Birthday!【例句】",
+      "file": "L30.json"
+    }
+  ]
+}

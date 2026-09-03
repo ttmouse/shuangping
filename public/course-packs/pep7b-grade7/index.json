@@ -1,0 +1,153 @@
+{
+  "id": "nzpxidc8lphzvuu6n5c8sqju",
+  "slug": "pep7b-grade7",
+  "title": "【人教版】七年级下册 课本同步",
+  "description": "与人教版七年级下册教材完全同步。熟练掌握单元重点。",
+  "courseCount": 24,
+  "courses": [
+    {
+      "order": 1,
+      "id": "u1tnpz3px74xrsdwhxvx123a",
+      "title": "Unit 1 Animal Friends【单词】",
+      "file": "L01.json"
+    },
+    {
+      "order": 2,
+      "id": "sadm8uu4y989o0int9yxi3lr",
+      "title": "Unit 1 Animal Friends【例句】",
+      "file": "L02.json"
+    },
+    {
+      "order": 3,
+      "id": "liw704cuwp2mboisfduode4h",
+      "title": "Unit 1 Animal Friends【例句】",
+      "file": "L03.json"
+    },
+    {
+      "order": 4,
+      "id": "shbz4j091cndgs7qta49q9do",
+      "title": "Unit 2 No Rules, No Order【单词】",
+      "file": "L04.json"
+    },
+    {
+      "order": 5,
+      "id": "tlas3vurjm3qcedip195x77k",
+      "title": "Unit 2 No Rules, No Order【例句】",
+      "file": "L05.json"
+    },
+    {
+      "order": 6,
+      "id": "rwy2iy2osqrfiwonc59irp5f",
+      "title": "Unit 2 No Rules, No Order【例句】",
+      "file": "L06.json"
+    },
+    {
+      "order": 7,
+      "id": "deng1suhjq6t05wzk6bkwpr1",
+      "title": "Unit 3 Keep Fit【单词】",
+      "file": "L07.json"
+    },
+    {
+      "order": 8,
+      "id": "rei86nayjjru8w39lrtwubnn",
+      "title": "Unit 3 Keep Fit【例句】",
+      "file": "L08.json"
+    },
+    {
+      "order": 9,
+      "id": "q2nm0ykspiclx52pw3lfffss",
+      "title": "Unit 3 Keep Fit【例句】",
+      "file": "L09.json"
+    },
+    {
+      "order": 10,
+      "id": "iuiz2wz5utg76ukd1g0ur1s4",
+      "title": "Unit 4 Eat Well【单词】",
+      "file": "L10.json"
+    },
+    {
+      "order": 11,
+      "id": "exwyj0njiiydd708vxtv0vwx",
+      "title": "Unit 4 Eat Well【例句】",
+      "file": "L11.json"
+    },
+    {
+      "order": 12,
+      "id": "ldrdu4bn4d0yxa627u8dhe87",
+      "title": "Unit 4 Eat Well【例句】",
+      "file": "L12.json"
+    },
+    {
+      "order": 13,
+      "id": "vi3b7es2w52aoe9cn90g6dwt",
+      "title": "Unit 5 Here and Now【单词】",
+      "file": "L13.json"
+    },
+    {
+      "order": 14,
+      "id": "ipxd9ewhyatq5cko94g71e8b",
+      "title": "Unit 5 Here and Now【例句】",
+      "file": "L14.json"
+    },
+    {
+      "order": 15,
+      "id": "sqtpwxsgp1df1ew5c0ynnwl6",
+      "title": "Unit 5 Here and Now【例句】",
+      "file": "L15.json"
+    },
+    {
+      "order": 16,
+      "id": "vjb4ck47sdq67cpoqsdqnowf",
+      "title": "Unit 6 Rain or Shine【单词】",
+      "file": "L16.json"
+    },
+    {
+      "order": 17,
+      "id": "j4x7bshcos2su19clwcj4e89",
+      "title": "Unit 6 Rain or Shine【例句】",
+      "file": "L17.json"
+    },
+    {
+      "order": 18,
+      "id": "amfclkp271nm165pvq91b035",
+      "title": "Unit 6 Rain or Shine【例句】",
+      "file": "L18.json"
+    },
+    {
+      "order": 19,
+      "id": "q0e93j25cv78l835j9tbnciq",
+      "title": "Unit 7 A Day to Remember【单词】",
+      "file": "L19.json"
+    },
+    {
+      "order": 20,
+      "id": "desmn8xvv2p7eoa2rylixj55",
+      "title": "Unit 7 A Day to Remember【例句】",
+      "file": "L20.json"
+    },
+    {
+      "order": 21,
+      "id": "zs4m10phm5voovm9avc3kbcj",
+      "title": "Unit 7 A Day to Remember【例句】",
+      "file": "L21.json"
+    },
+    {
+      "order": 22,
+      "id": "qxseyssrnx30il9r0y324rzr",
+      "title": "Unit 8 Once upon a Time【单词】",
+      "file": "L22.json"
+    },
+    {
+      "order": 23,
+      "id": "cwesona576uwg6izdpz89ilm",
+      "title": "Unit 8 Once upon a Time【例句】",
+      "file": "L23.json"
+    },
+    {
+      "order": 24,
+      "id": "des4qb7nnw9xz77ismrxsg5f",
+      "title": "Unit 8 Once upon a Time【例句】",
+      "file": "L24.json"
+    }
+  ]
+}
