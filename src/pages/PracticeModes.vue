@@ -5,7 +5,7 @@
     <div class="pageCenter">
       <div class="tipsTextContent">
         <!-- 英文进行中：顶部显示进度/提示（替换无意义描述文案） -->
-        <template v-if="mode === 'english' && started">
+        <template v-if="isEnglishOrMistake && started">
           <div class="enProgHeader">
             <h1 class="enProgTitle">
               第
@@ -27,7 +27,7 @@
               <span v-if="wordIdx < enSentence.length">· 第 {{ wordIdx + 1 }} / {{ enSentence.length }} 词</span>
               <span v-else>· 本句完成</span>
             </h1>
-            <h2 class="enProgHint">{{ enSentenceDone ? '（本句完成，按 空格/回车 进入下一句）' : ((dictWords.has(currentWord) || settings.enAllDictation) && !enHadError ? '（默写：看中文打英文，打错会显示单词）' : '（空格/回车 进入下一词）') }}</h2>
+            <h2 class="enProgHint">{{ enSentenceDone ? '（本句完成，按 空格/回车 进入下一句）' : (((dictWords.has(currentWord) || settings.enDisplayMode === 'dictation') && settings.enDisplayMode !== 'guide') && !enHadError ? '（默写：看中文打英文，打错会显示单词）' : '（空格/回车 进入下一词）') }}</h2>
           </div>
         </template>
         <template v-else>
@@ -83,17 +83,60 @@
       </div>
 
       <!-- 未开始且无配置区的模式：轻提示（不拦截输入，直接打字即开始） -->
-      <div v-if="!started && !(mode === 'letters' || mode === 'cards' || mode === 'english')" class="startHint">
+      <div v-if="!started && !(mode === 'letters' || mode === 'cards' || isEnglishOrMistake)" class="startHint">
         <p>直接开始打字练习</p>
       </div>
 
       <!-- 练习主体（卡片/字母/英文模式未开始时也显示，便于切换内容） -->
-      <div v-if="started || mode === 'cards' || mode === 'letters' || mode === 'english'" class="practiceArea">
-        <!-- 英文单词（参考 localhost:3002 的整句流式练习） -->
-        <template v-if="mode === 'english'">
-          <div class="enStage" v-if="started">
-            <div class="enSentenceCn" v-if="(enCustomMode || enStoryMode) && enSentenceCn">{{ enSentenceCn }}</div>
-            <div class="enSentenceWrap">
+      <div v-if="started || mode === 'cards' || mode === 'letters' || isEnglishOrMistake" class="practiceArea">
+        <!-- 英文/错词本：已开始 → 共用练习界面 -->
+        <template v-if="isEnglishOrMistake && started">
+          <div class="enStage">
+            <div class="enSentenceCn" v-if="!enSentenceDone && (enCustomMode || enStoryMode) && enSentenceCn">{{ enSentenceCn }}</div>
+            <!-- 评级弹层（复刻官网 comboPopup：Perfect/Great + combo；独立浮层不占位） -->
+            <Transition name="combo-pop" appear>
+              <div
+                v-if="comboPopupVisible && enLastRating"
+                :key="popFx"
+                class="combo-popup"
+              >
+                <span class="comboRating">{{ enLastRating === 'perfect' ? 'Perfect' : 'Great' }}</span>
+                <span v-if="enLastCombo > 1" class="comboCount">× {{ enLastCombo }}</span>
+              </div>
+            </Transition>
+            <!-- 整句完成态：官网式句子成分结构图（组框 + 词卡：音标/词/词性下划线/释义/词性） -->
+            <div v-if="enSentenceDone && enSentenceGroups.length" class="spParse" role="group" aria-label="本句成分解析">
+              <div
+                v-for="(g, gi) in enSentenceGroups"
+                :key="gi"
+                class="spGroup"
+                :style="{
+                  borderColor: g.color + '80',
+                  '--sp-chip': g.color,
+                }"
+              >
+                <span v-if="g.role" class="spChip">{{ g.role }}</span>
+                <div v-for="(wd, wi) in g.words" :key="wi" class="spUnit">
+                  <span class="spPh">{{ wd.ph }}</span>
+                  <span class="spCell">
+                    <span class="spWord">{{ wd.word }}<span class="spUl" :style="{ backgroundColor: wd.posColor }"></span></span><span v-if="wd.punct" class="spPunct">{{ wd.punct }}</span>
+                  </span>
+                  <span class="spDef">{{ wd.def }}</span>
+                  <span class="spPos">{{ wd.posCn }}</span>
+                  <!-- 官网式：悬停单词弹出成分讲解浮层 -->
+                  <div v-if="g.explanation" class="spTip">
+                    <div class="spTipTitle">
+                      <span v-if="g.role" class="spTipRole">{{ g.role }}</span>
+                      <span v-if="g.type" class="spTipType">{{ g.type }}</span>
+                    </div>
+                    <div class="spTipBody">{{ g.explanation }}</div>
+                  </div>
+                </div>
+              </div>
+              <!-- 整句中文：放卡片堆下方 -->
+              <div v-if="(enCustomMode || enStoryMode) && enSentenceCn" class="enSentenceCn spCn">{{ enSentenceCn }}</div>
+            </div>
+            <div v-else class="enSentenceWrap">
               <!-- 第一行：正常词（不含重练词）；单行横向滚动 -->
               <div
                 class="enSentence"
@@ -105,7 +148,6 @@
                   <div
                     v-if="!enRedoSet.has(wi)"
                     class="word-col"
-                    :data-wi="wi"
                     :class="{ active: wi === wordIdx, completed: wi < wordIdx, redo: enRedoSet.has(wi) }"
                   >
                     <span class="word-cn" v-if="(!enStoryMode && !enCustomMode) || settings.enShowWordCn">{{ wordCn(w) }}</span>
@@ -160,17 +202,20 @@
               </div>
             </div>
           </div>
-          <div class="enProgress" v-if="started">
+          <div class="enProgress">
             <button class="enActionBtn" :disabled="!enCanViewAnswer" @click="enViewAnswer" title="显示当前单词（计入完成统计）" data-nav><svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>答案</button>
             <button class="enActionBtn" @click="enRelisten" title="重读当前单词" data-nav><svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>重听</button>
             <button v-if="settings.enSpeakSentence" class="enActionBtn" @click="speakWholeSentence" title="重听整句 (Ctrl+')" data-nav><svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>重听整句</button>
           </div>
-          <div class="enStage" v-if="!started">
-            <!-- 英文内容类型：单词 / 短文 / 自定义 -->
+        </template>
+
+        <!-- 英文模式：未开始 → 配置区 -->
+        <template v-else-if="mode === 'english'">
+          <div class="enStage">
             <div class="enSectionTabs">
               <button class="enSectionTab" :class="{ active: enSection === 'words' }" @click="showEnWordsTab" data-nav>单词</button>
               <button class="enSectionTab" :class="{ active: enSection === 'stories' }" @click="showEnStoriesTab" data-nav>短文</button>
-              </div>
+            </div>
             <template v-if="enSection === 'words'">
             <div class="enGradeRow">
               <select class="enGradeSelect" :value="settings.enGrade" @change="onEnGradeChange" title="英文词库年级">
@@ -180,57 +225,8 @@
                 <option value="g6">六年级</option>
               </select>
             </div>
-            <!-- 英文错题本：打错的词（error/slow）自动收录，可一键专练 -->
-            <div class="mistakePanel enMistakePanel">
-              <template v-if="enMistakeWords.length">
-                <div class="mistakeList">
-                  <div v-for="w in enMistakeWords" :key="w" class="mistakeItem">
-                    <span class="mistakeWord">{{ w }}<i class="mistakeCn">{{ wordCn(w) }}</i></span>
-                    <span class="mistakeCount" :class="{ err: enMastery[w] === 'error' }">{{ enMastery[w] === 'error' ? '打错' : '太慢' }}</span>
-                  </div>
-                </div>
-                <div class="mistakeOpts">
-                  <button class="btn" @click="startEnMistakePractice" data-nav>练习这 {{ enMistakeWords.length }} 个错词</button>
-                  <button class="btn" @click="clearEnMistakes" data-nav>清空错题</button>
-                </div>
-              </template>
-              <div v-else class="mistakeEmpty">暂无错题——打错的英文单词会自动记到这里，专练到记住为止。</div>
-            </div>
-            <!-- 慢词刻意练习：默认不展示词列表，只显示数量与入口 -->
-            <div class="mistakePanel enMistakePanel">
-              <template v-if="enSlowList.length">
-                <div class="slowBar">
-                  <span class="slowBarTitle">慢词刻意练习</span>
-                  <span class="slowBarMeta">{{ enSlowList.length }} 个词待练快（平均耗时 &gt; {{ settings.enPracticeMs || 300 }}ms/字母）</span>
-                </div>
-                <div class="mistakeOpts">
-                  <label class="repeatLabel">每词重复
-                    <input type="number" v-model.number="customRepeat" min="1" max="20" /> 遍
-                  </label>
-                  <button class="btn" @click="startEnSlowPractice" data-nav>练到 {{ settings.enPracticeMs || 300 }}ms 以内</button>
-                  <button class="btn" @click="clearEnSlowWords" data-nav>清空</button>
-                </div>
-              </template>
-              <div v-else class="mistakeEmpty">暂无慢词——平均耗时超过 {{ settings.enPracticeMs || 300 }}ms/字母 的词会自动收录，刻意练到变快。</div>
-            </div>
             </template>
             <template v-else-if="enSection === 'stories'">
-            <!-- 英文错题本：短文练完也能直接练错词（error/slow 自动收录） -->
-            <div class="mistakePanel enMistakePanel">
-              <template v-if="enMistakeWords.length">
-                <div class="mistakeList">
-                  <div v-for="w in enMistakeWords" :key="w" class="mistakeItem">
-                    <span class="mistakeWord">{{ w }}<i class="mistakeCn">{{ wordCn(w) }}</i></span>
-                    <span class="mistakeCount" :class="{ err: enMastery[w] === 'error' }">{{ enMastery[w] === 'error' ? '打错' : '太慢' }}</span>
-                  </div>
-                </div>
-                <div class="mistakeOpts">
-                  <button class="btn" @click="startEnMistakePractice" data-nav>练习这 {{ enMistakeWords.length }} 个错词</button>
-                  <button class="btn" @click="clearEnMistakes" data-nav>清空错题</button>
-                </div>
-              </template>
-              <div v-else class="mistakeEmpty">暂无错题——短文里打错的英文单词会自动记到这里，专练到记住为止。</div>
-            </div>
             <div class="storyPanel" :class="{ 'storyPanelWide': packBrowseLevel === 'courses' }">
               <!-- 课包课程列表：独立视图，隐藏其他内容 -->
               <template v-if="packBrowseLevel === 'courses' && activePack">
@@ -323,6 +319,44 @@
             </div>
             </template>
             <div class="numHint" v-if="enSection === 'words'">从右上角选择词库开始，或按任意键开始</div>
+          </div>
+        </template>
+
+        <!-- 错词本：未开始 → 错词/慢词列表 -->
+        <template v-else-if="mode === 'mistake-book'">
+          <div class="mistakeBookStage">
+            <div class="mistakePanel enMistakePanel">
+              <template v-if="enMistakeWords.length">
+                <div class="mistakeList">
+                  <div v-for="w in enMistakeWords" :key="w" class="mistakeItem">
+                    <span class="mistakeWord">{{ w }}<i class="mistakeCn">{{ wordCn(w) }}</i></span>
+                    <span class="mistakeCount" :class="{ err: enMastery[w] === 'error' }">{{ enMastery[w] === 'error' ? '打错' : '太慢' }}</span>
+                  </div>
+                </div>
+                <div class="mistakeOpts">
+                  <button class="btn" @click="startEnMistakePractice" data-nav>练习这 {{ enMistakeWords.length }} 个错词</button>
+                  <button class="btn" @click="clearEnMistakes" data-nav>清空错题</button>
+                </div>
+              </template>
+              <div v-else class="mistakeEmpty">暂无错题——打错的英文单词会自动记到这里，专练到记住为止。</div>
+            </div>
+            <div class="mistakePanel enMistakePanel">
+              <template v-if="enSlowList.length">
+                <div class="slowBar">
+                  <span class="slowBarTitle">慢词刻意练习</span>
+                  <span class="slowBarMeta">{{ enSlowList.length }} 个词待练快（平均耗时 &gt; {{ settings.enPracticeMs || 300 }}ms/字母）</span>
+                </div>
+                <div class="mistakeOpts">
+                  <label class="repeatLabel">每词重复
+                    <input type="number" v-model.number="customRepeat" min="1" max="20" /> 遍
+                  </label>
+                  <button class="btn" @click="startEnSlowPractice" data-nav>练到 {{ settings.enPracticeMs || 300 }}ms 以内</button>
+                  <button class="btn" @click="clearEnSlowWords" data-nav>清空</button>
+                </div>
+              </template>
+              <div v-else class="mistakeEmpty">暂无慢词——平均耗时超过 {{ settings.enPracticeMs || 300 }}ms/字母 的词会自动收录，刻意练到变快。</div>
+            </div>
+            <div class="numHint">从错词本中挑选需要专练的单词</div>
           </div>
         </template>
 
@@ -483,7 +517,7 @@
       />
 
       <!-- 完成页：英文为浮动评测卡（半透明遮罩 + 居中卡片），其余模式保持居中弹窗 -->
-      <div v-if="completed && mode === 'english'" class="overlay" @click.self="backToModeSelect">
+      <div v-if="completed && isEnglishOrMistake" class="overlay" @click.self="backToModeSelect">
         <div class="resultModal resultPageInner">
           <!-- 顶部条：返回 + 标题 -->
           <div class="rpTopbar">
@@ -679,6 +713,7 @@ import { useStatsStore } from '../stores/stats.js'
 import { useProgressStore } from '../stores/progress.js'
 import { useMistakesStore } from '../stores/mistakes.js'
 import { playKeySound } from '../utils/sound.js'
+import confetti from 'canvas-confetti'
 
 const MODES = [
   {
@@ -710,6 +745,12 @@ const MODES = [
     label: '拼音音节',
     desc: '拼音音节组合拼打练习',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2-5 3 10 3-8 2 3h5"/></svg>',
+  },
+  {
+    id: 'mistake-book',
+    label: '错词本',
+    desc: '集中练习英文错词和慢词',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 9h6"/><path d="M9 13h6"/><path d="M9 7h6"/></svg>',
   },
 ]
 
@@ -811,6 +852,74 @@ const enWordKeystrokes = ref(0)
 const enLastWordAvg = ref(0) // 上一个词的平均耗时（ms/字母）
 const enWordAvgs = ref({}) // 本句各词完成后的平均耗时（按词位置记录，用于词下方显示）
 const enSentenceDone = ref(false) // 整句打完，等待再一次空格进入下一句
+
+// ---- 整句评级特效（复刻 julebu.co 规则，不自我发挥）----
+// rating：perfect(首答对零 typo) / great(首答对但 typo) / none(用过提示或首答错) / skip
+// popup 只在 perfect|great 弹（文案 Perfect/Great + 当前 combo）
+// combo：perfect|great → +1；none/skip → 归零
+const enCombo = ref(0)               // 当前连击（官网 combo，跨句累计）
+const enMaxCombo = ref(0)
+const enLastRating = ref('')         // 最近一次句子的 rating（弹层文案）
+const enLastCombo = ref(0)           // 弹层展示 combo
+const popFx = ref(0)                 // 自增 ID：驱动弹层动画重放
+const comboPopupVisible = ref(false) // 弹层可见（浮现 ~1.3s 后自行淡出）
+// 本句作答过程状态（每句开始时清零）
+const sentUsedHint = ref(false)      // 本句是否按过"答案"（=官网 hintsUsed）
+const sentFirstTry = ref(true)       // 本句是否全程首答（无错词/无重练）
+const sentTypos = ref(0)             // 本句 typo 计数（打错过但自行纠正）
+// 触发整句完成评级：rating 由调用方算好传入
+function fireSentenceCelebration(rating) {
+  const good = rating === 'perfect' || rating === 'great'
+  // 连击维护（官网：只有 perfect|great 才 +1，否则归零）
+  if (good) { enCombo.value++ } else { enCombo.value = 0 }
+  enMaxCombo.value = Math.max(enMaxCombo.value, enCombo.value)
+  // none/skip 不弹层不庆祝
+  if (!good) { enLastRating.value = ''; comboPopupVisible.value = false; return }
+  enLastRating.value = rating
+  enLastCombo.value = enCombo.value
+  popFx.value++
+  comboPopupVisible.value = true
+  clearTimeout(fireSentenceCelebration._t)
+  fireSentenceCelebration._t = setTimeout(() => { comboPopupVisible.value = false }, 1300)
+  // 官网：每句 Perfect/Great 只弹 popup + combo 音效，不放彩带烟花
+  // combo 音量比打字 ok/bad 音效醒目：跟随全局音量再放大 ~3 倍（封顶 1）
+  if (settings.sound) playKeySound('combo', { volume: Math.min(1, (settings.soundVolume || 0.18) * 3) })
+}
+// 完成一句的评级结算（由整句完成点调用）
+function rateSentenceCompletion() {
+  // 官网 Cie：skipped→skip / hintsUsed>0 或 firstAttemptCorrect===false → none /
+  // firstAttemptCorrect && typos===0 → perfect / 否则 great
+  if (sentUsedHint.value || !sentFirstTry.value) return 'none'
+  return sentTypos.value === 0 ? 'perfect' : 'great'
+}
+// 整课完成庆祝（复刻官网 StatsSummary：completeCourse → 300ms 后 confetti + victory 音效）
+// 官网三选一随机：30% 双烟花 / 30% 顶部彩带 / 40% 双侧礼炮；仅此一次，不频繁
+function fireCourseCelebration() {
+  setTimeout(() => {
+    const r = Math.random()
+    if (r < 0.3) {
+      // fireworks（官网 fireworksEffect 近似：双簇上炸）
+      for (let k = 0; k < 2; k++) {
+        confetti({ particleCount: 90, spread: 130, startVelocity: 45, origin: { x: 0.25 + k * 0.5, y: 0.55 }, ticks: 220, zIndex: 300 })
+      }
+    } else if (r < 0.6) {
+      // normal（官网 normalEffect：粒子从顶部洒下）
+      confetti({ particleCount: 300, spread: 180, origin: { y: -0.1 }, startVelocity: -35, ticks: 200, zIndex: 300 })
+    } else {
+      // schoolPride 近似：两侧礼炮
+      confetti({ particleCount: 130, angle: 60, spread: 75, origin: { x: 0, y: 0.7 }, zIndex: 300 })
+      confetti({ particleCount: 130, angle: 120, spread: 75, origin: { x: 1, y: 0.7 }, zIndex: 300 })
+    }
+    if (settings.sound) playKeySound('victory', { volume: 0.16 })
+  }, 300)
+}
+
+// 换句/重开：重置本句过程状态
+function resetSentenceScoring() {
+  sentUsedHint.value = false
+  sentFirstTry.value = true
+  sentTypos.value = 0
+}
 // 英文错题本：enMastery 中 error（打错）/ slow（太慢没想起来）的词 = 错题池
 const enMistakeMode = ref(false) // 是否在错题本练习模式
 // 英文子类型：'words'（单词词库/错题本/自定义）| 'stories'（内置短文）
@@ -1365,6 +1474,11 @@ function startEnWord() {
   enSkipOptionalWords()
   enWordStartTime.value = Date.now()
   enWordKeystrokes.value = 0
+  // 上一个词刚完成：hadError 表示曾打错/揭示 —— 官网视为 typo 或首答失败
+  // 曾用提示或宽松模式判错 → firstAttemptCorrect=false（none）
+  // 仅打错后自行纠正 → typo（great）
+  if (enHadError.value && !sentUsedHint.value) sentTypos.value++
+  sentUsedHint.value = false // 提示标记随词走，跨词不累计（每词独立作答）
   enHadError.value = false // 每个新词开始时重置错误标记，避免残留影响下一个词的默写隐藏
   // 每个英文单词出现时朗读一遍（可设置关闭）；换句首词的朗读由整句朗读覆盖，不再单独读
   // 开启「整句后免单词预读」→ 所有单词输入前都不朗读（打错仍会纠音朗读）
@@ -1384,6 +1498,8 @@ function openEnJumpInput() {
 
 // 确认跳转到目标句
 function jumpToSentence() {
+  enCombo.value = 0 // 跳句视为打断连击
+  resetSentenceScoring()
   const target = enSentenceJumpTarget.value
   enSentenceJumpOpen.value = false
   if (!target || target < 1 || target > enQueue.value.length || target === sentenceIdx.value + 1) return
@@ -1401,8 +1517,8 @@ function jumpToSentence() {
   gentleChecked.value = false
   enHadError.value = false
   enSkipWordSpeak.value = false
-  // 与换句体验一致：开启整句朗读（多词句）→ 朗读整句，首词不再单独朗读；150ms 视觉缓冲后开始首词
-  if (settings.enSpeakSentence && enSentence.value.length > 1) {
+  // 与换句体验一致：开启整句朗读 → 朗读整句，首词不再单独朗读；150ms 视觉缓冲后开始首词
+  if (settings.enSpeakSentence) {
     enSkipWordSpeak.value = true
     nextTick(() => setTimeout(() => speakWholeSentence(), 150))
   }
@@ -1459,11 +1575,11 @@ function checkGentleSentence() {
 import { speakWord, speakSentence } from '../utils/tts.js'
 const enSkipWordSpeak = ref(false) // 换句首词不单独朗读（该词已包含在整句朗读中）
 let enLastSpokenKey = '' // 最近朗读的「词#句」避免重复
-// 进入新句子时朗读整句（仅多词句；单词模式句子=单词，避免与单词朗读重复）
+// 进入新句子时朗读整句（含单个单词的句子，如短文模式中的 "OK" "Sure"）
 function speakWholeSentence() {
   if (!settings.enSpeakSentence) return
   const words = enSentence.value.filter((_, i) => !enRedoSet.value.has(i)).map(w => unitText(w)).filter(Boolean)
-  if (words.length < 2) return
+  if (!words.length) return
   speakSentence(words, settings.enTTSAccent || 'uk', enStoryMode.value ? 2 : 1)
 }
 function speakEnglish(word, force = false) {
@@ -1532,6 +1648,7 @@ function saveCustomCache() {
 }
 watch([customCardsInput, customRepeat], saveCustomCache)
 const isCustomPanel = computed(() => mode.value === 'cards' && cardType.value === 'custom' && !started.value)
+const isEnglishOrMistake = computed(() => mode.value === 'english' || mode.value === 'mistake-book')
 
 // 各模式的错题重练标记：当前单元（词/数字/字母/音节）是否出过错
 const enSentenceSpoken = ref(false) // 当前句是否已播放过整句语音（避免重练完成时重复播放）
@@ -1561,11 +1678,12 @@ const enCanViewAnswer = computed(() => {
   const w = currentWord.value
   if (isPunct(w)) return false
   const k = stripPunct(unitText(w))
-  return !!k && (dictWords.value.has(k) || settings.enAllDictation) && !enHadError.value
+  return !!k && settings.enDisplayMode !== 'guide' && (dictWords.value.has(k) || settings.enDisplayMode === 'dictation') && !enHadError.value
 })
 function enViewAnswer() {
   if (!enCanViewAnswer.value) return
   enViewAnswers.value++
+  sentUsedHint.value = true // 官网 hintsUsed>0 → rating none
   enHadError.value = true // 复用打错揭示机制：当前词立即显示；完成时判错、不算一次命中
 }
 function enRelisten() {
@@ -1651,6 +1769,129 @@ const enRedoSet = computed(() => {
 // 当前句的中文翻译（自定义模式：解析的句对翻译；词库模式为空）
 const enSentenceCn = computed(() => enQueue.value[sentenceIdx.value]?.cn || '')
 
+// ---- 整句完成态逐词解析（julebu 全字段课包：词性 + 句子成分）----
+// POS（词性）→ 中文名：850 词包 pos 全集 + 通用兜底
+const POS_CN = {
+  NOUN: '名词', VERB: '动词', AUX: '助动词', ADJ: '形容词', ADV: '副词',
+  PRON: '代词', DET: '限定词', ADP: '介词', CCONJ: '连词', SCONJ: '连词',
+  PART: '小品词', INTJ: '叹词', PROPN: '专有名词', PROPN_PERSON: '人名', NUM: '数词',
+  X: '其他', PUNCT: '标点', '.': '标点', '': '',
+}
+// 句子成分 type（英文标签）→ 中文（sentenceStructure.type / dependencyAnalysis 用）
+const COMP_CN = {
+  subject: '主语', predicate: '谓语', predicative: '表语', object: '宾语',
+  indirectObject: '间接宾语', adverbial: '状语', attributive: '定语',
+  complement: '补语', conjunction: '连词', root: '主干',
+  nsubj: '主语', aux: '助动词', det: '限定词', amod: '定语', obl: '状语',
+  case: '介词', cop: '系动词', advmod: '状语', compound: '复合词',
+  dep: '依存', '': '',
+}
+// ---- 官网风格配色（取自 julebu.co 练习页 DOM，2026-09-03）----
+// 成分（组框/胶囊）实色；边框用同色 50% 透明
+const COMP_COLORS = {
+  subject: '#b45309',        // 琥珀（官网实测）
+  predicate: '#be123c',      // 玫瑰（官网实测）
+  predicative: '#7c3aed',    // 紫（官网实测）
+  object: '#059669', indirectObject: '#0d9488',
+  adverbial: '#0369a1', attributive: '#db2777',
+  complement: '#ea580c', conjunction: '#64748b',
+  root: '#475569',
+}
+// 词性 → 词下方下划线色（tailwind-500 系；前五个官网实测）
+const POS_COLORS = {
+  PRON: '#ef4444',   // 代词 红（官网实测）
+  AUX: '#22c55e',    // 助动词 绿（官网实测）
+  PART: '#6b7280',   // 小品词 灰（官网实测）
+  DET: '#14b8a6',    // 限定词 teal（官网实测）
+  NOUN: '#3b82f6',   // 名词 蓝（官网实测）
+  VERB: '#f97316', ADJ: '#ec4899', ADV: '#8b5cf6', ADP: '#a855f7',
+  CCONJ: '#eab308', SCONJ: '#eab308', INTJ: '#f43f5e',
+  PROPN: '#0ea5e9', PROPN_PERSON: '#0ea5e9', NUM: '#84cc16',
+  X: '#9ca3af', PUNCT: '#9ca3af',
+}
+
+// 整句完成态 → 官网式"成分组框"结构：按 sentenceStructure 区间把词分进各成分组。
+// 每组 = { role(中文), color, explanation, words: [{word, ph, def, pos, posCn, posColor}] }
+const enSentenceGroups = computed(() => {
+  const s = enQueue.value[sentenceIdx.value]
+  const meta = s?.meta
+  if (!meta) return []
+  const wds = meta.wordDetails || []
+  const comps = (meta.sentenceStructure || []).filter(c => typeof c.start === 'number')
+  if (!wds.length || !comps.length) return []
+  // 官网结构区间 [start,end] 索引的是“纯词序列”（wordDetails 不含标点，如
+  // "No , I am not the teacher" 逗号前后带空格）。若把原句标点切成独立 token，
+  // 全部区间会错位一格（逗号被当成主语）。这里按空白拆词，把每个词后紧跟的
+  // 标点收进 puncts（不占词索引位），保证与 wordDetails / sentenceStructure 对齐。
+  // 标点归一：全角 → 半角（否则问号等会 fallback 到中文字体，字形高度/基线全歪）
+  const full2half = { '，': ',', '。': '.', '？': '?', '！': '!', '；': ';', '：': ':', '、': ',',
+    '“': '"', '”': '"', '‘': "'", '’': "'", '（': '(', '）': ')', '【': '[', '】': ']',
+    '《': '<', '》': '>', '…': '...', '—': '-', '–': '-' }
+  const normPunct = (s) => String(s || '').split('').map(ch => full2half[ch] || ch)
+    .join('').replace(/[^.,!?;:'"()<>\[\]…—-]+/g, '')
+  const bodies = []   // 词正文（保留原大小写，不含标点）
+  const puncts = []   // 紧跟每个词之后的标点串（原句顺序）
+  const rawToks = String(meta.sentenceEn || '').split(/\s+/).filter(Boolean)
+  for (const tok of rawToks) {
+    const m = /^[A-Za-z0-9']+/.exec(tok)
+    if (m) {
+      bodies.push(m[0])
+      puncts.push(normPunct(tok.slice(m[0].length)))
+    } else if (bodies.length) {
+      // 独立标点 token（如官网 "No , I …" 的逗号）挂到上一个词尾，不新增词位
+      puncts[puncts.length - 1] += normPunct(tok)
+    }
+  }
+  // 兜底：分词数与词典词数不一致时（罕见脏数据），以词典词序为准保索引不歪
+  if (bodies.length !== wds.length && wds.length) {
+    bodies.splice(0, bodies.length, ...wds.map(w => String(w.word || '')))
+    puncts.splice(0, puncts.length, ...bodies.map(() => ''))
+  }
+  // wordDetails 词根 → 条目
+  const wdMap = new Map()
+  for (const wd of wds) {
+    const k = String(wd.word || '').toLowerCase().replace(/[.,!?;:"]+$/, '')
+    if (k && !wdMap.has(k)) wdMap.set(k, wd)
+  }
+  const mkWord = (body, tail) => {
+    const text = String(body || '').toLowerCase().replace(/[.,!?;:"]+$/, '')
+    const wd = wdMap.get(text)
+    const pos = wd?.pos || wd?.partOfSpeech || ''
+    const cnRaw = wd?.definition || ''
+    const def = Array.isArray(cnRaw) ? (cnRaw[0] || '') : cnRaw
+    const ph = wd?.phonetic
+    const phStr = (ph && typeof ph === 'object') ? (ph.us || ph.uk || '') : (ph || '')
+    return {
+      word: body || text,
+      punct: tail || '',                       // 词后标点：行内同基线展示，不参与成分/词性标记
+      ph: phStr ? '/' + phStr + '/' : '',
+      def,
+      pos,
+      posCn: POS_CN[pos] || (pos ? pos.toLowerCase() : ''),
+      posColor: POS_COLORS[pos] || '#9ca3af',
+    }
+  }
+  // 词按成分区间分组成 keep 顺序（未覆盖区间的词塞进最后组 / 独立组）
+  const groups = []
+  const used = new Array(bodies.length).fill(false)
+  for (const c of comps) {
+    const words = []
+    for (let i = c.start; i <= (c.end ?? c.start) && i < bodies.length; i++) {
+      words.push(mkWord(bodies[i], puncts[i]))
+      used[i] = true
+    }
+    if (words.length) {
+      groups.push({ role: c.role || COMP_CN[c.type] || '', type: c.type || '', color: COMP_COLORS[c.type] || '#64748b', explanation: c.explanation || '', words })
+    }
+  }
+  const loose = []
+  bodies.forEach((b, i) => { if (!used[i]) loose.push(mkWord(b, puncts[i])) })
+  if (loose.length) {
+    if (groups.length) groups[groups.length - 1].words.push(...loose)
+    else groups.push({ role: '', color: '#64748b', explanation: '', words: loose })
+  }
+  return groups
+})
 // ---- 单词中文释义：优先当前课词典（释义跟课文走），未命中才走有道 suggest ----
 // 响应式：查询返回后更新 ref 触发模板重渲染；结果同时进 enTranslation 模块的缓存
 const extraCn = ref({}) // 单词 -> 查询到的中文（响应式）
@@ -1878,10 +2119,13 @@ function buildEnglishQueue() {
   // 短文模式：直接返回所选短文的句子（英文句逐词 + 中文翻译）
   if (enStoryMode.value && selectedEnStory.value) {
     return selectedEnStory.value.sentences.map(s => {
-      return {
+      const q = {
         words: parseEnSentence(s.en).words,
         cn: s.cn || '',
       }
+      // julebu 课包：附带逐词解析元数据（词性/成分），整句完成态展示用
+      if (s.meta) q.meta = s.meta
+      return q
     }).filter(s => s.words.length > 0)
   }
   // 自定义模式：直接返回粘贴内容解析出的句子（保持原文顺序，含中文翻译）
@@ -1988,7 +2232,7 @@ function letterClass(wi, li) {
   const isRedoWord = enRedoSet.value.has(wi)
   // 宽松模式重练词：强制 dict（不受 enHadError 影响，永远隐藏字母）
   const forceDict = settings.enGentleMode && isRedoWord
-  const dict = !isPunctCh && (dictWords.value.has(stripPunct(word)) || settings.enAllDictation || forceDict) && !(wi === wordIdx.value && enHadError.value && !forceDict)
+  const dict = !isPunctCh && settings.enDisplayMode !== 'guide' && (dictWords.value.has(stripPunct(word)) || settings.enDisplayMode === 'dictation' || forceDict) && !(wi === wordIdx.value && enHadError.value && !forceDict)
   // 音节着色（enColorMode === 'syllable'）：不同色相区分发音块，不受 dict 影响
   const sylCls = {}
   if (!isPunctCh && settings.enColorMode === 'syllable') {
@@ -2306,10 +2550,13 @@ function nextCard() {
 
 function start() {
   if (started.value) return
+  enCombo.value = 0 // 新会话从零连击
+  enMaxCombo.value = 0
+  resetSentenceScoring()
   // 普通开始：清空本次错词记录；刻意练习开始（mistakePracticeMode=true）保留供队列使用
   if (!mistakePracticeMode.value) sessionMistakes.value = []
   // 初始化当前模式的队列
-  if (mode.value === 'english') {
+  if (mode.value === 'english' || mode.value === 'mistake-book') {
     enQueue.value = buildEnglishQueue()
     sentenceIdx.value = 0
     wordIdx.value = 0
@@ -2323,8 +2570,8 @@ function start() {
     enGentleErrors.value = {} // 宽松模式：重置错误标记
     gentleChecked.value = false // 宽松模式：重置检查标记
     enSkipWordSpeak.value = false // 重置可能残留的换句标记
-    // 进入第一句：开启整句朗读且为多词句 → 先朗读整句，首词不单独朗读
-    if (enSentence.value.length > 1 && settings.enSpeakSentence) {
+    // 进入第一句：开启整句朗读 → 先朗读整句，首词不单独朗读
+    if (settings.enSpeakSentence) {
       enSkipWordSpeak.value = true
       nextTick(() => speakWholeSentence())
     }
@@ -2365,7 +2612,7 @@ function start() {
   started.value = true
   startElapsedTimer()
   // 英文模式：渲染后检查溢出并滚动到当前词
-  if (mode.value === 'english') {
+  if (mode.value === 'english' || mode.value === 'mistake-book') {
     nextTick(() => scrollToCurrentWord())
   }
   // 按实际模式记录会话（卡片/中文/数字…各自独立记录时长）
@@ -2375,6 +2622,8 @@ function start() {
     if (enStoryMode.value) practiceType = 'en-story'
     else if (enCustomMode.value) practiceType = 'en-custom'
     else practiceType = 'en-words'
+  } else if (mode.value === 'mistake-book') {
+    practiceType = 'en-mistake'
   }
   stats.startSession(practiceType)
   progress.startSession()
@@ -2434,7 +2683,7 @@ function submitCode(code) {
   let correct = false
   let expected = ''
 
-  if (mode.value === 'english') {
+  if (mode.value === 'english' || mode.value === 'mistake-book') {
     // 参考 localhost:3002：逐字母输入；词完成后按空格/回车推进
     const unit = currentWord.value
     if (!unit) return { correct: false }
@@ -2608,17 +2857,19 @@ function handleInput(code) {
 
 function finish() {
   completed.value = true
+  // 整课完成庆祝（官网只在完成整门课时放彩带/烟花 + victory 音效，非每句）
+  fireCourseCelebration()
   // 课包课程完成：标记进度
   if (mode.value === 'english' && currentCourse.value && activePack.value) {
     markCourseComplete(activePack.value.slug, currentCourse.value.file)
   }
   closeEnModePanel()
   // 错词练习结束：自动退回正常词库模式（避免下次开始仍在错词池）
-  if (mode.value === 'english') enMistakeMode.value = false
-  if (mode.value === 'english') enCustomMode.value = false // 自定义练习结束 → 回正常词库
+  if (mode.value === 'english' || mode.value === 'mistake-book') enMistakeMode.value = false
+  if (mode.value === 'english' || mode.value === 'mistake-book') enCustomMode.value = false // 自定义练习结束 → 回正常词库
   // 短文课包完成时不清除 enStoryMode —— 回到课程列表后用户可继续选课
   // 非课包短文（内置短文/自定义短文）仍清除
-  if (mode.value === 'english') enStoryMode.value = false // 短文练习结束 → 回正常词库
+  if (mode.value === 'english' || mode.value === 'mistake-book') enStoryMode.value = false // 短文练习结束 → 回正常词库
   enSlowMode.value = false // 慢词刻意练习结束 → 回正常词库
   // 刻意练习结束：复位（下次 start 恢复正常模式并清空本次错词）
   mistakePracticeMode.value = false
@@ -2713,8 +2964,9 @@ function onKeyDown(e) {
     if (activeTag === 'TEXTAREA' || activeTag === 'INPUT') return
     // 方向键：键盘导航专用，不开始练习
     if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return
-    // 短文浏览模式：不在此处按任意键开始，需点选具体课程/短文
+    // 短文浏览模式 / 错词本模式：不在此处按任意键开始，需点击具体按钮
     if (mode.value === 'english' && enSection.value === 'stories') return
+    if (mode.value === 'mistake-book') return
     // 未开始按 Esc：把焦点带回模式导航（顶部栏当前模式按钮）
     if (e.key === 'Escape') {
       e.preventDefault()
@@ -2762,7 +3014,7 @@ function onKeyDown(e) {
     return
   }
   // 英文模式：空格/回车推进下一词，退格回退，Ctrl+' 重听整句（参考 localhost:3002）
-  if (mode.value === 'english') {
+  if (mode.value === 'english' || mode.value === 'mistake-book') {
     if (e.ctrlKey && e.code === 'Quote') {
       e.preventDefault()
       speakWholeSentence()
@@ -2773,6 +3025,7 @@ function onKeyDown(e) {
       // 整句完成：再一次空格/回车进入下一句
       if (enSentenceDone.value) {
         enSentenceDone.value = false
+        resetSentenceScoring() // 新句子重置评分过程状态（句首 startEnWord 不误结算）
         enSentenceSpoken.value = false // 新句子重置整句语音播放标记
         sentenceIdx.value++
         wordIdx.value = 0
@@ -2784,8 +3037,8 @@ function onKeyDown(e) {
           finish()
         } else {
           // 换句首词：等渲染 + 150ms 视觉缓冲后再计时（换句后的定位时间不计入首词耗时）
-          // 开启整句朗读（多词句）→ 同时朗读整句，首词不再单独朗读
-          if (settings.enSpeakSentence && enSentence.value.length > 1) {
+          // 开启整句朗读 → 同时朗读整句，首词不再单独朗读
+          if (settings.enSpeakSentence) {
             enSkipWordSpeak.value = true
             nextTick(() => setTimeout(() => speakWholeSentence(), 150))
           }
@@ -2816,7 +3069,7 @@ function onKeyDown(e) {
           enWordCount.value++
           enWordTimeSum.value += Math.max(0, elapsed)
           if (!enHadError.value) enFirstHitCount.value++
-          const isDictation = dictWords.value.has(wordKey) || settings.enAllDictation // 该词以默写（隐藏字母）方式展示
+          const isDictation = (dictWords.value.has(wordKey) || settings.enDisplayMode === 'dictation') && settings.enDisplayMode !== 'guide' // 该词以默写（隐藏字母）方式展示
           const mMs = isDictation ? enMasteryMsDict.value : enMasteryMs.value
           const sMs = isDictation ? enSlowMsDict.value : enSlowMs.value
           // 慢词刻意练习：平均耗时超过阈值收录，刻意练习中达标移除
@@ -2876,7 +3129,14 @@ function onKeyDown(e) {
             // 此时 wordIdx 可能小于新长度，不结束句子，让用户继续输入错词
           }
           if (wordIdx.value >= enSentence.value.length) {
+            // 整句真正完成：评级结算（官网规则）
+            // 宽松模式整句有错 → 首答失败(none)；普通模式 hadError 视为 typo 但不至于 none（错词会重练，练对才算完成）
+            if (settings.enGentleMode) {
+              if (Object.keys(enGentleErrors.value).length > 0) sentFirstTry.value = false
+            }
+            const rating = rateSentenceCompletion()
             enSentenceDone.value = true
+            fireSentenceCelebration(rating)
           }
         }
       } else {
@@ -3104,6 +3364,13 @@ onBeforeUnmount(() => {
   max-width: 90%;
   text-align: center;
   line-height: 1.4;
+}
+/* 完成态结构图下方的整句中文（占满整行，与卡片堆留距） */
+.spParse .spCn {
+  flex-basis: 100%;
+  font-size: 26px;
+  margin-top: 10px;
+  opacity: 0.92;
 }
 /* 英文自定义内容面板 */
 .enCustomPanel {
@@ -3757,6 +4024,253 @@ onBeforeUnmount(() => {
   cursor: not-allowed;
 }
 
+/* 评级弹层（复刻官网 comboPopup：居中一行简单文字，如 Perfect × 4，无背景装饰） */
+.combo-popup {
+  position: fixed;
+  top: 15vh;               /* 相对靠上 */
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 12px;
+  z-index: 400;
+  pointer-events: none;   /* 不挡点击/打字 */
+  user-select: none;
+  white-space: nowrap;
+}
+/* 评级词：渐变金 → 橙，粗斜体 + 柔和光晕（纯文字，无背景块） */
+.comboRating {
+  font-size: 42px;
+  font-weight: 800;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: 0.8px;
+  background: linear-gradient(180deg, #ffd76a 8%, #f59e0b 55%, #ef7d1f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 6px rgba(245, 158, 11, 0.35)) drop-shadow(0 0 18px rgba(245, 158, 11, 0.18));
+  text-transform: capitalize;
+}
+/* 连击数：深色实字，沉稳衬托 */
+.comboCount {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--theme-main-text-color);
+  letter-spacing: 0.3px;
+}
+
+/* 简化动画：从下向上位移滑出（配合弹层固定定位的水平居中，用 translate 组合实现） */
+.combo-pop-enter-active { transition: transform .22s ease-out, opacity .22s ease-out; }
+.combo-pop-leave-active { transition: transform .18s ease-in, opacity .18s ease-in; }
+.combo-pop-enter-from { opacity: 0; transform: translate(-50%, 24px); }
+.combo-pop-leave-to   { opacity: 0; transform: translate(-50%, 14px); }
+
+/* 整句完成态：官网式句子成分结构图（参考 julebu.co 练习页）
+   结构：成分 = 圆角组框 + 顶部悬浮实色胶囊；词卡 = 音标/大字词/彩色下划线/释义/灰色词性 */
+.spParse {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px 16px;
+  padding: 6px 4px 4px;
+  max-width: 920px;
+  margin: 0 auto;
+}
+.spGroup {
+  position: relative;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px 14px;
+  border: 1.5px solid;
+  border-radius: 18px;
+  padding: 16px 12px 8px; /* 顶部留出胶囊悬浮空间 */
+  transition: box-shadow .15s ease;
+  background: color-mix(in srgb, var(--theme-background-light-color) 38%, transparent);
+}
+.spGroup:hover { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10); }
+.spChip {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -58%);
+  background: var(--sp-chip);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  line-height: 1;
+  padding: 4px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
+}
+/* 词卡单元：grid 四行——音标 / 词(+下划线) / 释义 / 词性 */
+.spUnit {
+  position: relative;
+  display: inline-grid;
+  grid-template-rows: auto auto auto auto;
+  justify-items: center;
+  gap: 0;
+  padding: 2px 3px;
+  min-width: 0;
+}
+/* 悬停浮层：参考官网 hover 单词出成分讲解 */
+.spTip {
+  position: absolute;
+  bottom: calc(100% - 14px);   /* 浮层定位在词上方（避让音标行留少许重叠） */
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+  z-index: 80;
+  width: max-content;
+  max-width: 340px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-color);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .16s ease, transform .16s ease, visibility .16s;
+  pointer-events: none;
+  text-align: left;
+}
+.spUnit:hover .spTip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.spTipTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.spTipRole {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--theme-main-text-color);
+}
+.spTipType {
+  font-size: 11px;
+  color: var(--theme-text-color);
+  opacity: 0.75;
+  font-style: italic;
+  letter-spacing: 0.3px;
+}
+.spTipBody {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--theme-main-text-color);
+}
+.spPh {
+  display: block;
+  font-size: 11px;
+  line-height: 1.3;
+  min-height: 15px;               /* 无音标时也占行，保证词行对齐 */
+  color: var(--theme-text-color);
+  opacity: 0.75;
+  white-space: nowrap;
+  margin-bottom: 3px;
+  user-select: none;
+}
+.spCell {
+  position: relative;             /* 标点 absolute 于词身右缘：不占列宽 → 底部标签行只对齐词身 */
+  line-height: 1;
+}
+.spWord {
+  position: relative;
+  display: inline-block;
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1.15;
+  color: #444444;                    /* 主词深灰（浅色模式） */
+  letter-spacing: 0.2px;
+  padding: 0 2px 5px;                /* 底部留出词性线空间 */
+  cursor: pointer;
+  user-select: none;
+}
+.dark .spWord, [data-theme='dark'] .spWord { color: #e2e8f0; }  /* 暗色模式浅色文字 */
+.dark .spPunct, [data-theme='dark'] .spPunct { color: #e2e8f0; }  /* 暗色模式标点浅色 */
+[data-theme='light'] .spWord { color: #444444; }
+[data-theme='light'] .spPunct { color: #444444; }
+.spUl {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  bottom: 0;
+  height: 4px;
+  border-radius: 999px;
+  opacity: 0.9;
+  pointer-events: none;
+}
+/* 词后标点（, . ! ? …）：与主词同行同字号、同一基线，不参与词性/成分标记 */
+.spPunct {
+  position: absolute;
+  left: 100%;                     /* 紧贴词身右缘外侧 */
+  bottom: 5px;                    /* 与 .spWord 的 padding-bottom 同值 → 标点与词文本同一基线 */
+  display: inline-block;
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1.15;
+  color: #444444;
+  opacity: 0.55;
+  user-select: none;
+  pointer-events: none;
+}
+.spDef {
+  font-size: 13px;
+  line-height: 1.35;
+  min-height: 18px;   /* 空值也占行，卡片等高 */
+  color: var(--theme-rich-text-color);
+  text-align: center;
+  max-width: 360px;
+  white-space: nowrap;      /* 参考官网：释义单行不换行 */
+  overflow: hidden;
+  text-overflow: ellipsis;  /* 超长兜底省略号，避免撑爆布局 */
+  margin-top: 2px;
+}
+.spPos {
+  font-size: 10px;
+  min-height: 14px;   /* 空值也占行，卡片等高 */
+  line-height: 1.4;
+  color: var(--theme-text-color);
+  opacity: 0.7;
+  letter-spacing: 0.3px;
+  margin-top: 2px;
+  user-select: none;
+}
+.spPos {
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--theme-text-color);
+  opacity: 0.7;
+  letter-spacing: 0.3px;
+  margin-top: 2px;
+  user-select: none;
+}
+/* 语法讲解（点击组展开，显示在组框下方） */
+.spExpl {
+  flex-basis: 100%;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--theme-main-text-color);
+  background: color-mix(in srgb, var(--theme-background-light-color) 60%, transparent);
+  border-radius: 10px;
+  padding: 6px 10px;
+  margin-top: 4px;
+  border: 1px dashed var(--theme-border-color);
+  cursor: default;
+}
+
+
+
 /* 键盘数字 */
 .numStage { display: flex; flex-direction: column; align-items: center; gap: 14px; }
 .numGroup { display: flex; gap: 8px; font-size: 56px; font-weight: 700; font-variant-numeric: tabular-nums; }
@@ -3953,6 +4467,7 @@ onBeforeUnmount(() => {
 }
 .enMistakePanel { align-self: center; }
 .enMistakePanel .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.mistakeBookStage { width: 100%; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
 .mistakeOpts { display: flex; gap: 10px; }
 .mistakeEmpty { color: var(--theme-text-color); font-size: 14px; text-align: center; padding: 20px 0; }
 

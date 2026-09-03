@@ -166,10 +166,14 @@
               <!-- 组2：英文·练习显示 -->
               <div class="spGroup">
                 <div class="spGroupTitle">英文·练习显示</div>
-                <label class="setRow">
-                  <span class="setLabel" title="开启后：所有英文单词默认隐藏字母（全默写，凭记忆打），不再区分是否掌握；打错仍会显示单词">英文全默写</span>
-                  <input type="checkbox" :checked="settings.enAllDictation" @change="settings.toggleEnAllDictation()" />
-                </label>
+                <div class="setRow">
+                  <span class="setLabel" title="英文单词显示模式：智能=按掌握度自动切换，全指引=始终显示字母，全默写=始终隐藏字母">显示模式</span>
+                  <span class="setCtrl setChips">
+                    <button class="chipBtn" :class="{ active: settings.enDisplayMode === 'smart' }" @click="settings.setEnDisplayMode('smart')" title="按掌握度自动切换：已掌握的隐藏字母，未掌握的显示字母">智能</button>
+                    <button class="chipBtn" :class="{ active: settings.enDisplayMode === 'guide' }" @click="settings.setEnDisplayMode('guide')" title="所有单词始终显示字母（指引/提示效果）">全指引</button>
+                    <button class="chipBtn" :class="{ active: settings.enDisplayMode === 'dictation' }" @click="settings.setEnDisplayMode('dictation')" title="所有单词始终隐藏字母（全默写，凭记忆打）">全默写</button>
+                  </span>
+                </div>
                 <label class="setRow">
                   <span class="setLabel" title="开启后显示每个英文单词上方的中文翻译；关闭后界面更简洁，专注拼写">单词·显示中文</span>
                   <input type="checkbox" :checked="settings.enShowWordCn" @change="settings.toggleEnShowWordCn()" />
@@ -331,6 +335,11 @@ const PRACTICE_MODES = [
     id: 'syllables',
     label: '拼音音节',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2-5 3 10 3-8 2 3h5"/></svg>',
+  },
+  {
+    id: 'mistake-book',
+    label: '错词本',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 9h6"/><path d="M9 13h6"/><path d="M9 7h6"/></svg>',
   },
 ]
 // 当前是否高亮某个练习模式：位于打字练习页且 query.mode 匹配（无 query 时默认 cards）

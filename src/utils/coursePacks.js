@@ -81,16 +81,34 @@ function inferStatementType(s) {
   return /\s/.test(en) ? 'sentence' : 'word'
 }
 
-// 生成练习队列：statements 原顺序 → { type, en, cn, phonetic }
+// 生成练习队列：statements 原顺序 → { type, en, cn, phonetic, meta? }
+// meta 含 sentenceId 关联的逐词解析（wordDetails + sentenceStructure 主语/谓语/表语），
+// 供整句完成态展示词性/成分（850 全字段课包有；PEP/friends 旧数据可能缺 → 前端容错）
 // 保持 word → phrase → sentence 的递进逻辑，与 enStories 旧格式兼容（含 en/cn）
 export function statementsToQueue(courseData) {
   const stmts = [...(courseData.statements || [])].sort((a, b) => (a.order || 0) - (b.order || 0))
-  return stmts.map(s => ({
-    type: inferStatementType(s),
-    en: s.english || '',
-    cn: s.chinese || '',
-    phonetic: s.phonetic || s.soundmark || '',
-  })).filter(s => s.en)
+  // sentenceId → 关联 sentence（含 wordDetails/sentenceStructure）
+  const sentById = new Map((courseData.sentences || []).map(s => [s.id, s]))
+  return stmts.map(s => {
+    const item = {
+      type: inferStatementType(s),
+      en: s.english || '',
+      cn: s.chinese || '',
+      phonetic: s.phonetic || s.soundmark || '',
+    }
+    const sent = s.sentenceId ? sentById.get(s.sentenceId) : null
+    if (sent && (sent.wordDetails?.length || sent.sentenceStructure?.length)) {
+      item.meta = {
+        sentenceId: s.sentenceId,
+        sentenceEn: sent.english || '',
+        // 逐词词性/释义/音标（词序 = 原句词序）
+        wordDetails: Array.isArray(sent.wordDetails) ? sent.wordDetails : [],
+        // 句子成分（主语/谓语/表语…，带 start/end 词索引区间）
+        sentenceStructure: Array.isArray(sent.sentenceStructure) ? sent.sentenceStructure : [],
+      }
+    }
+    return item
+  }).filter(s => s.en)
 }
 
 // 难度过滤：同一份 statements 按 type 出不同档位

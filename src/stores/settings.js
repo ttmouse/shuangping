@@ -33,7 +33,7 @@ export const useSettingsStore = defineStore('settings', {
     enSpeakSentence: true, // 英文整句朗读：进入新句子时整句作一次请求先试有道原声（与单词同音色），失败回退系统语音连读；多词句生效
     enNoWordPreSpeak: false, // 整句后免单词预读：读完整句后，单词输入前不再逐个朗读；打错纠音朗读仍保留
     enTTSAccent: 'uk', // 英文发音口音：'uk'=英音（有道 type=2）| 'us'=美音（type=1）
-    enAllDictation: false, // 全默写模式：所有英文单词默认隐藏字母（凭记忆打），不受掌握度影响
+    enDisplayMode: 'smart', // 英文显示模式：'smart'=智能(根据掌握度)|'guide'=全指引(始终显示字母)|'dictation'=全默写(始终隐藏字母)
     enGrade: 'all', // 英文词库年级：'all' | 'g4' | 'g5' | 'g6'
     enShowWordCn: true, // 英文·单词上方中文翻译是否显示（默认开）
     enShowWordTime: false, // 英文·单词下方平均用时(ms)是否显示（默认关）
@@ -156,11 +156,12 @@ export const useSettingsStore = defineStore('settings', {
         this.save()
       }
     },
-    // 全默写模式：所有英文单词隐藏字母
-    toggleEnAllDictation() {
-      this.enAllDictation = !this.enAllDictation
-      this.save()
-      return this.enAllDictation
+    // 英文显示模式：'smart'=智能 | 'guide'=全指引 | 'dictation'=全默写
+    setEnDisplayMode(mode) {
+      if (['smart', 'guide', 'dictation'].includes(mode)) {
+        this.enDisplayMode = mode
+        this.save()
+      }
     },
     // 英文·单词上方中文翻译是否显示
     toggleEnShowWordCn() {
