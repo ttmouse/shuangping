@@ -666,8 +666,18 @@
       <div class="footerSpace" />
     </div>
 
-    <!-- 底部四指标（无背景，纯文本） -->
+    <!-- 底部四指标（无背景，纯文本）；英文句序列练习时两侧出现切句箭头 -->
     <div v-if="started && !completed" class="bottomStats">
+      <button
+        v-if="enHasSentenceNav"
+        class="bsArrow"
+        :disabled="sentenceIdx < 1"
+        title="上一个句子"
+        aria-label="上一个句子"
+        @click="arrowJumpSentence(-1)"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+      </button>
       <div class="bsItem">
         <span class="bsValue">{{ accuracy }}%</span>
         <span class="bsLabel">正确率</span>
@@ -684,6 +694,16 @@
         <span class="bsValue">{{ formatDuration(elapsedSec) }}</span>
         <span class="bsLabel">用时</span>
       </div>
+      <button
+        v-if="enHasSentenceNav"
+        class="bsArrow"
+        :disabled="sentenceIdx >= enQueue.length - 1"
+        title="下一个句子"
+        aria-label="下一个句子"
+        @click="arrowJumpSentence(1)"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
+      </button>
     </div>
 
     <AchievementNotification :new-achievements="newAchievements" />
@@ -1484,6 +1504,15 @@ function startEnWord() {
   // 开启「整句后免单词预读」→ 所有单词输入前都不朗读（打错仍会纠音朗读）
   if (settings.enSpeakWords && !settings.enNoWordPreSpeak && !enSkipWordSpeak.value) speakEnglish(currentWord.value)
   enSkipWordSpeak.value = false
+}
+
+// 底部指标条左右箭头（上一句/下一句）：仅英文句序列（story/custom/错句/慢词组句）显示
+const enHasSentenceNav = computed(() => (enQueue.value?.length || 0) > 1)
+// 箭头切句：delta=-1 上一句 / +1 下一句（复用 jumpToSentence 的整句重置流程）
+function arrowJumpSentence(delta) {
+  if (!enHasSentenceNav.value) return
+  enSentenceJumpTarget.value = sentenceIdx.value + 1 + delta
+  jumpToSentence()
 }
 
 // 英文句子跳转：点击进度数字打开输入框
@@ -4654,6 +4683,34 @@ onBeforeUnmount(() => {
 .bsValue { display: block; font-size: 18px; font-weight: 700; color: var(--theme-main-text-color); font-variant-numeric: tabular-nums; }
 .bsValue small { font-size: 12px; color: var(--theme-text-color); }
 .bsLabel { font-size: 11px; color: var(--theme-text-color); }
+/* 底部指标条两侧的切句箭头（上一句/下一句） */
+.bsArrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin: auto 2px;
+  border-radius: 50%;
+  border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-color);
+  color: var(--theme-main-text-color);
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, color .15s ease, transform .1s ease;
+  padding: 0;
+  flex: none;
+}
+.bsArrow svg { width: 20px; height: 20px; }
+.bsArrow:hover:not(:disabled) {
+  background: var(--theme-menu-hover-color, color-mix(in srgb, var(--theme-primary-color) 12%, transparent));
+  border-color: var(--theme-primary-color, #4a90d9);
+}
+.bsArrow:active:not(:disabled) { transform: scale(0.92); }
+.bsArrow:disabled {
+  opacity: 0.28;
+  cursor: not-allowed;
+  border-style: dashed;
+}
 
 @media (max-width: 600px) {
   .word-letters { font-size: 32px; }
