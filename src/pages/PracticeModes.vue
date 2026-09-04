@@ -2478,10 +2478,10 @@ function letterClass(wi, li) {
     if (currentInput.value.length > letterIdx.value) return { incorrect: true }
     // 标点字符：当前位置（等待输入）→ 高亮提示
     if (isPunctCh) return { 'punct-current': true }
+    // 揭示后（看答案/打错）：当前字母清晰显示，与整词一致（优先于 enDictCurrentHint）
+    if (enHadError.value) return { correct: true }
     // 默写模式：可关闭当前字母内容提示，但该位置下划线仍高亮（提示输入位置）
     if (!settings.enDictCurrentHint) return { 'dict-current': true }
-    // 揭示后（看答案/打错）：当前字母清晰显示，与整词一致
-    if (enHadError.value) return { correct: true }
     return { current: true }
   }
   // 当前词内未输入字母：按着色模式渲染
