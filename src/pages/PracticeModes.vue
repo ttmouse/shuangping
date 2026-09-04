@@ -2653,6 +2653,10 @@ function letterChar(wi, li, defaultChar) {
     // 当前词：显示用户输入的内容
     if (wi === wordIdx.value) {
       if (li < currentInput.value.length) return currentInput.value[li]
+      // 未输入位置：在默写隐藏状态下返回空字符，避免退格时CSS过渡闪现正确字母；
+      // 但揭示状态（看答案/打错显示）下照常返回目标字母，保证"答案"可见
+      if (settings.enDisplayMode === 'dictation' && !enHadError.value) return ''
+      return defaultChar
     }
     // 已完成词：始终显示用户输入的字符（保持原样，不自动修复）
     if (wi < wordIdx.value) {
@@ -2664,6 +2668,10 @@ function letterChar(wi, li, defaultChar) {
       const input = enGentleInputs.value[wi] || ''
       if (li < input.length) return input[li]
     }
+  }
+  // 严格模式 + 全默写：当前词未输入位置返回空字符，避免退格时CSS过渡闪现正确字母
+  if (wi === wordIdx.value && settings.enDisplayMode === 'dictation' && !enHadError.value && li >= currentInput.value.length) {
+    return ''
   }
   return defaultChar
 }
