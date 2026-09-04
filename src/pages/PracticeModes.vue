@@ -3252,7 +3252,7 @@ function onKeyDown(e) {
       // 掌握度/错词/今日错词等记录统一用剥离标点的词（cows,→cows）
       const wordKey = stripPunct(word)
       // 完成判定基于输入核心：句号/逗号/问号没打也算完成（you'll 的撇号仍必须打）
-      if (settings.enGentleMode || letterIdx.value >= enCoreLen(word)) {
+      if (letterIdx.value >= enCoreLen(word)) {
         // 宽松模式：不检查输入是否正确，直接完成单词，保存输入
         if (settings.enGentleMode) {
           enGentleInputs.value[wordIdx.value] = currentInput.value
