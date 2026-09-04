@@ -2469,19 +2469,18 @@ function letterClass(wi, li) {
     // 重练单词（默写状态）强制隐藏字母，不依赖 enDictCurrentHint 设置
     if (settings.enGentleMode) {
       if (isPunctCh) return { 'punct-current': true }
-      if (dict) return { 'dict-current': true }
-      // 揭示后（看答案/打错）：当前字母清晰显示，与整词一致
+      // 揭示后（看答案/打错）：当前字母清晰显示
       if (enHadError.value) return { correct: true }
+      // 当前等待输入的字母：始终显示（不因 dict 隐藏）
       return { current: true }
     }
     // 当前位置有错误输入时显示 incorrect
     if (currentInput.value.length > letterIdx.value) return { incorrect: true }
     // 标点字符：当前位置（等待输入）→ 高亮提示
     if (isPunctCh) return { 'punct-current': true }
-    // 揭示后（看答案/打错）：当前字母清晰显示，与整词一致（优先于 enDictCurrentHint）
+    // 揭示后（看答案/打错）：当前字母清晰显示
     if (enHadError.value) return { correct: true }
-    // 默写模式：可关闭当前字母内容提示，但该位置下划线仍高亮（提示输入位置）
-    if (!settings.enDictCurrentHint) return { 'dict-current': true }
+    // 当前等待输入的字母：与宽松模式一致，始终显示（不因 enDictCurrentHint 隐藏）
     return { current: true }
   }
   // 当前词内未输入字母：按着色模式渲染
