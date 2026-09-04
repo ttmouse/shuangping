@@ -1,14 +1,15 @@
 // 音效播放（WebAudio：mp3 → AudioBuffer 缓存 → 播放）
 // 现支持多音效 kind：ok / bad / combo / victory / error
 // 文件放 public/sounds/，运行时 fetch 解码后播放
+const BASE = import.meta.env.BASE_URL || '/'
 let audioCtx = null
 const buffers = {}            // kind -> AudioBuffer|null
 const urls = {
-  ok: '/sounds/ting.mp3',
-  bad: '/sounds/cuowu.mp3',
-  combo: '/sounds/combo.mp3',
-  victory: '/sounds/victory.mp3',
-  error: '/sounds/error.mp3',
+  ok: `${BASE}sounds/ting.mp3`,
+  bad: `${BASE}sounds/cuowu.mp3`,
+  combo: `${BASE}sounds/combo.mp3`,
+  victory: `${BASE}sounds/victory.mp3`,
+  error: `${BASE}sounds/error.mp3`,
 }
 let triedLoad = false
 
@@ -27,11 +28,13 @@ export function resumeIfSuspended() {
 }
 
 export function setSoundURLs({ ok, bad, combo, victory, error } = {}) {
-  if (ok) urls.ok = ok
-  if (bad) urls.bad = bad
-  if (combo) urls.combo = combo
-  if (victory) urls.victory = victory
-  if (error) urls.error = error
+  const base = import.meta.env.BASE_URL || '/'
+  const prepend = (p) => p && p.startsWith('/') ? `${base.replace(/\/$/, '')}${p}` : p
+  if (ok) urls.ok = prepend(ok)
+  if (bad) urls.bad = prepend(bad)
+  if (combo) urls.combo = prepend(combo)
+  if (victory) urls.victory = prepend(victory)
+  if (error) urls.error = prepend(error)
   for (const k of Object.keys(buffers)) buffers[k] = null
   triedLoad = false
 }

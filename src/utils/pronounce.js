@@ -17,10 +17,11 @@ function getAudio() {
 
 function candidateUrls(final) {
   // Only use local assets; never reach online addresses at runtime
+  const BASE = import.meta.env.BASE_URL || '/'
   const f = String(final || '').toLowerCase()
   return [
-    `/finals/${f}.mp3`,
-    `/sounds/finals/${f}.mp3`,
+    `${BASE}finals/${f}.mp3`,
+    `${BASE}sounds/finals/${f}.mp3`,
   ]
 }
 

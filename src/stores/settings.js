@@ -75,9 +75,10 @@ export const useSettingsStore = defineStore('settings', {
       else html.classList.remove('dark')
     },
     async loadSoundList() {
+      const BASE = import.meta.env.BASE_URL || '/'
       const names = new Set()
       try {
-        const res = await fetch('/sounds/index.json', { cache: 'no-cache' })
+        const res = await fetch(`${BASE}sounds/index.json`, { cache: 'no-cache' })
         if (res.ok) {
           const arr = await res.json()
           if (Array.isArray(arr)) arr.forEach(n => typeof n === 'string' && names.add(n))
@@ -87,7 +88,7 @@ export const useSettingsStore = defineStore('settings', {
         const candidates = ['ting.mp3','correct.mp3','coin.mp3','reward.mp3','success.mp3','ok.mp3']
         await Promise.all(candidates.map(async n => {
           try {
-            const r = await fetch(`/sounds/${n}`, { method: 'GET', cache: 'no-cache' })
+            const r = await fetch(`${BASE}sounds/${n}`, { method: 'GET', cache: 'no-cache' })
             if (r.ok) names.add(n)
           } catch {}
         }))
