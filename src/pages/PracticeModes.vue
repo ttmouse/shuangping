@@ -1671,10 +1671,11 @@ function checkGentleSentence() {
   const words = enSentence.value
   const queue = sentenceObj.enRedoQueue
   if (!queue || !queue.length) {
-    // ---- 首次检查：扫原始区，错词入重练队列并插副本（不依赖 enRedoPractice：宽松查出错误必须拦下重练）----
+    // ---- 扫描原词区（重练关闭时每轮到句末都走到这里；重练开启时这是首次检查）----
     enGentleErrors.value = {}
     sentenceObj.enRedoQueue = []
     let hasError = false
+    let firstBad = -1
     words.forEach((w, wi) => {
       // 可忽略标点（句号/逗号/问号）双方都剥离后再比：展示但没打不算错，顺手打错了也不算错
       // 纯可忽略标点词（独立 , . ?）无需输入，直接跳过不检查
@@ -1694,6 +1695,7 @@ function checkGentleSentence() {
       if (!wordError) enFirstHitCount.value++
       if (wordError) {
         hasError = true
+        if (firstBad < 0) firstBad = wi
         sentFirstTry.value = false // 宽松：整句内首次查出错词即首答失败（不等结算点，最终全对轮会漏判）
         const wKey = isPunct(w) ? text : stripPunct(text)
         progress.recordDailyWrongWord(wKey)
@@ -1701,8 +1703,10 @@ function checkGentleSentence() {
         // 立即写入错题本（enMastery）：宽松模式下整句检查时就把错词入错题本
         enMastery[wKey] = 'error'
         saveEnMastery()
-        // 错词重练：插入本句队尾放到第二行（标点单元不重练）；登记重练队列供后续复查
-        if (!isPunct(w)) {
+        // 错词处理按"错词重练"开关分流：
+        // - 开启（重练）：插入句尾第二行重练区并登记队列复查（标点单元不重练）
+        // - 关闭（跳过）：不插副本、不出现第二行 —— 由调用处把输入回退到最早错词就地重打
+        if (settings.enRedoPractice && !isPunct(w)) {
           sentenceObj.redoWords = sentenceObj.redoWords || new Set()
           const redoWi = sentenceObj.words.length
           sentenceObj.redoWords.add(redoWi)
@@ -1711,8 +1715,19 @@ function checkGentleSentence() {
         }
       }
     })
-    if (hasError) enHadError.value = true
-    // 副本连续排在 origLen 起；wordIdx 仍停在旧句末 → 自然落到第一个副本等待输入
+    if (hasError) {
+      enHadError.value = true
+      if (!settings.enRedoPractice && firstBad >= 0) {
+        // 重练关闭：回退到最早打错的词，清空输入就地重打（错误字符已标红）。
+        // 回退后该词成为当前词；其后方已打对的词由空格"滑过"逻辑自动完成，无需重打
+        wordIdx.value = firstBad
+        currentInput.value = ''
+        letterIdx.value = 0
+        enGentleInputs.value[firstBad] = ''
+        startEnWord()
+      }
+    }
+    // 重练开启：副本连续排在 origLen 起；wordIdx 仍停在旧句末 → 自然落到第一个副本等待输入
     return hasError
   }
   // ---- 后续轮：只复查重练队列里未 done 的副本；没打对的"交接"成新副本追加到队尾，再打一轮 ----
@@ -3297,7 +3312,9 @@ function onKeyDown(e) {
       // 掌握度/错词/今日错词等记录统一用剥离标点的词（cows,→cows）
       const wordKey = stripPunct(word)
       // 完成判定基于输入核心：句号/逗号/问号没打也算完成（you'll 的撇号仍必须打）
-      if (letterIdx.value >= enCoreLen(word)) {
+      // 宽松模式 + 重练关闭的就地重打场景：回退后经过的"已打对"词无需重输，空格直接滑过
+      const gentleSkipPass = settings.enGentleMode && currentInput.value === '' && enCore(enGentleInputs.value[wordIdx.value] || '') === enCore(word)
+      if (letterIdx.value >= enCoreLen(word) || gentleSkipPass) {
         // 宽松模式：不检查输入是否正确，直接完成单词，保存输入
         if (settings.enGentleMode) {
           enGentleInputs.value[wordIdx.value] = currentInput.value
