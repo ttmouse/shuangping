@@ -3203,6 +3203,11 @@ function onKeyDown(e) {
       speakWholeSentence()
       return
     }
+    if (e.shiftKey && (e.code === 'ArrowLeft' || e.code === 'ArrowRight')) {
+      e.preventDefault()
+      arrowJumpSentence(e.code === 'ArrowLeft' ? -1 : 1)
+      return
+    }
     if (e.code === 'Space' || e.code === 'Enter') {
       e.preventDefault()
       // 整句完成：再一次空格/回车进入下一句
