@@ -2254,9 +2254,14 @@ const speed = computed(() => {
 })
 const sessionBest = computed(() => bestTimes[mode.value] || null)
 
+// 当前模式的下一个推荐模式（"换个模式"按钮用）
+// 英文相关模式一组，其余模式一组，避免从英文跳到数字等不相关模式
+const EN_MODES = ['words', 'stories', 'mistake-book']
+const OTHER_MODES = ['cards', 'numbers', 'letters', 'syllables']
 const nextMode = computed(() => {
-  const idx = MODES.findIndex(m => m.id === mode.value)
-  return MODES[(idx + 1) % MODES.length].id
+  const group = EN_MODES.includes(mode.value) ? EN_MODES : OTHER_MODES
+  const idx = group.indexOf(mode.value)
+  return group[(idx + 1) % group.length]
 })
 
 // 当前模式的标题/描述（顶部标题区展示）
@@ -2465,6 +2470,8 @@ function letterClass(wi, li) {
     if (settings.enGentleMode) {
       if (isPunctCh) return { 'punct-current': true }
       if (dict) return { 'dict-current': true }
+      // 揭示后（看答案/打错）：当前字母清晰显示，与整词一致
+      if (enHadError.value) return { correct: true }
       return { current: true }
     }
     // 当前位置有错误输入时显示 incorrect
@@ -2473,11 +2480,15 @@ function letterClass(wi, li) {
     if (isPunctCh) return { 'punct-current': true }
     // 默写模式：可关闭当前字母内容提示，但该位置下划线仍高亮（提示输入位置）
     if (!settings.enDictCurrentHint) return { 'dict-current': true }
+    // 揭示后（看答案/打错）：当前字母清晰显示，与整词一致
+    if (enHadError.value) return { correct: true }
     return { current: true }
   }
   // 当前词内未输入字母：按着色模式渲染
   if (isPunctCh) return { punct: true }
   if (dict) return { hidden: true }
+  // 揭示后（看答案/打错）：清晰显示当前词，不着色 → 与宽松模式样式一致
+  if (enHadError.value && wi === wordIdx.value) return { correct: true }
   if (settings.enColorMode === 'syllable') return sylCls
   return segCls
 }
@@ -3051,9 +3062,11 @@ function finish() {
   // 错词练习结束：自动退回正常词库模式（避免下次开始仍在错词池）
   if (isEnPractice.value) enMistakeMode.value = false
   if (isEnPractice.value) enCustomMode.value = false // 自定义练习结束 → 回正常词库
-  // 短文课包完成时不清除 enStoryMode —— 回到课程列表后用户可继续选课
+  // 短文课包完成时不清除 enStoryMode —— 保留课程上下文供"再来一次"重用
   // 非课包短文（内置短文/自定义短文）仍清除
-  if (isEnPractice.value) enStoryMode.value = false // 短文练习结束 → 回正常词库
+  if (isEnPractice.value && !(mode.value === 'stories' && currentCourse.value && activePack.value)) {
+    enStoryMode.value = false
+  }
   enSlowMode.value = false // 慢词刻意练习结束 → 回正常词库
   // 刻意练习结束：复位（下次 start 恢复正常模式并清空本次错词）
   mistakePracticeMode.value = false
