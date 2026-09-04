@@ -1,0 +1,177 @@
+{
+  "id": "v10rbpzdntas8bwrj79yifr0",
+  "slug": "friends-s4",
+  "title": "老友记第四季（对话版无拆解）- 适合有基础学员",
+  "description": "老友记第四季全季对话练习：整集一课、无单词拆解。根据自己需要进行练习。",
+  "courseCount": 24,
+  "courses": [
+    {
+      "order": 1,
+      "id": "gahvlzbq8dgurw5qemu6hd8z",
+      "title": "Friends S04E01",
+      "file": "L01.json",
+      "subtitle": "The One With The Jellyfish - 水母惊情"
+    },
+    {
+      "order": 2,
+      "id": "pjud3o0gos4mr3a2ms2fto42",
+      "title": "Friends S04E02",
+      "file": "L02.json",
+      "subtitle": ""
+    },
+    {
+      "order": 3,
+      "id": "ylqx6iutyenusypc1ho4w3vb",
+      "title": "Friends S04E03",
+      "file": "L03.json",
+      "subtitle": ""
+    },
+    {
+      "order": 4,
+      "id": "r589qydetsuw0mekviuxdqsc",
+      "title": "Friends S04E04",
+      "file": "L04.json",
+      "subtitle": ""
+    },
+    {
+      "order": 5,
+      "id": "h5vb6goz3eydmfcfhlp3vb27",
+      "title": "Friends S04E05",
+      "file": "L05.json",
+      "subtitle": ""
+    },
+    {
+      "order": 6,
+      "id": "r44sj58hoyjt6l5knvu2g63i",
+      "title": "Friends S04E06",
+      "file": "L06.json",
+      "subtitle": ""
+    },
+    {
+      "order": 7,
+      "id": "el4bweeufdp4vc59l03bbw74",
+      "title": "Friends S04E07",
+      "file": "L07.json",
+      "subtitle": ""
+    },
+    {
+      "order": 8,
+      "id": "spb9kjdc97ty0qcvh1thb8va",
+      "title": "Friends S04E08",
+      "file": "L08.json",
+      "subtitle": ""
+    },
+    {
+      "order": 9,
+      "id": "iy4wpgrml3miihzc1n3v79sp",
+      "title": "Friends S04E09",
+      "file": "L09.json",
+      "subtitle": ""
+    },
+    {
+      "order": 10,
+      "id": "bvrspdnqvtc7nib9alwe05sp",
+      "title": "Friends S04E10",
+      "file": "L10.json",
+      "subtitle": ""
+    },
+    {
+      "order": 11,
+      "id": "lljvbm8sbj981qaueqykypvd",
+      "title": "Friends S04E11",
+      "file": "L11.json",
+      "subtitle": ""
+    },
+    {
+      "order": 12,
+      "id": "acwvpyhqco1xhflnv659mp6e",
+      "title": "Friends S04E12",
+      "file": "L12.json",
+      "subtitle": ""
+    },
+    {
+      "order": 13,
+      "id": "dcrp9dgaclvvssmpwodgfzaj",
+      "title": "Friends S04E13",
+      "file": "L13.json",
+      "subtitle": ""
+    },
+    {
+      "order": 14,
+      "id": "q3u2z0oletifekoiscdpby7q",
+      "title": "Friends S04E14",
+      "file": "L14.json",
+      "subtitle": ""
+    },
+    {
+      "order": 15,
+      "id": "s5ljepysr6tcx367nkn068rl",
+      "title": "Friends S04E15",
+      "file": "L15.json",
+      "subtitle": ""
+    },
+    {
+      "order": 16,
+      "id": "u8cv4zex1vl7k8cmftlizkio",
+      "title": "Friends S04E16",
+      "file": "L16.json",
+      "subtitle": ""
+    },
+    {
+      "order": 17,
+      "id": "otvfnxcy4hp1u5lt7yr3pw65",
+      "title": "Friends S04E17",
+      "file": "L17.json",
+      "subtitle": ""
+    },
+    {
+      "order": 18,
+      "id": "tuhgvzkkujhqig4g3fzx1281",
+      "title": "Friends S04E18",
+      "file": "L18.json",
+      "subtitle": ""
+    },
+    {
+      "order": 19,
+      "id": "x6d8hccxmllf08khu4elbd81",
+      "title": "Friends S04E19",
+      "file": "L19.json",
+      "subtitle": ""
+    },
+    {
+      "order": 20,
+      "id": "ju1xqckuim8tiejmlbf7dorg",
+      "title": "Friends S04E20",
+      "file": "L20.json",
+      "subtitle": ""
+    },
+    {
+      "order": 21,
+      "id": "lqofzsh0rdc3439rs1bq7lva",
+      "title": "Friends S04E21",
+      "file": "L21.json",
+      "subtitle": ""
+    },
+    {
+      "order": 22,
+      "id": "rvgft21v4srswbfr6ghhxq16",
+      "title": "Friends S04E22",
+      "file": "L22.json",
+      "subtitle": ""
+    },
+    {
+      "order": 23,
+      "id": "nfhmk16q732lld8gq64yyea6",
+      "title": "Friends S04E23",
+      "file": "L23.json",
+      "subtitle": ""
+    },
+    {
+      "order": 24,
+      "id": "uize7ygzomey3m92ixrupqmq",
+      "title": "Friends S04E24",
+      "file": "L24.json",
+      "subtitle": ""
+    }
+  ]
+}

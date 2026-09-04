@@ -1,0 +1,184 @@
+{
+  "id": "b6gcxj3clvqflxmumcyij8qp",
+  "slug": "friends-s3",
+  "title": "老友记第三季（对话版无拆解）- 适合有基础学员",
+  "description": "老友记第三季全季对话练习：整集一课、无单词拆解。根据自己需要进行练习。",
+  "courseCount": 25,
+  "courses": [
+    {
+      "order": 1,
+      "id": "mf8iw50yq8adyxasec2or7rw",
+      "title": "Friends S03E01",
+      "file": "L01.json",
+      "subtitle": "The One With the Princess Leia Fantasy - （星际大战中的）莉亚公主"
+    },
+    {
+      "order": 2,
+      "id": "nrh8f12y2mvy87ztd8dgucrx",
+      "title": "Friends S03E02",
+      "file": "L02.json",
+      "subtitle": "The One Where No-one's Ready - 没人准备好"
+    },
+    {
+      "order": 3,
+      "id": "gettx3hja3mhh3sf4qy8s8y2",
+      "title": "Friends S03E03",
+      "file": "L03.json",
+      "subtitle": "The One With the Jam - 果酱"
+    },
+    {
+      "order": 4,
+      "id": "cn4pzldzlj18ake5lx7tvi40",
+      "title": "Friends S03E04",
+      "file": "L04.json",
+      "subtitle": "The One With The Metaphorical Tunnel - 战胜自我，不再害怕承诺"
+    },
+    {
+      "order": 5,
+      "id": "yoya4y5r8t4o6i7p2h62zqix",
+      "title": "Friends S03E05",
+      "file": "L05.json",
+      "subtitle": "The One With Frank Jr. - 菲比的弟弟小福兰克"
+    },
+    {
+      "order": 6,
+      "id": "c8z7vrs0a26gz1krgn3917fs",
+      "title": "Friends S03E06",
+      "file": "L06.json",
+      "subtitle": "The One With The Flashback - 时光倒转，昔日重现"
+    },
+    {
+      "order": 7,
+      "id": "geiqx85ygoupmvqrcjxk0k8k",
+      "title": "Friends S03E07",
+      "file": "L07.json",
+      "subtitle": "The One With the Race Car Bed - 赛车床"
+    },
+    {
+      "order": 8,
+      "id": "tsermsmbr4ljt298nyj1g3xb",
+      "title": "Friends S03E08",
+      "file": "L08.json",
+      "subtitle": "The One With The Football - 橄榄球比赛"
+    },
+    {
+      "order": 9,
+      "id": "qvct0yjx1t9p1iymjes4tj5h",
+      "title": "Friends S03E09",
+      "file": "L09.json",
+      "subtitle": "The One With The Football - 橄榄球比赛"
+    },
+    {
+      "order": 10,
+      "id": "c8pw8ffi1qwxtwhj189vlfxr",
+      "title": "Friends S03E10",
+      "file": "L10.json",
+      "subtitle": "The One Where Rachel Quits - 瑞秋辞职"
+    },
+    {
+      "order": 11,
+      "id": "zewmqxc5xn0ktq0uol41qlu4",
+      "title": "Friends S03E11",
+      "file": "L11.json",
+      "subtitle": "The One Where Chandler Can't Remember Which Sister - 钱德想不起勾搭了乔伊的哪个妹妹"
+    },
+    {
+      "order": 12,
+      "id": "zjt1ar3sim2q8uywh9ift8nr",
+      "title": "Friends S03E12",
+      "file": "L12.json",
+      "subtitle": "The One With All The Jealousy - 嫉妒"
+    },
+    {
+      "order": 13,
+      "id": "z1wb62c142mh1owovte5434h",
+      "title": "Friends S03E13",
+      "file": "L13.json",
+      "subtitle": ""
+    },
+    {
+      "order": 14,
+      "id": "j1ce35itz8izzcewlb45qln2",
+      "title": "Friends S03E14",
+      "file": "L14.json",
+      "subtitle": ""
+    },
+    {
+      "order": 15,
+      "id": "vrptcmc95onfv33ik0iw4esm",
+      "title": "Friends S03E15",
+      "file": "L15.json",
+      "subtitle": ""
+    },
+    {
+      "order": 16,
+      "id": "qh2sok32th4506ryzmvfz6kf",
+      "title": "Friends S03E16",
+      "file": "L16.json",
+      "subtitle": ""
+    },
+    {
+      "order": 17,
+      "id": "br14pajafws2dai3qqf4mxl7",
+      "title": "Friends S03E17",
+      "file": "L17.json",
+      "subtitle": "The One Without The Ski Trip - 滑雪之旅"
+    },
+    {
+      "order": 18,
+      "id": "df2t1576eh99w0n1xng9ejxr",
+      "title": "Friends S03E18",
+      "file": "L18.json",
+      "subtitle": "The One With The Hypnosis Tape - 催眠录音带"
+    },
+    {
+      "order": 19,
+      "id": "eue48l205k4s3exgidiykvft",
+      "title": "Friends S03E19",
+      "file": "L19.json",
+      "subtitle": "The One With The Tiny T-shirt - 小小T恤"
+    },
+    {
+      "order": 20,
+      "id": "vk4f7z4hw49kj7ndrpix1tx3",
+      "title": "Friends S03E20",
+      "file": "L20.json",
+      "subtitle": "The One With The Dollhouse - 玩偶屋"
+    },
+    {
+      "order": 21,
+      "id": "y9ykxo5kgulfie0dztz0vk0n",
+      "title": "Friends S03E21",
+      "file": "L21.json",
+      "subtitle": "The One With A Chick. And A Duck - 小鸡和小鸭"
+    },
+    {
+      "order": 22,
+      "id": "dctr20ny1azznryty183q29d",
+      "title": "Friends S03E22",
+      "file": "L22.json",
+      "subtitle": "The One With The Screamer - 尖叫的汤米"
+    },
+    {
+      "order": 23,
+      "id": "yp6qupbh3yz7h4eapsuz1l4c",
+      "title": "Friends S03E23",
+      "file": "L23.json",
+      "subtitle": "The One With Ross's Thing - 罗斯长了怪东西"
+    },
+    {
+      "order": 24,
+      "id": "zv7edsl37dckxo68w5vtv3nc",
+      "title": "Friends S03E24",
+      "file": "L24.json",
+      "subtitle": ""
+    },
+    {
+      "order": 25,
+      "id": "cs9qw0areuarbpi7b3qy256t",
+      "title": "Friends S03E25",
+      "file": "L25.json",
+      "subtitle": ""
+    }
+  ]
+}

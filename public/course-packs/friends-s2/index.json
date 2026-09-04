@@ -1,0 +1,261 @@
+{
+  "id": "q2qpx5izc10xc1bk77b1aqf3",
+  "slug": "friends-s2",
+  "title": "老友记第二季（对话版无拆解）- 适合有基础学员",
+  "description": "老友记第二季全季对话练习：整集一课、无单词拆解。根据自己需要进行练习。",
+  "courseCount": 36,
+  "courses": [
+    {
+      "order": 1,
+      "id": "wg7d5lfb3xu9xvzhq16cf7im",
+      "title": "Friends S02E01 - 1",
+      "file": "L01.json",
+      "subtitle": ""
+    },
+    {
+      "order": 2,
+      "id": "x8hx4xmdy6oudlw9db9j6124",
+      "title": "Friends S02E01 - 2",
+      "file": "L02.json",
+      "subtitle": ""
+    },
+    {
+      "order": 3,
+      "id": "ok377dnng6qbns0va8quxgli",
+      "title": "Friends S02E01 - 3",
+      "file": "L03.json",
+      "subtitle": ""
+    },
+    {
+      "order": 4,
+      "id": "yb7od0vor2fnmpcv8r7zjg38",
+      "title": "Friends S02E01 - 4",
+      "file": "L04.json",
+      "subtitle": ""
+    },
+    {
+      "order": 5,
+      "id": "s94j7n5pom7bnsjngh75c9ra",
+      "title": "Friends S02E02 - 5",
+      "file": "L05.json",
+      "subtitle": ""
+    },
+    {
+      "order": 6,
+      "id": "gqlav6lpfu96438ilazid1t5",
+      "title": "Friends S02E02 - 6",
+      "file": "L06.json",
+      "subtitle": ""
+    },
+    {
+      "order": 7,
+      "id": "t7vgd50dx7tp6yw8rnmzu53d",
+      "title": "Friends S02E02 - 7",
+      "file": "L07.json",
+      "subtitle": ""
+    },
+    {
+      "order": 8,
+      "id": "mqyp6tqkp1oplcbs5au5cbc9",
+      "title": "Friends S02E02 - 8",
+      "file": "L08.json",
+      "subtitle": ""
+    },
+    {
+      "order": 9,
+      "id": "irgtjhuou36bodkqsrkkcl2x",
+      "title": "Friends S02E03 - 9",
+      "file": "L09.json",
+      "subtitle": ""
+    },
+    {
+      "order": 10,
+      "id": "jipv45iy9k6jb98jie786o4g",
+      "title": "Friends S02E03 - 10",
+      "file": "L10.json",
+      "subtitle": ""
+    },
+    {
+      "order": 11,
+      "id": "cd92npvlr4icfqvsa3q41c4i",
+      "title": "Friends S02E03 - 11",
+      "file": "L11.json",
+      "subtitle": ""
+    },
+    {
+      "order": 12,
+      "id": "am24ghv97dk3vt18h5zp6tis",
+      "title": "Friends S02E03 - 12",
+      "file": "L12.json",
+      "subtitle": ""
+    },
+    {
+      "order": 13,
+      "id": "rebl0vkp2rwcxwty70o9ch3s",
+      "title": "Friends S02E01",
+      "file": "L13.json",
+      "subtitle": "The One With Ross' New Girlfriend-罗斯的新女友"
+    },
+    {
+      "order": 14,
+      "id": "wa1gsv2l25ua3xtn8he22vrt",
+      "title": " Friends S02E02",
+      "file": "L14.json",
+      "subtitle": "The One With the Breast Milk-母乳"
+    },
+    {
+      "order": 15,
+      "id": "gbsewhd9gmfp987o8zn3iu1o",
+      "title": "Friends S02E03",
+      "file": "L15.json",
+      "subtitle": "The One Where Mr. Heckles Dies-海先生之死"
+    },
+    {
+      "order": 16,
+      "id": "z5p6m1xq38rkb15bao8h8f2j",
+      "title": "Friends S02E04",
+      "file": "L16.json",
+      "subtitle": "The One With Phoebe's Husband-菲比的丈夫"
+    },
+    {
+      "order": 17,
+      "id": "iq1yvkkomlw6xj8tjilvcjh6",
+      "title": "Friends S02E05",
+      "file": "L17.json",
+      "subtitle": "The One With Five Steaks and an Eggplant-五块牛排和一根茄子"
+    },
+    {
+      "order": 18,
+      "id": "bysruuxpw5x5o351ziwibxra",
+      "title": "Friends S02E06",
+      "file": "L18.json",
+      "subtitle": "The One With the Baby on the Bus - 宝宝落在巴士上了"
+    },
+    {
+      "order": 19,
+      "id": "s4999khbs70vhgr3w42rji2k",
+      "title": "Friends S02E07",
+      "file": "L19.json",
+      "subtitle": "The One Where Ross Finds Out - 罗斯发现瑞秋对他有意思"
+    },
+    {
+      "order": 20,
+      "id": "jt5um91yolbfzze865yige13",
+      "title": "Friends S02E08",
+      "file": "L20.json",
+      "subtitle": "The One With the List - 清单"
+    },
+    {
+      "order": 21,
+      "id": "tlpueyjmltwqlp403reyqwi1",
+      "title": "Friends S02E09",
+      "file": "L21.json",
+      "subtitle": "The One With Phoebe's Dad - 菲比的爸爸"
+    },
+    {
+      "order": 22,
+      "id": "vvc427m0xfwqkaasuded45ke",
+      "title": "Friends S02E10",
+      "file": "L22.json",
+      "subtitle": "The One With Russ - 纳斯（罗斯翻版）"
+    },
+    {
+      "order": 23,
+      "id": "dxgap79v2pt6riaisqzl6tu4",
+      "title": "Friends S02E11",
+      "file": "L23.json",
+      "subtitle": "The One With the Lesbian Wedding - 同志婚礼"
+    },
+    {
+      "order": 24,
+      "id": "xj10ei2c8ubwcjgbzdc02j1i",
+      "title": "Friends S02E12",
+      "file": "L24.json",
+      "subtitle": "The One After the Superbowl part 1 - 超级杯后（第一集）"
+    },
+    {
+      "order": 25,
+      "id": "gmnpxs03ifrgl7wr8fyjw7ou",
+      "title": "Friends S02E13",
+      "file": "L25.json",
+      "subtitle": "The One After the Superbowl part 2 - 超级杯后（第二集）"
+    },
+    {
+      "order": 26,
+      "id": "fsep2ctvocpumdrlqhozfa0h",
+      "title": "Friends S02E14",
+      "file": "L26.json",
+      "subtitle": "The One With the Prom Video - 高中舞会录影带"
+    },
+    {
+      "order": 27,
+      "id": "yxp91ga59dy1bumd906bgo6e",
+      "title": "Friends S02E15",
+      "file": "L27.json",
+      "subtitle": "The One Where Rachel and Ross... You Know - 罗斯和瑞秋生米煮成"
+    },
+    {
+      "order": 28,
+      "id": "q8rdhipc2jqhmm0ozenmfkbz",
+      "title": "Friends S02E16",
+      "file": "L28.json",
+      "subtitle": "One Where Joey Moves Out - 乔伊搬走了"
+    },
+    {
+      "order": 29,
+      "id": "w6a8esy522a4p2mtuz5t0rt1",
+      "title": "Friends S02E17",
+      "file": "L29.json",
+      "subtitle": "The One Where Eddie Moves In - 艾迪搬入"
+    },
+    {
+      "order": 30,
+      "id": "dnmo9jdc3dfzx43w4uxadops",
+      "title": "Friends S02E18",
+      "file": "L30.json",
+      "subtitle": "The One Where Dr. Remore Dies - 瑞摩瑞医生之死"
+    },
+    {
+      "order": 31,
+      "id": "htvz1k4tyntzcibgvgob7ao6",
+      "title": "Friends S02E19",
+      "file": "L31.json",
+      "subtitle": "The One Where Eddie Won't Go - 艾迪赖着不走"
+    },
+    {
+      "order": 32,
+      "id": "tlwp9qu6j217r94l49nsxvj5",
+      "title": "Friends S02E20",
+      "file": "L32.json",
+      "subtitle": "The One Where Old Yeller Dies - 猎狗之死"
+    },
+    {
+      "order": 33,
+      "id": "k40ehw4u9475dtohl67isabz",
+      "title": "Friends S02E21",
+      "file": "L33.json",
+      "subtitle": "The One With the Two Bullies - 两个小流氓"
+    },
+    {
+      "order": 34,
+      "id": "bj0bjdqpm3z5ggnqmd0fx7t2",
+      "title": "Friends S02E22",
+      "file": "L34.json",
+      "subtitle": "The One With the Two Parties - 一个头两个大"
+    },
+    {
+      "order": 35,
+      "id": "ytx8ven7vq4xobcum1r7igfp",
+      "title": "Friends S02E23",
+      "file": "L35.json",
+      "subtitle": "The One With the Chicken Pox - 出水痘"
+    },
+    {
+      "order": 36,
+      "id": "hi1xf7nvuys4kq80jlqxv6u0",
+      "title": "Friends S02E24",
+      "file": "L36.json",
+      "subtitle": "The One With Barry and Mindy's Wedding - 巴利和明蒂大喜之日"
+    }
+  ]
+}
