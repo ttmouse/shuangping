@@ -1652,7 +1652,6 @@ function jumpToSentence() {
   enSentenceSpoken.value = false
   enGentleInputs.value = []
   enGentleErrors.value = {}
-  gentleChecked.value = false
   enHadError.value = false
   enSkipWordSpeak.value = false
   // 与换句体验一致：开启整句朗读 → 朗读整句，首词不再单独朗读；150ms 视觉缓冲后开始首词
@@ -1663,48 +1662,94 @@ function jumpToSentence() {
   nextTick(() => setTimeout(() => startEnWord(), 150))
 }
 
-// 宽松模式：整句完成后统一检查所有单词，标记错误位置
+// 宽松模式：整句完成后统一检查。首次检查把错词插入队尾第二行（重练区）并登记队列；
+// 后续每轮句末只复查队列副本（words 只增不减，副本索引 = origLen + 队列序号，稳定可寻址），
+// 未打对的词回退到该副本强制重打 —— 错词永远进不了完成界面（对齐官网：提交含错词被拦、需改正）
 function checkGentleSentence() {
-  enGentleErrors.value = {}
   const sentenceObj = enQueue.value[sentenceIdx.value]
+  if (!sentenceObj) return false
   const words = enSentence.value
+  const queue = sentenceObj.enRedoQueue
+  if (!queue || !queue.length) {
+    // ---- 首次检查：扫原始区，错词入重练队列并插副本（不依赖 enRedoPractice：宽松查出错误必须拦下重练）----
+    enGentleErrors.value = {}
+    sentenceObj.enRedoQueue = []
+    let hasError = false
+    words.forEach((w, wi) => {
+      // 可忽略标点（句号/逗号/问号）双方都剥离后再比：展示但没打不算错，顺手打错了也不算错
+      // 纯可忽略标点词（独立 , . ?）无需输入，直接跳过不检查
+      const text = enCore(unitText(w))
+      if (!text) return
+      const input = enCore(enGentleInputs.value[wi] || '')
+      const maxLen = Math.max(text.length, input.length)
+      let wordError = false
+      for (let li = 0; li < maxLen; li++) {
+        if (input[li] !== text[li]) {
+          enGentleErrors.value[`${wi}:${li}`] = true
+          wordError = true
+        }
+      }
+      // 更新会话统计
+      enWordCount.value++
+      if (!wordError) enFirstHitCount.value++
+      if (wordError) {
+        hasError = true
+        sentFirstTry.value = false // 宽松：整句内首次查出错词即首答失败（不等结算点，最终全对轮会漏判）
+        const wKey = isPunct(w) ? text : stripPunct(text)
+        progress.recordDailyWrongWord(wKey)
+        recordSessionMistake(wKey)
+        // 立即写入错题本（enMastery）：宽松模式下整句检查时就把错词入错题本
+        enMastery[wKey] = 'error'
+        saveEnMastery()
+        // 错词重练：插入本句队尾放到第二行（标点单元不重练）；登记重练队列供后续复查
+        if (!isPunct(w)) {
+          sentenceObj.redoWords = sentenceObj.redoWords || new Set()
+          const redoWi = sentenceObj.words.length
+          sentenceObj.redoWords.add(redoWi)
+          sentenceObj.words.push(text)
+          sentenceObj.enRedoQueue.push({ text, done: false, wi: redoWi })
+        }
+      }
+    })
+    if (hasError) enHadError.value = true
+    // 副本连续排在 origLen 起；wordIdx 仍停在旧句末 → 自然落到第一个副本等待输入
+    return hasError
+  }
+  // ---- 后续轮：只复查重练队列里未 done 的副本；没打对的"交接"成新副本追加到队尾，再打一轮 ----
+  enGentleErrors.value = {}
   let hasError = false
-  words.forEach((w, wi) => {
-    // 宽松模式：整句检查
-    // 可忽略标点（句号/逗号/问号）双方都剥离后再比：展示但没打不算错，顺手打错了也不算错
-    // 纯可忽略标点词（独立 , . ?）无需输入，直接跳过不检查
-    const text = enCore(unitText(w))
-    if (!text) return
+  const badQueue = [] // 未打对的队列序号（按原顺序）
+  queue.forEach((q, qi) => {
+    if (q.done) return
+    const wi = q.wi
+    const text = q.text
+    const w = words[wi]
+    if (!w) { q.done = true; return }
     const input = enCore(enGentleInputs.value[wi] || '')
     const maxLen = Math.max(text.length, input.length)
-    let wordError = false
+    let bad = false
     for (let li = 0; li < maxLen; li++) {
       if (input[li] !== text[li]) {
         enGentleErrors.value[`${wi}:${li}`] = true
-        wordError = true
+        bad = true
       }
     }
-    // 更新会话统计
-    enWordCount.value++
-    if (!wordError) enFirstHitCount.value++
-    if (wordError) {
-      hasError = true
-      const wKey = isPunct(w) ? text : stripPunct(text)
-      progress.recordDailyWrongWord(wKey)
-      recordSessionMistake(wKey)
-      // 立即写入错题本（enMastery）：宽松模式下整句检查时就把错词入错题本
-      enMastery[wKey] = 'error'
-      saveEnMastery()
-      // 错词重练：插入本句队尾，放到第二行（标点单元不重练，只重练单词）
-      if (settings.enRedoPractice && sentenceObj && !isPunct(w)) {
-        sentenceObj.redoWords = sentenceObj.redoWords || new Set()
-        sentenceObj.redoWords.add(sentenceObj.words.length)
-        sentenceObj.words.push(text)
-      }
-    }
+    if (bad) { hasError = true; badQueue.push(qi) } else { q.done = true }
   })
-  // 如果有错误，记录 enHadError 供完成弹窗使用
-  if (hasError) enHadError.value = true
+  if (hasError) {
+    // 未打对的副本：本轮视为"已交接"，把同样文本的新副本追加到句尾继续输入
+    // （wordIdx 停在旧句末 = 第一个新副本位置，无需回退，已完成的其他词不受影响）
+    const fresh = badQueue.map(qi => queue[qi].text)
+    badQueue.forEach(qi => { queue[qi].done = true })
+    for (const text of fresh) {
+      sentenceObj.redoWords = sentenceObj.redoWords || new Set()
+      const redoWi = sentenceObj.words.length
+      sentenceObj.redoWords.add(redoWi)
+      sentenceObj.words.push(text)
+      queue.push({ text, done: false, wi: redoWi })
+    }
+  }
+  return hasError
 }
 
 // 英文单词发音：有道词典 TTS 接口（参考 3002 的 audio-player.js，type=2 英音）
@@ -1797,7 +1842,6 @@ const enGentleInputs = ref([]) // { wordIdx: inputString }
 // 宽松模式：整句检查后的错误位置标记
 const enGentleErrors = ref({}) // { "wi:li": true } for wrong characters
 // 宽松模式：标记是否已执行过整句检查（避免重练时再次检查导致重复插入错词）
-const gentleChecked = ref(false)
 // 英文句子跳转：点击进度数字直接输入目标句号
 const enSentenceJumpOpen = ref(false)
 const enSentenceJumpTarget = ref(1)
@@ -2763,8 +2807,7 @@ function start() {
     enSentenceSpoken.value = false // 新句子重置整句语音播放标记
     enGentleInputs.value = [] // 宽松模式：重置输入记录
     enGentleErrors.value = {} // 宽松模式：重置错误标记
-    gentleChecked.value = false // 宽松模式：重置检查标记
-    enSkipWordSpeak.value = false // 重置可能残留的换句标记
+        enSkipWordSpeak.value = false // 重置可能残留的换句标记
     // 进入第一句：开启整句朗读 → 先朗读整句，首词不单独朗读
     if (settings.enSpeakSentence) {
       enSkipWordSpeak.value = true
@@ -3235,7 +3278,6 @@ function onKeyDown(e) {
         enWordAvgs.value = {} // 新句子清空耗时记录
         enGentleInputs.value = [] // 宽松模式：新句子重置输入记录
         enGentleErrors.value = {} // 宽松模式：新句子重置错误标记
-        gentleChecked.value = false // 宽松模式：重置检查标记
         if (sentenceIdx.value >= enQueue.value.length) {
           finish()
         } else {
@@ -3323,13 +3365,13 @@ function onKeyDown(e) {
         wordCompleted.value = false
         if (wordIdx.value >= enSentence.value.length) {
           // 最后一个词打完：整句完成
-          // 宽松模式：统一检查所有单词，标记错误，插入错词到第二行
-          // 只检查一次（gentleChecked 标记），避免重练完成后再次检查导致重复插入错词
-          if (settings.enGentleMode && !gentleChecked.value) {
-            gentleChecked.value = true
-            checkGentleSentence()
-            // 错词重练：如果 checkGentleSentence 插入了错词，句子长度增加
-            // 此时 wordIdx 可能小于新长度，不结束句子，让用户继续输入错词
+          // 宽松模式：每轮到达句末都统一检查一次（不设"只查一次"闸门）——
+          // 上一轮查出的错词重练后再乱打，若不再检查就能混进完成界面
+          if (settings.enGentleMode) {
+            const stillWrong = checkGentleSentence()
+            // 报错：本轮仍有错词 → 错词已插回队尾重练（句子变长，wordIdx 落在错词上），
+            // 不放行到完成界面，并给一次错误音反馈（对应官网提交错误被拦）
+            if (stillWrong && settings.sound) playKeySound('bad', { volume: settings.soundVolume })
           }
           if (wordIdx.value >= enSentence.value.length) {
             // 整句真正完成：评级结算（官网规则）
