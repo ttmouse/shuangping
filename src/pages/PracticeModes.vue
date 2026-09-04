@@ -1975,9 +1975,21 @@ function charToKey(ch) {
   }
   return map[ch] || null
 }
-// 键盘键 → 字符（宽松模式记录实际输入用；标点键反查，区分大小写/Shift 由调用方处理）
-function codeToChar(code) {
+// Shift 组合键：Digit/标点键按住 Shift 时打出的符号（'%'=Shift+5、':'=Shift+; 等）
+const SHIFT_CODE_CHARS = {
+  Digit1: '!', Digit2: '@', Digit3: '#', Digit4: '$', Digit5: '%', Digit6: '^',
+  Digit7: '&', Digit8: '*', Digit9: '(', Digit0: ')',
+  Semicolon: ':', Quote: '"', Slash: '?', Comma: '<', Period: '>',
+  Minus: '_', Equal: '+', BracketLeft: '{', BracketRight: '}', Backslash: '|', Backquote: '~',
+}
+// 标准 US 布局不需 Shift 即可打出的字符（字母/数字/无 Shift 形态的符号）
+const NO_SHIFT_CHARS = new Set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ,.;'/[]\\-=" + '`')
+// 目标字符是否必须按 Shift 才能输入（% @ # ^ & * ( ) : ? 等）
+function needsShift(ch) { return !NO_SHIFT_CHARS.has(ch) }
+// 键盘键 → 字符（宽松模式记录实际输入用；标点键反查，Shift 组合键按 shiftKey 还原符号）
+function codeToChar(code, shiftKey) {
   if (code.startsWith('Key')) return code.replace('Key', '').toLowerCase()
+  if (shiftKey && SHIFT_CODE_CHARS[code]) return SHIFT_CODE_CHARS[code]
   if (/^Digit/.test(code)) return code.replace('Digit', '')
   const map = {
     Comma: ',', Period: '.', Slash: '/', Semicolon: ';', Quote: "'",
@@ -3004,8 +3016,8 @@ function note(correct, expected = '', actual = '') {
   }
 }
 
-function submitCode(code) {
-  // 统一入口：code 为 KeyboardEvent.code（如 KeyA / Digit5）
+function submitCode(code, shiftKey = false) {
+  // 统一入口：code 为 KeyboardEvent.code（如 KeyA / Digit5）；shiftKey 用于区分 %(=Shift+5) 与 5
   if (!started.value || completed.value) return { correct: false }
 
   let correct = false
@@ -3024,7 +3036,8 @@ function submitCode(code) {
       const expectKey = charToKey(ch)
       if (!expectKey) return { correct: false }
       expected = expectKey
-      correct = expected === code
+      // Shift 组合符号（% @ # 等）：必须按住 Shift 才算对，防止 5 冒充 %
+      correct = expected === code && (!needsShift(ch) || shiftKey)
       if (settings.enGentleMode) {
         // 回放中开始重打：中断回放并清空错误内容（本次按键作为第一个输入字母）
         if (enReplayWi.value === wordIdx.value) {
@@ -3036,8 +3049,8 @@ function submitCode(code) {
         }
         // 宽松模式：不标记错误、不播错误音效、不记录错词
         enWordKeystrokes.value++ // 记录按键数（掌握度计时用，不计正确与否）
-        // 存储实际输入的字符，原样显示（用于完成时比对）
-        const typedChar = codeToChar(code) || ch
+        // 存储实际输入的字符，原样显示（用于完成时比对）；Shift 组合键还原真实符号（shift+5 → % 而非 5）
+        const typedChar = codeToChar(code, shiftKey) || ch
         // 核心字母已打满后：多余输入若为可忽略标点（. , ? !）允许补打（完成时剥掉、不影响判定），
         // 多余的普通字母直接静默忽略——否则多余字符没有显示位、用户看不见，
         // 整句检查时会被莫名判错（如 not 多打一个 t 成 nott，界面只有 3 个字母格）
@@ -3068,7 +3081,7 @@ function submitCode(code) {
         // 延迟 250ms：等错误音效先播完，避免两种声音混合成怪声
         if (settings.enSpeakWords) setTimeout(() => speakEnglish(word, true), 250)
         // 错误输入：位置不前进，仅填充错误字符用于显示
-        const wrongChar = codeToChar(code) || code.replace('Key', '').toLowerCase()
+        const wrongChar = codeToChar(code, shiftKey) || code.replace('Key', '').toLowerCase()
         if (currentInput.value.length <= letterIdx.value) {
           currentInput.value += wrongChar
         } else {
@@ -3195,10 +3208,10 @@ function submitCode(code) {
 }
 
 // 统一输入入口：提交 + 驱动键盘闪光（物理键盘与鼠标点击共用）
-function handleInput(code) {
+function handleInput(code, shiftKey) {
   // 卡片完成等待空格 / 整句完成等待空格期间忽略输入
   if (cardAdvancePending || enSentenceDone.value) return { correct: false }
-  const res = submitCode(code)
+  const res = submitCode(code, shiftKey)
   flashKey(code, res.correct ? 'ok' : 'bad')
   return res
 }
@@ -3565,7 +3578,7 @@ function onKeyDown(e) {
     const PUNCT_CODES = new Set(['Quote', 'Semicolon', 'Comma', 'Period', 'Slash', 'Minus', 'Equal', 'BracketLeft', 'BracketRight', 'Backslash', 'Backquote'])
     if (!code.startsWith('Key') && !/^Digit/.test(code) && !/^Numpad/.test(code) && !PUNCT_CODES.has(code)) return
     e.preventDefault()
-    handleInput(code)
+    handleInput(code, e.shiftKey)
     return
   }
   const code = e.code
@@ -3574,7 +3587,7 @@ function onKeyDown(e) {
     ((mode.value === 'letters' || mode.value === 'syllables' || mode.value === 'cards') && code.startsWith('Key'))
   if (!handled) return
   e.preventDefault()
-  handleInput(code)
+  handleInput(code, e.shiftKey)
 }
 
 // 键盘导航：未开始时方向键在可导航元素间移动焦点（顶部导航 + 模式/难度/类型按钮），Enter/Space 由浏览器默认激活
