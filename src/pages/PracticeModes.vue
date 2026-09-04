@@ -2653,10 +2653,6 @@ function letterChar(wi, li, defaultChar) {
     // 当前词：显示用户输入的内容
     if (wi === wordIdx.value) {
       if (li < currentInput.value.length) return currentInput.value[li]
-      // 未输入位置：在默写隐藏状态下返回空字符，避免退格时CSS过渡闪现正确字母；
-      // 但揭示状态（看答案/打错显示）下照常返回目标字母，保证"答案"可见
-      if (settings.enDisplayMode === 'dictation' && !enHadError.value) return ''
-      return defaultChar
     }
     // 已完成词：始终显示用户输入的字符（保持原样，不自动修复）
     if (wi < wordIdx.value) {
@@ -2668,10 +2664,6 @@ function letterChar(wi, li, defaultChar) {
       const input = enGentleInputs.value[wi] || ''
       if (li < input.length) return input[li]
     }
-  }
-  // 严格模式 + 全默写：当前词未输入位置返回空字符，避免退格时CSS过渡闪现正确字母
-  if (wi === wordIdx.value && settings.enDisplayMode === 'dictation' && !enHadError.value && li >= currentInput.value.length) {
-    return ''
   }
   return defaultChar
 }
@@ -4213,6 +4205,12 @@ onBeforeUnmount(() => {
 /* 字母槽线常驻：未输入/已输入/标点等都保留同一条底部线（输入前后样式一致）。
    仅在正在输入的那一格(current/dict-current)短暂用主题色强调，打完后回归常线 */
 .word-box .letter { color: var(--theme-text-color); opacity: 0.17; border-bottom: 5px solid color-mix(in srgb, var(--theme-text-color) 30%, transparent); transition: color .12s ease, opacity .12s ease, border-color .12s ease; }
+/* 默写隐藏态禁止颜色/透明度过渡：槽内文本常驻（宽度/底线稳定），退格把错误字符换回目标字母时
+   class 翻转若带 0.12s 过渡，会经半透明中间态把目标字母闪现出来 → 进出隐藏态必须瞬时切换 */
+.word-box .letter.hidden,
+.word-box .letter.dict-current {
+  transition: none;
+}
 /* 标点字符（并入单词）：灰色显示，不参与着色/默写隐藏 */
 .word-box .letter.punct { color: var(--text-muted, #999); opacity: 0.55; }
 /* 标点字符：已输入（正确）→ 深灰实色 */
