@@ -201,7 +201,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref, watch, inject } from 'vue'
 import Keyboard from '../components/Keyboard.vue'
 import TopStatusBar from '../components/TopStatusBar.vue'
 import SchemeSelector from '../components/SchemeSelector.vue'
@@ -236,6 +236,33 @@ const timeChallengeTimer = ref(null)
 const timeChallengeResults = ref(null)
 const showTimeChallengeResult = ref(false)
 const showShareCard = ref(false)
+
+// 注入 App.vue 提供的全局暂停状态
+const paused = inject('paused', ref(false))
+const togglePause = inject('togglePause', () => {})
+const savedTimeRemaining = ref(0)
+
+// 监听暂停状态变化：暂停/恢复限时挑战计时器
+watch(paused, (isPaused) => {
+  if (isPaused) {
+    if (timeChallengeTimer.value) {
+      savedTimeRemaining.value = timeRemaining.value
+      clearInterval(timeChallengeTimer.value)
+      timeChallengeTimer.value = null
+    }
+  } else {
+    if (settings.timeChallenge && savedTimeRemaining.value > 0) {
+      timeRemaining.value = savedTimeRemaining.value
+      savedTimeRemaining.value = 0
+      timeChallengeTimer.value = setInterval(() => {
+        timeRemaining.value--
+        if (timeRemaining.value <= 0) {
+          endTimeChallenge()
+        }
+      }, 1000)
+    }
+  }
+})
 
 onMounted(() => {
   settings.load()
@@ -443,6 +470,7 @@ function endPractice() {
 }
 
 function onPress(code) {
+  if (paused.value) return { ignore: true }
   if (!session.started) return { correct: false }
   const res = session.submitKeyCode(code)
 
@@ -541,6 +569,9 @@ function clearStats() {
 
 // 处理键盘输入，即使键盘被隐藏也能工作
 function onKeyDown(e) {
+  // 暂停时忽略所有按键（App.vue 已处理空格/回车恢复）
+  if (paused.value) return
+
   // 只有当键盘被隐藏时才处理输入，且必须是有效的按键
   if (session.hideKeyboard && keyByCode.has(e.code)) {
     e.preventDefault()

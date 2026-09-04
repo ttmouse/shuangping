@@ -283,7 +283,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref, inject, watch } from 'vue'
 import { useSettingsStore } from '../stores/settings.js'
 import { useWriterStore, CORPUS_IDS } from '../stores/writer.js'
 import { useStatsStore } from '../stores/stats.js'
@@ -313,6 +313,35 @@ const newAchievements = ref([])
 const showMenu = ref(false)
 const showShareCard = ref(false)
 
+// 注入 App.vue 提供的全局暂停状态
+const paused = inject('paused', ref(false))
+const togglePause = inject('togglePause', () => {})
+const savedTimeRemaining = ref(0)
+
+// 监听暂停状态变化：暂停/恢复限时挑战计时器
+watch(paused, (isPaused) => {
+  if (isPaused) {
+    // 停止限时挑战计时器
+    if (timeChallengeTimer.value) {
+      savedTimeRemaining.value = timeRemaining.value
+      clearInterval(timeChallengeTimer.value)
+      timeChallengeTimer.value = null
+    }
+  } else {
+    // 恢复限时挑战计时器
+    if (settings.timeChallenge && savedTimeRemaining.value > 0) {
+      timeRemaining.value = savedTimeRemaining.value
+      savedTimeRemaining.value = 0
+      timeChallengeTimer.value = setInterval(() => {
+        timeRemaining.value--
+        if (timeRemaining.value <= 0) {
+          endTimeChallenge()
+        }
+      }, 1000)
+    }
+  }
+})
+
 // 限时挑战状态
 const timeRemaining = ref(0)
 const timeChallengeTimer = ref(null)
@@ -337,6 +366,7 @@ function letterClass(cardIndex, letterIndex) {
 }
 
 function onPress(code) {
+  if (paused.value) return { ignore: true }
   const res = writer.submit(code)
   // 记录统计
   const currentItem = writer.currentItem
@@ -567,6 +597,9 @@ function onKeydownRestart(e) {
 
 // 处理键盘输入，即使键盘被隐藏也能工作
 function onKeyDown(e) {
+  // 暂停时忽略所有按键（App.vue 已处理空格/回车恢复）
+  if (paused.value) return
+
   if (writer.hideKeyboard && keyByCode.has(e.code)) {
     const res = writer.submit(e.code) || { correct: false }
     // 记录统计
@@ -682,7 +715,7 @@ onBeforeUnmount(() => {
 }
 
 /* 简易弹窗样式 */
-.modalMask { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; z-index: 40; }
+.modalMask { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; z-index: 1001; }
 .modal { width: 720px; max-width: 92vw; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 10px; box-shadow: 0 6px 16px rgba(0,0,0,0.18); padding: 14px; }
 .modal h3 { margin: 4px 0 10px; color: var(--theme-main-text-color); }
 .modal textarea { width: 100%; height: 220px; padding: 10px; border-radius: 8px; border: 1px solid var(--theme-border-color); background: var(--theme-background-light-color); color: var(--theme-text-color); resize: vertical; }

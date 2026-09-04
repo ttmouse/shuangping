@@ -126,3 +126,56 @@ a { color: var(--theme-menu-text-color); text-decoration: none; }
 [data-nav]:focus-visible.levelBtn {
   box-shadow: 0 0 0 2px #35e2b733 inset;
 }
+
+/* 通用遮罩层 — 所有浮层共用，z-index 须高于所有页面元素（最高现为 1000） */
+.modalMask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+}
+.modal {
+  width: 720px;
+  max-width: 92vw;
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+  padding: 14px;
+}
+.modal h2 {
+  margin: 4px 0 10px;
+  color: var(--theme-main-text-color);
+}
+
+/* 暂停浮层（练习页共用） */
+.pause-overlay {
+  backdrop-filter: blur(4px);
+}
+.pause-modal {
+  text-align: center;
+  padding: 40px 32px;
+  max-width: 380px;
+}
+.pause-modal h2 {
+  font-size: 28px;
+  margin: 0 0 16px;
+}
+.pause-modal p {
+  font-size: 15px;
+  color: var(--theme-text-color);
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+.pause-modal .pause-motivation {
+  font-size: 14px;
+  color: var(--theme-rich-text-color, #ac47ff);
+  margin-bottom: 28px;
+  font-style: italic;
+}
+.pause-footer {
+  justify-content: center;
+}

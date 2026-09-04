@@ -1,0 +1,375 @@
+{
+ "id": "rwtocajplud9ld732ep5u8ec",
+ "slug": "xingrong-beginner",
+ "title": "星荣零基础学英语（new）",
+ "description": "最适合零基础入门的课程（拥有句子成分解析&讲解&词性的最新版本）",
+ "courseCount": 61,
+ "courses": [
+  {
+   "order": 1,
+   "id": "r0h3kjyefkttp47tijduvvlc",
+   "title": "第1课",
+   "file": "L01.json"
+  },
+  {
+   "order": 2,
+   "id": "lpf14qqagz4rgj6me3enhzsu",
+   "title": "第2课",
+   "file": "L02.json"
+  },
+  {
+   "order": 3,
+   "id": "k46gw988jcfag7pd87uefm4n",
+   "title": "第3课",
+   "file": "L03.json"
+  },
+  {
+   "order": 4,
+   "id": "kb4ledd8jsk2favk6tx951hh",
+   "title": "第4课",
+   "file": "L04.json"
+  },
+  {
+   "order": 5,
+   "id": "v5ecj1z0csddsna8pa6wtgcu",
+   "title": "第5课",
+   "file": "L05.json"
+  },
+  {
+   "order": 6,
+   "id": "o3vkggo07oqovexg6a01d1ln",
+   "title": "第6课",
+   "file": "L06.json"
+  },
+  {
+   "order": 7,
+   "id": "x8h491t5n9hupak3uytbcd2g",
+   "title": "第7课",
+   "file": "L07.json"
+  },
+  {
+   "order": 8,
+   "id": "sk64v8u2r4kqlyj9050m71vy",
+   "title": "第8课",
+   "file": "L08.json"
+  },
+  {
+   "order": 9,
+   "id": "rce53tvh1q2lk39mo29fozsg",
+   "title": "第9课",
+   "file": "L09.json"
+  },
+  {
+   "order": 10,
+   "id": "prd83oeqjp8kh5gr1dg7s7yh",
+   "title": "第10课",
+   "file": "L10.json"
+  },
+  {
+   "order": 11,
+   "id": "pydt07nkaii7ebvd9krfp7wd",
+   "title": "第11课",
+   "file": "L11.json"
+  },
+  {
+   "order": 12,
+   "id": "ak6cl6i3nodq3vwkeg6t2kv8",
+   "title": "第12课",
+   "file": "L12.json"
+  },
+  {
+   "order": 13,
+   "id": "v68mh9a1484imqoy7khnymtw",
+   "title": "第13课",
+   "file": "L13.json"
+  },
+  {
+   "order": 14,
+   "id": "m14vbuoyn8mc9aroub0b5qph",
+   "title": "第14课",
+   "file": "L14.json"
+  },
+  {
+   "order": 15,
+   "id": "x071igcqwj4p4o3hzrdd08vf",
+   "title": "第15课",
+   "file": "L15.json"
+  },
+  {
+   "order": 16,
+   "id": "e6ly3919dcge476h4glmzh7a",
+   "title": "第16课",
+   "file": "L16.json"
+  },
+  {
+   "order": 17,
+   "id": "cqrny0046hgtj9vafkmc0mqx",
+   "title": "第17课",
+   "file": "L17.json"
+  },
+  {
+   "order": 18,
+   "id": "mdkmlhpx5ms8pmkpdz3vft62",
+   "title": "第18课",
+   "file": "L18.json"
+  },
+  {
+   "order": 19,
+   "id": "hbnah7sariz7pxxmyibbto0r",
+   "title": "第19课",
+   "file": "L19.json"
+  },
+  {
+   "order": 20,
+   "id": "tdnl3ovc9e66v2epd1yot1kz",
+   "title": "第20课",
+   "file": "L20.json"
+  },
+  {
+   "order": 21,
+   "id": "yqdlc1np5addcle455ydirf5",
+   "title": "第21课",
+   "file": "L21.json"
+  },
+  {
+   "order": 22,
+   "id": "enau88z2elp1pqg7cx66zhwd",
+   "title": "第22课",
+   "file": "L22.json"
+  },
+  {
+   "order": 23,
+   "id": "ihjl5puprwzyzlasvzix97ln",
+   "title": "第23课",
+   "file": "L23.json"
+  },
+  {
+   "order": 24,
+   "id": "dvvccbqbszif5qs2y8mcwrv7",
+   "title": "第24课",
+   "file": "L24.json"
+  },
+  {
+   "order": 25,
+   "id": "udvu8junkou8vd5psl239zi2",
+   "title": "第25课",
+   "file": "L25.json"
+  },
+  {
+   "order": 26,
+   "id": "djlota6rp0ahz55m9ewcfw9u",
+   "title": "第26课",
+   "file": "L26.json"
+  },
+  {
+   "order": 27,
+   "id": "j0m6qxsbjyo7q3lbyo820i46",
+   "title": "第27课",
+   "file": "L27.json"
+  },
+  {
+   "order": 28,
+   "id": "fju82juo2rugp261p7xokn4k",
+   "title": "第28课",
+   "file": "L28.json"
+  },
+  {
+   "order": 29,
+   "id": "vlpfjnabpy7i0wu7ttb4mzu3",
+   "title": "第29课",
+   "file": "L29.json"
+  },
+  {
+   "order": 30,
+   "id": "f8zyu1yxg5tn4i0jaugj7ji5",
+   "title": "第30课",
+   "file": "L30.json"
+  },
+  {
+   "order": 31,
+   "id": "wy9zg1racutrzgwmmoke4dpf",
+   "title": "第31课",
+   "file": "L31.json"
+  },
+  {
+   "order": 32,
+   "id": "u8ip941kyislhi2krtdvnp0d",
+   "title": "第32课",
+   "file": "L32.json"
+  },
+  {
+   "order": 33,
+   "id": "i7eg5adjhzvwvsk0gnvzgfw1",
+   "title": "第33课",
+   "file": "L33.json"
+  },
+  {
+   "order": 34,
+   "id": "vcdwl7ajgwnrafbwar2r0kdj",
+   "title": "第34课",
+   "file": "L34.json"
+  },
+  {
+   "order": 35,
+   "id": "bjles9ld8jra7w80gvkkzlvd",
+   "title": "第35课",
+   "file": "L35.json"
+  },
+  {
+   "order": 36,
+   "id": "hh3oxpg0mkxv2mjok0o6mcnz",
+   "title": "第36课",
+   "file": "L36.json"
+  },
+  {
+   "order": 37,
+   "id": "sq2c4fiw13apxjqhi27yqmfa",
+   "title": "第37课",
+   "file": "L37.json"
+  },
+  {
+   "order": 38,
+   "id": "vv5n4z0ha53m11xgyx73q2bo",
+   "title": "第38课",
+   "file": "L38.json"
+  },
+  {
+   "order": 39,
+   "id": "wztfovpcr9l779d4whns03b5",
+   "title": "第39课",
+   "file": "L39.json"
+  },
+  {
+   "order": 40,
+   "id": "annwysuwergvu9dirrwn5amm",
+   "title": "第40课",
+   "file": "L40.json"
+  },
+  {
+   "order": 41,
+   "id": "mml5qmcxkrhwefo3hq7e54h2",
+   "title": "第41课",
+   "file": "L41.json"
+  },
+  {
+   "order": 42,
+   "id": "xhqf0qwljlya0l1lb6ggvw5o",
+   "title": "第42课",
+   "file": "L42.json"
+  },
+  {
+   "order": 43,
+   "id": "jzns3pchigmiyqhpswwum3z2",
+   "title": "第43课",
+   "file": "L43.json"
+  },
+  {
+   "order": 44,
+   "id": "xc8v2v807xiyb4kr7dzzfh8e",
+   "title": "第44课",
+   "file": "L44.json"
+  },
+  {
+   "order": 45,
+   "id": "ui1kl5810hed279q9ldy16du",
+   "title": "第45课",
+   "file": "L45.json"
+  },
+  {
+   "order": 46,
+   "id": "pkshcrglpof5qic3xx6sv6an",
+   "title": "第46课",
+   "file": "L46.json"
+  },
+  {
+   "order": 47,
+   "id": "r8t2c3v610r3y9jo2q4m0bzz",
+   "title": "第47课",
+   "file": "L47.json"
+  },
+  {
+   "order": 48,
+   "id": "oibchqzg0eelsooaeaqopip8",
+   "title": "第48课",
+   "file": "L48.json"
+  },
+  {
+   "order": 49,
+   "id": "q3et1lhw2v8yfxa3f0ha5szg",
+   "title": "第49课",
+   "file": "L49.json"
+  },
+  {
+   "order": 50,
+   "id": "ys4kb349h3pwlab9xesrfl7z",
+   "title": "第50课",
+   "file": "L50.json"
+  },
+  {
+   "order": 51,
+   "id": "qj9nszqbxygxtdmslix2fh8k",
+   "title": "第51课",
+   "file": "L51.json"
+  },
+  {
+   "order": 52,
+   "id": "hd2gvz5vpnf0eqnrh9e5nl7h",
+   "title": "第52课",
+   "file": "L52.json"
+  },
+  {
+   "order": 53,
+   "id": "jebstwqzukzk6lxp7zf7ek02",
+   "title": "第53课",
+   "file": "L53.json"
+  },
+  {
+   "order": 54,
+   "id": "eiv1nehgd8u2rpzj7qbqite9",
+   "title": "第54课",
+   "file": "L54.json"
+  },
+  {
+   "order": 55,
+   "id": "rvzb528nc9emysoix6qlybuk",
+   "title": "第55课",
+   "file": "L55.json"
+  },
+  {
+   "order": 56,
+   "id": "eecgddzsf73cqdf94ps3javs",
+   "title": "第56课",
+   "file": "L56.json"
+  },
+  {
+   "order": 57,
+   "id": "cw5p9zu8ad1sz82ym0l7aki9",
+   "title": "第57课",
+   "file": "L57.json"
+  },
+  {
+   "order": 58,
+   "id": "u4b6hxsegkaizwysvtq10hro",
+   "title": "第58课",
+   "file": "L58.json"
+  },
+  {
+   "order": 59,
+   "id": "u91ecbuul0jcg0inkvvv9rxk",
+   "title": "第59课",
+   "file": "L59.json"
+  },
+  {
+   "order": 60,
+   "id": "gq1aggbzlekspjqbrpebwng1",
+   "title": "第60课",
+   "file": "L60.json"
+  },
+  {
+   "order": 61,
+   "id": "rm6hnjiozsva6goo8db0uodg",
+   "title": "第61课",
+   "file": "L61.json"
+  }
+ ]
+}

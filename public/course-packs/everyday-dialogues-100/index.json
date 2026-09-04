@@ -1,0 +1,111 @@
+{
+ "id": "z627gosu18ct79hr98a4qhyn",
+ "slug": "everyday-dialogues-100",
+ "title": "日常英语对话100句",
+ "description": "100 句日常对话按场景分 17 课：购物、餐饮、旅行、问候、医疗、银行、住宿、工作、天气、生活",
+ "courseCount": 17,
+ "courses": [
+  {
+   "order": 1,
+   "id": "oe1hcuft2gntprbol4bvuaof",
+   "title": "购物与询问(1)",
+   "file": "L01.json"
+  },
+  {
+   "order": 2,
+   "id": "zw73e2fozqlqjnd8j9gmezo0",
+   "title": "购物与询问(2)",
+   "file": "L02.json"
+  },
+  {
+   "order": 3,
+   "id": "ucj4x1xejru94icaoi0xzj9a",
+   "title": "购物与询问(3)",
+   "file": "L03.json"
+  },
+  {
+   "order": 4,
+   "id": "ngcvm0qls1qmtw0r6lep8jui",
+   "title": "餐饮与订餐(1)",
+   "file": "L04.json"
+  },
+  {
+   "order": 5,
+   "id": "d4u4mzdgjijfylz25580xyg2",
+   "title": "餐饮与订餐(2)",
+   "file": "L05.json"
+  },
+  {
+   "order": 6,
+   "id": "unvx8nq3j9853782ldct6wrw",
+   "title": "旅行与交通(1)",
+   "file": "L06.json"
+  },
+  {
+   "order": 7,
+   "id": "d6djfyjod2ejjl557hpv23dp",
+   "title": "旅行与交通(2)",
+   "file": "L07.json"
+  },
+  {
+   "order": 8,
+   "id": "sv8bkg12xqykwart3mczipc4",
+   "title": "问候与寒暄",
+   "file": "L08.json"
+  },
+  {
+   "order": 9,
+   "id": "n36zuol29vpy2bk0h6o6ol30",
+   "title": "问候与寒暄(2)",
+   "file": "L09.json"
+  },
+  {
+   "order": 10,
+   "id": "i5ekjtqdlmxcfmqgxtz86ve7",
+   "title": "医疗与健康",
+   "file": "L10.json"
+  },
+  {
+   "order": 11,
+   "id": "iurw28zzz56lxqhgef5f66l3",
+   "title": "银行与金融",
+   "file": "L11.json"
+  },
+  {
+   "order": 12,
+   "id": "ra9lgi0ytn3tf7ic5p8q483w",
+   "title": "住宿与服务",
+   "file": "L12.json"
+  },
+  {
+   "order": 13,
+   "id": "dpucputu6rjdqjx3w4r4q0if",
+   "title": "工作与求职",
+   "file": "L13.json"
+  },
+  {
+   "order": 14,
+   "id": "dhivkeu5kg2bzownetofu7oc",
+   "title": "天气与活动(1)",
+   "file": "L14.json"
+  },
+  {
+   "order": 15,
+   "id": "kpebfe2plbmkn81cuet51pkg",
+   "title": "天气与活动(2)",
+   "file": "L15.json"
+  },
+  {
+   "order": 16,
+   "id": "cqwp7izita762nq58cip2nlt",
+   "title": "日常生活(1)",
+   "file": "L16.json"
+  },
+  {
+   "order": 17,
+   "id": "i3oeif6vpmc8jj2ljmpeyrd2",
+   "title": "日常生活(2)",
+   "file": "L17.json"
+  }
+ ]
+}

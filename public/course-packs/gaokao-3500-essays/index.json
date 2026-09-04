@@ -1,0 +1,249 @@
+{
+ "id": "awq8aedtv9zz1y30cy6ofv6u",
+ "slug": "gaokao-3500-essays",
+ "title": "40篇短文搞定高考3500单词",
+ "description": "40 篇短文搞定高考 3500 词（来自英语兔）：Fall in Love with English、A Hard Trip… 每篇短文情境记词",
+ "courseCount": 40,
+ "courses": [
+  {
+   "order": 1,
+   "id": "p3zilrj5qsty6p6ngovv6zpc",
+   "title": "1. Fall in Love with English",
+   "file": "L01.json"
+  },
+  {
+   "order": 2,
+   "id": "gvaj49t72ihftxplpi8x6t0x",
+   "title": "2. Different Countries Have Different Kinds of Englishes",
+   "file": "L02.json"
+  },
+  {
+   "order": 3,
+   "id": "ltssvan89jw9487k76bvpqoz",
+   "title": "3. A Hard Trip",
+   "file": "L03.json"
+  },
+  {
+   "order": 4,
+   "id": "pmpfghrvocidojpuhvr0l2ah",
+   "title": "4. A Horrible Earthquake",
+   "file": "L04.json"
+  },
+  {
+   "order": 5,
+   "id": "fq208qy50dw5f46oe6brx9mt",
+   "title": "5. The Great President",
+   "file": "L05.json"
+  },
+  {
+   "order": 6,
+   "id": "l4pfyo1yjiq1r56famiizkj8",
+   "title": "6. A Brave Maid",
+   "file": "L06.json"
+  },
+  {
+   "order": 7,
+   "id": "dvs3br78ihsce7rsuy7savce",
+   "title": "7. A Fair Competition",
+   "file": "L07.json"
+  },
+  {
+   "order": 8,
+   "id": "mgqnne7cpxnv32p8hgybz5er",
+   "title": "8. Computers",
+   "file": "L08.json"
+  },
+  {
+   "order": 9,
+   "id": "y9i8otta1hptx2w8wg6d3k30",
+   "title": "9.Wildlife Protection",
+   "file": "L09.json"
+  },
+  {
+   "order": 10,
+   "id": "fh1ls1bdaj280a25x6fjxfk5",
+   "title": "10. My First Band",
+   "file": "L10.json"
+  },
+  {
+   "order": 11,
+   "id": "wbet82eph4c9jm0uq2sd0opv",
+   "title": "11.An Interesting Festival",
+   "file": "L11.json"
+  },
+  {
+   "order": 12,
+   "id": "vo4psufosw1xvycn9ehqs9x0",
+   "title": "12.Balanced Diet",
+   "file": "L12.json"
+  },
+  {
+   "order": 13,
+   "id": "dq0emqx3zktt6owhs7wx5kxr",
+   "title": "13.Sailing Home",
+   "file": "L13.json"
+  },
+  {
+   "order": 14,
+   "id": "po1gqia3mc9ztcpwnfl9b9et",
+   "title": "14. Explore MKII",
+   "file": "L14.json"
+  },
+  {
+   "order": 15,
+   "id": "sq0xw1ezax8mon8v6fje9fsw",
+   "title": "15.A Journey across Canada",
+   "file": "L15.json"
+  },
+  {
+   "order": 16,
+   "id": "g936al7znzsmhc8x0jyregfx",
+   "title": "16.A Woman Doctor-Lina",
+   "file": "L16.json"
+  },
+  {
+   "order": 17,
+   "id": "ky61felx7c5t31t6v7ak423b",
+   "title": "17. A New Farming Way",
+   "file": "L17.json"
+  },
+  {
+   "order": 18,
+   "id": "isqd6fo90perom3bdcv60035",
+   "title": "18. Chaplin - A Great Master of Humour",
+   "file": "L18.json"
+  },
+  {
+   "order": 19,
+   "id": "x307zfpyq7i3fepdh40f3v2m",
+   "title": "19.A Misunderstanding",
+   "file": "L19.json"
+  },
+  {
+   "order": 20,
+   "id": "koyflwhm32o31bzf8wq6z6pm",
+   "title": "20.A Unique Theme Park",
+   "file": "L20.json"
+  },
+  {
+   "order": 21,
+   "id": "q951u3xguaseqwukur1wps8w",
+   "title": "21.A Strange Disease",
+   "file": "L21.json"
+  },
+  {
+   "order": 22,
+   "id": "elq3tfjctwtrr8y595yn5ep8",
+   "title": "22.Sightseeing in the United Kingdom",
+   "file": "L22.json"
+  },
+  {
+   "order": 23,
+   "id": "gyxa5ask7n2rfq06euhb9zuc",
+   "title": "23.An Air Crash",
+   "file": "L23.json"
+  },
+  {
+   "order": 24,
+   "id": "eo2wgvq6832iam8wr2mw83n3",
+   "title": "24.An Amateur Journalist",
+   "file": "L24.json"
+  },
+  {
+   "order": 25,
+   "id": "inr5zhyuof6hbryqu3f1cvwf",
+   "title": "25.First Aid",
+   "file": "L25.json"
+  },
+  {
+   "order": 26,
+   "id": "qdtc3zw9f81l3qjennpnxp7c",
+   "title": "26.Abstract Art",
+   "file": "L26.json"
+  },
+  {
+   "order": 27,
+   "id": "tz53tbsli08fz9ogzc73my56",
+   "title": "27.A Russian Poem",
+   "file": "L27.json"
+  },
+  {
+   "order": 28,
+   "id": "zwhfrp1efqjlx1ucjivfu3f9",
+   "title": "28.Let’s Help Adolescents",
+   "file": "L28.json"
+  },
+  {
+   "order": 29,
+   "id": "rub11n6vw454ol77mvir793m",
+   "title": "29.Refresh Our Environment",
+   "file": "L29.json"
+  },
+  {
+   "order": 30,
+   "id": "nwxkaz1e7k4gec75som0wuwx",
+   "title": "30.A Volcano Eruption",
+   "file": "L30.json"
+  },
+  {
+   "order": 31,
+   "id": "vx7v7e1n91ywjre0zx6yesjb",
+   "title": "31.Defeat Disability",
+   "file": "L31.json"
+  },
+  {
+   "order": 32,
+   "id": "hmqfpn7xuv1yqr7qn77sxbbg",
+   "title": "32.Happy Marriage Needs Fighting For",
+   "file": "L32.json"
+  },
+  {
+   "order": 33,
+   "id": "hev6iwpk9ol7q905knvvoorn",
+   "title": "33.Mark and a Seal",
+   "file": "L33.json"
+  },
+  {
+   "order": 34,
+   "id": "wz6b0tvq9h8xgnrbvswdhej7",
+   "title": "34.Helping the Remote Village",
+   "file": "L34.json"
+  },
+  {
+   "order": 35,
+   "id": "dv23cdsf5d9vy80e3pxp6jic",
+   "title": "35.Study in America",
+   "file": "L35.json"
+  },
+  {
+   "order": 36,
+   "id": "fkkvt4qe584j9s0ozjytv3zb",
+   "title": "36.Immigrate to America",
+   "file": "L36.json"
+  },
+  {
+   "order": 37,
+   "id": "y5ynek2v2l00s2mot7d951sg",
+   "title": "37.Be Careful about Cloning",
+   "file": "L37.json"
+  },
+  {
+   "order": 38,
+   "id": "ffe45eidovju6l4zt5gmeg2g",
+   "title": "38.Strange Patent Applications",
+   "file": "L38.json"
+  },
+  {
+   "order": 39,
+   "id": "vl97h54bdoowrlm0a4nitcrj",
+   "title": "39. Pronunciation and Status",
+   "file": "L39.json"
+  },
+  {
+   "order": 40,
+   "id": "ejvl43f7n9q0m0a2z67jul3j",
+   "title": "40. A Sly Murder",
+   "file": "L40.json"
+  }
+ ]
+}
