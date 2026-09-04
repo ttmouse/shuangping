@@ -3390,6 +3390,19 @@ function onKeyDown(e) {
         letterIdx.value = 0
         currentInput.value = ''
         wordCompleted.value = false
+        // 宽松+跳过模式：回退就地重打后，把后方"已打对"的词自动滑过（无需逐个按空格），
+        // 只停在下一个仍错的词或直接到句末 —— 错词改完即自动进入整句判定（官网：提交只看最终内容）
+        if (settings.enGentleMode && !settings.enRedoPractice) {
+          const sWords = enSentence.value
+          while (wordIdx.value < sWords.length) {
+            const tu = sWords[wordIdx.value]
+            const ttext = enCore(unitText(tu))
+            if (!ttext) { wordIdx.value++; continue } // 可忽略标点词自动过（与 enSkipOptionalWords 一致不计完成）
+            if (enCore(enGentleInputs.value[wordIdx.value] || '') !== ttext) break // 该词还没打对 → 停在这里等输入
+            wordIdx.value++
+            completedUnits.value++
+          }
+        }
         if (wordIdx.value >= enSentence.value.length) {
           // 最后一个词打完：整句完成
           // 宽松模式：每轮到达句末都统一检查一次（不设"只查一次"闸门）——
