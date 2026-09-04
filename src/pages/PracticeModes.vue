@@ -2573,9 +2573,11 @@ function letterClass(wi, li) {
   if (settings.enGentleMode && enGentleErrors.value[`${wi}:${li}`] && li >= letterIdx.value) {
     return { incorrect: true }
   }
-  // 错误回放：回退后短暂红字显示打错的字母（内容为用户输入，不替换成正确字母）
+  // 错误回放：回退后短暂显示打错的内容（用户输入原样，不替换成正确字母），
+  // 但逐位对比——输入与目标一致的字母位不标红（正常显示），只有真正打错的位标红
   if (settings.enGentleMode && enReplayWi.value === wi && li < letterIdx.value) {
-    return { incorrect: true }
+    const inputCh = currentInput.value[li]
+    return inputCh === ch ? { correct: true } : { incorrect: true }
   }
   if (li < letterIdx.value) {
     // 宽松模式：已输入字母正常显示（用主文字色；词根灰/半透明色太淡）
