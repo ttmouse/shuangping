@@ -2986,16 +2986,23 @@ function submitCode(code) {
       expected = expectKey
       correct = expected === code
       if (settings.enGentleMode) {
-        // 宽松模式：接受所有输入，不限制长度，不标记错误，不播错误音效，不记录错词
+        // 宽松模式：不标记错误、不播错误音效、不记录错词
         enWordKeystrokes.value++ // 记录按键数（掌握度计时用，不计正确与否）
         // 存储实际输入的字符，原样显示（用于完成时比对）
         const typedChar = codeToChar(code) || ch
-        currentInput.value += typedChar
-        letterIdx.value = currentInput.value.length // 始终等于输入长度，不限制
-        // 整句检查标红的错位：本轮输入字母正确 → 清除该位置红标（回退重打时红色随修正消失）
-        if (typedChar === ch) {
-          const errKey = `${wordIdx.value}:${letterIdx.value - 1}`
-          if (enGentleErrors.value[errKey]) delete enGentleErrors.value[errKey]
+        // 核心字母已打满后：多余输入若为可忽略标点（. , ? !）允许补打（完成时剥掉、不影响判定），
+        // 多余的普通字母直接静默忽略——否则多余字符没有显示位、用户看不见，
+        // 整句检查时会被莫名判错（如 not 多打一个 t 成 nott，界面只有 3 个字母格）
+        if (enCore(currentInput.value).length >= core.length && !EN_OPTIONAL_PUNCT.has(typedChar)) {
+          // 丢弃多余普通字母（与严格模式打满后一致）
+        } else {
+          currentInput.value += typedChar
+          letterIdx.value = currentInput.value.length
+          // 整句检查标红的错位：本轮输入字母正确 → 清除该位置红标（回退重打时红色随修正消失）
+          if (typedChar === ch) {
+            const errKey = `${wordIdx.value}:${letterIdx.value - 1}`
+            if (enGentleErrors.value[errKey]) delete enGentleErrors.value[errKey]
+          }
         }
         // 不自动设置 wordCompleted——由空格/回车手动完成
       } else if (!correct) {
