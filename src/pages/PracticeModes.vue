@@ -2514,6 +2514,11 @@ function letterClass(wi, li) {
   // 当前词
   // 无需输入的可忽略标点（句号/逗号/问号）：固定按已完成淡色展示，不参与输入高亮/等待
   if (isPunctCh && EN_OPTIONAL_PUNCT.has(ch) && li >= enCoreLen(word)) return { 'punct-done': true }
+  // 宽松模式整句检查标出的错位（重练关闭时回退就地重打的词）：还没重打到的字母保持红色，
+  // 让"打错了"的状态可见；已重打（li < letterIdx）的字母走下方常规显示，红色随修正逐步消失
+  if (settings.enGentleMode && enGentleErrors.value[`${wi}:${li}`] && li >= letterIdx.value) {
+    return { incorrect: true }
+  }
   if (li < letterIdx.value) {
     // 宽松模式：已输入字母正常显示（用主文字色；词根灰/半透明色太淡）
     // 不标"正确绿"、也不标"错误红"——宽松模式只提示、不纠错
@@ -2959,6 +2964,11 @@ function submitCode(code) {
         const typedChar = codeToChar(code) || ch
         currentInput.value += typedChar
         letterIdx.value = currentInput.value.length // 始终等于输入长度，不限制
+        // 整句检查标红的错位：本轮输入字母正确 → 清除该位置红标（回退重打时红色随修正消失）
+        if (typedChar === ch) {
+          const errKey = `${wordIdx.value}:${letterIdx.value - 1}`
+          if (enGentleErrors.value[errKey]) delete enGentleErrors.value[errKey]
+        }
         // 不自动设置 wordCompleted——由空格/回车手动完成
       } else if (!correct) {
         // 非宽松模式：错误输入，记录错误状态（错题重练依赖此状态）
