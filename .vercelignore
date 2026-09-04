@@ -5,3 +5,11 @@ dist
 .trae
 .log
 .figma
+.claude
+.alma-snapshots
+.reasonix
+.code-review-graph
+.archive
+.harness
+julebu-raw*
+.DS_Store
