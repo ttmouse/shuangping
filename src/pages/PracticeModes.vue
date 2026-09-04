@@ -217,7 +217,7 @@
                   <div
                     v-if="!enRedoSet.has(wi)"
                     class="word-col"
-                    :class="{ active: wi === wordIdx, completed: wi < wordIdx, redo: enRedoSet.has(wi) }"
+                    :class="{ active: wi === wordIdx, completed: wi < wordIdx || enDoneByInput(wi), redo: enRedoSet.has(wi) }"
                   >
                     <span class="word-cn" v-if="(!enStoryMode && !enCustomMode) || settings.enShowWordCn">{{ wordCn(w) }}</span>
                     <div class="word-box">
@@ -2471,6 +2471,17 @@ const enSyllableMap = computed(() => {
 
 // 单词内字母状态（参考 localhost:3002：correct/current/incorrect）
 // 已掌握单词（dict）：未输入字母隐藏为横线（看中文默写）；打错后临时揭示
+// 宽松模式：该词已在整句输入中输入正确（用于光标之后保持"已完成"观感/容器样式）
+function enDoneByInput(wi) {
+  if (!settings.enGentleMode) return false
+  const u = enSentence.value[wi]
+  if (!u) return false
+  const wc = enCore(unitText(u))
+  if (!wc) return false
+  const inp = enCore(enGentleInputs.value[wi] || '')
+  return inp !== '' && inp === wc
+}
+
 function letterClass(wi, li) {
   const unit = enSentence.value[wi]
   const word = unitText(unit)
@@ -2494,8 +2505,15 @@ function letterClass(wi, li) {
   // 词根着色（enColorMode === 'word-root'，默认）：不同深浅灰色区分前缀/词根/后缀
   const seg = (!isPunctCh && settings.enColorMode === 'word-root' && !dict) ? (enSegments.value[stripPunct(word)]?.[li] || '') : ''
   const segCls = seg ? { [`seg-${seg}`]: true } : {}
-  // 已完成的词
-  if (wi < wordIdx.value) {
+  // 宽松模式：光标之后已输入过的词按输入结果定型（回退重打时不能退回"未输入"观感）
+  // - 已输入正确 → 与已完成词同观感（颜色/透明度一致，样式不变）
+  // - 已输入仍错（还没轮到的错词）→ 红色待改，让用户知道后面还有词要改
+  const wordCore = enCore(word)
+  const gentleInp = settings.enGentleMode ? enCore(enGentleInputs.value[wi] || '') : ''
+  const doneByInput = gentleInp !== '' && gentleInp === wordCore
+  const wrongByInput = gentleInp !== '' && gentleInp !== wordCore
+  // 已完成的词（含宽松模式光标后已输入正确的词）
+  if (wi < wordIdx.value || (settings.enGentleMode && wi > wordIdx.value && doneByInput)) {
     // 宽松模式：整句检查后，标记错误位置的字符
     if (settings.enGentleMode && enGentleErrors.value[`${wi}:${li}`]) {
       return { incorrect: true }
@@ -2508,6 +2526,11 @@ function letterClass(wi, li) {
   }
   // 未到的词
   if (wi > wordIdx.value) {
+    // 宽松模式：输入过但打错、还没轮到的词 → 红色待改状态（多错词时提前可见）
+    if (settings.enGentleMode && wrongByInput) {
+      if (isPunctCh) return { 'punct-done': true }
+      return { incorrect: true }
+    }
     if (isPunctCh) return { punct: true }
     return dict ? { hidden: true } : (settings.enColorMode === 'syllable' ? sylCls : segCls)
   }
@@ -2568,6 +2591,11 @@ function letterChar(wi, li, defaultChar) {
     }
     // 已完成词：始终显示用户输入的字符（保持原样，不自动修复）
     if (wi < wordIdx.value) {
+      const input = enGentleInputs.value[wi] || ''
+      if (li < input.length) return input[li]
+    }
+    // 光标之后但已输入过的词（回退重打时保持"已打"观感：对词显示输入原文、错词显示待改内容）
+    if (wi > wordIdx.value) {
       const input = enGentleInputs.value[wi] || ''
       if (li < input.length) return input[li]
     }
