@@ -4563,9 +4563,6 @@ onBeforeUnmount(() => {
 }
 /* 词后标点（, . ! ? …）：与主词同行同字号、同一基线，不参与词性/成分标记 */
 .spPunct {
-  position: absolute;
-  left: 100%;                     /* 紧贴词身右缘外侧 */
-  bottom: 5px;                    /* 与 .spWord 的 padding-bottom 同值 → 标点与词文本同一基线 */
   display: inline-block;
   font-size: 40px;
   font-weight: 600;
@@ -4574,6 +4571,7 @@ onBeforeUnmount(() => {
   opacity: 0.55;
   user-select: none;
   pointer-events: none;
+  margin-left: 1px;
 }
 .spDef {
   font-size: 13px;

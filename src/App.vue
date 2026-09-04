@@ -26,20 +26,13 @@ function togglePause() { paused.value = !paused.value }
 provide('paused', paused)
 provide('togglePause', togglePause)
 
-// 浏览器 Tab 切换时自动暂停：离开页面（切换到其他 Tab）→ 暂停
-// visibilitychange 覆盖 Tab 切换，blur 覆盖窗口失焦（如 Cmd+Tab 切应用）
-function onVisibilityChange() {
+// 浏览器 Tab 切换时自动暂停：离开页面（切换到其他 Tab / 最小化浏览器）→ 暂停
+// 仅用 visibilitychange，不用 blur（打开 DevTools 会触发 blur 但不会触发 visibilitychange → hidden）
+document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden' && !paused.value) {
     paused.value = true
   }
-}
-function onBlur() {
-  if (!paused.value) {
-    paused.value = true
-  }
-}
-document.addEventListener('visibilitychange', onVisibilityChange)
-window.addEventListener('blur', onBlur)
+})
 
 // 全局键盘监听：暂停时空格/回车恢复
 function onKeyDown(e) {
