@@ -5,7 +5,7 @@
     <div class="pageCenter">
       <div class="tipsTextContent">
         <!-- 英文进行中：顶部显示进度/提示（替换无意义描述文案） -->
-        <template v-if="isEnglishOrMistake && started">
+        <template v-if="isEnPractice && started">
           <div class="enProgHeader">
             <h1 class="enProgTitle">
               第
@@ -37,7 +37,7 @@
       </div>
 
       <!-- 课包课程：右上角模式切换 chip（句乐部样式：🔒 初级）—— 定位在页面右上角 -->
-      <div v-if="mode === 'english' && started && julebuFullQueue.length" class="enModeBox" @click.stop>
+      <div v-if="mode === 'stories' && started && julebuFullQueue.length" class="enModeBox" @click.stop>
         <button
           class="enModeChip"
           :class="{ open: enModePanelOpen }"
@@ -150,14 +150,14 @@
       </div>
 
       <!-- 未开始且无配置区的模式：轻提示（不拦截输入，直接打字即开始） -->
-      <div v-if="!started && !(mode === 'letters' || mode === 'cards' || isEnglishOrMistake)" class="startHint">
+      <div v-if="!started && !(mode === 'letters' || mode === 'cards' || isEnPractice)" class="startHint">
         <p>直接开始打字练习</p>
       </div>
 
       <!-- 练习主体（卡片/字母/英文模式未开始时也显示，便于切换内容） -->
-      <div v-if="started || mode === 'cards' || mode === 'letters' || isEnglishOrMistake" class="practiceArea">
+      <div v-if="started || mode === 'cards' || mode === 'letters' || isEnPractice" class="practiceArea">
         <!-- 英文/错词本：已开始 → 共用练习界面 -->
-        <template v-if="isEnglishOrMistake && started">
+        <template v-if="isEnPractice && started">
           <div class="enStage">
             <div class="enSentenceCn" v-if="!enSentenceDone && (enCustomMode || enStoryMode) && enSentenceCn && !enDictationMode">{{ enSentenceCn }}</div>
             <!-- 评级弹层（复刻官网 comboPopup：Perfect/Great + combo；独立浮层不占位） -->
@@ -181,6 +181,7 @@
                 :style="{
                   borderColor: g.color + '80',
                   '--sp-chip': g.color,
+                  '--gi': gi,
                 }"
               >
                 <span v-if="g.role" class="spChip">{{ g.role }}</span>
@@ -277,14 +278,9 @@
           </div>
         </template>
 
-        <!-- 英文模式：未开始 → 配置区 -->
-        <template v-else-if="mode === 'english'">
+        <!-- 单词模式：未开始 → 词库配置 -->
+        <template v-else-if="mode === 'words'">
           <div class="enStage">
-            <div class="enSectionTabs">
-              <button class="enSectionTab" :class="{ active: enSection === 'words' }" @click="showEnWordsTab" data-nav>单词</button>
-              <button class="enSectionTab" :class="{ active: enSection === 'stories' }" @click="showEnStoriesTab" data-nav>短文</button>
-            </div>
-            <template v-if="enSection === 'words'">
             <div class="enGradeRow">
               <select class="enGradeSelect" :value="settings.enGrade" @change="onEnGradeChange" title="英文词库年级">
                 <option value="all">全部词库</option>
@@ -293,8 +289,13 @@
                 <option value="g6">六年级</option>
               </select>
             </div>
-            </template>
-            <template v-else-if="enSection === 'stories'">
+            <div class="numHint">从右上角选择词库开始，或按任意键开始</div>
+          </div>
+        </template>
+
+        <!-- 短文模式：未开始 → 短文/课包列表 -->
+        <template v-else-if="mode === 'stories'">
+          <div class="enStage">
             <div class="storyPanel" :class="{ 'storyPanelWide': packBrowseLevel === 'courses' }">
               <!-- 课包课程列表：独立视图，隐藏其他内容 -->
               <template v-if="packBrowseLevel === 'courses' && activePack">
@@ -385,8 +386,6 @@
                 </div>
               </template>
             </div>
-            </template>
-            <div class="numHint" v-if="enSection === 'words'">从右上角选择词库开始，或按任意键开始</div>
           </div>
         </template>
 
@@ -585,7 +584,7 @@
       />
 
       <!-- 完成页：英文为浮动评测卡（半透明遮罩 + 居中卡片），其余模式保持居中弹窗 -->
-      <div v-if="completed && isEnglishOrMistake" class="overlay" @click.self="backToModeSelect">
+      <div v-if="completed && isEnPractice" class="overlay" @click.self="backToModeSelect">
         <div class="resultModal resultPageInner">
           <!-- 顶部条：返回 + 标题 -->
           <div class="rpTopbar">
@@ -811,10 +810,16 @@ const MODES = [
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>',
   },
   {
-    id: 'english',
-    label: '英文',
-    desc: '整句流式练习英文单词，支持词库/短文/自定义内容',
+    id: 'words',
+    label: '英文单词',
+    desc: '按词库流式练习英文单词拼写',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h10"/></svg>',
+  },
+  {
+    id: 'stories',
+    label: '英文短文',
+    desc: '短文/课包整句流式练习，句子上方中文对照',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 9h6"/><path d="M9 13h6"/><path d="M9 7h6"/></svg>',
   },
   {
     id: 'numbers',
@@ -1010,8 +1015,6 @@ function resetSentenceScoring() {
 }
 // 英文错题本：enMastery 中 error（打错）/ slow（太慢没想起来）的词 = 错题池
 const enMistakeMode = ref(false) // 是否在错题本练习模式
-// 英文子类型：'words'（单词词库/错题本/自定义）| 'stories'（内置短文）
-const enSection = ref('words')
 const enStoryMode = ref(false) // 是否在短文练习中
 const selectedEnStory = ref(null)
 
@@ -1164,37 +1167,17 @@ function goToNextCourse() {
  function backToCourseList() {
    // 退出当前练习，回到课程列表
    endSession()
-   enSection.value = 'stories'
    packBrowseLevel.value = 'courses'
    started.value = false
    completed.value = false
    currentCourse.value = null
  }
 
-// 切到短文 tab：进入课包浏览态并懒加载注册表
-function showEnWordsTab() {
-  enSection.value = 'words'
-  // 切换到单词 tab 时，退出短文/自定义/错题/慢词模式，确保按任意键开始的是单词词库
-  enStoryMode.value = false
-  enCustomMode.value = false
-  enMistakeMode.value = false
-  enSlowMode.value = false
-  mistakePracticeMode.value = false
-  syncSectionToUrl()
-}
-function showEnStoriesTab() {
-  enSection.value = 'stories'
+// 短文模式初始化：进入课包浏览态并懒加载注册表（由 applyModeFromQuery / 模式切换时调用）
+function initStoriesBrowse() {
   packBrowseLevel.value = 'packs'
   activePack.value = null
   loadCoursePackRegistry()
-  syncSectionToUrl()
-}
-function showEnCustomTab() {
-  enSection.value = 'custom'
-  syncSectionToUrl()
-}
-function syncSectionToUrl() {
-  router.replace({ query: { ...route.query, section: enSection.value } })
 }
 function syncJulebuUrl({ pack, course }) {
   const q = { ...route.query }
@@ -1366,7 +1349,6 @@ function startEnStory(story) {
   enCustomMode.value = false
   enSlowMode.value = false
   enStoryMode.value = true
-  enSection.value = 'stories'
   // 非课包课程（farm/自定义）：清空课包上下文，避免难度条误显示
   if (story.source !== 'julebu') {
     julebuFullQueue.value = []
@@ -1801,7 +1783,8 @@ function saveCustomCache() {
 }
 watch([customCardsInput, customRepeat], saveCustomCache)
 const isCustomPanel = computed(() => mode.value === 'cards' && cardType.value === 'custom' && !started.value)
-const isEnglishOrMistake = computed(() => mode.value === 'english' || mode.value === 'mistake-book')
+// 英文族练习模式（单词/短文/错词本）：共用整套英文练习界面与逻辑
+const isEnPractice = computed(() => mode.value === 'words' || mode.value === 'stories' || mode.value === 'mistake-book')
 
 // 各模式的错题重练标记：当前单元（词/数字/字母/音节）是否出过错
 const enSentenceSpoken = ref(false) // 当前句是否已播放过整句语音（避免重练完成时重复播放）
@@ -1971,9 +1954,41 @@ const enSentenceGroups = computed(() => {
   if (!meta) return []
   const wds = meta.wordDetails || []
   const comps = (meta.sentenceStructure || []).filter(c => typeof c.start === 'number')
-  // 无词级词典就真没东西可解析；有词但官网没给成分结构（如老友记"对话版无拆解"包）时，
-  // 不早退——全部词平铺成一整组无框词卡（词性下划线/释义/音标照常，无主语谓语分组框）
-  if (!wds.length) return []
+  // 官网个别单元连词级词典都没给（如星荣包的单词卡 like/don't，源句就是孤词）：
+  // 从课内词典兜底取词性/释义/音标把词卡撑起来（词性取不到就只显示词义）
+  if (!wds.length) {
+    const words = enSentence.value
+      .filter(w => !isPunct(w))
+      .map(w => {
+        const body = String(unitText(w)).trim()
+        if (!body) return null
+        const lower = body.toLowerCase().replace(/[.,!?;:"]+$/, '')
+        const de = currentCourseDict.value[lower]
+        const pos = de?.pos || de?.partOfSpeech || ''
+        const defRaw = de?.definition ?? de?.cn ?? ''
+        const def = Array.isArray(defRaw) ? (defRaw[0] || '') : String(defRaw || '')
+        let ph = ''
+        if (de?.phonetic) {
+          const p = de.phonetic
+          ph = (p && typeof p === 'object') ? (p.us || p.uk || '') : String(p || '')
+        }
+        return {
+          word: body,
+          punct: '',
+          ph: ph ? '/' + ph + '/' : '',
+          // 兜底：单卡（词级练习）且课内词典没命中时，用本句翻译当词义（like → 喜欢）
+          def: def || (enSentence.value.length === 1 ? String(enQueue.value[sentenceIdx.value]?.cn || '') : ''),
+          pos,
+          posCn: POS_CN[pos] || '',
+          posColor: POS_COLORS[pos] || '#9ca3af',
+        }
+      })
+      .filter(Boolean)
+    if (!words.length) return []
+    return [{ role: '', type: '', color: '#64748b', explanation: '', words }]
+  }
+  // 有词但官网没给成分结构（如老友记"对话版无拆解"包）时，不早退——全部词平铺成
+  // 一整组无框词卡（词性下划线/释义/音标照常，无主语谓语分组框）
   // 官网结构区间 [start,end] 索引的是“纯词序列”（wordDetails 不含标点，如
   // "No , I am not the teacher" 逗号前后带空格）。若把原句标点切成独立 token，
   // 全部区间会错位一格（逗号被当成主语）。这里按空白拆词，把每个词后紧跟的
@@ -2637,7 +2652,7 @@ function onEnGradeChange(e) {
   settings.setEnGrade(e.target.value)
 }
 watch(enGrade, (id, old) => {
-  if (old !== undefined && id !== old && started.value && mode.value === 'english') {
+  if (old !== undefined && id !== old && started.value && mode.value === 'words') {
     endSession()
     started.value = false
     completed.value = false
@@ -2723,7 +2738,7 @@ function start() {
   // 普通开始：清空本次错词记录；刻意练习开始（mistakePracticeMode=true）保留供队列使用
   if (!mistakePracticeMode.value) sessionMistakes.value = []
   // 初始化当前模式的队列
-  if (mode.value === 'english' || mode.value === 'mistake-book') {
+  if (mode.value === 'words' || mode.value === 'stories' || mode.value === 'mistake-book') {
     enQueue.value = buildEnglishQueue()
     sentenceIdx.value = 0
     wordIdx.value = 0
@@ -2779,13 +2794,15 @@ function start() {
   started.value = true
   startElapsedTimer()
   // 英文模式：渲染后检查溢出并滚动到当前词
-  if (mode.value === 'english' || mode.value === 'mistake-book') {
+  if (mode.value === 'words' || mode.value === 'stories' || mode.value === 'mistake-book') {
     nextTick(() => scrollToCurrentWord())
   }
   // 按实际模式记录会话（卡片/中文/数字…各自独立记录时长）
-  // 英文模式细分为单词/短文/自定义，否则历史记录都显示为"英文单词"
+  // 单词模式即词库练习；短文模式细分内置/自定义/课包；错词本固定 en-mistake
   let practiceType = mode.value
-  if (mode.value === 'english') {
+  if (mode.value === 'words') {
+    practiceType = 'en-words'
+  } else if (mode.value === 'stories') {
     if (enStoryMode.value) practiceType = 'en-story'
     else if (enCustomMode.value) practiceType = 'en-custom'
     else practiceType = 'en-words'
@@ -2850,7 +2867,7 @@ function submitCode(code) {
   let correct = false
   let expected = ''
 
-  if (mode.value === 'english' || mode.value === 'mistake-book') {
+  if (mode.value === 'words' || mode.value === 'stories' || mode.value === 'mistake-book') {
     // 参考 localhost:3002：逐字母输入；词完成后按空格/回车推进
     const unit = currentWord.value
     if (!unit) return { correct: false }
@@ -3027,16 +3044,16 @@ function finish() {
   // 整课完成庆祝（官网只在完成整门课时放彩带/烟花 + victory 音效，非每句）
   fireCourseCelebration()
   // 课包课程完成：标记进度
-  if (mode.value === 'english' && currentCourse.value && activePack.value) {
+  if (mode.value === 'stories' && currentCourse.value && activePack.value) {
     markCourseComplete(activePack.value.slug, currentCourse.value.file)
   }
   closeEnModePanel()
   // 错词练习结束：自动退回正常词库模式（避免下次开始仍在错词池）
-  if (mode.value === 'english' || mode.value === 'mistake-book') enMistakeMode.value = false
-  if (mode.value === 'english' || mode.value === 'mistake-book') enCustomMode.value = false // 自定义练习结束 → 回正常词库
+  if (isEnPractice.value) enMistakeMode.value = false
+  if (isEnPractice.value) enCustomMode.value = false // 自定义练习结束 → 回正常词库
   // 短文课包完成时不清除 enStoryMode —— 回到课程列表后用户可继续选课
   // 非课包短文（内置短文/自定义短文）仍清除
-  if (mode.value === 'english' || mode.value === 'mistake-book') enStoryMode.value = false // 短文练习结束 → 回正常词库
+  if (isEnPractice.value) enStoryMode.value = false // 短文练习结束 → 回正常词库
   enSlowMode.value = false // 慢词刻意练习结束 → 回正常词库
   // 刻意练习结束：复位（下次 start 恢复正常模式并清空本次错词）
   mistakePracticeMode.value = false
@@ -3056,7 +3073,6 @@ function finish() {
 
 function endSession() {
   cardAdvancePending = false
-  enSentenceDone.value = false
   stopElapsedTimer()
   if (!sessionStart.value) return
   const duration = Math.round((Date.now() - sessionStart.value) / 60000)
@@ -3132,7 +3148,7 @@ function onKeyDown(e) {
     // 方向键：键盘导航专用，不开始练习
     if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return
     // 短文浏览模式 / 错词本模式：不在此处按任意键开始，需点击具体按钮
-    if (mode.value === 'english' && enSection.value === 'stories') return
+    if (mode.value === 'stories') return
     if (mode.value === 'mistake-book') return
     // 未开始按 Esc：把焦点带回模式导航（顶部栏当前模式按钮）
     if (e.key === 'Escape') {
@@ -3181,7 +3197,7 @@ function onKeyDown(e) {
     return
   }
   // 英文模式：空格/回车推进下一词，退格回退，Ctrl+' 重听整句（参考 localhost:3002）
-  if (mode.value === 'english' || mode.value === 'mistake-book') {
+  if (mode.value === 'words' || mode.value === 'stories' || mode.value === 'mistake-book') {
     if (e.ctrlKey && e.code === 'Quote') {
       e.preventDefault()
       speakWholeSentence()
@@ -3395,15 +3411,20 @@ function applyModeFromQuery() {
     mode.value = 'cards'
     router.replace({ path: '/practice-modes', query: { mode: 'cards' } })
   }
-  // 从 URL 恢复英文子 tab（单词/短文/自定义）
-  if (mode.value === 'english' && route.query.section) {
-    const sec = route.query.section
-    if (sec === 'words') showEnWordsTab()
-    else if (sec === 'stories') showEnStoriesTab()
-    else if (sec === 'custom') showEnCustomTab()
+  // mode=words：确保词源为词库（退出短文/自定义/错题上下文），保持任意键即开始
+  if (mode.value === 'words') {
+    enStoryMode.value = false
+    enCustomMode.value = false
+    enMistakeMode.value = false
+    enSlowMode.value = false
+    mistakePracticeMode.value = false
   }
-  // 从 URL 恢复课包浏览状态
-  if (mode.value === 'english' && route.query.section === 'stories' && route.query.pack) {
+  // mode=stories：进入短文浏览态（packs 层级）并懒加载课包注册表
+  if (mode.value === 'stories' && !activePack.value) {
+    initStoriesBrowse()
+  }
+  // 从 URL 恢复课包浏览状态（stories 模式下的 pack/course 直达）
+  if (mode.value === 'stories' && route.query.pack) {
     restoreJulebuFromUrl()
   }
 }
@@ -3439,13 +3460,7 @@ watch(() => route.query.mode, () => {
   if (route.query.error === '1') return // error 专项已由 onMounted 处理
   applyModeFromQuery()
 })
-// 英文子 tab 切换（浏览器前进/后退时恢复 section 状态）
-watch(() => route.query.section, (sec) => {
-  if (route.name !== 'practice-modes' || mode.value !== 'english' || started.value) return
-  if (sec === 'words') showEnWordsTab()
-  else if (sec === 'stories') showEnStoriesTab()
-  else if (sec === 'custom') showEnCustomTab()
-})
+// 英文子 tab 切换（浏览器前进/后退时恢复 section 状态）已随模式拆分移除
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeyDown)
   window.removeEventListener('keydown', onNavKeydown)
@@ -3558,6 +3573,8 @@ onBeforeUnmount(() => {
   font-size: 26px;
   margin-top: 10px;
   opacity: 0.92;
+  animation: spCnIn .2s ease-out both;
+  animation-delay: calc(var(--gi, 0) * 20ms + 380ms);
 }
 /* 英文自定义内容面板 */
 .enCustomPanel {
@@ -3570,37 +3587,7 @@ onBeforeUnmount(() => {
   color: var(--theme-main-text-color);
   margin-bottom: 10px;
 }
-/* 英文内容类型切换：单词 / 短文 */
-.enSectionTabs {
-  display: flex;
-  gap: 6px;
-  padding: 4px;
-  background: var(--theme-background-light-color);
-  border-radius: 999px;
-  border: 1px solid var(--theme-border-color);
-}
-.enSectionTab {
-  padding: 7px 20px;
-  border-radius: 999px;
-  border: none;
-  background: transparent;
-  color: var(--theme-menu-text-color);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all .2s ease;
-}
-.enSectionTab:hover {
-  color: var(--theme-main-text-color);
-  background: color-mix(in srgb, var(--theme-menu-text-color) 8%, transparent);
-}
-.enSectionTab.active {
-  background: var(--theme-menu-text-color);
-  color: #fff;
-  font-weight: 600;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-/* 词库年级选择器：单词 tab 内，紧接在 tab 下方 */
+/* 词库年级选择器：单词模式配置区 */
 .enGradeRow {
   display: flex;
   justify-content: center;
@@ -4381,6 +4368,38 @@ onBeforeUnmount(() => {
 .combo-pop-enter-from { opacity: 0; transform: translate(-50%, 24px); }
 .combo-pop-leave-to   { opacity: 0; transform: translate(-50%, 14px); }
 
+/* 整句完成态入场微动画（与 combo 音效匹配：快速短促，节奏感）
+   时序：英文单词最先出现（核心主体），组框/角色胶囊/辅助文字依次跟进
+   英文单词：即时滑入，无延迟
+   组框边框：主体接近完成时跟进淡入（opacity 0.2→1，子元素始终可见）
+   角色胶囊：组框出现后弹入
+   辅助文字（音标/释义/词性）：最后淡入 */
+@keyframes spParseIn {
+  from { opacity: 0; transform: scale(0.97) translateY(6px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes spGroupIn {
+  from { opacity: 0.2; }
+  to   { opacity: 1; }
+}
+@keyframes spChipBounce {
+  0%   { transform: translate(-50%, -58%) scale(0.5); opacity: 0; }
+  55%  { transform: translate(-50%, -58%) scale(1.12); }
+  100% { transform: translate(-50%, -58%) scale(1); opacity: 1; }
+}
+@keyframes spWordUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes spAuxIn {
+  from { opacity: 0; transform: translateY(3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes spCnIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 0.92; transform: translateY(0); }
+}
+
 /* 整句完成态：官网式句子成分结构图（参考 julebu.co 练习页）
    结构：成分 = 圆角组框 + 顶部悬浮实色胶囊；词卡 = 音标/大字词/彩色下划线/释义/灰色词性 */
 .spParse {
@@ -4405,6 +4424,8 @@ onBeforeUnmount(() => {
   padding: 16px 12px 8px; /* 顶部留出胶囊悬浮空间 */
   transition: box-shadow .15s ease;
   background: color-mix(in srgb, var(--theme-background-light-color) 38%, transparent);
+  animation: spGroupIn .15s ease-out both;
+  animation-delay: calc(var(--gi, 0) * 20ms + 280ms);
 }
 .spGroup:hover { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10); }
 /* 无成分结构的整句（如 friends 对话版无拆解）：词卡平铺，不套组框 */
@@ -4429,6 +4450,8 @@ onBeforeUnmount(() => {
   border-radius: 999px;
   white-space: nowrap;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
+  animation: spChipBounce .2s ease-out both;
+  animation-delay: calc(var(--gi, 0) * 20ms + 340ms);
 }
 /* 词卡单元：grid 四行——音标 / 词(+下划线) / 释义 / 词性 */
 .spUnit {
@@ -4498,6 +4521,8 @@ onBeforeUnmount(() => {
   white-space: nowrap;
   margin-bottom: 3px;
   user-select: none;
+  animation: spAuxIn .15s ease-out both;
+  animation-delay: calc(var(--gi, 0) * 20ms + 300ms);
 }
 .spCell {
   position: relative;             /* 标点 absolute 于词身右缘：不占列宽 → 底部标签行只对齐词身 */
@@ -4514,6 +4539,8 @@ onBeforeUnmount(() => {
   padding: 0 2px 5px;                /* 底部留出词性线空间 */
   cursor: pointer;
   user-select: none;
+  animation: spWordUp .18s ease-out both;
+  animation-delay: calc(var(--gi, 0) * 20ms);
 }
 .dark .spWord, [data-theme='dark'] .spWord { color: #e2e8f0; }  /* 暗色模式浅色文字 */
 .dark .spPunct, [data-theme='dark'] .spPunct { color: #e2e8f0; }  /* 暗色模式标点浅色 */
@@ -4554,6 +4581,8 @@ onBeforeUnmount(() => {
   overflow: hidden;
   text-overflow: ellipsis;  /* 超长兜底省略号，避免撑爆布局 */
   margin-top: 2px;
+  animation: spAuxIn .15s ease-out both;
+  animation-delay: calc(var(--gi, 0) * 20ms + 300ms);
 }
 .spPos {
   font-size: 10px;
@@ -4564,6 +4593,8 @@ onBeforeUnmount(() => {
   letter-spacing: 0.3px;
   margin-top: 2px;
   user-select: none;
+  animation: spAuxIn .15s ease-out both;
+  animation-delay: calc(var(--gi, 0) * 20ms + 300ms);
 }
 .spPos {
   font-size: 10px;
