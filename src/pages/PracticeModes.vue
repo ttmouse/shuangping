@@ -962,6 +962,9 @@ const sentFirstTry = ref(true)       // 本句是否全程首答（无错词/无
 const sentTypos = ref(0)             // 本句 typo 计数（打错过但自行纠正）
 // 触发整句完成评级：rating 由调用方算好传入
 function fireSentenceCelebration(rating) {
+  // 整句提交即内容全部正确（严格模式错字母不前进、宽松模式错词插回重练）→ 响官网式"叮"
+  // 官网实测：句子提交准确 → 立即 0.6s 短叮（correct.mp3），与是否 perfect 无关
+  if (settings.sound) playKeySound('correct', { volume: Math.min(1, (settings.soundVolume || 0.18) * 3) })
   const good = rating === 'perfect' || rating === 'great'
   // 连击维护（官网：只有 perfect|great 才 +1，否则归零）
   if (good) { enCombo.value++ } else { enCombo.value = 0 }

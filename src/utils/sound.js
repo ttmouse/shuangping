@@ -1,5 +1,5 @@
 // 音效播放（WebAudio：mp3 → AudioBuffer 缓存 → 播放）
-// 现支持多音效 kind：ok / bad / combo / victory / error
+// 现支持多音效 kind：ok / bad / combo / victory / error / correct
 // 文件放 public/sounds/，运行时 fetch 解码后播放
 const BASE = import.meta.env.BASE_URL || '/'
 let audioCtx = null
@@ -10,6 +10,7 @@ const urls = {
   combo: `${BASE}sounds/combo.mp3`,
   victory: `${BASE}sounds/victory.mp3`,
   error: `${BASE}sounds/error.mp3`,
+  correct: `${BASE}sounds/correct.mp3`, // 整句提交准确提示（官网 0.6s 短叮）
 }
 let triedLoad = false
 
