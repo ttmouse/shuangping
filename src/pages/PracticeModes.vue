@@ -1012,6 +1012,7 @@ function fireCourseCelebration() {
 
 // 换句/重开：重置本句过程状态
 function resetSentenceScoring() {
+  clearEnReplay(-1) // 清错误回放状态/定时器（跨句不残留）
   sentUsedHint.value = false
   sentFirstTry.value = true
   sentTypos.value = 0
@@ -1721,10 +1722,9 @@ function checkGentleSentence() {
         // 重练关闭：回退到最早打错的词，清空输入就地重打（错误字符已标红）。
         // 回退后该词成为当前词；其后方已打对的词由空格"滑过"逻辑自动完成，无需重打
         wordIdx.value = firstBad
-        currentInput.value = ''
-        letterIdx.value = 0
-        enGentleInputs.value[firstBad] = ''
         startEnWord()
+        // 错误回放：先把打错的字母红字显示（不直接替换成正确字母），1 秒后自动清空回归初始
+        startEnReplay(firstBad)
       }
     }
     // 重练开启：副本连续排在 origLen 起；wordIdx 仍停在旧句末 → 自然落到第一个副本等待输入
@@ -1856,6 +1856,37 @@ const enHadError = ref(false)
 const enGentleInputs = ref([]) // { wordIdx: inputString }
 // 宽松模式：整句检查后的错误位置标记
 const enGentleErrors = ref({}) // { "wi:li": true } for wrong characters
+// ---- 宽松+跳过：错词"错误回放"——回退到错词时先把打错的字母红字显示 1 秒，再回归初始待输入 ----
+const enReplayWi = ref(-1) // 正在回放的词索引（-1 = 无）
+let enReplayTimer = 0
+const EN_REPLAY_MS = 1000
+
+// 开始回放词 wi 的错误输入（红字显示用户打错的内容，不替换成正确字母）
+function startEnReplay(wi) {
+  if (!settings.enGentleMode || settings.enRedoPractice) return
+  const wrong = enGentleInputs.value[wi] || ''
+  if (wrong === '') return
+  clearTimeout(enReplayTimer)
+  enReplayWi.value = wi
+  currentInput.value = wrong // 显示用户打错的内容
+  letterIdx.value = wrong.length
+  enReplayTimer = setTimeout(() => clearEnReplay(wi), EN_REPLAY_MS)
+}
+// 结束回放：清定时器；wi>=0 时让该词回归初始未输入状态（清输入/该词红标，作为重打起点）
+function clearEnReplay(wi) {
+  clearTimeout(enReplayTimer)
+  if (wi < 0 || enReplayWi.value === wi) enReplayWi.value = -1
+  if (wi >= 0) {
+    if (wordIdx.value === wi) {
+      currentInput.value = ''
+      letterIdx.value = 0
+    }
+    enGentleInputs.value[wi] = ''
+    for (const k of Object.keys(enGentleErrors.value)) {
+      if (k.startsWith(`${wi}:`)) delete enGentleErrors.value[k]
+    }
+  }
+}
 // 宽松模式：标记是否已执行过整句检查（避免重练时再次检查导致重复插入错词）
 // 英文句子跳转：点击进度数字直接输入目标句号
 const enSentenceJumpOpen = ref(false)
@@ -2542,6 +2573,10 @@ function letterClass(wi, li) {
   if (settings.enGentleMode && enGentleErrors.value[`${wi}:${li}`] && li >= letterIdx.value) {
     return { incorrect: true }
   }
+  // 错误回放：回退后短暂红字显示打错的字母（内容为用户输入，不替换成正确字母）
+  if (settings.enGentleMode && enReplayWi.value === wi && li < letterIdx.value) {
+    return { incorrect: true }
+  }
   if (li < letterIdx.value) {
     // 宽松模式：已输入字母正常显示（用主文字色；词根灰/半透明色太淡）
     // 不标"正确绿"、也不标"错误红"——宽松模式只提示、不纠错
@@ -2986,6 +3021,14 @@ function submitCode(code) {
       expected = expectKey
       correct = expected === code
       if (settings.enGentleMode) {
+        // 回放中开始重打：中断回放并清空错误内容（本次按键作为第一个输入字母）
+        if (enReplayWi.value === wordIdx.value) {
+          clearTimeout(enReplayTimer)
+          enReplayWi.value = -1
+          currentInput.value = ''
+          letterIdx.value = 0
+          enGentleInputs.value[wordIdx.value] = ''
+        }
         // 宽松模式：不标记错误、不播错误音效、不记录错词
         enWordKeystrokes.value++ // 记录按键数（掌握度计时用，不计正确与否）
         // 存储实际输入的字符，原样显示（用于完成时比对）
@@ -3359,6 +3402,11 @@ function onKeyDown(e) {
       // 完成判定基于输入核心：句号/逗号/问号没打也算完成（you'll 的撇号仍必须打）
       // 宽松模式 + 重练关闭的就地重打场景：回退后经过的"已打对"词无需重输，空格直接滑过
       const gentleSkipPass = settings.enGentleMode && currentInput.value === '' && enCore(enGentleInputs.value[wordIdx.value] || '') === enCore(word)
+      // 错误回放中按空格/回车：提前结束回放、回归初始待输入（不把错误内容当完成提交）
+      if (settings.enGentleMode && enReplayWi.value === wordIdx.value) {
+        clearEnReplay(wordIdx.value)
+        return
+      }
       if (letterIdx.value >= enCoreLen(word) || gentleSkipPass) {
         // 宽松模式：不检查输入是否正确，直接完成单词，保存输入
         if (settings.enGentleMode) {
@@ -3437,6 +3485,12 @@ function onKeyDown(e) {
             wordIdx.value++
             completedUnits.value++
           }
+          // 停在下一个仍错的词（有错误输入）→ 同样先红字回放 1 秒再回归初始重打
+          if (wordIdx.value < sWords.length) {
+            const wu = sWords[wordIdx.value]
+            const wc = enCore(unitText(wu))
+            if (wc && enCore(enGentleInputs.value[wordIdx.value] || '') !== wc) startEnReplay(wordIdx.value)
+          }
         }
         if (wordIdx.value >= enSentence.value.length) {
           // 最后一个词打完：整句完成
@@ -3467,6 +3521,11 @@ function onKeyDown(e) {
     }
     if (e.code === 'Backspace') {
       e.preventDefault()
+      // 错误回放中退格：直接结束回放回归初始（重打从空开始）
+      if (settings.enGentleMode && enReplayWi.value === wordIdx.value) {
+        clearEnReplay(wordIdx.value)
+        return
+      }
       if (currentInput.value.length > 0) {
         currentInput.value = currentInput.value.slice(0, -1)
         // 若回退到正确位置之前，同步回退 letterIdx
