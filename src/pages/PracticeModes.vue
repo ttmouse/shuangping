@@ -1723,8 +1723,10 @@ function checkGentleSentence() {
         // 回退后该词成为当前词；其后方已打对的词由空格"滑过"逻辑自动完成，无需重打
         wordIdx.value = firstBad
         startEnWord()
-        // 错误回放：先把打错的字母红字显示（不直接替换成正确字母），1 秒后自动清空回归初始
-        startEnReplay(firstBad)
+        // 错误回放：先把打错的字母红字显示（不直接替换成正确字母），1 秒后自动清空回归初始。
+        // 默写词跳过内容回放（避免正确字母闪现），直接清空该词输入/红标回归初始，凭记忆重打
+        if (!isEnDictHiddenWord(firstBad)) startEnReplay(firstBad)
+        else clearEnReplay(firstBad)
       }
     }
     // 重练开启：副本连续排在 origLen 起；wordIdx 仍停在旧句末 → 自然落到第一个副本等待输入
@@ -1887,6 +1889,17 @@ function clearEnReplay(wi) {
     }
   }
 }
+// 该词是否以"默写"方式隐藏字母（dict）：宽松+跳过回退/自动滑过停错词时的"错误回放"会逐位对比，
+// 打对的位以正确色显示 = 把拼写答案闪现给用户，违背默写"不露字"原则 → 默写词跳过回放、直接回归初始隐藏态
+function isEnDictHiddenWord(wi) {
+  const unit = enSentence.value[wi]
+  if (!unit) return false
+  const word = unitText(unit)
+  if (!/[A-Za-z0-9]/.test(word)) return false // 标点词不参与隐藏判断
+  if (settings.enDisplayMode === 'guide') return false
+  return settings.enDisplayMode === 'dictation' || dictWords.value.has(stripPunct(word))
+}
+
 // 宽松模式：标记是否已执行过整句检查（避免重练时再次检查导致重复插入错词）
 // 英文句子跳转：点击进度数字直接输入目标句号
 const enSentenceJumpOpen = ref(false)
@@ -3507,7 +3520,11 @@ function onKeyDown(e) {
           if (wordIdx.value < sWords.length) {
             const wu = sWords[wordIdx.value]
             const wc = enCore(unitText(wu))
-            if (wc && enCore(enGentleInputs.value[wordIdx.value] || '') !== wc) startEnReplay(wordIdx.value)
+            if (wc && enCore(enGentleInputs.value[wordIdx.value] || '') !== wc) {
+              // 默写词同样跳过内容回放，直接清空回归初始
+              if (!isEnDictHiddenWord(wordIdx.value)) startEnReplay(wordIdx.value)
+              else clearEnReplay(wordIdx.value)
+            }
           }
         }
         if (wordIdx.value >= enSentence.value.length) {
@@ -3550,6 +3567,10 @@ function onKeyDown(e) {
         if (currentInput.value.length < letterIdx.value) {
           letterIdx.value = currentInput.value.length
           wordCompleted.value = false
+        }
+        // 退格删除了所有错误字符后，重置错误揭示状态（避免全默写模式下退格时闪现正确单词）
+        if (currentInput.value.length <= letterIdx.value && enHadError.value) {
+          enHadError.value = false
         }
         // 宽松模式：同步记录，保证完成/显示一致
         if (settings.enGentleMode) enGentleInputs.value[wordIdx.value] = currentInput.value
