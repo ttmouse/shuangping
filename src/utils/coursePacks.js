@@ -2,8 +2,9 @@
 // 数据在 public/course-packs/<slug>/ 下，运行时 fetch 按需加载
 // 结构：index.json（总注册表）→ <slug>/index.json（课包+课程清单）→ <slug>/Lxx.json（单课全量）
 
-// 用相对根路径访问 public/course-packs（部署到子路径时由 base 配置保证；此处固定根路径）
-const PACK_ROOT = '/course-packs'
+// 用相对根路径访问 public/course-packs（GitHub Pages 部署到子路径时由 base 配置保证）
+// Vite 注入 import.meta.env.BASE_URL，运行时取当前 base 路径
+const PACK_ROOT = `${import.meta.env.BASE_URL}course-packs`
 
 // 单词释义缓存（课包slug → word → {pos, cn, phonetic}），供"释义跟课文走"
 const dictCache = new Map()
