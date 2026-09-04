@@ -4023,8 +4023,8 @@ onBeforeUnmount(() => {
   border-radius: 3px;
 }
 .word-box .letter.dict-current {
-  /* 默写·关闭当前字母提示：半透字母 + 淡背景 + 主题色线定位输入位置 */
-  color: color-mix(in srgb, var(--theme-main-text-color) 20%, transparent);
+  /* 默写·关闭当前字母提示：字母隐藏（仅下划线 + 淡背景定位输入位置） */
+  color: transparent;
   opacity: 1;
   border-bottom: 5px solid var(--theme-menu-hover-color);
   background: color-mix(in srgb, var(--theme-menu-hover-color) 12%, transparent);
