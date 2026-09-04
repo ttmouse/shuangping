@@ -2598,7 +2598,8 @@ function letterClass(wi, li) {
       if (isPunctCh) return { 'punct-current': true }
       // 揭示后（看答案/打错）：当前字母清晰显示
       if (enHadError.value) return { correct: true }
-      // 当前等待输入的字母：始终显示（不因 dict 隐藏）
+      // 默写状态（dict）：当前字母不展示文字，仅下划线+淡背景定位输入位置
+      if (dict) return { 'dict-current': true }
       return { current: true }
     }
     // 当前位置有错误输入时显示 incorrect
@@ -2607,7 +2608,9 @@ function letterClass(wi, li) {
     if (isPunctCh) return { 'punct-current': true }
     // 揭示后（看答案/打错）：当前字母清晰显示
     if (enHadError.value) return { correct: true }
-    // 当前等待输入的字母：与宽松模式一致，始终显示（不因 enDictCurrentHint 隐藏）
+    // 默写状态（dict）：当前字母不展示文字，仅下划线+淡背景定位输入位置
+    if (dict) return { 'dict-current': true }
+    // 普通（非默写）词：当前字母可作提示显示
     return { current: true }
   }
   // 当前词内未输入字母：按着色模式渲染
