@@ -350,6 +350,30 @@
               </template>
               <!-- 非课包浏览：短文列表 + 课包列表 -->
               <template v-else>
+                <div class="packBrowser">
+                  <div class="packTitle">
+                    <span>主题课包</span>
+                    <button v-if="!packList.length && !packLoading" class="btn storyAddBtn" @click="loadCoursePackRegistry" data-nav>加载课包</button>
+                    <button v-else-if="packLoading" class="btn" disabled data-nav>加载中…</button>
+                  </div>
+                  <div v-if="packError" class="packError">{{ packError }}</div>
+                  <div v-if="!packList.length && !packLoading" class="packEmpty">点击"加载课包"获取主题课程（850 基础词等）</div>
+                  <div v-if="packList.length" class="packGrid">
+                    <button v-for="p in sortedPackList" :key="p.slug" class="packCard" @click="openCoursePack(p)" data-nav>
+                      <span class="packCardBody">
+                        <span class="packCardTitle" :title="p.title">{{ p.title }}</span>
+                        <span v-if="p.description" class="packCardDesc">{{ p.description }}</span>
+                        <span class="packCardFoot">
+                          <span class="packProgressTrack"><span class="packProgressFill" :style="{ width: packProgress(p).pct + '%' }"></span></span>
+                          <span class="packCardMeta">
+                            <span class="packMetaMain">{{ packProgress(p).practiced }}/{{ p.courseCount }} 课程 · {{ packProgress(p).pct }}% 完成</span>
+                            <span v-if="packLastPractice.get(p.slug)" class="packMetaLast">上次 {{ relTime(packLastPractice.get(p.slug)) }}</span>
+                          </span>
+                        </span>
+                      </span>
+                    </button>
+                  </div>
+                </div>
                 <div class="storyPanelTitle">
                   <span>短文</span>
                   <button class="btn storyAddBtn" @click="openCustomEditor" data-nav>＋ 新增自定义</button>
@@ -380,30 +404,7 @@
                   </div>
                 </div>
                 <!-- 主题课包（julebu 课程）浏览：课包列表 -->
-                <div class="packBrowser">
-                  <div class="packTitle">
-                    <span>主题课包</span>
-                    <button v-if="!packList.length && !packLoading" class="btn storyAddBtn" @click="loadCoursePackRegistry" data-nav>加载课包</button>
-                    <button v-else-if="packLoading" class="btn" disabled data-nav>加载中…</button>
-                  </div>
-                  <div v-if="packError" class="packError">{{ packError }}</div>
-                  <div v-if="!packList.length && !packLoading" class="packEmpty">点击"加载课包"获取主题课程（850 基础词等）</div>
-                  <div v-if="packList.length" class="packGrid">
-                    <button v-for="p in sortedPackList" :key="p.slug" class="packCard" @click="openCoursePack(p)" data-nav>
-                      <span class="packCardBody">
-                        <span class="packCardTitle" :title="p.title">{{ p.title }}</span>
-                        <span v-if="p.description" class="packCardDesc">{{ p.description }}</span>
-                        <span class="packCardFoot">
-                          <span class="packProgressTrack"><span class="packProgressFill" :style="{ width: packProgress(p).pct + '%' }"></span></span>
-                          <span class="packCardMeta">
-                            <span class="packMetaMain">{{ packProgress(p).practiced }}/{{ p.courseCount }} 课程 · {{ packProgress(p).pct }}% 完成</span>
-                            <span v-if="packLastPractice.get(p.slug)" class="packMetaLast">上次 {{ relTime(packLastPractice.get(p.slug)) }}</span>
-                          </span>
-                        </span>
-                      </span>
-                    </button>
-                  </div>
-                </div>
+
                 <div class="storyList" v-if="EN_STORIES.length">
                   <div class="packBuiltinLabel">内置短文</div>
                   <button
@@ -2808,8 +2809,8 @@ function letterClass(wi, li) {
       if (dict) return { 'dict-current': true }
       return { current: true }
     }
-    // 当前位置有错误输入时显示 incorrect
-    if (currentInput.value.length > letterIdx.value) return { incorrect: true }
+    // 当前位置有错误输入时显示 incorrect，同时保留 current 的淡背景（背景不闪没）
+    if (currentInput.value.length > letterIdx.value) return { current: true, incorrect: true }
     // 标点字符：当前位置（等待输入）→ 高亮提示
     if (isPunctCh) return { 'punct-current': true }
     // 揭示后（看答案/打错）：保留 dict-current 背景+下划线，仅文字可见（revealed）
@@ -4820,6 +4821,11 @@ onBeforeUnmount(() => {
   color: #f56c6c;
   opacity: 1;
   border-bottom: 5px solid #f56c6c;
+}
+/* 当前位打错：保留 current 的淡背景和圆角，仅文字和下划线变红（背景不闪没） */
+.word-box .letter.current.incorrect {
+  background: color-mix(in srgb, var(--theme-border-color) 12%, transparent);
+  border-radius: 3px;
 }
 .enProgress { font-size: 14px; color: var(--theme-text-color); display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: auto; }
 .enHint { font-size: 13px; color: var(--theme-rich-text-color); }
