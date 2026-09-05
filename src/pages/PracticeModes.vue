@@ -4650,7 +4650,8 @@ onBeforeUnmount(() => {
   justify-content: center;
   gap: 12px 16px;
   padding: 6px 4px 4px;
-  max-width: 920px;
+  /* 用满舞台宽度（练习词格行同宽）：成分结构图尽量一行排开，不再被 920px 锁窄而白占两侧空间 */
+  max-width: calc(100% - 8px);
   margin: 0 auto;
 }
 .spGroup {
