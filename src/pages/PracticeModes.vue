@@ -1231,8 +1231,9 @@ function statParts(c) {
   if (s.word) items.push({ k: 'word', label: `词${s.word}`, path: STAT_ICONS.word, title: `词 ${s.word}` })
   if (s.phrase) items.push({ k: 'phrase', label: `短语${s.phrase}`, path: STAT_ICONS.phrase, title: `短语 ${s.phrase}` })
   if (s.sentence) items.push({ k: 'sentence', label: `句${s.sentence}`, path: STAT_ICONS.sentence, title: `句 ${s.sentence}` })
-  if (s.chunk) items.push({ k: 'chunk', label: `块${s.chunk}`, path: STAT_ICONS.chunk, title: `块 ${s.chunk}` })
-  if (s.combinedChunks) items.push({ k: 'combinedChunks', label: `组合块${s.combinedChunks}`, path: STAT_ICONS.chunk, title: `组合块 ${s.combinedChunks}` })
+  // 块与组合块合并计算，统一显示为"块"
+  const chunkCount = (s.chunk || 0) + (s.combinedChunks || 0)
+  if (chunkCount) items.push({ k: 'chunk', label: `块${chunkCount}`, path: STAT_ICONS.chunk, title: `块 ${chunkCount}` })
   if (!items.length && s.sentences) return [{ k: 'sentence', label: `共 ${s.sentences} 句`, path: STAT_ICONS.sentence, title: `共 ${s.sentences} 句` }]
   return items
 }
