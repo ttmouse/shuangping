@@ -15,7 +15,7 @@ export const useSettingsStore = defineStore('settings', {
     soundOkFile: '',
     soundList: [],
     // UI preferences
-    showKeyboard: true, // 显示底部虚拟键盘（设置菜单可关；外接实体键盘时可隐藏）
+    showKeyboard: false, // 显示底部虚拟键盘（默认关；外接实体键盘或不需要提示时可开启）
     yunmuShowShuangpin: true,
     yunmuAutoSpeak: false, // 自动朗读功能
     // Double pinyin scheme
@@ -28,10 +28,10 @@ export const useSettingsStore = defineStore('settings', {
     enPracticeMs: 300, // 慢词刻意练习阈值 ms/字母：超过则收录，刻意练习练到该值以内过关
     enMasteryMsDict: 1000, // 英文默写模式（隐藏字母回忆拼写）掌握阈值 ms/字母：回忆含思考时间，阈值放宽
     enSlowMsDict: 2500, // 英文默写模式慢词阈值：平均每字母超过（想不起来）→ 视为掌握不好
-    enDictCurrentHint: false, // 默写模式·当前字母显示：默认关闭（字母不显示，仅下划线高亮提示位置）；打开后当前字母也显示
-    enSpeakWords: true, // 英文单词发音：单词出现/打错时朗读（有道词典 TTS 接口）
+    enSpeakWords: true, // 英文单词朗读（主开关）：进入新单词和/或打错时朗读，具体由 enSpeakOnEnter / enSpeakOnError 细分
+    enSpeakOnEnter: true, // 单词朗读·进入时朗读：进入新单词时先朗读一遍（默认开）
+    enSpeakOnError: true, // 单词朗读·错误时朗读：打错时朗读该词纠音（默认开）
     enSpeakSentence: true, // 英文整句朗读：进入新句子时整句作一次请求先试有道原声（与单词同音色），失败回退系统语音连读；多词句生效
-    enNoWordPreSpeak: false, // 整句后免单词预读：读完整句后，单词输入前不再逐个朗读；打错纠音朗读仍保留
     enTTSAccent: 'uk', // 英文发音口音：'uk'=英音（有道 type=2）| 'us'=美音（type=1）
     enDisplayMode: 'smart', // 英文显示模式：'smart'=智能(根据掌握度)|'guide'=全指引(始终显示字母)|'dictation'=全默写(始终隐藏字母)
     enGrade: 'all', // 英文词库年级：'all' | 'g4' | 'g5' | 'g6'
@@ -40,7 +40,6 @@ export const useSettingsStore = defineStore('settings', {
     enRedoPractice: false, // 英文·错题重练：打错的单词是否重新入队重练（默认关：打错即过，无错题模式；开：错词进第二行重练）
     enGentleMode: false, // 英文·宽松模式：输入过程中不判错，整词完成后统一判断；支持 Backspace 自由修改
     enColorMode: 'word-root', // 英文·着色模式：'word-root'=词根着色（不同深浅灰色区分前缀/词根/后缀）| 'syllable'=音节着色（不同色相区分发音块）| 'off'=关闭着色
-    enShowPunct: false, // 英文·句中标点：句子练习时是否在词间展示逗号/句号等标点（默认关；开后在词与词之间显示原句标点）
     cardContent: 'all', // 卡片模式内容源（含年级）：'all' | 'g4' | 'g5' | 'g6' | 'sentence' | 'mistake' | 'custom'
     timeChallenge: false, // 限时挑战模式
     timeChallengeDuration: 60, // 限时挑战时长（秒）
@@ -114,23 +113,23 @@ export const useSettingsStore = defineStore('settings', {
       this.blindMode = !!value
       this.save()
     },
-    // 默写模式·当前字母提示
-    toggleEnDictCurrentHint() {
-      this.enDictCurrentHint = !this.enDictCurrentHint
-      this.save()
-      return this.enDictCurrentHint
-    },
     // 显示/隐藏底部虚拟键盘（全局）
     toggleShowKeyboard() {
       this.showKeyboard = !this.showKeyboard
       this.save()
       return this.showKeyboard
     },
-    // 整句后免单词预读：单词输入前不再朗读（打错纠音保留）
-    toggleEnNoWordPreSpeak() {
-      this.enNoWordPreSpeak = !this.enNoWordPreSpeak
+    // 单词朗读·进入时朗读
+    toggleEnSpeakOnEnter() {
+      this.enSpeakOnEnter = !this.enSpeakOnEnter
       this.save()
-      return this.enNoWordPreSpeak
+      return this.enSpeakOnEnter
+    },
+    // 单词朗读·错误时朗读
+    toggleEnSpeakOnError() {
+      this.enSpeakOnError = !this.enSpeakOnError
+      this.save()
+      return this.enSpeakOnError
     },
     // 英文整句朗读：进入新句子时先朗读整句
     toggleEnSpeakSentence() {
@@ -138,7 +137,7 @@ export const useSettingsStore = defineStore('settings', {
       this.save()
       return this.enSpeakSentence
     },
-    // 英文单词发音
+    // 英文单词朗读（主开关）
     toggleEnSpeakWords() {
       this.enSpeakWords = !this.enSpeakWords
       this.save()
@@ -194,12 +193,6 @@ export const useSettingsStore = defineStore('settings', {
         this.enColorMode = mode
         this.save()
       }
-    },
-    // 英文·句中标点显示
-    toggleEnShowPunct() {
-      this.enShowPunct = !this.enShowPunct
-      this.save()
-      return this.enShowPunct
     },
     // 卡片默写模式：隐藏/显示拼音字母提示
     toggleCardHideLetters() {

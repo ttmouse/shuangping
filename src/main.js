@@ -5,8 +5,10 @@ import App from './App.vue'
 import './assets/styles.css'
 import { useSettingsStore } from './stores/settings.js'
 import { setSoundURLs, loadCustomSounds } from './utils/sound.js'
+import { vQtip } from './utils/qtip.js'
 
 const app = createApp(App)
+app.directive('qtip', vQtip)
 const pinia = createPinia()
 app.use(pinia)
 app.use(router)

@@ -3,78 +3,78 @@
     <!-- 课包课程练习：顶部栏替换为课程面包屑导航（模式入口隐藏，但今日目标/正确率仍显示） -->
     <template v-if="course">
       <div class="left courseLeft">
-        <button class="courseBackBtn" title="回到课程列表" @click="course.onBack" data-nav>‹ 课程列表</button>
+        <button class="courseBackBtn" v-qtip data-tip="回到课程列表" @click="course.onBack" data-nav>‹ 课程列表</button>
         <div class="courseBreadcrumb">
           <span class="courseCrumbPack" :title="course.packTitle">{{ course.packTitle }}</span>
           <span class="courseCrumbSep">›</span>
           <span class="courseCrumbCourse" :title="course.courseTitle">{{ course.courseTitle }}</span>
         </div>
         <div class="courseNav">
-          <button class="courseNavBtn" :disabled="course.index <= 0" @click="course.onPrev" title="上一课" data-nav>‹</button>
+          <button class="courseNavBtn" v-qtip :disabled="course.index <= 0" @click="course.onPrev" data-tip="上一课" data-nav>‹</button>
           <span class="courseNavPos">{{ course.position }}</span>
-          <button class="courseNavBtn" :disabled="course.index >= course.total - 1" @click="course.onNext" title="下一课" data-nav>›</button>
+          <button class="courseNavBtn" v-qtip :disabled="course.index >= course.total - 1" @click="course.onNext" data-tip="下一课" data-nav>›</button>
         </div>
       </div>
     </template>
     <!-- 常规页面：左侧模式导航入口（练习中隐藏） -->
     <div v-show="!started" v-else class="left">
       <button
-        class="modeBtn"
+        class="modeBtn" v-qtip
         :class="{ active: route.name === 'projects' }"
         @click="go('/projects')"
-        title="首页"
+        data-tip="首页"
         data-nav
       >首页</button>
       <button
         v-for="m in PRACTICE_MODES"
         :key="m.id"
-        class="modeBtn"
+        class="modeBtn" v-qtip
         :class="{ active: isModeActive(m.id) }"
         @click="goMode(m.id)"
-        :title="m.label"
+        :data-tip="m.label"
         data-nav
       >
         <span class="modeBtnIcon" v-html="m.icon"></span>{{ m.label }}
       </button>
       <button
-        class="modeBtn"
+        class="modeBtn" v-qtip
         :class="{ active: route.name === 'yunmu-practice' }"
         @click="go('/yunmu-practice')"
-        title="声母韵母练习"
+        data-tip="声母韵母练习"
         data-nav
       >声母韵母练习</button>
       <button
-        class="modeBtn"
+        class="modeBtn" v-qtip
         :class="{ active: route.name === 'writer' }"
         @click="go('/writer')"
-        title="双拼打字练习"
+        data-tip="双拼打字练习"
         data-nav
       >双拼打字练习</button>
       <button
-        class="modeBtn"
+        class="modeBtn" v-qtip
         :class="{ active: route.name === 'statistics' }"
         @click="go('/statistics')"
-        title="练习统计"
+        data-tip="练习统计"
         data-nav
       >
         <svg class="btnIcon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 13V8"/><path d="M8 13V4"/><path d="M13 13V6"/></svg>
         统计
       </button>
       <button
-        class="modeBtn"
+        class="modeBtn" v-qtip
         :class="{ active: route.name === 'progress' }"
         @click="go('/progress')"
-        title="学习进度"
+        data-tip="学习进度"
         data-nav
       >
         <svg class="btnIcon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2"/></svg>
         进度
       </button>
       <button
-        class="modeBtn"
+        class="modeBtn" v-qtip
         :class="{ active: route.name === 'leaderboard' }"
         @click="go('/leaderboard')"
-        title="排行榜"
+        data-tip="排行榜"
         data-nav
       >
         <svg class="btnIcon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h6v4a3 3 0 0 1-6 0V3z"/><path d="M5 4H3v1a2.5 2.5 0 0 0 2.5 2.5"/><path d="M11 4h2v1a2.5 2.5 0 0 1-2.5 2.5"/><path d="M8 10v2"/><path d="M6 13h4"/></svg>
@@ -99,36 +99,36 @@
         <span class="acc-value">{{ session.accuracy }}%</span>
         <span class="acc-label">正确率</span>
       </div>
-      <button v-if="togglePause && pauseActive" class="iconBtn" :title="paused ? '继续' : '暂停'" @click="togglePause()">
+      <button v-if="togglePause && pauseActive" class="iconBtn" v-qtip :data-tip="paused ? '继续' : '暂停'" @click="togglePause()">
         <svg v-if="!paused" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
         <svg v-else viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>
       </button>
       <!-- 课程练习附加动作（切「阅读」），紧邻暂停按钮；由组件内部渲染以继承 scoped 样式 -->
       <button
         v-if="courseReadAction && courseReadAction.visible"
-        class="iconBtn"
-        title="阅读本课（整课例句文章流，可逐句朗读/查词）"
+        class="iconBtn" v-qtip
+        data-tip="阅读本课（整课例句文章流，可逐句朗读/查词）"
         @click="courseReadAction.onClick && courseReadAction.onClick()"
         data-nav
       >
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
       </button>
-      <button class="iconBtn" :title="isDark ? '切换到明亮模式' : '切换到暗色模式'" @click="toggleTheme">
+      <button class="iconBtn" v-qtip :data-tip="isDark ? '切换到明亮模式' : '切换到暗色模式'" @click="toggleTheme">
         <svg v-if="isDark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/></svg>
         <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
       <div class="settingsWrap">
         <button
-          class="iconBtn"
-          title="设置"
+          class="iconBtn" v-qtip
+          data-tip="设置"
           :class="{ active: showSettings }"
           @click="showSettings = !showSettings"
           data-nav
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         </button>
-        <!-- 设置浮层：居中大卡片 + 分组 -->
-        <div v-if="showSettings" class="settingsMask" @click.self="showSettings = false">
+        <!-- 设置浮层：居中大卡片 + 分组（Teleport 到 body，脱离顶部栏层叠上下文，确保遮罩盖住全页） -->
+        <Teleport to="body"><div v-if="showSettings" class="settingsMask" @click.self="showSettings = false">
           <div class="settingsPanel">
             <div class="spHeader">
               <span class="spTitle">设置</span>
@@ -137,7 +137,80 @@
               </button>
             </div>
             <div class="spBody">
-              <!-- 组1：英文·掌握判定 -->
+              <!-- 组1：英文·练习显示 -->
+              <div class="spGroup">
+                <div class="spGroupTitle">英文·练习显示</div>
+                <label class="setRow">
+                  <span class="setLabel" title="开启后显示每个英文单词下方本词的平均用时(ms)；关闭后界面更简洁">单词·显示用时(ms)</span>
+                  <input type="checkbox" :checked="settings.enShowWordTime" @change="settings.toggleEnShowWordTime()" />
+                </label>
+                <div class="setRow">
+                  <span class="setLabel" title="单词字母着色模式：词根着色（按前缀/词根/后缀分组上色）、音节着色（按自然拼读发音块上色）或关闭">着色模式</span>
+                  <span class="setCtrl setChips">
+                    <button class="chipBtn" :class="{ active: settings.enColorMode === 'word-root' }" @click="settings.setEnColorMode('word-root')" title="按前缀/词根/后缀分组上色">词根</button>
+                    <button class="chipBtn" :class="{ active: settings.enColorMode === 'syllable' }" @click="settings.setEnColorMode('syllable')" title="按自然拼读发音块上色">音节</button>
+                    <button class="chipBtn" :class="{ active: settings.enColorMode === 'off' }" @click="settings.setEnColorMode('off')" title="不显示着色">关</button>
+                  </span>
+                </div>
+              </div>
+
+              <!-- 组2：英文·发音 -->
+              <div class="spGroup">
+                <div class="spGroupTitle">英文·发音</div>
+                <label class="setRow">
+                  <span class="setLabel" title="英文模式：单词朗读主开关，开启后可细分进入时和错误时是否朗读">单词朗读</span>
+                  <input type="checkbox" :checked="settings.enSpeakWords" @change="settings.toggleEnSpeakWords()" />
+                </label>
+                <label class="setRow setRowSub" v-if="settings.enSpeakWords">
+                  <span class="setLabel" title="进入新单词时先朗读一遍（听发音再打）">进入时朗读</span>
+                  <input type="checkbox" :checked="settings.enSpeakOnEnter" @change="settings.toggleEnSpeakOnEnter()" />
+                </label>
+                <label class="setRow setRowSub" v-if="settings.enSpeakWords">
+                  <span class="setLabel" title="打错时朗读该词纠音">错误时朗读</span>
+                  <input type="checkbox" :checked="settings.enSpeakOnError" @change="settings.toggleEnSpeakOnError()" />
+                </label>
+                <label class="setRow">
+                  <span class="setLabel" title="英文短文/自定义模式：进入新句子时整句作一次请求先试有道原声（与单词同音色），未收录的句子自动回退系统语音整句朗读">整句朗读</span>
+                  <input type="checkbox" :checked="settings.enSpeakSentence" @change="settings.toggleEnSpeakSentence()" />
+                </label>
+                <div class="setRow setRowSound" v-if="settings.enSpeakWords">
+                  <span class="setLabel" title="发音口音：有道词典 TTS，英音（type=2）或美音（type=1）">发音口音</span>
+                  <select :value="settings.enTTSAccent" @change="onSelectTTSAccent">
+                    <option value="uk">英音</option>
+                    <option value="us">美音</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- 组3：通用键盘 -->
+              <div class="spGroup">
+                <div class="spGroupTitle">通用键盘</div>
+                <label class="setRow">
+                  <span class="setLabel" title="关闭后底部虚拟键盘不再显示（适合使用外接实体键盘的场景）；各练习页顶部的单独“隐藏键盘”开关仍可用">显示底部键盘</span>
+                  <input type="checkbox" :checked="settings.showKeyboard" @change="settings.toggleShowKeyboard()" />
+                </label>
+                <label class="setRow" v-if="settings.showKeyboard">
+                  <span class="setLabel">盲打模式</span>
+                  <input type="checkbox" :checked="settings.blindMode" @change="settings.toggleBlindMode()" />
+                </label>
+              </div>
+
+              <!-- 组4：声音 -->
+              <div class="spGroup">
+                <div class="spGroupTitle">声音</div>
+                <label class="setRow">
+                  <span class="setLabel">音效</span>
+                  <input type="checkbox" :checked="settings.sound" @change="settings.toggleSound()" />
+                </label>
+                <div class="setRow setRowSound">
+                  <span class="setLabel">正确音效</span>
+                  <select :value="settings.soundOkFile" @change="onSelectSound">
+                    <option v-for="n in soundOptions" :key="n" :value="n">{{ n }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- 组5：英文·掌握判定（高级阈值，放底部） -->
               <div class="spGroup">
                 <div class="spGroupTitle">英文·掌握判定</div>
                 <div class="setRow">
@@ -176,110 +249,9 @@
                   </span>
                 </div>
               </div>
-
-              <!-- 组2：英文·练习显示 -->
-              <div class="spGroup">
-                <div class="spGroupTitle">英文·练习显示</div>
-                <div class="setRow">
-                  <span class="setLabel" title="英文单词显示模式：智能=按掌握度自动切换，全指引=始终显示字母，全默写=始终隐藏字母">显示模式</span>
-                  <span class="setCtrl setChips">
-                    <button class="chipBtn" :class="{ active: settings.enDisplayMode === 'smart' }" @click="settings.setEnDisplayMode('smart')" title="按掌握度自动切换：已掌握的隐藏字母，未掌握的显示字母">智能</button>
-                    <button class="chipBtn" :class="{ active: settings.enDisplayMode === 'guide' }" @click="settings.setEnDisplayMode('guide')" title="所有单词始终显示字母（指引/提示效果）">全指引</button>
-                    <button class="chipBtn" :class="{ active: settings.enDisplayMode === 'dictation' }" @click="settings.setEnDisplayMode('dictation')" title="所有单词始终隐藏字母（全默写，凭记忆打）">全默写</button>
-                  </span>
-                </div>
-                <label class="setRow">
-                  <span class="setLabel" title="开启后显示每个英文单词上方的中文翻译；关闭后界面更简洁，专注拼写">单词·显示中文</span>
-                  <input type="checkbox" :checked="settings.enShowWordCn" @change="settings.toggleEnShowWordCn()" />
-                </label>
-                <label class="setRow">
-                  <span class="setLabel" title="开启后显示每个英文单词下方本词的平均用时(ms)；关闭后界面更简洁">单词·显示用时(ms)</span>
-                  <input type="checkbox" :checked="settings.enShowWordTime" @change="settings.toggleEnShowWordTime()" />
-                </label>
-                <div class="setRow">
-                  <span class="setLabel" title="单词字母着色模式：词根着色（按前缀/词根/后缀分组上色）、音节着色（按自然拼读发音块上色）或关闭">着色模式</span>
-                  <span class="setCtrl setChips">
-                    <button class="chipBtn" :class="{ active: settings.enColorMode === 'word-root' }" @click="settings.setEnColorMode('word-root')" title="按前缀/词根/后缀分组上色">词根</button>
-                    <button class="chipBtn" :class="{ active: settings.enColorMode === 'syllable' }" @click="settings.setEnColorMode('syllable')" title="按自然拼读发音块上色">音节</button>
-                    <button class="chipBtn" :class="{ active: settings.enColorMode === 'off' }" @click="settings.setEnColorMode('off')" title="不显示着色">关</button>
-                  </span>
-                </div>
-                <label class="setRow">
-                  <span class="setLabel" title="默写模式下当前录入位置的字母是否显示：默认不显示（回忆拼写，仅该位置下划线高亮）；勾选后显示字母">默写·显示当前字母</span>
-                  <input type="checkbox" :checked="settings.enDictCurrentHint" @change="settings.toggleEnDictCurrentHint()" />
-                </label>
-                <label class="setRow">
-                  <span class="setLabel" title="开启后：打错的单词会重新入队、放到第二行重练（错题模式）；关闭后：打错即过，不重练错词">错题重练</span>
-                  <input type="checkbox" :checked="settings.enRedoPractice" @change="settings.toggleEnRedoPractice()" />
-                </label>
-                <label class="setRow">
-                  <span class="setLabel" title="宽松模式：输入过程中不判错，可自由修改；整词完成后统一判断对错">宽松模式</span>
-                  <input type="checkbox" :checked="settings.enGentleMode" @change="settings.toggleEnGentleMode()" />
-                </label>
-                <label class="setRow">
-                  <span class="setLabel" title="句子练习时是否在词与词之间展示原句的逗号/句号等标点（默认关；开后在练习中显示标点，标点不参与输入）">句中标点</span>
-                  <input type="checkbox" :checked="settings.enShowPunct" @change="settings.toggleEnShowPunct()" />
-                </label>
-              </div>
-
-              <!-- 组3：英文·发音 -->
-              <div class="spGroup">
-                <div class="spGroupTitle">英文·发音</div>
-                <label class="setRow">
-                  <span class="setLabel" title="英文模式：单词出现时朗读一遍；打错时也会再次朗读该词提示正确发音（浏览器内置语音）">单词发音</span>
-                  <input type="checkbox" :checked="settings.enSpeakWords" @change="settings.toggleEnSpeakWords()" />
-                </label>
-                <label class="setRow">
-                  <span class="setLabel" title="英文短文/自定义模式：进入新句子时整句作一次请求先试有道原声（与单词同音色），未收录的句子自动回退系统语音整句朗读">整句朗读</span>
-                  <input type="checkbox" :checked="settings.enSpeakSentence" @change="settings.toggleEnSpeakSentence()" />
-                </label>
-                <label class="setRow" v-if="settings.enSpeakSentence">
-                  <span class="setLabel" title="读完整句后：单词输入前不再逐个朗读（安静回想/试拼）；打错时的纠音朗读仍保留（建议短文模式使用）">整句后免单词预读</span>
-                  <input type="checkbox" :checked="settings.enNoWordPreSpeak" @change="settings.toggleEnNoWordPreSpeak()" />
-                </label>
-                <div class="setRow setRowSound" v-if="settings.enSpeakWords">
-                  <span class="setLabel" title="发音口音：有道词典 TTS，英音（type=2）或美音（type=1）">发音口音</span>
-                  <select :value="settings.enTTSAccent" @change="onSelectTTSAccent">
-                    <option value="uk">英音</option>
-                    <option value="us">美音</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- 组4：通用键盘 -->
-              <div class="spGroup">
-                <div class="spGroupTitle">通用键盘</div>
-                <label class="setRow">
-                  <span class="setLabel" title="关闭后底部虚拟键盘不再显示（适合使用外接实体键盘的场景）；各练习页顶部的单独“隐藏键盘”开关仍可用">显示底部键盘</span>
-                  <input type="checkbox" :checked="settings.showKeyboard" @change="settings.toggleShowKeyboard()" />
-                </label>
-                <label class="setRow">
-                  <span class="setLabel">卡片隐藏字母</span>
-                  <input type="checkbox" :checked="settings.cardHideLetters" @change="settings.toggleCardHideLetters()" />
-                </label>
-                <label class="setRow">
-                  <span class="setLabel">盲打模式</span>
-                  <input type="checkbox" :checked="settings.blindMode" @change="settings.toggleBlindMode()" />
-                </label>
-              </div>
-
-              <!-- 组5：声音 -->
-              <div class="spGroup">
-                <div class="spGroupTitle">声音</div>
-                <label class="setRow">
-                  <span class="setLabel">音效</span>
-                  <input type="checkbox" :checked="settings.sound" @change="settings.toggleSound()" />
-                </label>
-                <div class="setRow setRowSound">
-                  <span class="setLabel">正确音效</span>
-                  <select :value="settings.soundOkFile" @change="onSelectSound">
-                    <option v-for="n in soundOptions" :key="n" :value="n">{{ n }}</option>
-                  </select>
-                </div>
-              </div>
             </div>
           </div>
-        </div>
+        </div></Teleport>
       </div>
     </div>
   </div>
@@ -367,6 +339,11 @@ const PRACTICE_MODES = [
     label: '错词本',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 9h6"/><path d="M9 13h6"/><path d="M9 7h6"/></svg>',
   },
+  {
+    id: 'vocab-book',
+    label: '生词本',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.35 4.76 5.25.76-3.8 3.7.9 5.23L12 15.1l-4.7 2.35.9-5.23-3.8-3.7 5.25-.76z"/></svg>',
+  },
 ]
 // 当前是否高亮某个练习模式：位于打字练习页且 query.mode 匹配（无 query 时默认 cards）
 function isModeActive(id) {
@@ -410,7 +387,7 @@ function onSelectTTSAccent(e) {
 // 点击设置面板外部时关闭
 function onDocClick(e) {
   if (!showSettings.value) return
-  if (e.target.closest('.settingsWrap')) return
+  if (e.target.closest('.settingsWrap') || e.target.closest('.settingsMask')) return
   showSettings.value = false
 }
 onMounted(() => {
@@ -520,7 +497,6 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
   border-color: var(--theme-menu-hover-color);
   color: var(--theme-menu-hover-color);
 }
-.iconBtn.active { transform: rotate(40deg); }
 .settingsMask {
   position: fixed;
   inset: 0;
@@ -596,6 +572,7 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
   cursor: pointer;
 }
 .setLabel { flex: 0 0 auto; }
+.setRowSub { padding-left: 22px; font-size: 12.5px; color: var(--theme-text-secondary-color, #666); }
 .setCtrl { display: inline-flex; align-items: center; gap: 6px; }
 .setCtrl input[type="number"] {
   width: 60px;
@@ -610,7 +587,8 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
 }
 .setCtrl input[type="number"]:focus { border-color: var(--theme-menu-hover-color); }
 .setUnit { font-size: 11px; opacity: 0.7; }
-.setRow input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--theme-menu-hover-color); cursor: pointer; }
+.setRow input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--theme-menu-hover-color); cursor: pointer; outline: none; }
+.setRow input[type="checkbox"]:focus { outline: none; }
 .setChips { gap: 4px; }
 .chipBtn {
   padding: 3px 10px;

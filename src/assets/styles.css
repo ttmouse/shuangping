@@ -179,3 +179,23 @@ a { color: var(--theme-menu-text-color); text-decoration: none; }
 .pause-footer {
   justify-content: center;
 }
+
+/* 快速悬停提示浮层（由 v-qtip 指令创建的 fixed 气泡）：
+   深色底白字、hover 立即弹出、最高层级，不受容器裁剪/层级影响 */
+.qtip-bubble {
+  position: fixed;
+  z-index: 9999;
+  padding: 4px 9px;
+  border-radius: 6px;
+  background: rgba(22, 22, 28, 0.92);
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.4;
+  max-width: 280px;
+  text-align: center;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.08s ease;
+}
