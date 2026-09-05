@@ -4148,7 +4148,7 @@ onBeforeUnmount(() => {
   border-radius: 10px;
   border: 1px solid var(--theme-border-color);
   background: var(--theme-background-color);
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-color); /* 列表正文/标题用中性深灰（非品牌绿），绿色只留给状态强调 */
   font-size: 15px;
   cursor: pointer;
   text-align: left;
@@ -4160,11 +4160,11 @@ onBeforeUnmount(() => {
 }
 .storyMeta {
   font-size: 12px;
-  color: var(--theme-menu-text-color);
+  color: var(--theme-text-secondary); /* 辅助信息灰化，不再沿品牌绿 */
 }
 .storySubtitle {
   font-size: 12.5px;
-  color: var(--theme-menu-text-color);
+  color: var(--theme-text-secondary);
   line-height: 1.4;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -4255,15 +4255,15 @@ onBeforeUnmount(() => {
   outline: 2px solid var(--theme-menu-hover-color);
   outline-offset: 2px;
 }
-/* 最近打开/练习的课程：主色内描边（inset，不占位不抖动）+ 顶部高亮条点亮 */
-.courseGrid .courseCard.recent { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--theme-main-text-color) 82%, transparent); }
+/* 最近打开/练习的课程：细描边 + 顶部高亮条点缀（绿色仅作轻微提示，不再满框强绿） */
+.courseGrid .courseCard.recent { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--theme-menu-hover-color) 55%, transparent); }
 .courseGrid .courseCard.recent:hover {
   box-shadow:
-    inset 0 0 0 2px color-mix(in srgb, var(--theme-main-text-color) 82%, transparent),
-    0 6px 18px -10px color-mix(in srgb, var(--theme-main-text-color) 35%, transparent);
+    inset 0 0 0 1.5px color-mix(in srgb, var(--theme-menu-hover-color) 55%, transparent),
+    0 6px 18px -10px color-mix(in srgb, var(--theme-main-text-color) 30%, transparent);
 }
-.courseGrid .courseCard.recent::before { opacity: 1; }
-.courseOrder .recentDot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--theme-main-text-color); margin-left: 6px; vertical-align: 1px; }
+.courseGrid .courseCard.recent::before { opacity: .75; }
+.courseOrder .recentDot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--theme-menu-hover-color); margin-left: 6px; vertical-align: 1px; }
 .courseOrder {
   position: absolute;
   top: 12px;
@@ -4275,9 +4275,9 @@ onBeforeUnmount(() => {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: .4px;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-secondary);
   border-radius: 7px;
-  background: color-mix(in srgb, var(--theme-main-text-color) 9%, transparent);
+  background: color-mix(in srgb, var(--theme-text-secondary) 10%, transparent);
 }
 .courseCard .courseTitle {
   font-size: 15px;
@@ -4313,7 +4313,7 @@ onBeforeUnmount(() => {
   background: color-mix(in srgb, #2e9e5b 16%, transparent);
   flex-shrink: 0;
 }
-/* 上次练习时间：前置小圆点提示（与"已完成"同信息层级，不抢色） */
+/* 上次练习时间：前置小圆点提示（中性灰，避免与"已完成"绿章抢视觉） */
 .courseLast {
   display: inline-flex;
   align-items: center;
@@ -4324,7 +4324,7 @@ onBeforeUnmount(() => {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--theme-menu-hover-color);
+  background: var(--theme-text-secondary);
   flex-shrink: 0;
 }
 /* 课程卡底部：统计行置底，状态行紧随其后；未练习卡 footer 让位，卡内不悬空 */
@@ -4405,6 +4405,7 @@ onBeforeUnmount(() => {
   font-size: 16.5px;
   font-weight: 650;
   letter-spacing: .1px;
+  color: var(--theme-text-color); /* 包名中性色，不沿品牌绿 */
 }
 .packChip {
   flex-shrink: 0;
