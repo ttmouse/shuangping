@@ -354,12 +354,19 @@
                   <span>短文</span>
                   <button class="btn storyAddBtn" @click="openCustomEditor" data-nav>＋ 新增自定义</button>
                 </div>
-                <div v-if="customEditorOpen" class="customEditor">
-                  <input v-model="newCustomTitle" placeholder="给这组内容起个名字（可留空）" class="customTitleInput" />
-                  <textarea v-model="newCustomText" placeholder="粘贴英文内容（可中英对照，每句一行，中文行自动配为翻译）" rows="4"></textarea>
-                  <div class="customOpts">
-                    <button class="btn" :disabled="!newCustomText.trim()" @click="saveCustomStory" data-nav>{{ editingCustomId ? '保存修改' : '保存并加入' }}</button>
-                    <button class="btn" @click="customEditorOpen = false" data-nav>取消</button>
+                <!-- 新增自定义：独立浮层弹窗处理，不在当前页面展开 -->
+                <div v-if="customEditorOpen" class="customOverlay" @click.self="customEditorOpen = false">
+                  <div class="customModal">
+                    <div class="customModalHead">
+                      <span>{{ editingCustomId ? '编辑自定义' : '新增自定义' }}</span>
+                      <span class="customModalClose" title="关闭" @click="customEditorOpen = false">×</span>
+                    </div>
+                    <input v-model="newCustomTitle" placeholder="给这组内容起个名字（可留空）" class="customTitleInput" />
+                    <textarea v-model="newCustomText" placeholder="粘贴英文内容（可中英对照，每句一行，中文行自动配为翻译）" rows="5"></textarea>
+                    <div class="customOpts">
+                      <button class="btn" :disabled="!newCustomText.trim()" @click="saveCustomStory" data-nav>{{ editingCustomId ? '保存修改' : '保存并加入' }}</button>
+                      <button class="btn" @click="customEditorOpen = false" data-nav>取消</button>
+                    </div>
                   </div>
                 </div>
                 <div v-if="enCustomStoryList.length" class="storyList">
@@ -4070,19 +4077,18 @@ onBeforeUnmount(() => {
 /* “＋ 新增自定义”弱化为幽灵文字入口：低调次要按钮（透明底/无边框/灰色小字），仅悬停时轻微浮现 */
 .storyAddBtn {
   flex: none;
-  font-size: 12px;
+  font-size: 11.5px;
   line-height: 1;
-  padding: 4px 7px;
-  border: 1px solid transparent;
+  padding: 3px 6px;
+  border: 0;
   background: transparent;
   color: var(--theme-text-secondary);
-  border-radius: 6px;
-  opacity: .8;
-  transition: color .12s ease, background .12s ease, opacity .12s ease;
+  border-radius: 5px;
+  opacity: .7;
+  transition: color .12s ease, opacity .12s ease;
 }
 .storyAddBtn:hover {
   color: var(--theme-text-color);
-  background: color-mix(in srgb, var(--theme-text-secondary) 8%, transparent);
   opacity: 1;
 }
 .storyBackBtn {
@@ -4113,14 +4119,66 @@ onBeforeUnmount(() => {
   outline: 2px solid var(--theme-menu-hover-color);
   outline-offset: 2px;
 }
-.customEditor {
+/* 新增自定义：独立浮层（遮罩 + 居中弹窗），不在页面内展开 */
+.customOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.customModal {
+  width: min(480px, 94vw);
+  max-height: 90vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
+  gap: 10px;
+  padding: 18px 18px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-light-color);
+  box-shadow: 0 18px 50px -20px rgba(0, 0, 0, 0.4);
+}
+.customModalHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 8px;
-  padding: 12px;
-  border: 1px dashed var(--theme-border-color);
-  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--theme-text-color);
+}
+.customModalClose {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  color: var(--theme-text-secondary);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+.customModalClose:hover {
+  background: color-mix(in srgb, var(--theme-text-secondary) 10%, transparent);
+  color: var(--theme-text-color);
+}
+.customModal textarea {
+  width: 100%;
+  resize: vertical;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--theme-border-color);
   background: var(--theme-background-color);
+  color: var(--theme-main-text-color);
+  font-size: 14px;
+  outline: none;
 }
 .customTitleInput {
   padding: 6px 10px;
