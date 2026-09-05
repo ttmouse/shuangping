@@ -4711,7 +4711,7 @@ onBeforeUnmount(() => {
   bottom: calc(100% - 14px);   /* 浮层定位在词上方（避让音标行留少许重叠） */
   left: 50%;
   transform: translateX(-50%) translateY(-6px);
-  z-index: 80;
+  z-index: 999; /* 完结态词卡讲解浮层：提到页面内最高（仅低于 .overlay 1000 全屏遮罩），不被模式框/评级浮层/相邻卡片盖住 */
   width: max-content;
   max-width: 340px;
   padding: 9px 12px;
