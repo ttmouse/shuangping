@@ -1908,7 +1908,7 @@ function toggleVocabWord(wd) {
   if (vocabBook[key]) {
     delete vocabBook[key]
   } else {
-    vocabBook[key] = { def: wd.def || '', posCn: wd.posCn || '', phUk: wd.phUk || '', phUs: wd.phUs || '', ts: Date.now() }
+    vocabBook[key] = { def: wd.def || '', pos: wd.pos || '', posCn: wd.posCn || '', phUk: wd.phUk || '', phUs: wd.phUs || '', ts: Date.now() }
   }
   saveEnVocab()
 }
@@ -2869,12 +2869,25 @@ function buildEnglishQueue() {
     return parsed.map(s => ({ words: s.words, cn: s.cn || '' }))
   }
   // 生词本练习：每个收藏词单独一行，行内连续重复 N 遍（与慢词刻意练习同款；词量再少也能练）
-  if (enVocabMode.value) {
+  // 以模式为准（而非仅 enVocabMode）：完成后"再来一次"（finish 已清标志）也仍从生词本重建队列
+  if (enVocabMode.value || mode.value === 'vocab-book') {
     const pool = vocabBookWords.value
-    if (pool.length) {
-      const repeat = Math.max(1, Math.min(20, Number(customRepeat.value) || 3))
-      return shuffle(pool).map(w => ({ words: Array(repeat).fill(w), cn: '' }))
-    }
+    if (!pool.length) return [] // 生词本为空时不落到词库池
+    const repeat = Math.max(1, Math.min(20, Number(customRepeat.value) || 3))
+    return shuffle(pool).map(w => {
+      const info = vocabBook[w] || {}
+      const phonetic = { uk: info.phUk || '', us: info.phUs || '' }
+      return {
+        words: Array(repeat).fill(w),
+        cn: '',
+        // 整句完成态复用：平铺单张词卡（音标/词性/释义来自收藏快照，不依赖课程词典）
+        meta: {
+          sentenceEn: w,
+          wordDetails: [{ word: w, pos: info.pos || '', definition: info.def || '', phonetic }],
+          sentenceStructure: [],
+        },
+      }
+    })
   }
   // 慢词刻意练习：每个慢词单独一行，行内连续重复 N 遍（高频重复，默认 3 遍可调）
   if (enSlowMode.value) {
@@ -3405,11 +3418,11 @@ function start() {
   started.value = true
   startElapsedTimer()
   // 英文模式：渲染后检查溢出并滚动到当前词
-  if (mode.value === 'words' || mode.value === 'stories' || mode.value === 'mistake-book') {
+  if (mode.value === 'words' || mode.value === 'stories' || mode.value === 'mistake-book' || mode.value === 'vocab-book') {
     nextTick(() => scrollToCurrentWord())
   }
   // 按实际模式记录会话（卡片/中文/数字…各自独立记录时长）
-  // 单词模式即词库练习；短文模式细分内置/自定义/课包；错词本固定 en-mistake
+  // 单词模式即词库练习；短文模式细分内置/自定义/课包；错词本固定 en-mistake；生词本固定 en-vocab
   let practiceType = mode.value
   if (mode.value === 'words') {
     practiceType = 'en-words'
@@ -3419,6 +3432,8 @@ function start() {
     else practiceType = 'en-words'
   } else if (mode.value === 'mistake-book') {
     practiceType = 'en-mistake'
+  } else if (mode.value === 'vocab-book') {
+    practiceType = 'en-vocab'
   }
   stats.startSession(practiceType)
   progress.startSession()
@@ -3478,7 +3493,7 @@ function submitCode(code, shiftKey = false) {
   let correct = false
   let expected = ''
 
-  if (mode.value === 'words' || mode.value === 'stories' || mode.value === 'mistake-book') {
+  if (mode.value === 'words' || mode.value === 'stories' || mode.value === 'mistake-book' || mode.value === 'vocab-book') {
     // 参考 localhost:3002：逐字母输入；词完成后按空格/回车推进
     const unit = currentWord.value
     if (!unit) return { correct: false }
