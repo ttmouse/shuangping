@@ -16,6 +16,7 @@
   --theme-success: #2e9e5b;
   --theme-error: #d9534f;
   --theme-warning: #e6a23c;
+  --theme-card-background: #f6f6f6;
 }
 html.dark {
   --theme-background-color: #0f172a;
@@ -32,6 +33,7 @@ html.dark {
   --theme-success: #34d399;
   --theme-error: #f87171;
   --theme-warning: #fbbf24;
+  --theme-card-background: #1e293b;
 }
 * { box-sizing: border-box; }
 html, body, #app { height: 100%; }

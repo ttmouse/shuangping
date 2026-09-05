@@ -331,6 +331,38 @@ const ACHIEVEMENTS = [
   },
 ]
 
+// 成就进度定义（锁定卡片展示"还差多少"）
+// current 返回当前值；时间段类成就（早起/夜猫子/周末/每日目标达成）无累计型进度，不展示进度条
+const ACHIEVEMENT_PROGRESS = {
+  'first-practice': { current: s => s.totalCharsTyped, target: 1, unit: '字符' },
+  'hundred-chars': { current: s => s.totalCharsTyped, target: 100, unit: '字符' },
+  'five-hundred-chars': { current: s => s.totalCharsTyped, target: 500, unit: '字符' },
+  'thousand-chars': { current: s => s.totalCharsTyped, target: 1000, unit: '字符' },
+  'five-thousand': { current: s => s.totalCharsTyped, target: 5000, unit: '字符' },
+  'ten-thousand': { current: s => s.totalCharsTyped, target: 10000, unit: '字符' },
+  'fifty-thousand': { current: s => s.totalCharsTyped, target: 50000, unit: '字符' },
+  'accuracy-80': { current: s => s.accuracy, target: 80, unit: '%' },
+  'accuracy-90': { current: s => s.accuracy, target: 90, unit: '%' },
+  'accuracy-95': { current: s => s.accuracy, target: 95, unit: '%' },
+  'accuracy-100': { current: s => s.accuracy, target: 100, unit: '%' },
+  'speed-30': { current: s => s.averageSpeed, target: 30, unit: '字/分' },
+  'speed-60': { current: s => s.averageSpeed, target: 60, unit: '字/分' },
+  'speed-100': { current: s => s.averageSpeed, target: 100, unit: '字/分' },
+  'speed-150': { current: s => s.averageSpeed, target: 150, unit: '字/分' },
+  'streak-3': { current: s => s.streakDays, target: 3, unit: '天' },
+  'streak-7': { current: s => s.streakDays, target: 7, unit: '天' },
+  'streak-14': { current: s => s.streakDays, target: 14, unit: '天' },
+  'streak-30': { current: s => s.streakDays, target: 30, unit: '天' },
+  'streak-100': { current: s => s.streakDays, target: 100, unit: '天' },
+  'combo-5': { current: (s, sess) => sess.maxCombo, target: 5, unit: '连击' },
+  'combo-10': { current: (s, sess) => sess.maxCombo, target: 10, unit: '连击' },
+  'combo-25': { current: (s, sess) => sess.maxCombo, target: 25, unit: '连击' },
+  'combo-50': { current: (s, sess) => sess.maxCombo, target: 50, unit: '连击' },
+  'combo-100': { current: (s, sess) => sess.maxCombo, target: 100, unit: '连击' },
+  'weak-mode-master': { current: s => s.weakModePractices, target: 100, unit: '次' },
+  'daily-goal-streak': { current: s => s.dailyGoalStreak, target: 7, unit: '天' },
+}
+
 export const useProgressStore = defineStore('progress', {
   state: () => ({
     // 存储版本
@@ -377,6 +409,33 @@ export const useProgressStore = defineStore('progress', {
     // 获取已解锁成就列表
     unlockedList(state) {
       return ACHIEVEMENTS.filter(a => state.unlockedAchievements.includes(a.id))
+    },
+
+    // 各成就当前进度（锁定卡片进度条用）：{ id: { pct, current, target, unit } }
+    achievementProgress(state) {
+      const statsStore = useStatsStore()
+      const result = {}
+      const stats = {
+        totalCharsTyped: statsStore.totalCharsTyped,
+        averageSpeed: statsStore.averageSpeed,
+        streakDays: statsStore.streakDays,
+        weakModePractices: state.weakModePractices,
+        dailyGoalsCompleted: state.dailyGoals.completedDates.length,
+        dailyGoalStreak: this.calculateDailyGoalStreak(),
+        // 累计正确率（无练习时为 0，避免空数据时显示 100% 误导）
+        accuracy: statsStore.totalCharsTyped > 0
+          ? Math.round(statsStore.totalCorrectChars / statsStore.totalCharsTyped * 100)
+          : 0
+      }
+      const session = { maxCombo: state.maxCombo }
+      for (const a of ACHIEVEMENTS) {
+        const p = ACHIEVEMENT_PROGRESS[a.id]
+        if (!p) continue
+        const current = p.current(stats, session)
+        const pct = p.target > 0 ? Math.max(0, Math.min(100, Math.round(current / p.target * 100))) : 0
+        result[a.id] = { pct, current, target: p.target, unit: p.unit }
+      }
+      return result
     },
 
     // 获取未解锁成就列表

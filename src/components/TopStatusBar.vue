@@ -474,7 +474,7 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
   white-space: nowrap;
 }
 .goalTop.all { border-color: #3db389; }
-.goalTopTitle { display: inline-flex; align-items: center; gap: 4px; font-weight: 700; color: var(--theme-main-text-color); }
+.goalTopTitle { display: inline-flex; align-items: center; gap: 4px; font-weight: 700; color: var(--theme-text-color); }
 .goalTopTime { display: inline-flex; align-items: center; gap: 5px; font-variant-numeric: tabular-nums; }
 .goalTopBar { width: 44px; height: 6px; border-radius: 3px; background: var(--theme-border-color); overflow: hidden; display: inline-block; }
 .goalTopFill { display: block; height: 100%; background: var(--theme-menu-hover-color); border-radius: 3px; transition: width .3s ease; }
@@ -488,18 +488,22 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
   gap: 5px;
   padding: 6px 10px;
   border-radius: 10px;
-  border: 1px solid var(--theme-border-color);
-  background: var(--theme-background-light-color);
-  color: var(--theme-menu-text-color);
+  border: none;
+  background: transparent;
+  color: var(--theme-text-color);
   cursor: pointer;
   white-space: nowrap;
   flex: 0 0 auto;
 }
-.modeBtn.active {
-  border-color: var(--theme-menu-hover-color);
-  box-shadow: 0 0 0 2px #35e2b733 inset;
+.modeBtn:hover {
+  background: color-mix(in srgb, var(--theme-border-color) 55%, transparent);
+  color: var(--theme-text-color);
 }
-.modeBtn:hover { color: var(--theme-menu-hover-color); }
+.modeBtn.active {
+  background: color-mix(in srgb, var(--theme-accent-color) 10%, transparent);
+  color: var(--theme-accent-color);
+  font-weight: 600;
+}
 .btnIcon { width: 15px; height: 15px; flex: 0 0 auto; }
 .modeBtnIcon { display: inline-flex; width: 15px; height: 15px; flex: 0 0 auto; }
 .modeBtnIcon svg { width: 15px; height: 15px; }
@@ -542,11 +546,11 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
   text-align: left;
   white-space: nowrap;
 }
-.moreMenuItem:hover { background: var(--theme-menu-hover-color); color: var(--theme-menu-text-color); }
-.moreMenuItem.active { background: var(--theme-menu-hover-color); color: var(--theme-menu-text-color); font-weight: 600; }
+.moreMenuItem:hover { background: color-mix(in srgb, var(--theme-border-color) 55%, transparent); color: var(--theme-text-color); }
+.moreMenuItem.active { background: color-mix(in srgb, var(--theme-accent-color) 10%, transparent); color: var(--theme-accent-color); font-weight: 600; }
 .moreMenuMask { position: fixed; inset: 0; z-index: 999; }
 .accuracy { display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: var(--theme-background-color); border-radius: 6px; font-size: 12px; }
-.acc-value { font-weight: 700; color: #67c23a; }
+.acc-value { font-weight: 700; color: #6a9e7a; }
 .acc-label { color: var(--theme-text-color); }
 .psItem { text-align: center; padding: 3px 10px; background: var(--theme-background-color); border: 1px solid var(--theme-border-color); border-radius: 8px; min-width: 48px; }
 .psValue { display: block; font-size: 15px; font-weight: 700; color: var(--theme-main-text-color); font-variant-numeric: tabular-nums; line-height: 1.3; }
@@ -564,14 +568,15 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
   border-radius: 8px;
   border: 1px solid var(--theme-border-color);
   background: var(--theme-background-light-color);
-  color: var(--theme-menu-text-color);
+  color: var(--theme-text-color);
   cursor: pointer;
   transition: border-color .15s, color .15s, transform .2s;
 }
 .iconBtn svg { width: 18px; height: 18px; }
 .iconBtn:hover, .iconBtn.active {
-  border-color: var(--theme-menu-hover-color);
-  color: var(--theme-menu-hover-color);
+  border-color: var(--theme-text-secondary);
+  background: var(--theme-border-color);
+  color: var(--theme-text-color);
 }
 .settingsMask {
   position: fixed;
@@ -700,33 +705,33 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
 .courseBackBtn {
   padding: 5px 10px;
   border-radius: 6px;
-  border: 1px solid var(--theme-border-color);
   background: transparent;
-  color: var(--theme-menu-text-color);
+  border: 1px solid var(--theme-border-color);
+  color: var(--theme-text-color);
   font-size: 13px;
   cursor: pointer;
   white-space: nowrap;
 }
-.courseBackBtn:hover { color: var(--theme-main-text-color); background: var(--theme-background-color); }
+.courseBackBtn:hover { color: var(--theme-text-color); background: var(--theme-border-color); }
 .courseBreadcrumb {
   display: flex;
   align-items: center;
   gap: 5px;
   font-size: 14px;
-  color: var(--theme-menu-text-color);
+  color: var(--theme-text-color);
   min-width: 0;
 }
 .courseCrumbPack {
   font-weight: 600;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 160px;
 }
-.courseCrumbSep { color: var(--theme-menu-text-color); flex-shrink: 0; font-size: 16px; }
+.courseCrumbSep { color: var(--theme-rich-text-color); flex-shrink: 0; font-size: 16px; }
 .courseCrumbCourse {
-  color: var(--theme-accent-color, #ac47ff);
+  color: var(--theme-text-color);
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -744,16 +749,16 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
   border-radius: 4px;
   border: none;
   background: transparent;
-  color: var(--theme-menu-text-color);
+  color: var(--theme-text-color);
   font-size: 15px;
   cursor: pointer;
   line-height: 1.4;
 }
 .courseNavBtn:disabled { opacity: 0.3; cursor: default; }
-.courseNavBtn:hover:not(:disabled) { color: var(--theme-main-text-color); background: var(--theme-background-color); }
+.courseNavBtn:hover:not(:disabled) { color: var(--theme-text-color); background: var(--theme-border-color); }
 .courseNavPos {
   font-size: 13px;
-  color: var(--theme-menu-text-color);
+  color: var(--theme-text-color);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }

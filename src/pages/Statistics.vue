@@ -584,7 +584,7 @@ function clearStats() {
 }
 
 .stat-card {
-  background: var(--theme-background-light-color);
+  background: var(--theme-card-background);
   border: 1px solid var(--theme-border-color);
   border-radius: 12px;
   padding: 20px;
@@ -617,7 +617,7 @@ function clearStats() {
 
 /* 今日统计 */
 .today-section {
-  background: var(--theme-background-light-color);
+  background: var(--theme-card-background);
   border: 1px solid var(--theme-border-color);
   border-radius: 12px;
   padding: 20px;
@@ -671,7 +671,7 @@ function clearStats() {
 }
 
 .chart-card {
-  background: var(--theme-background-light-color);
+  background: var(--theme-card-background);
   border: 1px solid var(--theme-border-color);
   border-radius: 12px;
   padding: 20px;
@@ -711,7 +711,7 @@ function clearStats() {
 
 /* 操作按钮 */
 .actions-section {
-  background: var(--theme-background-light-color);
+  background: var(--theme-card-background);
   border: 1px solid var(--theme-border-color);
   border-radius: 12px;
   padding: 20px;
@@ -772,7 +772,7 @@ function clearStats() {
 
 /* 历史记录 */
 .history-section {
-  background: var(--theme-background-light-color);
+  background: var(--theme-card-background);
   border: 1px solid var(--theme-border-color);
   border-radius: 12px;
   padding: 20px;
@@ -864,7 +864,7 @@ function clearStats() {
 
 /* 周进度分析 */
 .weekly-progress-section {
-  background: var(--theme-background-light-color);
+  background: var(--theme-card-background);
   border: 1px solid var(--theme-border-color);
   border-radius: 12px;
   padding: 20px;
@@ -914,7 +914,7 @@ function clearStats() {
 
 /* 时段分析 */
 .time-slot-section {
-  background: var(--theme-background-light-color);
+  background: var(--theme-card-background);
   border: 1px solid var(--theme-border-color);
   border-radius: 12px;
   padding: 20px;
@@ -937,14 +937,15 @@ function clearStats() {
 .time-slot-item {
   text-align: center;
   padding: 16px 12px;
-  background: var(--theme-background-color);
+  background: var(--theme-card-background);
   border-radius: 8px;
   opacity: 0.6;
 }
 
+/* 深色模式：改用暗色浮层背景，避免亮灰刺眼 */
+
 .time-slot-item.active {
   opacity: 1;
-  border: 1px solid #8aa8a2;
 }
 
 .slot-name {

@@ -4352,7 +4352,6 @@ onBeforeUnmount(() => {
   gap: 16px;
   padding: 24px;
   background: var(--theme-background-light-color);
-  border: 1px solid var(--theme-border-color);
   border-radius: 12px;
 }
 .storyPanelTitle {
