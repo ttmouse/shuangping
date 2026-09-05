@@ -1,6 +1,12 @@
 <template>
-  <div class="app">
-    <TopStatusBar :course="courseBar" :started="started" />
+  <!-- mode=reading：整课阅读视图（与练习共用课程 URL，mode 后缀切换，同官网） -->
+  <ReadingView v-if="readingMode" />
+  <div v-else class="app">
+    <TopStatusBar
+      :course="courseBar"
+      :started="started"
+      :course-read-action="showCourseReadTop ? { visible: true, onClick: jumpToCourseReading } : null"
+    />
 
     <div class="pageCenter">
       <div class="tipsTextContent">
@@ -306,28 +312,40 @@
                       返回课包
                     </button>
                     <span class="packTitleText">{{ activePack.title }}</span>
+                    <span v-if="activePack.courses?.length" class="packChip" title="课包内课程数">{{ activePack.courses.length }} 课</span>
                     <span v-if="courseLoading" class="packLoadingTip">加载课程…</span>
                   </div>
                   <div v-if="activePack.description" class="packDesc">{{ activePack.description }}</div>
                   <div v-if="packError" class="packError">{{ packError }}</div>
                   <div v-if="packCoursesLoading" class="packEmpty">课程加载中…</div>
                   <div v-else class="storyList courseGrid">
-                    <button
-                      v-for="c in (activePack.courses || [])"
-                      :key="c.id"
-                      class="storyItem courseCard"
-                      :disabled="courseLoading"
-                      @click="startJulebuCourse(c)"
-                      data-nav
-                    >
-                      <span class="courseOrder">#{{ c.order }}</span>
-                      <span class="storyTitle courseTitle">{{ c.title }}</span>
-                      <span v-if="c.subtitle" class="storySubtitle">{{ c.subtitle }}</span>
-                      <span class="storyMeta">
-                        <span v-if="courseProgress[activePack.slug]?.[c.file]?.completed" class="courseDone" title="已练习完成">✓ 已完成</span>
-                        <span v-else>点击开始练习</span>
-                      </span>
-                    </button>
+                    <div v-for="c in (activePack.courses || [])" :key="c.id" class="courseCardWrap">
+                      <button
+                        class="storyItem courseCard"
+                        :class="{ recent: isRecentCourse(c) }"
+                        :disabled="courseLoading"
+                        @click="startJulebuCourse(c)"
+                        data-nav
+                      >
+                        <span class="courseOrder">#{{ c.order }}<i v-if="isRecentCourse(c)" class="recentDot" title="最近打开/练习的课程"></i></span>
+                        <span class="storyTitle courseTitle">{{ c.title }}</span>
+                        <span v-if="c.subtitle" class="storySubtitle">{{ c.subtitle }}</span>
+                        <span class="courseCardFoot">
+                          <span class="courseStatsRow" :title="courseStatsTitle(c)">{{ courseStatsText(c) }}</span>
+                          <span class="courseStatus"><span v-if="courseRec(c)?.completed" class="courseDone" title="已练习完成">已完成<span v-if="courseRec(c)?.lastPracticed"> · {{ relTime(courseRec(c).lastPracticed) }}</span></span><span v-else-if="courseRec(c)?.lastPracticed" class="courseLast" title="上次练习时间">上次 {{ relTime(courseRec(c).lastPracticed) }}</span></span>
+                        </span>
+                      </button>
+                      <button
+                        class="courseReadBtn"
+                        :disabled="courseLoading"
+                        title="阅读本课：整课例句文章流（可逐句朗读/查词）"
+                        @click="openCourseReading(c)"
+                        data-nav
+                      >
+                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        阅读
+                      </button>
+                    </div>
                   </div>
                 </div>
               </template>
@@ -778,7 +796,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onBeforeUnmount, ref, reactive, watch, nextTick } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref, reactive, watch, nextTick, defineAsyncComponent } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import TopStatusBar from '../components/TopStatusBar.vue'
 import AchievementNotification from '../components/AchievementNotification.vue'
@@ -886,6 +904,26 @@ const goal = computed(() => progress.todayGoal)
 const mistakes = useMistakesStore()
 const route = useRoute()
 const router = useRouter()
+
+// 最近打开/练习的课程（每个课包记一个），课程列表用于标识"上次选的是哪个"
+const lastCourse = ref(JSON.parse(localStorage.getItem('sp-last-course') || 'null'))
+function rememberRecentCourse(course) {
+  const pk = activePack.value?.slug
+  if (!pk || !course) return
+  const rec = { pack: pk, course: course.file || course.id, ts: Date.now() }
+  lastCourse.value = rec
+  try { localStorage.setItem('sp-last-course', JSON.stringify(rec)) } catch { /* ignore */ }
+}
+function isRecentCourse(c) {
+  const rec = lastCourse.value
+  return !!(rec && activePack.value && rec.pack === activePack.value.slug && rec.course === (c.file || c.id))
+}
+
+// mode=reading：整课阅读视图（懒加载 CourseReading；URL 与练习同源、mode 在末尾）
+const ReadingView = defineAsyncComponent(() => import('./CourseReading.vue'))
+const readingMode = computed(() => route.query.mode === 'reading' && !!route.query.pack && !!route.query.course)
+// 课程练习进行中 → 顶部状态条显示「阅读」入口（惰性求值，状态定义在其后无碍）
+const showCourseReadTop = computed(() => mode.value === 'stories' && started.value && !!(currentCourse.value && activePack.value))
 
 const mode = ref('cards')
 const started = ref(false)
@@ -1129,6 +1167,55 @@ function markCourseComplete(packSlug, courseFile) {
   courseProgress[packSlug][courseFile] = { completed: true, lastPracticed: Date.now() }
   saveCourseProgress()
 }
+// 触碰课程（开始练习/打开阅读）：记录 lastPracticed，保留 completed；课程卡显示"上次 x 天前"
+function touchCourse(course) {
+  const pk = activePack.value?.slug
+  if (!pk || !course) return
+  const file = course.file || course.id || ''
+  if (!courseProgress[pk]) courseProgress[pk] = {}
+  courseProgress[pk][file] = { ...(courseProgress[pk][file] || {}), lastPracticed: Date.now() }
+  saveCourseProgress()
+}
+// 课程卡辅助：进度记录 / 模块统计文案 / 相对时间
+function courseRec(c) {
+  return courseProgress[activePack.value?.slug]?.[c.file || c.id] || null
+}
+function relTime(ts) {
+  if (!ts) return ''
+  const min = Math.floor((Date.now() - ts) / 60000)
+  if (min < 1) return '刚刚'
+  if (min < 60) return `${min} 分钟前`
+  const h = Math.floor(min / 60)
+  if (h < 24) return `${h} 小时前`
+  const d = Math.floor(h / 24)
+  if (d < 2) return '昨天'
+  if (d < 30) return `${d} 天前`
+  const mo = Math.floor(d / 30)
+  return mo < 12 ? `${mo} 个月前` : `${Math.floor(mo / 12)} 年前`
+}
+function courseStatsText(c) {
+  const s = c.stats
+  if (!s) return ''
+  // 口径与练习队列一致：单词型 statement → 词，整句型 → 句（非 raw sentences.length）
+  const parts = []
+  if (s.word) parts.push(`词${s.word}`)
+  if (s.phrase) parts.push(`短语${s.phrase}`)
+  if (s.sentence) parts.push(`句${s.sentence}`)
+  if (s.chunk) parts.push(`块${s.chunk}`)
+  if (s.combinedChunks) parts.push(`组合块${s.combinedChunks}`)
+  if (parts.length <= 1) {
+    // 纯句子包/单一种类：直接读作计数（"句37"）
+    return parts[0] || (s.sentences ? `共 ${s.sentences} 句` : '')
+  }
+  return parts.join(' · ')
+}
+function courseStatsTitle(c) {
+  const s = c.stats
+  if (!s) return ''
+  const t = courseStatsText(c)
+  if (!t) return ''
+  return s.total ? `共 ${s.total} 项：${t}` : t
+}
 // 当前课程在课包中的索引（用于导航）
 const currentCourseIndex = computed(() => {
   if (!activePack.value?.courses || !currentCourse.value) return -1
@@ -1184,11 +1271,16 @@ function initStoriesBrowse() {
   loadCoursePackRegistry()
 }
 function syncJulebuUrl({ pack, course }) {
-  const q = { ...route.query }
+  // 重建 query：pack → course → mode 依次排列，让 mode 稳定落在 URL 末尾（同官网）
+  const q = {}
   if (pack) q.pack = pack
-  else delete q.pack
   if (course) q.course = course
-  else delete q.course
+  for (const k of Object.keys(route.query)) {
+    if (k === 'pack' || k === 'course' || k === 'mode') continue
+    q[k] = route.query[k]
+  }
+  const m = route.query.mode
+  q.mode = m && m !== 'reading' ? m : 'stories'
   router.replace({ query: q })
 }
 // 从 URL 恢复课包浏览状态：找到匹配的课包并展开，如有课程则自动加载
@@ -1277,9 +1369,28 @@ function backToPacks() {
   currentCourse.value = null
 }
 // 选课 → 加载单课全量 → 转成 story → 开始练习（释义跟课文走）
- async function startJulebuCourse(course) {
+ // 课程卡「阅读」入口：与练习共用课程 URL，mode=reading 后缀切换（同官网）
+ // 阅读视图内可「开始练习」切回 mode=stories 练习
+function openCourseReading(course) {
+  if (!activePack.value || !course) return
+  rememberRecentCourse(course) // 阅读也算"最近"，回来列表仍可见
+  touchCourse(course) // 阅读也算一次"触碰"，卡片记录上次时间
+  const f = course.file || course.id || ''
+  router.push({ path: '/practice-modes', query: { pack: activePack.value.slug, course: f, mode: 'reading' } })
+}
+// 练习进行中，顶部工具条「阅读」：切到当前课的阅读模式（练习状态保留，可从阅读页切回）
+function jumpToCourseReading() {
+  const pack = activePack.value
+  const course = currentCourse.value
+  if (!pack || !course) return
+  const f = course.file || course.id || ''
+  router.push({ path: '/practice-modes', query: { pack: pack.slug, course: f, mode: 'reading' } })
+}
+async function startJulebuCourse(course) {
    const pack = activePack.value
    if (!pack || courseLoading.value) return
+   rememberRecentCourse(course) // 记最近练习/打开的课，课程列表高亮
+   touchCourse(course) // 记录本次练习时间（课程卡"上次 x 天前"）
    courseLoading.value = true
    packError.value = ''
    // 结束上一课会话（导航切换时从已完成/进行中切换到新课）
@@ -2647,8 +2758,8 @@ function letterClass(wi, li) {
     // 重练单词（默写状态）强制隐藏字母，不依赖 enDictCurrentHint 设置
     if (settings.enGentleMode) {
       if (isPunctCh) return { 'punct-current': true }
-      // 揭示后（看答案/打错）：当前字母清晰显示
-      if (enHadError.value) return { correct: true }
+      // 揭示后（看答案/打错）：当前字母以默认态显示，引导输入，不标正确绿
+      if (enHadError.value) return {}
       // 默写状态（dict）：当前字母不展示文字，仅下划线+淡背景定位输入位置
       if (dict) return { 'dict-current': true }
       return { current: true }
@@ -2657,8 +2768,8 @@ function letterClass(wi, li) {
     if (currentInput.value.length > letterIdx.value) return { incorrect: true }
     // 标点字符：当前位置（等待输入）→ 高亮提示
     if (isPunctCh) return { 'punct-current': true }
-    // 揭示后（看答案/打错）：当前字母清晰显示
-    if (enHadError.value) return { correct: true }
+    // 揭示后（看答案/打错）：当前字母以默认态显示，引导输入，不标正确绿
+    if (enHadError.value) return {}
     // 默写状态（dict）：当前字母不展示文字，仅下划线+淡背景定位输入位置
     if (dict) return { 'dict-current': true }
     // 普通（非默写）词：当前字母可作提示显示
@@ -2667,8 +2778,8 @@ function letterClass(wi, li) {
   // 当前词内未输入字母：按着色模式渲染
   if (isPunctCh) return { punct: true }
   if (dict) return { hidden: true }
-  // 揭示后（看答案/打错）：清晰显示当前词，不着色 → 与宽松模式样式一致
-  if (enHadError.value && wi === wordIdx.value) return { correct: true }
+  // 揭示后（看答案/打错）：以默认态显示当前词，引导输入，不标正确绿
+  if (enHadError.value && wi === wordIdx.value) return {}
   if (settings.enColorMode === 'syllable') return sylCls
   return segCls
 }
@@ -3659,12 +3770,27 @@ function onKeyUp(e) {
 
 // 从路由 query 应用模式（顶部导航切换到某模式时入口）；error=1 易错键专项优先
 function applyModeFromQuery() {
+  // 同步"最近课程"（阅读页内部切课等也会写入 localStorage）
+  const recRaw = localStorage.getItem('sp-last-course')
+  if (recRaw) { try { lastCourse.value = JSON.parse(recRaw) } catch { /* ignore */ } }
+  // 同步课程进度（阅读页/练习都可能更新过 lastPracticed）
+  const progRaw = localStorage.getItem(COURSE_PROGRESS_KEY)
+  if (progRaw) {
+    try {
+      const fresh = JSON.parse(progRaw)
+      for (const k of Object.keys(courseProgress)) if (!(k in fresh)) delete courseProgress[k]
+      Object.assign(courseProgress, fresh)
+    } catch { /* ignore */ }
+  }
   if (route.query.error === '1') {
     mode.value = 'letters'
     letterLevel.value = 'error'
     return
   }
   const q = route.query.mode
+  // mode=reading：阅读视图自身加载课程并整页渲染，练习页不做任何 stories 恢复/重定向
+  // （否则会被当成 stories 直达课包 → restoreJulebuFromUrl 启动练习并改写回 mode=stories）
+  if (q === 'reading') return
   if (q && MODES.some(m => m.id === q)) {
     mode.value = q
   } else if (!q) {
@@ -3684,8 +3810,21 @@ function applyModeFromQuery() {
   if (mode.value === 'stories' && !activePack.value) {
     initStoriesBrowse()
   }
+  // URL 只带 pack 不带 course（阅读页「课程列表」退出等）：若正处于课程练习，先结束回到浏览态
+  if (mode.value === 'stories' && route.query.pack && !route.query.course && (started.value || currentCourse.value)) {
+    endSession()
+    started.value = false
+    completed.value = false
+    currentCourse.value = null
+  }
   // 从 URL 恢复课包浏览状态（stories 模式下的 pack/course 直达）
-  if (mode.value === 'stories' && route.query.pack) {
+  // 同课已在练习中（阅读↔练习互切返回）→ 保留进度不重置
+  const sameCourseActive =
+    mode.value === 'stories' && route.query.pack &&
+    activePack.value && currentCourse.value &&
+    activePack.value.slug === route.query.pack &&
+    (currentCourse.value.file || currentCourse.value.id) === route.query.course
+  if (mode.value === 'stories' && route.query.pack && !sameCourseActive) {
     restoreJulebuFromUrl()
   }
 }
@@ -3899,20 +4038,30 @@ onBeforeUnmount(() => {
 .storyBackBtn {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  font-size: 12px;
-  padding: 5px 10px;
-  border-radius: 8px;
+  gap: 4px;
+  height: 28px;
+  padding: 0 11px 0 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  border-radius: 9px;
   border: 1px solid var(--theme-border-color);
-  background: var(--theme-background-color);
+  background: var(--theme-background-light-color);
   color: var(--theme-menu-text-color);
   cursor: pointer;
-  transition: all .15s ease;
+  transition: border-color .15s ease, background .15s ease, color .15s ease, transform .15s ease;
   flex-shrink: 0;
 }
+.storyBackBtn svg { flex-shrink: 0; }
 .storyBackBtn:hover {
   border-color: var(--theme-menu-hover-color);
-  background: color-mix(in srgb, var(--theme-menu-hover-color) 6%, var(--theme-background-color));
+  background: color-mix(in srgb, var(--theme-menu-hover-color) 8%, var(--theme-background-light-color));
+  color: var(--theme-main-text-color);
+  transform: translateX(-1px);
+}
+.storyBackBtn:active { transform: translateX(0) scale(.97); }
+.storyBackBtn:focus-visible {
+  outline: 2px solid var(--theme-menu-hover-color);
+  outline-offset: 2px;
 }
 .customEditor {
   display: flex;
@@ -4023,66 +4172,229 @@ onBeforeUnmount(() => {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
-/* 主题课包·课程卡片网格（参考 julebu 官网卡片墙：多列网格 + 左上序号） */
+/* 主题课包·课程卡片网格（参考 julebu 官网卡片墙：多列网格 + 序号徽章） */
 .courseGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
+  gap: 12px;
 }
+.courseCardWrap {
+  position: relative;
+  min-width: 0;
+}
+.courseCardWrap .courseCard {
+  width: 100%;
+  height: 100%;
+}
+.courseReadBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 9px;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1;
+  border-radius: 999px;
+  border: 1px solid var(--theme-border-color);
+  background: color-mix(in srgb, var(--theme-background-light-color) 92%, transparent);
+  color: var(--theme-text-secondary);
+  cursor: pointer;
+  transition: border-color .15s ease, color .15s ease, background .15s ease, transform .15s ease;
+  z-index: 1;
+}
+.courseReadBtn svg { flex-shrink: 0; }
+.courseReadBtn:hover {
+  border-color: var(--theme-menu-hover-color);
+  background: color-mix(in srgb, var(--theme-menu-hover-color) 9%, var(--theme-background-light-color));
+  color: var(--theme-main-text-color);
+  transform: translateY(-1px);
+}
+.courseReadBtn:active { transform: translateY(0) scale(.96); }
+.courseReadBtn:focus-visible {
+  outline: 2px solid var(--theme-menu-hover-color);
+  outline-offset: 1px;
+}
+.courseReadBtn:disabled { opacity: .35; cursor: default; transform: none; }
 .courseGrid .courseCard {
   position: relative;
-  gap: 4px;
-  min-height: 108px;
-  padding: 28px 14px 12px;
-  border-radius: 12px;
+  gap: 6px;
+  min-height: 122px;
+  padding: 46px 16px 13px;
+  border-radius: 14px;
   justify-content: center;
   overflow: hidden;
-  transition: all .18s ease;
+  transition: border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease;
   cursor: pointer;
+}
+.courseGrid .courseCard::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--theme-menu-hover-color) 55%, transparent),
+    color-mix(in srgb, var(--theme-menu-hover-color) 10%, transparent) 70%,
+    transparent);
+  opacity: 0;
+  transition: opacity .18s ease;
+  pointer-events: none;
 }
 .courseGrid .courseCard:hover {
   border-color: var(--theme-menu-hover-color);
-  background: color-mix(in srgb, var(--theme-menu-hover-color) 6%, var(--theme-background-light-color));
+  background: color-mix(in srgb, var(--theme-menu-hover-color) 7%, var(--theme-background-light-color));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px -10px color-mix(in srgb, var(--theme-main-text-color) 35%, transparent);
 }
+.courseGrid .courseCard:hover::before { opacity: 1; }
+.courseGrid .courseCard:active { transform: translateY(0) scale(.99); }
+.courseGrid .courseCard:focus-visible {
+  outline: 2px solid var(--theme-menu-hover-color);
+  outline-offset: 2px;
+}
+/* 最近打开/练习的课程：主色内描边（inset，不占位不抖动）+ 顶部高亮条点亮 */
+.courseGrid .courseCard.recent { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--theme-main-text-color) 82%, transparent); }
+.courseGrid .courseCard.recent:hover {
+  box-shadow:
+    inset 0 0 0 2px color-mix(in srgb, var(--theme-main-text-color) 82%, transparent),
+    0 6px 18px -10px color-mix(in srgb, var(--theme-main-text-color) 35%, transparent);
+}
+.courseGrid .courseCard.recent::before { opacity: 1; }
+.courseOrder .recentDot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--theme-main-text-color); margin-left: 6px; vertical-align: 1px; }
 .courseOrder {
   position: absolute;
-  top: 8px;
-  left: 10px;
+  top: 12px;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 8px;
   font-size: 11px;
   font-weight: 700;
-  color: var(--theme-menu-text-color);
-  opacity: 0.75;
-  letter-spacing: 0.5px;
+  letter-spacing: .4px;
+  color: var(--theme-main-text-color);
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--theme-main-text-color) 9%, transparent);
 }
 .courseCard .courseTitle {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
+  line-height: 1.35;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 .courseCard .courseDone {
   color: #2e9e5b;
+}
+/* 已完成 ✓ 徽章：圆形底 + 绿勾 */
+.courseDone {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 500;
+}
+.courseDone::before {
+  content: "✓";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  font-size: 9.5px;
+  line-height: 1;
+  border-radius: 50%;
+  color: #2e9e5b;
+  background: color-mix(in srgb, #2e9e5b 16%, transparent);
+  flex-shrink: 0;
+}
+/* 上次练习时间：前置小圆点提示（与"已完成"同信息层级，不抢色） */
+.courseLast {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.courseLast::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--theme-menu-hover-color);
+  flex-shrink: 0;
+}
+/* 课程卡底部：统计行置底，状态行紧随其后；未练习卡 footer 让位，卡内不悬空 */
+.courseCard .courseCardFoot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+  width: 100%;
+  min-height: 16px;
+  padding-top: 7px;
+  border-top: 1px dashed color-mix(in srgb, var(--theme-border-color) 72%, transparent);
+}
+.courseCard .courseStatsRow {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--theme-text-secondary);
+  opacity: .92;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.courseCard .courseStatus {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--theme-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: none;
+}
+.courseCard .courseStatus:empty { display: none; }
+/* 无障碍：偏好减少动效时，列表 hover/按压位移与过渡一律关闭 */
+@media (prefers-reduced-motion: reduce) {
+  .courseGrid .courseCard,
+  .courseGrid .courseCard::before,
+  .courseReadBtn,
+  .storyBackBtn {
+    transition: none;
+  }
+  .courseGrid .courseCard:hover,
+  .courseGrid .courseCard:active,
+  .courseReadBtn:hover,
+  .courseReadBtn:active,
+  .storyBackBtn:hover {
+    transform: none;
+  }
 }
 /* 主题课包浏览器 */
 .packBrowser {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin: 6px 0 12px;
+  gap: 8px;
+  margin: 4px 0 16px;
 }
 .packDesc {
-  font-size: 13px;
+  font-size: 12.5px;
   line-height: 1.6;
-  color: var(--theme-menu-text-color);
-  padding: 2px 2px 4px;
+  color: var(--theme-text-secondary);
+  padding: 0 2px 4px;
 }
 .packTitle {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-size: 15px;
   font-weight: 600;
+  padding: 2px 0 4px;
 }
 .packTitleText {
   flex: 1;
@@ -4090,8 +4402,26 @@ onBeforeUnmount(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 16.5px;
+  font-weight: 650;
+  letter-spacing: .1px;
+}
+.packChip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  height: 21px;
+  padding: 0 9px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--theme-text-secondary);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 999px;
+  background: var(--theme-background-light-color);
+  white-space: nowrap;
 }
 .packLoadingTip {
+  flex-shrink: 0;
   font-size: 12px;
   font-weight: 400;
   color: var(--theme-menu-text-color);

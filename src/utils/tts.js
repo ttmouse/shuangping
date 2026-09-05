@@ -17,7 +17,7 @@ let lastAudio = null
 
 // ---- 打断机制：任何新朗读（单词/整句）使进行中的朗读全部失效 ----
 let speechToken = null
-function stopAllSpeech() {
+export function stopAllSpeech() {
   speechToken = null // 使进行中的整句朗读（含 pending 的有道请求）失效
   if (lastAudio && lastAudio.currentTime > 0 && !lastAudio.ended) {
     try { lastAudio.pause(); lastAudio.currentTime = 0 } catch {}
@@ -161,7 +161,7 @@ if (typeof speechSynthesis !== 'undefined') {
   refreshVoices()
   speechSynthesis.addEventListener?.('voiceschanged', refreshVoices)
 }
-function speakNative(text, accent, token, repeat = 1) {
+function speakNative(text, accent, token, repeat = 1, onDone = null) {
   if (typeof speechSynthesis === 'undefined' || isStale(token)) return
   try {
     const u = new SpeechSynthesisUtterance(text)
@@ -177,12 +177,11 @@ function speakNative(text, accent, token, repeat = 1) {
     u.volume = 0.8
     speechSynthesis.cancel() // 防止与其它语音合成叠加
     const speakOnce = () => speechSynthesis.speak(u)
-    if (repeat > 1) {
-      let n = repeat
-      u.onend = () => {
-        if (isStale(token)) return
-        if (--n > 0) speakOnce()
-      }
+    let n = repeat
+    u.onend = () => {
+      if (isStale(token)) return
+      if (--n > 0) speakOnce()
+      else if (typeof onDone === 'function') onDone()
     }
     speakOnce()
   } catch {}
@@ -191,7 +190,7 @@ function speakNative(text, accent, token, repeat = 1) {
 // 整句朗读：整个句子作为一次请求发给有道（同接口同音色）；
 // 命中（词典预生成音频）→ 直接播放整句；失败（500 null audio / 超时）
 // → 回退系统语音整句连读。textOrWords 支持单词数组或字符串。
-export function speakSentence(textOrWords, accent = 'uk', repeat = 1) {
+export function speakSentence(textOrWords, accent = 'uk', repeat = 1, onDone = null) {
   const text = Array.isArray(textOrWords)
     ? textOrWords.filter(Boolean).join(' ')
     : String(textOrWords || '').trim()
@@ -203,7 +202,7 @@ export function speakSentence(textOrWords, accent = 'uk', repeat = 1) {
   // 缓存命中或超长句 → 直接系统语音（省去必然失败的有道请求）
   const cached = sentenceFailCache.get(text)
   if (text.length > MAX_YOUDAO_LEN || (cached && Date.now() - cached < SENT_FAIL_TTL)) {
-    speakNative(text, accent, token, repeat)
+    speakNative(text, accent, token, repeat, onDone)
     return
   }
 
@@ -227,17 +226,21 @@ export function speakSentence(textOrWords, accent = 'uk', repeat = 1) {
         return tryDictvoice()
       }
       sentenceFailCache.set(text, Date.now())
-      speakNative(text, accent, token, repeat) // 未收录 → 回退系统语音整句连读
+      speakNative(text, accent, token, repeat, onDone) // 未收录 → 回退系统语音整句连读
     }
   }
   // 重复播放：一遍结束后自动接着下一遍（打被断时中止后续重复）
   const playRepeat = n => {
     const playOnce = () => a.play().catch(() => {})
-    if (n <= 1) { playOnce(); return }
+    if (n <= 1) {
+      a.onended = () => { if (!isStale(token) && typeof onDone === 'function') onDone() }
+      playOnce()
+      return
+    }
     a.onended = () => {
       if (isStale(token)) return // 已被打断：不再重播
       if (--n > 0) { a.currentTime = 0; playOnce() }
-      else a.onended = null
+      else { a.onended = null; if (typeof onDone === 'function') onDone() }
     }
     playOnce()
   }

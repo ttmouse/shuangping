@@ -17,6 +17,11 @@ const routes = [
   { path: '/statistics', name: 'statistics', component: Statistics },
   { path: '/progress', name: 'progress', component: Progress },
   { path: '/leaderboard', name: 'leaderboard', component: Leaderboard },
+  // 旧阅读路径 → 统一课程 URL（pack/course + mode=reading 后缀）
+  {
+    path: '/course-reading',
+    redirect: to => ({ path: '/practice-modes', query: { ...(to.query.pack ? { pack: to.query.pack } : {}), ...(to.query.course ? { course: to.query.course } : {}), mode: 'reading' } }),
+  },
 ]
 
 const router = createRouter({

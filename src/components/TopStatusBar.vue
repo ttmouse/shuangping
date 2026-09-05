@@ -103,6 +103,16 @@
         <svg v-if="!paused" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
         <svg v-else viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>
       </button>
+      <!-- 课程练习附加动作（切「阅读」），紧邻暂停按钮；由组件内部渲染以继承 scoped 样式 -->
+      <button
+        v-if="courseReadAction && courseReadAction.visible"
+        class="iconBtn"
+        title="阅读本课（整课例句文章流，可逐句朗读/查词）"
+        @click="courseReadAction.onClick && courseReadAction.onClick()"
+        data-nav
+      >
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      </button>
       <button class="iconBtn" :title="isDark ? '切换到明亮模式' : '切换到暗色模式'" @click="toggleTheme">
         <svg v-if="isDark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/></svg>
         <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -291,6 +301,8 @@ import { setSoundURLs, loadCustomSounds } from '../utils/sound.js'
 const props = defineProps({
   course: { type: Object, default: null },
   started: { type: Boolean, default: false },
+  // 课程练习进行中切「阅读」的入口动作：{ visible, onClick }
+  courseReadAction: { type: Object, default: null },
 })
 
 const route = useRoute()
