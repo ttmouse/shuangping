@@ -327,12 +327,19 @@
                         @click="startJulebuCourse(c)"
                         data-nav
                       >
-                        <span class="courseOrder">#{{ c.order }}</span>
                         <span class="courseBody">
-                          <span class="courseTitle">{{ c.title }}</span>
+                          <span class="courseTitleRow">
+                            <span class="courseTitle" :title="c.title">{{ c.title }}</span>
+                            <span class="courseOrder">#{{ c.order }}</span>
+                          </span>
                           <span v-if="c.subtitle" class="storySubtitle">{{ c.subtitle }}</span>
                           <span class="courseCardFoot">
-                            <span class="courseStatsRow" :title="courseStatsTitle(c)">{{ courseStatsText(c) }}</span>
+                            <span class="courseStatsRow">
+                              <span v-for="s in statParts(c)" :key="s.k" class="statItem" :title="s.title">
+                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path :d="s.path" /></svg>
+                                {{ s.label }}
+                              </span>
+                            </span>
                             <span class="courseStatus"><span v-if="courseRec(c)?.completed" class="courseDone" title="已练习完成">已完成<span v-if="courseRec(c)?.lastPracticed"> · {{ relTime(courseRec(c).lastPracticed) }}</span></span><span v-else-if="courseRec(c)?.lastPracticed" class="courseLast" title="上次练习时间">上次 {{ relTime(courseRec(c).lastPracticed) }}</span></span>
                           </span>
                         </span>
@@ -1207,6 +1214,26 @@ function courseStatsTitle(c) {
   const t = courseStatsText(c)
   if (!t) return ''
   return s.total ? `共 ${s.total} 项：${t}` : t
+}
+// 词/短语/句/块 统计的线性图标（Feather 风格，统一 24 viewBox 单色）
+const STAT_ICONS = {
+  word: 'M4 19.5A2.5 2.5 0 0 1 6.5 17H20 M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z',
+  phrase: 'M3 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z',
+  sentence: 'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z',
+  chunk: 'M12 2 2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5'
+}
+// 课程统计分成带图标的条目（供卡片左下角展示，替代纯文本 "词17 · 句1"）
+function statParts(c) {
+  const s = c.stats
+  if (!s) return []
+  const items = []
+  if (s.word) items.push({ k: 'word', label: `词${s.word}`, path: STAT_ICONS.word, title: `词 ${s.word}` })
+  if (s.phrase) items.push({ k: 'phrase', label: `短语${s.phrase}`, path: STAT_ICONS.phrase, title: `短语 ${s.phrase}` })
+  if (s.sentence) items.push({ k: 'sentence', label: `句${s.sentence}`, path: STAT_ICONS.sentence, title: `句 ${s.sentence}` })
+  if (s.chunk) items.push({ k: 'chunk', label: `块${s.chunk}`, path: STAT_ICONS.chunk, title: `块 ${s.chunk}` })
+  if (s.combinedChunks) items.push({ k: 'combinedChunks', label: `组合块${s.combinedChunks}`, path: STAT_ICONS.chunk, title: `组合块 ${s.combinedChunks}` })
+  if (!items.length && s.sentences) return [{ k: 'sentence', label: `共 ${s.sentences} 句`, path: STAT_ICONS.sentence, title: `共 ${s.sentences} 句` }]
+  return items
 }
 // 当前课程在课包中的索引（用于导航）
 const currentCourseIndex = computed(() => {
@@ -4202,37 +4229,42 @@ onBeforeUnmount(() => {
   outline-offset: 2px;
 }
 .courseCard.recent .courseStatus { color: var(--theme-text-color); }
-/* 序号徽章：流式顶部小徽章（承载"第几课"的真实顺序信息，非装饰角标） */
+/* 标题行：主标题左侧单行截断，序号徽章靠右（序号承载"第几课"的真实顺序信息） */
+.courseTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
 .courseOrder {
-  align-self: flex-start;
+  flex: none;
   display: inline-flex;
   align-items: center;
-  height: 20px;
-  padding: 0 8px;
-  font-size: 11px;
+  height: 18px;
+  padding: 0 7px;
+  font-size: 10.5px;
   font-weight: 650;
   letter-spacing: .3px;
   color: var(--theme-text-secondary);
-  background: color-mix(in srgb, var(--theme-text-secondary) 10%, transparent);
+  background: color-mix(in srgb, var(--theme-text-secondary) 12%, transparent);
   border-radius: 6px;
 }
 .courseBody {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   min-width: 0;
 }
 .courseCard .courseTitle {
+  flex: 1;
+  min-width: 0;
   font-size: 15px;
   font-weight: 650;
-  line-height: 1.35;
+  line-height: 1.4;
   color: var(--theme-text-color);
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  min-height: 2.7em; /* 两行高，防卡片间因行数不同参差 */
 }
 .courseBody .storySubtitle {
   padding-right: 4px;
@@ -4275,27 +4307,35 @@ onBeforeUnmount(() => {
   background: var(--theme-text-secondary);
   flex-shrink: 0;
 }
-/* 卡脚部：统计一行 + 状态一行（贴底，宽卡内不挤） */
+/* 卡脚部：统计与状态行；顶部细分割线与正文分层，增加层次感 */
 .courseCard .courseCardFoot {
   margin-top: auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 3px;
+  gap: 5px;
   width: 100%;
   min-height: 16px;
-  padding-top: 2px;
+  padding-top: 8px;
+  border-top: 1px solid color-mix(in srgb, var(--theme-border-color) 60%, transparent);
 }
 .courseCard .courseStatsRow {
-  font-size: 11.5px;
-  line-height: 1.5;
-  color: var(--theme-text-secondary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 3px 10px;
   min-width: 0;
 }
 .courseCard .courseStatsRow:empty { display: none; }
+.courseStatsRow .statItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--theme-text-secondary);
+}
+.courseStatsRow .statItem svg { flex-shrink: 0; }
 .courseCard .courseStatus {
   font-size: 11.5px;
   line-height: 1.5;
