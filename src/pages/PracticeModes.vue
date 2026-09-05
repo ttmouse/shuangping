@@ -1245,14 +1245,13 @@ const sortedPackList = computed(() => {
   const last = packLastPractice.value
   return [...packList.value].sort((a, b) => (last.get(b.slug) || 0) - (last.get(a.slug) || 0))
 })
-// 课包列表项 meta 文案：N 课 +（练过才显示）上次 X前 · 主题课包 ›
+// 课包列表项 meta 文案：N 课 +（练过才显示）上次 X前（同课程卡"上次 x 前"口径，无冗余文案）
 function packMetaText(p) {
   const parts = []
   if (p.courseCount) parts.push(`${p.courseCount} 课`)
   const ts = packLastPractice.value.get(p.slug)
   const rel = ts ? relTime(ts) : ''
   if (rel) parts.push(`上次 ${rel}`)
-  parts.push('主题课包 ›')
   return parts.join(' · ')
 }
 // 展开课包 → 拉课程清单
