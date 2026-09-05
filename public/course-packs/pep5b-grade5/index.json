@@ -9,169 +9,357 @@
       "order": 1,
       "id": "h1c7e9ci7iei4lyji1xawf53",
       "title": "Unit 1 My day-【单词】",
-      "file": "U1-words.json"
+      "file": "U1-words.json",
+      "stats": {
+        "sentences": 36,
+        "total": 42,
+        "word": 28,
+        "phrase": 2,
+        "sentence": 12
+      },
+      "subtitle": "Unit 1 My day-【单词】\n"
     },
     {
       "order": 2,
       "id": "kemkvfh6fjnxko4lblyu9ufw",
       "title": "Unit 1 My day-Part A--【例句】",
-      "file": "U1-partA.json"
+      "file": "U1-partA.json",
+      "stats": {
+        "sentences": 26,
+        "total": 26,
+        "sentence": 26
+      },
+      "subtitle": "Part A（When do you do things?）"
     },
     {
       "order": 3,
       "id": "wftnuhosfhrcfl1ebu333cv6",
       "title": "Unit 1 My day-Part B--【例句】",
-      "file": "U1-partB.json"
+      "file": "U1-partB.json",
+      "stats": {
+        "sentences": 28,
+        "total": 28,
+        "sentence": 28
+      },
+      "subtitle": "Part B（What do you do on the weekend?）"
     },
     {
       "order": 4,
       "id": "ibyymalovwf1uy34bh93zesp",
       "title": "Unit 1 My day-Part C--【例句】",
-      "file": "U1-partC.json"
+      "file": "U1-partC.json",
+      "stats": {
+        "sentences": 11,
+        "total": 11,
+        "sentence": 11
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 5,
       "id": "rt3seyr8pkm44zjx57l5szwi",
       "title": "Unit 2 My favourite season-【单词】",
-      "file": "U2-words.json"
+      "file": "U2-words.json",
+      "stats": {
+        "sentences": 25,
+        "total": 31,
+        "word": 23,
+        "phrase": 3,
+        "sentence": 5
+      },
+      "subtitle": "Unit 2 My favourite season-【单词】\n"
     },
     {
       "order": 6,
       "id": "xxlii4qymwqybwcqzkwi1w6a",
       "title": "Unit 2 My favourite season-Part A--【例句】",
-      "file": "U2-partA.json"
+      "file": "U2-partA.json",
+      "stats": {
+        "sentences": 21,
+        "total": 21,
+        "sentence": 21
+      },
+      "subtitle": "Part A（Which season do you like best?）"
     },
     {
       "order": 7,
       "id": "oljzy2cqbp6xrotffnbke7fy",
       "title": "Unit 2 My favourite season-Part B--【例句】",
-      "file": "U2-partB.json"
+      "file": "U2-partB.json",
+      "stats": {
+        "sentences": 35,
+        "total": 35,
+        "word": 1,
+        "sentence": 34
+      },
+      "subtitle": "Part B（Why do you like this season?）"
     },
     {
       "order": 8,
       "id": "et34bpm2f5i6ve8arscygnts",
       "title": "Unit 2 My favourite season-Part C--【例句】",
-      "file": "U2-partC.json"
+      "file": "U2-partC.json",
+      "stats": {
+        "sentences": 11,
+        "total": 11,
+        "sentence": 11
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 9,
       "id": "o88422exjjhq8gk40785965v",
       "title": "Unit 3 My school calendar-【单词】",
-      "file": "U3-words.json"
+      "file": "U3-words.json",
+      "stats": {
+        "sentences": 44,
+        "total": 44,
+        "word": 39,
+        "sentence": 5
+      },
+      "subtitle": "Unit 3 My school calendar-【单词】\n"
     },
     {
       "order": 10,
       "id": "tgj2yzug5mlkiyowtmo0q8v3",
       "title": "Unit 3 My school calendar-Part A--【例句】",
-      "file": "U3-partA.json"
+      "file": "U3-partA.json",
+      "stats": {
+        "sentences": 23,
+        "total": 23,
+        "word": 1,
+        "sentence": 22
+      },
+      "subtitle": "Part A（When are the school activities?）"
     },
     {
       "order": 11,
       "id": "i7g7sydkft2cv3yl7mcjmb34",
       "title": "Unit 3 My school calendar-Part B--【例句】",
-      "file": "U3-partB.json"
+      "file": "U3-partB.json",
+      "stats": {
+        "sentences": 20,
+        "total": 20,
+        "sentence": 20
+      },
+      "subtitle": "Part B（What do we do in different months?）"
     },
     {
       "order": 12,
       "id": "fyge47ey6kw5xdawf2eocl2x",
       "title": "Unit 3 My school calendar-Part C--【例句】",
-      "file": "U3-partC.json"
+      "file": "U3-partC.json",
+      "stats": {
+        "sentences": 19,
+        "total": 19,
+        "sentence": 19
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 13,
       "id": "bgarz5eq881t545j382ehv57",
       "title": "Unit 4 When is the art show?-【单词】",
-      "file": "U4-words.json"
+      "file": "U4-words.json",
+      "stats": {
+        "sentences": 21,
+        "total": 21,
+        "word": 21
+      },
+      "subtitle": "Unit 4 When is the art show?-【单词】\n"
     },
     {
       "order": 14,
       "id": "hdyu72o7uszrqrw8t5gibjbb",
       "title": "Unit 4 When is the art show?-Part A--【例句】",
-      "file": "U4-partA.json"
+      "file": "U4-partA.json",
+      "stats": {
+        "sentences": 27,
+        "total": 27,
+        "sentence": 27
+      },
+      "subtitle": "Part A（When are the special days?）"
     },
     {
       "order": 15,
       "id": "vwft2dx0hpzhd0i3lthbomlx",
       "title": "Unit 4 When is the art show?-Part B--【例句】",
-      "file": "U4-partB.json"
+      "file": "U4-partB.json",
+      "stats": {
+        "sentences": 16,
+        "total": 16,
+        "sentence": 16
+      },
+      "subtitle": "Part B（When is your birthday?）"
     },
     {
       "order": 16,
       "id": "d51av3507io8o0g0ocn71496",
       "title": "Unit 4 When is the art show?-Part C--【例句】",
-      "file": "U4-partC.json"
+      "file": "U4-partC.json",
+      "stats": {
+        "sentences": 17,
+        "total": 17,
+        "sentence": 17
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 17,
       "id": "vgfg06y1xgp13f1b2zjjuck5",
       "title": "Unit 5 Whose dog is it?-【单词】",
-      "file": "U5-words.json"
+      "file": "U5-words.json",
+      "stats": {
+        "sentences": 16,
+        "total": 16,
+        "word": 15,
+        "sentence": 1
+      },
+      "subtitle": "Unit 5 Whose dog is it?-【单词】\n"
     },
     {
       "order": 18,
       "id": "lwifgim3si72civuzos8ye6x",
       "title": "Unit 5 Whose dog is it?-Part A--【例句】",
-      "file": "U5-partA.json"
+      "file": "U5-partA.json",
+      "stats": {
+        "sentences": 33,
+        "total": 33,
+        "sentence": 33
+      },
+      "subtitle": "Part A（Whose things are these?）"
     },
     {
       "order": 19,
       "id": "yfxyzf31rkn5zd493fip4g1e",
       "title": "Unit 5 Whose dog is it?-Part B--【例句】",
-      "file": "U5-partB.json"
+      "file": "U5-partB.json",
+      "stats": {
+        "sentences": 31,
+        "total": 31,
+        "sentence": 31
+      },
+      "subtitle": "Part B（What are the animals doing?）"
     },
     {
       "order": 20,
       "id": "fe6010b5ss4bbvlucjo7cord",
       "title": "Unit 5 Whose dog is it?-Part C--【例句】",
-      "file": "U5-partC.json"
+      "file": "U5-partC.json",
+      "stats": {
+        "sentences": 18,
+        "total": 18,
+        "sentence": 18
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 21,
       "id": "ket6raftqycczssgkaz4suak",
       "title": "Unit 6 Work quietly!-【单词】",
-      "file": "U6-words.json"
+      "file": "U6-words.json",
+      "stats": {
+        "sentences": 42,
+        "total": 42,
+        "word": 41,
+        "sentence": 1
+      },
+      "subtitle": "Unit 6 Work quietly!-【单词】\n"
     },
     {
       "order": 22,
       "id": "wwgfpmqvkixh17pmtn9d6bnj",
       "title": "Unit 6 Work quietly!-Part A--【例句】",
-      "file": "U6-partA.json"
+      "file": "U6-partA.json",
+      "stats": {
+        "sentences": 30,
+        "total": 30,
+        "sentence": 30
+      },
+      "subtitle": "Part A（What are they doing?）"
     },
     {
       "order": 23,
       "id": "hsh5d38mk5llqs4zuvs6il5m",
       "title": "Unit 6 Work quietly!-Part B--【例句】",
-      "file": "U6-partB.json"
+      "file": "U6-partB.json",
+      "stats": {
+        "sentences": 47,
+        "total": 47,
+        "word": 2,
+        "sentence": 45
+      },
+      "subtitle": "Part B（How should we behave in public?）"
     },
     {
       "order": 24,
       "id": "h65iuhnci0e6j8pwzhmywer8",
       "title": "Unit 6 Work quietly!-Part C--【例句】",
-      "file": "U6-partC.json"
+      "file": "U6-partC.json",
+      "stats": {
+        "sentences": 12,
+        "total": 12,
+        "sentence": 12
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 25,
       "id": "tm3zulrikp6dck9jo9jz3v1p",
       "title": "Review Units 1-3-【单词】",
-      "file": "RV1-3.json"
+      "file": "RV1-3.json",
+      "stats": {
+        "sentences": 20,
+        "total": 22,
+        "word": 21,
+        "sentence": 1
+      },
+      "subtitle": "Recycle 1\n"
     },
     {
       "order": 26,
       "id": "it6dz6vdcdwhzi6a06iob0l4",
       "title": "Recycle 1--【例句】",
-      "file": "REC1.json"
+      "file": "REC1.json",
+      "stats": {
+        "sentences": 10,
+        "total": 90,
+        "word": 30,
+        "phrase": 30,
+        "sentence": 10,
+        "chunk": 19,
+        "combinedChunks": 1
+      },
+      "subtitle": "Recycle 1"
     },
     {
       "order": 27,
       "id": "wy91t1g76cluhrfa0qfz6vqk",
       "title": "Review Units 4-6-【单词】",
-      "file": "RV4-6.json"
+      "file": "RV4-6.json",
+      "stats": {
+        "sentences": 22,
+        "total": 22,
+        "word": 17,
+        "sentence": 5
+      },
+      "subtitle": "Recycle 2"
     },
     {
       "order": 28,
       "id": "qr8npiszb5jjt3eg391v0bv7",
       "title": "Recycle 2--【例句】",
-      "file": "REC2.json"
+      "file": "REC2.json",
+      "stats": {
+        "sentences": 10,
+        "total": 91,
+        "word": 45,
+        "phrase": 18,
+        "sentence": 10,
+        "chunk": 16,
+        "combinedChunks": 2
+      },
+      "subtitle": "Recycle 2"
     }
   ]
 }

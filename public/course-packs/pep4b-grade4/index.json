@@ -9,169 +9,418 @@
       "order": 1,
       "id": "whq03ygpzaywcdgle6838fc7",
       "title": "Unit 1 My school-【单词】",
-      "file": "U1-words.json"
+      "file": "U1-words.json",
+      "stats": {
+        "sentences": 14,
+        "total": 14,
+        "word": 9,
+        "sentence": 5
+      },
+      "subtitle": "Unit 1 My school-【单词】\n"
     },
     {
       "order": 2,
       "id": "nioe70ftv9ryg871znqmtmbg",
       "title": "Unit 1 My school-Part A--【例句】",
-      "file": "U1-partA.json"
+      "file": "U1-partA.json",
+      "stats": {
+        "sentences": 10,
+        "total": 60,
+        "word": 21,
+        "phrase": 13,
+        "sentence": 10,
+        "chunk": 15,
+        "combinedChunks": 1
+      },
+      "subtitle": "Part A（Where are the school rooms?）"
     },
     {
       "order": 3,
       "id": "ovjs37ksrl3xzd4q7t7c3imn",
       "title": "Unit 1 My school-Part B--【例句】",
-      "file": "U1-partB.json"
+      "file": "U1-partB.json",
+      "stats": {
+        "sentences": 10,
+        "total": 76,
+        "word": 26,
+        "phrase": 22,
+        "sentence": 10,
+        "chunk": 16,
+        "combinedChunks": 2
+      },
+      "subtitle": "Part B（Do we have these rooms?）"
     },
     {
       "order": 4,
       "id": "ykcpr4yh7gj3v4v58xag6ur6",
       "title": "Unit 1 My school-Part C--【例句】",
-      "file": "U1-partC.json"
+      "file": "U1-partC.json",
+      "stats": {
+        "sentences": 6,
+        "total": 47,
+        "word": 21,
+        "phrase": 10,
+        "sentence": 6,
+        "chunk": 10
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 5,
       "id": "biu5dmb2wfxhl8oe9g2m7s5o",
       "title": "Unit 2 What time is it?-【单词】",
-      "file": "U2-words.json"
+      "file": "U2-words.json",
+      "stats": {
+        "sentences": 18,
+        "total": 22,
+        "word": 11,
+        "phrase": 1,
+        "sentence": 10
+      },
+      "subtitle": "Unit 2 What time is it?-【单词】\n"
     },
     {
       "order": 6,
       "id": "kq2okp3552apidesqxpckzfs",
       "title": "Unit 2 What time is it?-Part A--【例句】",
-      "file": "U2-partA.json"
+      "file": "U2-partA.json",
+      "stats": {
+        "sentences": 10,
+        "total": 84,
+        "word": 34,
+        "phrase": 22,
+        "sentence": 10,
+        "chunk": 18
+      },
+      "subtitle": "Part A（What time is it?）"
     },
     {
       "order": 7,
       "id": "iwmzbusq55u7yy2o0mya7v4r",
       "title": "Unit 2 What time is it?-Part B--【例句】",
-      "file": "U2-partB.json"
+      "file": "U2-partB.json",
+      "stats": {
+        "sentences": 10,
+        "total": 66,
+        "word": 21,
+        "phrase": 17,
+        "sentence": 10,
+        "chunk": 16,
+        "combinedChunks": 2
+      },
+      "subtitle": "Part B（What do we do at this time?）"
     },
     {
       "order": 8,
       "id": "rfc1azlyk9lse7nfc5pr8ihw",
       "title": "Unit 2 What time is it?-Part C--【例句】",
-      "file": "U2-partC.json"
+      "file": "U2-partC.json",
+      "stats": {
+        "sentences": 6,
+        "total": 39,
+        "word": 14,
+        "phrase": 5,
+        "sentence": 6,
+        "chunk": 11,
+        "combinedChunks": 3
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 9,
       "id": "vmcz55uyjmpydgd1kfkn4v6a",
       "title": "Unit 3 Weather-【单词】",
-      "file": "U3-words.json"
+      "file": "U3-words.json",
+      "stats": {
+        "sentences": 16,
+        "total": 16,
+        "word": 13,
+        "sentence": 3
+      },
+      "subtitle": "Unit 3 Weather-【单词】\n"
     },
     {
       "order": 10,
       "id": "pa605zp5fvmjq4wiikmbxjj2",
       "title": "Unit 3 Weather-Part A--【例句】",
-      "file": "U3-partA.json"
+      "file": "U3-partA.json",
+      "stats": {
+        "sentences": 10,
+        "total": 71,
+        "word": 32,
+        "phrase": 13,
+        "sentence": 10,
+        "chunk": 16
+      },
+      "subtitle": "Part A（Can we go outside?）"
     },
     {
       "order": 11,
       "id": "d3d2q4spxk4tpjncgkts2mh2",
       "title": "Unit 3 Weather-Part B--【例句】",
-      "file": "U3-partB.json"
+      "file": "U3-partB.json",
+      "stats": {
+        "sentences": 10,
+        "total": 74,
+        "word": 31,
+        "phrase": 13,
+        "sentence": 10,
+        "chunk": 19,
+        "combinedChunks": 1
+      },
+      "subtitle": "Part B（What's the weather like in other cities?）"
     },
     {
       "order": 12,
       "id": "jlo50kcwvvhzu2lw54xsu544",
       "title": "Unit 3 Weather-Part C--【例句】",
-      "file": "U3-partC.json"
+      "file": "U3-partC.json",
+      "stats": {
+        "sentences": 7,
+        "total": 57,
+        "word": 30,
+        "phrase": 10,
+        "sentence": 7,
+        "chunk": 10
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 13,
       "id": "hexwu5e4s3s0qvdv63r0msso",
       "title": "Unit 4 At the farm-【单词】",
-      "file": "U4-words.json"
+      "file": "U4-words.json",
+      "stats": {
+        "sentences": 17,
+        "total": 17,
+        "word": 16,
+        "sentence": 1
+      },
+      "subtitle": "Unit 4 At the farm-【单词】\n"
     },
     {
       "order": 14,
       "id": "ya40co0t03t4dwizciq23oav",
       "title": "Unit 4 At the farm-Part A--【例句】",
-      "file": "U4-partA.json"
+      "file": "U4-partA.json",
+      "stats": {
+        "sentences": 10,
+        "total": 44,
+        "word": 15,
+        "phrase": 8,
+        "sentence": 9,
+        "chunk": 12
+      },
+      "subtitle": "Part A（What are these vegetables?）"
     },
     {
       "order": 15,
       "id": "xwssbqk9ggpyclcp6ziklc4b",
       "title": "Unit 4 At the farm-Part B--【例句】",
-      "file": "U4-partB.json"
+      "file": "U4-partB.json",
+      "stats": {
+        "sentences": 10,
+        "total": 63,
+        "word": 23,
+        "phrase": 10,
+        "sentence": 10,
+        "chunk": 18,
+        "combinedChunks": 2
+      },
+      "subtitle": "Part B（What are those animals?）"
     },
     {
       "order": 16,
       "id": "gn4h3ccnireo1w3kqkxgqa96",
       "title": "Unit 4 At the farm-Part C--【例句】",
-      "file": "U4-partC.json"
+      "file": "U4-partC.json",
+      "stats": {
+        "sentences": 7,
+        "total": 48,
+        "word": 22,
+        "phrase": 7,
+        "sentence": 7,
+        "chunk": 11,
+        "combinedChunks": 1
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 17,
       "id": "aohscnlwes4chvrs8xf0getn",
       "title": "Unit 5 My clothes-【单词】",
-      "file": "U5-words.json"
+      "file": "U5-words.json",
+      "stats": {
+        "sentences": 16,
+        "total": 16,
+        "word": 16
+      },
+      "subtitle": "Unit 5 My clothes-【单词】\n"
     },
     {
       "order": 18,
       "id": "bc6mrkstsezlze53k8mws7om",
       "title": "Unit 5 My clothes-Part A--【例句】",
-      "file": "U5-partA.json"
+      "file": "U5-partA.json",
+      "stats": {
+        "sentences": 10,
+        "total": 73,
+        "word": 27,
+        "phrase": 12,
+        "sentence": 10,
+        "chunk": 20,
+        "combinedChunks": 4
+      },
+      "subtitle": "Part A（Are these yours?）"
     },
     {
       "order": 19,
       "id": "wiqvvzp978zckru2hkd8j7tg",
       "title": "Unit 5 My clothes-Part B--【例句】",
-      "file": "U5-partB.json"
+      "file": "U5-partB.json",
+      "stats": {
+        "sentences": 10,
+        "total": 65,
+        "word": 28,
+        "phrase": 13,
+        "sentence": 10,
+        "chunk": 14
+      },
+      "subtitle": "Part B（Whose clothes are those?）"
     },
     {
       "order": 20,
       "id": "yt2ouoa7ny47waoi7pze2hmv",
       "title": "Unit 5 My clothes-Part C--【例句】",
-      "file": "U5-partC.json"
+      "file": "U5-partC.json",
+      "stats": {
+        "sentences": 7,
+        "total": 56,
+        "word": 25,
+        "phrase": 14,
+        "sentence": 7,
+        "chunk": 9,
+        "combinedChunks": 1
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 21,
       "id": "xnim0d5odibi4pmo32uoz7st",
       "title": "Unit 6 Shopping-【单词】",
-      "file": "U6-words.json"
+      "file": "U6-words.json",
+      "stats": {
+        "sentences": 21,
+        "total": 21,
+        "word": 18,
+        "sentence": 3
+      },
+      "subtitle": "Unit 6 Shopping-【单词】\n"
     },
     {
       "order": 22,
       "id": "bf3ni8vr5hp64z7sj5772s1j",
       "title": "Unit 6 Shopping-Part A--【例句】",
-      "file": "U6-partA.json"
+      "file": "U6-partA.json",
+      "stats": {
+        "sentences": 10,
+        "total": 73,
+        "word": 29,
+        "phrase": 12,
+        "sentence": 10,
+        "chunk": 18,
+        "combinedChunks": 4
+      },
+      "subtitle": "Part A（Can I try them on?）"
     },
     {
       "order": 23,
       "id": "sxmjk5627vb6xhpnqwpbpwxs",
       "title": "Unit 6 Shopping-Part B--【例句】",
-      "file": "U6-partB.json"
+      "file": "U6-partB.json",
+      "stats": {
+        "sentences": 10,
+        "total": 91,
+        "word": 33,
+        "phrase": 20,
+        "sentence": 10,
+        "chunk": 23,
+        "combinedChunks": 5
+      },
+      "subtitle": "Part B（How much is it?）"
     },
     {
       "order": 24,
       "id": "mtlz56tkqeef0y56coortng0",
       "title": "Unit 6 Shopping-Part C--【例句】",
-      "file": "U6-partC.json"
+      "file": "U6-partC.json",
+      "stats": {
+        "sentences": 7,
+        "total": 42,
+        "word": 12,
+        "phrase": 9,
+        "sentence": 7,
+        "chunk": 12,
+        "combinedChunks": 2
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 25,
       "id": "rao3xylm009b33w7zrojjuqf",
       "title": "Review Units 1-3-【单词】",
-      "file": "RV1-3.json"
+      "file": "RV1-3.json",
+      "stats": {
+        "sentences": 13,
+        "total": 13,
+        "word": 12,
+        "sentence": 1
+      },
+      "subtitle": "Recycle 1"
     },
     {
       "order": 26,
       "id": "ur7f5bixlxgk4hrygmablvd4",
       "title": "Recycle 1--【例句】",
-      "file": "REC1.json"
+      "file": "REC1.json",
+      "stats": {
+        "sentences": 10,
+        "total": 102,
+        "word": 39,
+        "phrase": 19,
+        "sentence": 10,
+        "chunk": 26,
+        "combinedChunks": 8
+      },
+      "subtitle": "Recycle 1--【例句】"
     },
     {
       "order": 27,
       "id": "jec21damnzb35p1bi6kdnkiv",
       "title": "Review Units 4-6-【单词】",
-      "file": "RV4-6.json"
+      "file": "RV4-6.json",
+      "stats": {
+        "sentences": 18,
+        "total": 18,
+        "word": 18
+      },
+      "subtitle": "Recycle 2"
     },
     {
       "order": 28,
       "id": "w3tysc3jtzlwynrjx5p19lbg",
       "title": "Recycle 2--【例句】",
-      "file": "REC2.json"
+      "file": "REC2.json",
+      "stats": {
+        "sentences": 10,
+        "total": 107,
+        "word": 38,
+        "phrase": 31,
+        "sentence": 10,
+        "chunk": 23,
+        "combinedChunks": 5
+      },
+      "subtitle": "Recycle 2"
     }
   ]
 }

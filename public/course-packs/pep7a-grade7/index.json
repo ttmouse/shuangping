@@ -9,181 +9,445 @@
       "order": 1,
       "id": "p9t0h3e23ijx54gqyahvkl1h",
       "title": "Starter Unit 1 Hello!【单词】",
-      "file": "L01.json"
+      "file": "L01.json",
+      "stats": {
+        "sentences": 24,
+        "total": 24,
+        "word": 23,
+        "sentence": 1
+      },
+      "subtitle": "Starter Unit 1 Hello!【单词】"
     },
     {
       "order": 2,
       "id": "ixfln0wlzisbrkl3mx7g7zmb",
       "title": "Starter Unit 2 Keep Tidy!【单词】",
-      "file": "L02.json"
+      "file": "L02.json",
+      "stats": {
+        "sentences": 6,
+        "total": 6,
+        "word": 5,
+        "sentence": 1
+      },
+      "subtitle": "Starter Unit 2 Keep Tidy!【单词】"
     },
     {
       "order": 3,
       "id": "k62tsbbud5jfulioaig6bvo1",
       "title": "Starter Unit 3 Welcome!【单词】",
-      "file": "L03.json"
+      "file": "L03.json",
+      "stats": {
+        "sentences": 9,
+        "total": 9,
+        "word": 8,
+        "sentence": 1
+      },
+      "subtitle": "Starter Unit 3 Welcome!【单词】"
     },
     {
       "order": 4,
       "id": "bj1i2m70deozt0qj9t2oqoya",
       "title": "Unit 1 You and Me【单词】",
-      "file": "L04.json"
+      "file": "L04.json",
+      "stats": {
+        "sentences": 31,
+        "total": 33,
+        "word": 22,
+        "phrase": 1,
+        "sentence": 10
+      },
+      "subtitle": "Unit 1 You and Me【单词】"
     },
     {
       "order": 5,
       "id": "r6tu3q21beyyk4gog7fv3zjb",
       "title": "Unit 2 We’re Family!【单词】",
-      "file": "L05.json"
+      "file": "L05.json",
+      "stats": {
+        "sentences": 29,
+        "total": 31,
+        "word": 20,
+        "sentence": 11
+      },
+      "subtitle": "Unit 2 We’re Family!【单词】"
     },
     {
       "order": 6,
       "id": "bzyxrfzme2v6dkxf5v9uaaqb",
       "title": "Unit 3 My School【单词】",
-      "file": "L06.json"
+      "file": "L06.json",
+      "stats": {
+        "sentences": 42,
+        "total": 42,
+        "word": 30,
+        "sentence": 12
+      },
+      "subtitle": "Unit 3 My School【单词】"
     },
     {
       "order": 7,
       "id": "v7duuqho12h7la7yrjxgwa4j",
       "title": "Unit 4 My Favourite Subject【单词】",
-      "file": "L07.json"
+      "file": "L07.json",
+      "stats": {
+        "sentences": 31,
+        "total": 34,
+        "word": 27,
+        "sentence": 7
+      },
+      "subtitle": "Unit 4 My Favourite Subject【单词】"
     },
     {
       "order": 8,
       "id": "v1uld7n9t0uyajwptvtvtrq2",
       "title": "Unit 5 Fun Clubs【单词】",
-      "file": "L08.json"
+      "file": "L08.json",
+      "stats": {
+        "sentences": 33,
+        "total": 35,
+        "word": 26,
+        "phrase": 1,
+        "sentence": 8
+      },
+      "subtitle": "Unit 5 Fun Clubs【单词】"
     },
     {
       "order": 9,
       "id": "tff8d7q2qby76340cni4byyp",
       "title": "Unit 6 A Day in the Life【单词】",
-      "file": "L09.json"
+      "file": "L09.json",
+      "stats": {
+        "sentences": 39,
+        "total": 42,
+        "word": 32,
+        "sentence": 10
+      },
+      "subtitle": "Unit 6 A Day in the Life【单词】"
     },
     {
       "order": 10,
       "id": "w7patdnrobzw7cb7bhgqh21q",
       "title": "Unit 7 Happy Birthday!【单词】",
-      "file": "L10.json"
+      "file": "L10.json",
+      "stats": {
+        "sentences": 36,
+        "total": 38,
+        "word": 32,
+        "phrase": 1,
+        "sentence": 5
+      },
+      "subtitle": "Unit 7 Happy Birthday!【单词】"
     },
     {
       "order": 11,
       "id": "ogff14jrt1b6kk84dviwpiib",
       "title": "Starter Unit 1 Hello!【例句】",
-      "file": "L11.json"
+      "file": "L11.json",
+      "stats": {
+        "sentences": 21,
+        "total": 70,
+        "word": 24,
+        "phrase": 23,
+        "sentence": 21,
+        "chunk": 2
+      },
+      "subtitle": "SECTION A： How do you greet people?"
     },
     {
       "order": 12,
       "id": "ia86n48lkou7rshlhzw84jj5",
       "title": "Starter Unit 1 Hello!【例句】",
-      "file": "L12.json"
+      "file": "L12.json",
+      "stats": {
+        "sentences": 13,
+        "total": 64,
+        "word": 23,
+        "phrase": 14,
+        "sentence": 13,
+        "chunk": 13,
+        "combinedChunks": 1
+      },
+      "subtitle": "SECTION B： How do you start a conversation?"
     },
     {
       "order": 13,
       "id": "lllqhie7ngw1u4iodno9poev",
       "title": "Starter Unit 2 Keep Tidy!【例句】",
-      "file": "L13.json"
+      "file": "L13.json",
+      "stats": {
+        "sentences": 13,
+        "total": 47,
+        "word": 21,
+        "phrase": 13,
+        "sentence": 13
+      },
+      "subtitle": "SECTION A What do you have?"
     },
     {
       "order": 14,
       "id": "sqizk67um50ok57xqbgtjy7v",
       "title": "Starter Unit 2 Keep Tidy!【例句】",
-      "file": "L14.json"
+      "file": "L14.json",
+      "stats": {
+        "sentences": 17,
+        "total": 80,
+        "word": 38,
+        "phrase": 19,
+        "sentence": 17,
+        "chunk": 6
+      },
+      "subtitle": "SECTION B Where do you put your things?"
     },
     {
       "order": 15,
       "id": "fm8nr5wpkllxe1czpexas6un",
       "title": "Starter Unit 3 Welcome!【例句】",
-      "file": "L15.json"
+      "file": "L15.json",
+      "stats": {
+        "sentences": 8,
+        "total": 38,
+        "word": 17,
+        "phrase": 11,
+        "sentence": 8,
+        "chunk": 2
+      },
+      "subtitle": "SECTION A What is fun in a yard?"
     },
     {
       "order": 16,
       "id": "ssfzvmwebpqzafe5vtlk6rqi",
       "title": "Starter Unit 3 Welcome!【例句】",
-      "file": "L16.json"
+      "file": "L16.json",
+      "stats": {
+        "sentences": 12,
+        "total": 56,
+        "word": 29,
+        "phrase": 13,
+        "sentence": 12,
+        "chunk": 2
+      },
+      "subtitle": "SECTION B What is fun on a farm?"
     },
     {
       "order": 17,
       "id": "dgt83c9z6rczl82q8gbsv69z",
       "title": "Unit 1 You and Me【例句】",
-      "file": "L17.json"
+      "file": "L17.json",
+      "stats": {
+        "sentences": 24,
+        "total": 107,
+        "word": 48,
+        "phrase": 19,
+        "sentence": 24,
+        "chunk": 14,
+        "combinedChunks": 2
+      },
+      "subtitle": "SECTION A How do we get to know each other?"
     },
     {
       "order": 18,
       "id": "xrjv6nq2xlhvbyizzjubfbxd",
       "title": "Unit 1 You and Me【例句】",
-      "file": "L18.json"
+      "file": "L18.json",
+      "stats": {
+        "sentences": 17,
+        "total": 104,
+        "word": 45,
+        "phrase": 24,
+        "sentence": 17,
+        "chunk": 16,
+        "combinedChunks": 2
+      },
+      "subtitle": "SECTION B What do we need to know about a new friend?"
     },
     {
       "order": 19,
       "id": "ri5zdkb15c3nf21qupvpevfb",
       "title": "Unit 2 We're Family!【例句】",
-      "file": "L19.json"
+      "file": "L19.json",
+      "stats": {
+        "sentences": 22,
+        "total": 99,
+        "word": 45,
+        "phrase": 24,
+        "sentence": 22,
+        "chunk": 8
+      },
+      "subtitle": "SECTION A What is your family like?"
     },
     {
       "order": 20,
       "id": "baf20shtpk7bm97elf8dm86g",
       "title": "Unit 2 We're Family!【例句】",
-      "file": "L20.json"
+      "file": "L20.json",
+      "stats": {
+        "sentences": 17,
+        "total": 99,
+        "word": 44,
+        "phrase": 24,
+        "sentence": 17,
+        "chunk": 14
+      },
+      "subtitle": "SECTION B What do you like about your family?"
     },
     {
       "order": 21,
       "id": "ikhd7sig2tji4cmd1hs0ngq8",
       "title": "Unit 3 My School【例句】",
-      "file": "L21.json"
+      "file": "L21.json",
+      "stats": {
+        "sentences": 19,
+        "total": 98,
+        "word": 42,
+        "phrase": 29,
+        "sentence": 19,
+        "chunk": 8
+      },
+      "subtitle": "SECTION A What is your school like?"
     },
     {
       "order": 22,
       "id": "w6y5idq68b84vz605vp99vx8",
       "title": "Unit 3 My School【例句】",
-      "file": "L22.json"
+      "file": "L22.json",
+      "stats": {
+        "sentences": 19,
+        "total": 107,
+        "word": 34,
+        "phrase": 30,
+        "sentence": 19,
+        "chunk": 22,
+        "combinedChunks": 2
+      },
+      "subtitle": "SECTION B What fun things do you do at school?"
     },
     {
       "order": 23,
       "id": "w50qnxp2gtct1ysew1a20qa3",
       "title": "Unit 4 My Favourite Subject【例句】",
-      "file": "L23.json"
+      "file": "L23.json",
+      "stats": {
+        "sentences": 28,
+        "total": 141,
+        "word": 70,
+        "phrase": 29,
+        "sentence": 28,
+        "chunk": 12,
+        "combinedChunks": 2
+      },
+      "subtitle": "SECTION A Why do you like this subject?"
     },
     {
       "order": 24,
       "id": "q4zhmqk3yqv7y56m992xgkeo",
       "title": "Unit 4 My Favourite Subject【例句】",
-      "file": "L24.json"
+      "file": "L24.json",
+      "stats": {
+        "sentences": 19,
+        "total": 145,
+        "word": 75,
+        "phrase": 27,
+        "sentence": 19,
+        "chunk": 22,
+        "combinedChunks": 2
+      },
+      "subtitle": "SECTION B What can you learn from different subjects?"
     },
     {
       "order": 25,
       "id": "i0a0556utwpa905qbp7u7mnn",
       "title": "Unit 5 Fun Clubs【例句】",
-      "file": "L25.json"
+      "file": "L25.json",
+      "stats": {
+        "sentences": 26,
+        "total": 170,
+        "word": 64,
+        "phrase": 46,
+        "sentence": 26,
+        "chunk": 29,
+        "combinedChunks": 5
+      },
+      "subtitle": "SECTION A How do you choose a school club?"
     },
     {
       "order": 26,
       "id": "t4o3a3m077ef2lkd3t4vnec3",
       "title": "Unit 5 Fun Clubs【例句】",
-      "file": "L26.json"
+      "file": "L26.json",
+      "stats": {
+        "sentences": 17,
+        "total": 107,
+        "word": 48,
+        "phrase": 22,
+        "sentence": 17,
+        "chunk": 17,
+        "combinedChunks": 3
+      },
+      "subtitle": "SECTION B What can you learn in a school club?"
     },
     {
       "order": 27,
       "id": "annbwxyt3i4uc1sht0knlm55",
       "title": "Unit 6 A Day in the Life【例句】",
-      "file": "L27.json"
+      "file": "L27.json",
+      "stats": {
+        "sentences": 36,
+        "total": 180,
+        "word": 70,
+        "phrase": 43,
+        "sentence": 35,
+        "chunk": 28,
+        "combinedChunks": 4
+      },
+      "subtitle": "SECTION A How do you spend your school day?"
     },
     {
       "order": 28,
       "id": "bu2yyi0fri73mybh5wxibz79",
       "title": "Unit 6 A Day in the Life【例句】",
-      "file": "L28.json"
+      "file": "L28.json",
+      "stats": {
+        "sentences": 21,
+        "total": 143,
+        "word": 65,
+        "phrase": 27,
+        "sentence": 21,
+        "chunk": 27,
+        "combinedChunks": 3
+      },
+      "subtitle": "SECTION B How different are people's daily routines?"
     },
     {
       "order": 29,
       "id": "v2sa2gatmjbce9kgpt5ilwkm",
       "title": "Unit 7 Happy Birthday!【例句】",
-      "file": "L29.json"
+      "file": "L29.json",
+      "stats": {
+        "sentences": 41,
+        "total": 210,
+        "word": 79,
+        "phrase": 55,
+        "sentence": 40,
+        "chunk": 32,
+        "combinedChunks": 4
+      },
+      "subtitle": "SECTION A How do we celebrate birthdays?"
     },
     {
       "order": 30,
       "id": "msr2rojzhwoufm2qsmy7ocqa",
       "title": "Unit 7 Happy Birthday!【例句】",
-      "file": "L30.json"
+      "file": "L30.json",
+      "stats": {
+        "sentences": 18,
+        "total": 169,
+        "word": 63,
+        "phrase": 42,
+        "sentence": 18,
+        "chunk": 35,
+        "combinedChunks": 11
+      },
+      "subtitle": "SECTION B How do you make your birthday meaningful?\n\n"
     }
   ]
 }

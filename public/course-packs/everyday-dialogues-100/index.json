@@ -1,111 +1,274 @@
 {
- "id": "z627gosu18ct79hr98a4qhyn",
- "slug": "everyday-dialogues-100",
- "title": "日常英语对话100句",
- "description": "100 句日常对话按场景分 17 课：购物、餐饮、旅行、问候、医疗、银行、住宿、工作、天气、生活",
- "courseCount": 17,
- "courses": [
-  {
-   "order": 1,
-   "id": "oe1hcuft2gntprbol4bvuaof",
-   "title": "购物与询问(1)",
-   "file": "L01.json"
-  },
-  {
-   "order": 2,
-   "id": "zw73e2fozqlqjnd8j9gmezo0",
-   "title": "购物与询问(2)",
-   "file": "L02.json"
-  },
-  {
-   "order": 3,
-   "id": "ucj4x1xejru94icaoi0xzj9a",
-   "title": "购物与询问(3)",
-   "file": "L03.json"
-  },
-  {
-   "order": 4,
-   "id": "ngcvm0qls1qmtw0r6lep8jui",
-   "title": "餐饮与订餐(1)",
-   "file": "L04.json"
-  },
-  {
-   "order": 5,
-   "id": "d4u4mzdgjijfylz25580xyg2",
-   "title": "餐饮与订餐(2)",
-   "file": "L05.json"
-  },
-  {
-   "order": 6,
-   "id": "unvx8nq3j9853782ldct6wrw",
-   "title": "旅行与交通(1)",
-   "file": "L06.json"
-  },
-  {
-   "order": 7,
-   "id": "d6djfyjod2ejjl557hpv23dp",
-   "title": "旅行与交通(2)",
-   "file": "L07.json"
-  },
-  {
-   "order": 8,
-   "id": "sv8bkg12xqykwart3mczipc4",
-   "title": "问候与寒暄",
-   "file": "L08.json"
-  },
-  {
-   "order": 9,
-   "id": "n36zuol29vpy2bk0h6o6ol30",
-   "title": "问候与寒暄(2)",
-   "file": "L09.json"
-  },
-  {
-   "order": 10,
-   "id": "i5ekjtqdlmxcfmqgxtz86ve7",
-   "title": "医疗与健康",
-   "file": "L10.json"
-  },
-  {
-   "order": 11,
-   "id": "iurw28zzz56lxqhgef5f66l3",
-   "title": "银行与金融",
-   "file": "L11.json"
-  },
-  {
-   "order": 12,
-   "id": "ra9lgi0ytn3tf7ic5p8q483w",
-   "title": "住宿与服务",
-   "file": "L12.json"
-  },
-  {
-   "order": 13,
-   "id": "dpucputu6rjdqjx3w4r4q0if",
-   "title": "工作与求职",
-   "file": "L13.json"
-  },
-  {
-   "order": 14,
-   "id": "dhivkeu5kg2bzownetofu7oc",
-   "title": "天气与活动(1)",
-   "file": "L14.json"
-  },
-  {
-   "order": 15,
-   "id": "kpebfe2plbmkn81cuet51pkg",
-   "title": "天气与活动(2)",
-   "file": "L15.json"
-  },
-  {
-   "order": 16,
-   "id": "cqwp7izita762nq58cip2nlt",
-   "title": "日常生活(1)",
-   "file": "L16.json"
-  },
-  {
-   "order": 17,
-   "id": "i3oeif6vpmc8jj2ljmpeyrd2",
-   "title": "日常生活(2)",
-   "file": "L17.json"
-  }
- ]
+  "id": "z627gosu18ct79hr98a4qhyn",
+  "slug": "everyday-dialogues-100",
+  "title": "日常英语对话100句",
+  "description": "100 句日常对话按场景分 17 课：购物、餐饮、旅行、问候、医疗、银行、住宿、工作、天气、生活",
+  "courseCount": 17,
+  "courses": [
+    {
+      "order": 1,
+      "id": "oe1hcuft2gntprbol4bvuaof",
+      "title": "购物与询问(1)",
+      "file": "L01.json",
+      "stats": {
+        "sentences": 5,
+        "total": 36,
+        "word": 14,
+        "phrase": 9,
+        "sentence": 5,
+        "chunk": 7,
+        "combinedChunks": 1
+      },
+      "subtitle": "购物与询问(1)"
+    },
+    {
+      "order": 2,
+      "id": "zw73e2fozqlqjnd8j9gmezo0",
+      "title": "购物与询问(2)",
+      "file": "L02.json",
+      "stats": {
+        "sentences": 5,
+        "total": 35,
+        "word": 15,
+        "phrase": 9,
+        "sentence": 5,
+        "chunk": 6
+      },
+      "subtitle": "购物与询问(2)"
+    },
+    {
+      "order": 3,
+      "id": "ucj4x1xejru94icaoi0xzj9a",
+      "title": "购物与询问(3)",
+      "file": "L03.json",
+      "stats": {
+        "sentences": 5,
+        "total": 26,
+        "word": 8,
+        "phrase": 9,
+        "sentence": 5,
+        "chunk": 4
+      },
+      "subtitle": "购物与询问(3)"
+    },
+    {
+      "order": 4,
+      "id": "ngcvm0qls1qmtw0r6lep8jui",
+      "title": "餐饮与订餐(1)",
+      "file": "L04.json",
+      "stats": {
+        "sentences": 5,
+        "total": 44,
+        "word": 18,
+        "phrase": 13,
+        "sentence": 5,
+        "chunk": 8
+      },
+      "subtitle": "餐饮与订餐(1)"
+    },
+    {
+      "order": 5,
+      "id": "d4u4mzdgjijfylz25580xyg2",
+      "title": "餐饮与订餐(2)",
+      "file": "L05.json",
+      "stats": {
+        "sentences": 6,
+        "total": 46,
+        "word": 14,
+        "phrase": 12,
+        "sentence": 6,
+        "chunk": 12,
+        "combinedChunks": 2
+      },
+      "subtitle": "餐饮与订餐(2)"
+    },
+    {
+      "order": 6,
+      "id": "unvx8nq3j9853782ldct6wrw",
+      "title": "旅行与交通(1)",
+      "file": "L06.json",
+      "stats": {
+        "sentences": 6,
+        "total": 39,
+        "word": 9,
+        "phrase": 14,
+        "sentence": 6,
+        "chunk": 9,
+        "combinedChunks": 1
+      },
+      "subtitle": "旅行与交通(1)"
+    },
+    {
+      "order": 7,
+      "id": "d6djfyjod2ejjl557hpv23dp",
+      "title": "旅行与交通(2)",
+      "file": "L07.json",
+      "stats": {
+        "sentences": 6,
+        "total": 53,
+        "word": 22,
+        "phrase": 15,
+        "sentence": 6,
+        "chunk": 9,
+        "combinedChunks": 1
+      },
+      "subtitle": "旅行与交通(2)"
+    },
+    {
+      "order": 8,
+      "id": "sv8bkg12xqykwart3mczipc4",
+      "title": "问候与寒暄",
+      "file": "L08.json",
+      "stats": {
+        "sentences": 5,
+        "total": 38,
+        "word": 11,
+        "phrase": 10,
+        "sentence": 5,
+        "chunk": 11,
+        "combinedChunks": 1
+      },
+      "subtitle": "问候与寒暄"
+    },
+    {
+      "order": 9,
+      "id": "n36zuol29vpy2bk0h6o6ol30",
+      "title": "问候与寒暄(2)",
+      "file": "L09.json",
+      "stats": {
+        "sentences": 5,
+        "total": 46,
+        "word": 22,
+        "phrase": 9,
+        "sentence": 5,
+        "chunk": 10
+      },
+      "subtitle": "问候与寒暄(2)"
+    },
+    {
+      "order": 10,
+      "id": "i5ekjtqdlmxcfmqgxtz86ve7",
+      "title": "医疗与健康",
+      "file": "L10.json",
+      "stats": {
+        "sentences": 6,
+        "total": 52,
+        "word": 16,
+        "phrase": 18,
+        "sentence": 6,
+        "chunk": 10,
+        "combinedChunks": 2
+      },
+      "subtitle": "医疗与健康"
+    },
+    {
+      "order": 11,
+      "id": "iurw28zzz56lxqhgef5f66l3",
+      "title": "银行与金融",
+      "file": "L11.json",
+      "stats": {
+        "sentences": 6,
+        "total": 51,
+        "word": 13,
+        "phrase": 16,
+        "sentence": 6,
+        "chunk": 13,
+        "combinedChunks": 3
+      },
+      "subtitle": "银行与金融"
+    },
+    {
+      "order": 12,
+      "id": "ra9lgi0ytn3tf7ic5p8q483w",
+      "title": "住宿与服务",
+      "file": "L12.json",
+      "stats": {
+        "sentences": 7,
+        "total": 63,
+        "word": 21,
+        "phrase": 17,
+        "sentence": 7,
+        "chunk": 14,
+        "combinedChunks": 4
+      },
+      "subtitle": "住宿与服务"
+    },
+    {
+      "order": 13,
+      "id": "dpucputu6rjdqjx3w4r4q0if",
+      "title": "工作与求职",
+      "file": "L13.json",
+      "stats": {
+        "sentences": 6,
+        "total": 42,
+        "word": 12,
+        "phrase": 16,
+        "sentence": 6,
+        "chunk": 8
+      },
+      "subtitle": "工作与求职"
+    },
+    {
+      "order": 14,
+      "id": "dhivkeu5kg2bzownetofu7oc",
+      "title": "天气与活动(1)",
+      "file": "L14.json",
+      "stats": {
+        "sentences": 6,
+        "total": 49,
+        "word": 20,
+        "phrase": 13,
+        "sentence": 6,
+        "chunk": 10
+      },
+      "subtitle": "天气与活动(1)"
+    },
+    {
+      "order": 15,
+      "id": "kpebfe2plbmkn81cuet51pkg",
+      "title": "天气与活动(2)",
+      "file": "L15.json",
+      "stats": {
+        "sentences": 6,
+        "total": 47,
+        "word": 23,
+        "phrase": 6,
+        "sentence": 6,
+        "chunk": 11,
+        "combinedChunks": 1
+      },
+      "subtitle": "天气与活动(2)"
+    },
+    {
+      "order": 16,
+      "id": "cqwp7izita762nq58cip2nlt",
+      "title": "日常生活(1)",
+      "file": "L16.json",
+      "stats": {
+        "sentences": 10,
+        "total": 69,
+        "word": 25,
+        "phrase": 16,
+        "sentence": 10,
+        "chunk": 18
+      },
+      "subtitle": "日常生活(1)"
+    },
+    {
+      "order": 17,
+      "id": "i3oeif6vpmc8jj2ljmpeyrd2",
+      "title": "日常生活(2)",
+      "file": "L17.json",
+      "stats": {
+        "sentences": 12,
+        "total": 89,
+        "word": 25,
+        "phrase": 26,
+        "sentence": 12,
+        "chunk": 23,
+        "combinedChunks": 3
+      },
+      "subtitle": "日常生活(2)"
+    }
+  ]
 }

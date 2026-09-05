@@ -9,157 +9,387 @@
       "order": 1,
       "id": "p7rzl8idtt031mo5pkqtb8m5",
       "title": "Unit 1 Different friends-【单词】",
-      "file": "U1-words.json"
+      "file": "U1-words.json",
+      "stats": {
+        "sentences": 18,
+        "total": 18,
+        "word": 17,
+        "sentence": 1
+      },
+      "subtitle": "Unit 1 Different friends-【单词】\n"
     },
     {
       "order": 2,
       "id": "cvk8fz7skyynxwqmilftn2kb",
       "title": "Unit 1 Different friends-Part A--【例句】",
-      "file": "U1-partA.json"
+      "file": "U1-partA.json",
+      "stats": {
+        "sentences": 34,
+        "total": 156,
+        "word": 76,
+        "phrase": 34,
+        "sentence": 34,
+        "chunk": 12
+      },
+      "subtitle": "Part A（How different are your friends?）"
     },
     {
       "order": 3,
       "id": "g9ggxke6sumcdpk2crsy6an1",
       "title": "Unit 1 Different friends-Part B--【例句】",
-      "file": "U1-partB.json"
+      "file": "U1-partB.json",
+      "stats": {
+        "sentences": 37,
+        "total": 176,
+        "word": 82,
+        "phrase": 45,
+        "sentence": 37,
+        "chunk": 11,
+        "combinedChunks": 1
+      },
+      "subtitle": "Part B（What can you do?）"
     },
     {
       "order": 4,
       "id": "cr4v8j9vk5b5a9p8qdy5f1uc",
       "title": "Unit 1 Different friends-Part C--【例句】",
-      "file": "U1-partC.json"
+      "file": "U1-partC.json",
+      "stats": {
+        "sentences": 37,
+        "total": 165,
+        "word": 82,
+        "phrase": 38,
+        "sentence": 37,
+        "chunk": 8
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 5,
       "id": "zzwrrbxtbweu82061ddpen47",
       "title": "Unit 2 My feelings-【单词】",
-      "file": "U2-words.json"
+      "file": "U2-words.json",
+      "stats": {
+        "sentences": 17,
+        "total": 17,
+        "word": 17
+      },
+      "subtitle": "Unit 2 My feelings-【单词】\n"
     },
     {
       "order": 6,
       "id": "fbi4rg3n7oz0jb7xx9hmnhkw",
       "title": "Unit 2 My feelings-Part A--【例句】",
-      "file": "U2-partA.json"
+      "file": "U2-partA.json",
+      "stats": {
+        "sentences": 46,
+        "total": 211,
+        "word": 103,
+        "phrase": 48,
+        "sentence": 46,
+        "chunk": 14
+      },
+      "subtitle": "Part A（How do we express our feelings?）"
     },
     {
       "order": 7,
       "id": "rtsfshupdcajujn3b7j2t8ep",
       "title": "Unit 2 My feelings-Part B--【例句】",
-      "file": "U2-partB.json"
+      "file": "U2-partB.json",
+      "stats": {
+        "sentences": 36,
+        "total": 185,
+        "word": 74,
+        "phrase": 57,
+        "sentence": 36,
+        "chunk": 16,
+        "combinedChunks": 2
+      },
+      "subtitle": "Part B（How can we understand each other better?）"
     },
     {
       "order": 8,
       "id": "ynzi0ptky0p12cvksy52n6t8",
       "title": "Unit 2 My feelings-Part C--【例句】",
-      "file": "U2-partC.json"
+      "file": "U2-partC.json",
+      "stats": {
+        "sentences": 42,
+        "total": 190,
+        "word": 101,
+        "phrase": 37,
+        "sentence": 42,
+        "chunk": 9,
+        "combinedChunks": 1
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 9,
       "id": "halhlis7z21d4a54r7lsuv8r",
       "title": "Unit 3 Work and play-【单词】",
-      "file": "U3-words.json"
+      "file": "U3-words.json",
+      "stats": {
+        "sentences": 19,
+        "total": 19,
+        "word": 19
+      },
+      "subtitle": "Unit 3 Work and play-【单词】\n"
     },
     {
       "order": 10,
       "id": "qpjiyt8pa6vn181mevkjx219",
       "title": "Unit 3 Work and play-Part A--【例句】",
-      "file": "U3-partA.json"
+      "file": "U3-partA.json",
+      "stats": {
+        "sentences": 32,
+        "total": 189,
+        "word": 88,
+        "phrase": 44,
+        "sentence": 31,
+        "chunk": 24,
+        "combinedChunks": 2
+      },
+      "subtitle": "Part A（What do you learn at school?）"
     },
     {
       "order": 11,
       "id": "v9p79nftsaytfgibkrbx8qpn",
       "title": "Unit 3 Work and play-Part B--【例句】",
-      "file": "U3-partB.json"
+      "file": "U3-partB.json",
+      "stats": {
+        "sentences": 23,
+        "total": 139,
+        "word": 51,
+        "phrase": 37,
+        "sentence": 23,
+        "chunk": 25,
+        "combinedChunks": 3
+      },
+      "subtitle": "Part B（What do you do at the weekend?）"
     },
     {
       "order": 12,
       "id": "xbvelhe82sggxcpv4osdrhzr",
       "title": "Unit 3 Work and play-Part C--【例句】",
-      "file": "U3-partC.json"
+      "file": "U3-partC.json",
+      "stats": {
+        "sentences": 37,
+        "total": 181,
+        "word": 71,
+        "phrase": 53,
+        "sentence": 37,
+        "chunk": 19,
+        "combinedChunks": 1
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 13,
       "id": "d1l60uahgx63otwnte8a1nap",
       "title": "Unit 4 Healthy habits-【单词】",
-      "file": "U4-words.json"
+      "file": "U4-words.json",
+      "stats": {
+        "sentences": 20,
+        "total": 20,
+        "word": 19,
+        "sentence": 1
+      },
+      "subtitle": "Unit 4 Healthy habits-【单词】\n"
     },
     {
       "order": 14,
       "id": "pkfsllocglioq8v40g8h0s5k",
       "title": "Unit 4 Healthy habits-Part A--【例句】",
-      "file": "U4-partA.json"
+      "file": "U4-partA.json",
+      "stats": {
+        "sentences": 28,
+        "total": 151,
+        "word": 56,
+        "phrase": 47,
+        "sentence": 28,
+        "chunk": 19,
+        "combinedChunks": 1
+      },
+      "subtitle": "Part A（How can we stay healthy?）"
     },
     {
       "order": 15,
       "id": "es9ighk3ggurp18modxc9wy8",
       "title": "Unit 4 Healthy habits-Part B--【例句】",
-      "file": "U4-partB.json"
+      "file": "U4-partB.json",
+      "stats": {
+        "sentences": 39,
+        "total": 204,
+        "word": 89,
+        "phrase": 60,
+        "sentence": 39,
+        "chunk": 13,
+        "combinedChunks": 3
+      },
+      "subtitle": "Part B（How can good habits help us?）"
     },
     {
       "order": 16,
       "id": "o3c1wztgcljrdbcqwugh3k6t",
       "title": "Unit 4 Healthy habits-Part C--【例句】",
-      "file": "U4-partC.json"
+      "file": "U4-partC.json",
+      "stats": {
+        "sentences": 30,
+        "total": 146,
+        "word": 56,
+        "phrase": 46,
+        "sentence": 30,
+        "chunk": 14
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 17,
       "id": "g9no8jzydt68i9jszatqajk0",
       "title": "Unit 5 Food we eat-【单词】",
-      "file": "U5-words.json"
+      "file": "U5-words.json",
+      "stats": {
+        "sentences": 27,
+        "total": 27,
+        "word": 25,
+        "sentence": 2
+      },
+      "subtitle": "Unit 5 Food we eat-【单词】\n"
     },
     {
       "order": 18,
       "id": "pgu23hfowth4k9nnh2ux4zop",
       "title": "Unit 5 Food we eat-Part A--【例句】",
-      "file": "U5-partA.json"
+      "file": "U5-partA.json",
+      "stats": {
+        "sentences": 27,
+        "total": 126,
+        "word": 55,
+        "phrase": 40,
+        "sentence": 27,
+        "chunk": 4
+      },
+      "subtitle": "Part A（What do we eat?）"
     },
     {
       "order": 19,
       "id": "j5vidsk6a7vgaodyjb3gi6wm",
       "title": "Unit 5 Food we eat-Part B--【例句】",
-      "file": "U5-partB.json"
+      "file": "U5-partB.json",
+      "stats": {
+        "sentences": 48,
+        "total": 243,
+        "word": 108,
+        "phrase": 69,
+        "sentence": 48,
+        "chunk": 17,
+        "combinedChunks": 1
+      },
+      "subtitle": "Part B（Where does our food come from?）"
     },
     {
       "order": 20,
       "id": "rudbjhydoyczl37g9i6jiw10",
       "title": "Unit 5 Food we eat-Part C--【例句】",
-      "file": "U5-partC.json"
+      "file": "U5-partC.json",
+      "stats": {
+        "sentences": 25,
+        "total": 155,
+        "word": 57,
+        "phrase": 53,
+        "sentence": 25,
+        "chunk": 17,
+        "combinedChunks": 3
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 21,
       "id": "p1gpu6qmcmv3yzwinjdiu39x",
       "title": "Unit 6 Nature and us-【单词】",
-      "file": "U6-words.json"
+      "file": "U6-words.json",
+      "stats": {
+        "sentences": 23,
+        "total": 23,
+        "word": 22,
+        "sentence": 1
+      },
+      "subtitle": "Unit 6 Nature and us-【单词】\n"
     },
     {
       "order": 22,
       "id": "v44wx91x2frwg1tpb7xqdj7p",
       "title": "Unit 6 Nature and us-Part A--【例句】",
-      "file": "U6-partA.json"
+      "file": "U6-partA.json",
+      "stats": {
+        "sentences": 28,
+        "total": 182,
+        "word": 74,
+        "phrase": 44,
+        "sentence": 28,
+        "chunk": 32,
+        "combinedChunks": 4
+      },
+      "subtitle": "Part A（What is exciting about nature?）"
     },
     {
       "order": 23,
       "id": "mvyrr383jij1y0oibxj4j2u3",
       "title": "Unit 6 Nature and us-Part B--【例句】",
-      "file": "U6-partB.json"
+      "file": "U6-partB.json",
+      "stats": {
+        "sentences": 54,
+        "total": 363,
+        "word": 137,
+        "phrase": 108,
+        "sentence": 54,
+        "chunk": 60,
+        "combinedChunks": 4
+      },
+      "subtitle": "Part B（What happens in bad weather?）"
     },
     {
       "order": 24,
       "id": "nbukibj24qebkvo0lkp4yrrf",
       "title": "Unit 6 Nature and us-Part C--【例句】",
-      "file": "U6-partC.json"
+      "file": "U6-partC.json",
+      "stats": {
+        "sentences": 47,
+        "total": 302,
+        "word": 117,
+        "phrase": 90,
+        "sentence": 47,
+        "chunk": 44,
+        "combinedChunks": 4
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 25,
       "id": "i6b8jscmld5fy167eyuk0g52",
       "title": "Revision New Year's party-【单词】",
-      "file": "REV-words.json"
+      "file": "REV-words.json",
+      "stats": {
+        "sentences": 24,
+        "total": 24,
+        "word": 24
+      },
+      "subtitle": "Revision New Year's party-【单词】\n"
     },
     {
       "order": 26,
       "id": "v3u03t9ffzl6gyqcmmo06u6y",
       "title": "Revision New Year's party--【例句】",
-      "file": "REV-examples.json"
+      "file": "REV-examples.json",
+      "stats": {
+        "sentences": 45,
+        "total": 245,
+        "word": 101,
+        "phrase": 75,
+        "sentence": 45,
+        "chunk": 24
+      },
+      "subtitle": "Revision New Year's party--【例句】\n"
     }
   ]
 }

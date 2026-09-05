@@ -1,375 +1,800 @@
 {
- "id": "rwtocajplud9ld732ep5u8ec",
- "slug": "xingrong-beginner",
- "title": "星荣零基础学英语（new）",
- "description": "最适合零基础入门的课程（拥有句子成分解析&讲解&词性的最新版本）",
- "courseCount": 61,
- "courses": [
-  {
-   "order": 1,
-   "id": "r0h3kjyefkttp47tijduvvlc",
-   "title": "第1课",
-   "file": "L01.json"
-  },
-  {
-   "order": 2,
-   "id": "lpf14qqagz4rgj6me3enhzsu",
-   "title": "第2课",
-   "file": "L02.json"
-  },
-  {
-   "order": 3,
-   "id": "k46gw988jcfag7pd87uefm4n",
-   "title": "第3课",
-   "file": "L03.json"
-  },
-  {
-   "order": 4,
-   "id": "kb4ledd8jsk2favk6tx951hh",
-   "title": "第4课",
-   "file": "L04.json"
-  },
-  {
-   "order": 5,
-   "id": "v5ecj1z0csddsna8pa6wtgcu",
-   "title": "第5课",
-   "file": "L05.json"
-  },
-  {
-   "order": 6,
-   "id": "o3vkggo07oqovexg6a01d1ln",
-   "title": "第6课",
-   "file": "L06.json"
-  },
-  {
-   "order": 7,
-   "id": "x8h491t5n9hupak3uytbcd2g",
-   "title": "第7课",
-   "file": "L07.json"
-  },
-  {
-   "order": 8,
-   "id": "sk64v8u2r4kqlyj9050m71vy",
-   "title": "第8课",
-   "file": "L08.json"
-  },
-  {
-   "order": 9,
-   "id": "rce53tvh1q2lk39mo29fozsg",
-   "title": "第9课",
-   "file": "L09.json"
-  },
-  {
-   "order": 10,
-   "id": "prd83oeqjp8kh5gr1dg7s7yh",
-   "title": "第10课",
-   "file": "L10.json"
-  },
-  {
-   "order": 11,
-   "id": "pydt07nkaii7ebvd9krfp7wd",
-   "title": "第11课",
-   "file": "L11.json"
-  },
-  {
-   "order": 12,
-   "id": "ak6cl6i3nodq3vwkeg6t2kv8",
-   "title": "第12课",
-   "file": "L12.json"
-  },
-  {
-   "order": 13,
-   "id": "v68mh9a1484imqoy7khnymtw",
-   "title": "第13课",
-   "file": "L13.json"
-  },
-  {
-   "order": 14,
-   "id": "m14vbuoyn8mc9aroub0b5qph",
-   "title": "第14课",
-   "file": "L14.json"
-  },
-  {
-   "order": 15,
-   "id": "x071igcqwj4p4o3hzrdd08vf",
-   "title": "第15课",
-   "file": "L15.json"
-  },
-  {
-   "order": 16,
-   "id": "e6ly3919dcge476h4glmzh7a",
-   "title": "第16课",
-   "file": "L16.json"
-  },
-  {
-   "order": 17,
-   "id": "cqrny0046hgtj9vafkmc0mqx",
-   "title": "第17课",
-   "file": "L17.json"
-  },
-  {
-   "order": 18,
-   "id": "mdkmlhpx5ms8pmkpdz3vft62",
-   "title": "第18课",
-   "file": "L18.json"
-  },
-  {
-   "order": 19,
-   "id": "hbnah7sariz7pxxmyibbto0r",
-   "title": "第19课",
-   "file": "L19.json"
-  },
-  {
-   "order": 20,
-   "id": "tdnl3ovc9e66v2epd1yot1kz",
-   "title": "第20课",
-   "file": "L20.json"
-  },
-  {
-   "order": 21,
-   "id": "yqdlc1np5addcle455ydirf5",
-   "title": "第21课",
-   "file": "L21.json"
-  },
-  {
-   "order": 22,
-   "id": "enau88z2elp1pqg7cx66zhwd",
-   "title": "第22课",
-   "file": "L22.json"
-  },
-  {
-   "order": 23,
-   "id": "ihjl5puprwzyzlasvzix97ln",
-   "title": "第23课",
-   "file": "L23.json"
-  },
-  {
-   "order": 24,
-   "id": "dvvccbqbszif5qs2y8mcwrv7",
-   "title": "第24课",
-   "file": "L24.json"
-  },
-  {
-   "order": 25,
-   "id": "udvu8junkou8vd5psl239zi2",
-   "title": "第25课",
-   "file": "L25.json"
-  },
-  {
-   "order": 26,
-   "id": "djlota6rp0ahz55m9ewcfw9u",
-   "title": "第26课",
-   "file": "L26.json"
-  },
-  {
-   "order": 27,
-   "id": "j0m6qxsbjyo7q3lbyo820i46",
-   "title": "第27课",
-   "file": "L27.json"
-  },
-  {
-   "order": 28,
-   "id": "fju82juo2rugp261p7xokn4k",
-   "title": "第28课",
-   "file": "L28.json"
-  },
-  {
-   "order": 29,
-   "id": "vlpfjnabpy7i0wu7ttb4mzu3",
-   "title": "第29课",
-   "file": "L29.json"
-  },
-  {
-   "order": 30,
-   "id": "f8zyu1yxg5tn4i0jaugj7ji5",
-   "title": "第30课",
-   "file": "L30.json"
-  },
-  {
-   "order": 31,
-   "id": "wy9zg1racutrzgwmmoke4dpf",
-   "title": "第31课",
-   "file": "L31.json"
-  },
-  {
-   "order": 32,
-   "id": "u8ip941kyislhi2krtdvnp0d",
-   "title": "第32课",
-   "file": "L32.json"
-  },
-  {
-   "order": 33,
-   "id": "i7eg5adjhzvwvsk0gnvzgfw1",
-   "title": "第33课",
-   "file": "L33.json"
-  },
-  {
-   "order": 34,
-   "id": "vcdwl7ajgwnrafbwar2r0kdj",
-   "title": "第34课",
-   "file": "L34.json"
-  },
-  {
-   "order": 35,
-   "id": "bjles9ld8jra7w80gvkkzlvd",
-   "title": "第35课",
-   "file": "L35.json"
-  },
-  {
-   "order": 36,
-   "id": "hh3oxpg0mkxv2mjok0o6mcnz",
-   "title": "第36课",
-   "file": "L36.json"
-  },
-  {
-   "order": 37,
-   "id": "sq2c4fiw13apxjqhi27yqmfa",
-   "title": "第37课",
-   "file": "L37.json"
-  },
-  {
-   "order": 38,
-   "id": "vv5n4z0ha53m11xgyx73q2bo",
-   "title": "第38课",
-   "file": "L38.json"
-  },
-  {
-   "order": 39,
-   "id": "wztfovpcr9l779d4whns03b5",
-   "title": "第39课",
-   "file": "L39.json"
-  },
-  {
-   "order": 40,
-   "id": "annwysuwergvu9dirrwn5amm",
-   "title": "第40课",
-   "file": "L40.json"
-  },
-  {
-   "order": 41,
-   "id": "mml5qmcxkrhwefo3hq7e54h2",
-   "title": "第41课",
-   "file": "L41.json"
-  },
-  {
-   "order": 42,
-   "id": "xhqf0qwljlya0l1lb6ggvw5o",
-   "title": "第42课",
-   "file": "L42.json"
-  },
-  {
-   "order": 43,
-   "id": "jzns3pchigmiyqhpswwum3z2",
-   "title": "第43课",
-   "file": "L43.json"
-  },
-  {
-   "order": 44,
-   "id": "xc8v2v807xiyb4kr7dzzfh8e",
-   "title": "第44课",
-   "file": "L44.json"
-  },
-  {
-   "order": 45,
-   "id": "ui1kl5810hed279q9ldy16du",
-   "title": "第45课",
-   "file": "L45.json"
-  },
-  {
-   "order": 46,
-   "id": "pkshcrglpof5qic3xx6sv6an",
-   "title": "第46课",
-   "file": "L46.json"
-  },
-  {
-   "order": 47,
-   "id": "r8t2c3v610r3y9jo2q4m0bzz",
-   "title": "第47课",
-   "file": "L47.json"
-  },
-  {
-   "order": 48,
-   "id": "oibchqzg0eelsooaeaqopip8",
-   "title": "第48课",
-   "file": "L48.json"
-  },
-  {
-   "order": 49,
-   "id": "q3et1lhw2v8yfxa3f0ha5szg",
-   "title": "第49课",
-   "file": "L49.json"
-  },
-  {
-   "order": 50,
-   "id": "ys4kb349h3pwlab9xesrfl7z",
-   "title": "第50课",
-   "file": "L50.json"
-  },
-  {
-   "order": 51,
-   "id": "qj9nszqbxygxtdmslix2fh8k",
-   "title": "第51课",
-   "file": "L51.json"
-  },
-  {
-   "order": 52,
-   "id": "hd2gvz5vpnf0eqnrh9e5nl7h",
-   "title": "第52课",
-   "file": "L52.json"
-  },
-  {
-   "order": 53,
-   "id": "jebstwqzukzk6lxp7zf7ek02",
-   "title": "第53课",
-   "file": "L53.json"
-  },
-  {
-   "order": 54,
-   "id": "eiv1nehgd8u2rpzj7qbqite9",
-   "title": "第54课",
-   "file": "L54.json"
-  },
-  {
-   "order": 55,
-   "id": "rvzb528nc9emysoix6qlybuk",
-   "title": "第55课",
-   "file": "L55.json"
-  },
-  {
-   "order": 56,
-   "id": "eecgddzsf73cqdf94ps3javs",
-   "title": "第56课",
-   "file": "L56.json"
-  },
-  {
-   "order": 57,
-   "id": "cw5p9zu8ad1sz82ym0l7aki9",
-   "title": "第57课",
-   "file": "L57.json"
-  },
-  {
-   "order": 58,
-   "id": "u4b6hxsegkaizwysvtq10hro",
-   "title": "第58课",
-   "file": "L58.json"
-  },
-  {
-   "order": 59,
-   "id": "u91ecbuul0jcg0inkvvv9rxk",
-   "title": "第59课",
-   "file": "L59.json"
-  },
-  {
-   "order": 60,
-   "id": "gq1aggbzlekspjqbrpebwng1",
-   "title": "第60课",
-   "file": "L60.json"
-  },
-  {
-   "order": 61,
-   "id": "rm6hnjiozsva6goo8db0uodg",
-   "title": "第61课",
-   "file": "L61.json"
-  }
- ]
+  "id": "rwtocajplud9ld732ep5u8ec",
+  "slug": "xingrong-beginner",
+  "title": "星荣零基础学英语（new）",
+  "description": "最适合零基础入门的课程（拥有句子成分解析&讲解&词性的最新版本）",
+  "courseCount": 61,
+  "courses": [
+    {
+      "order": 1,
+      "id": "r0h3kjyefkttp47tijduvvlc",
+      "title": "第1课",
+      "file": "L01.json",
+      "stats": {
+        "sentences": 218,
+        "total": 218,
+        "word": 49,
+        "sentence": 169
+      },
+      "subtitle": "第1课 - 基础英语句子学习"
+    },
+    {
+      "order": 2,
+      "id": "lpf14qqagz4rgj6me3enhzsu",
+      "title": "第2课",
+      "file": "L02.json",
+      "stats": {
+        "sentences": 163,
+        "total": 163,
+        "word": 36,
+        "sentence": 127
+      },
+      "subtitle": "第2课 - 基础英语句子学习"
+    },
+    {
+      "order": 3,
+      "id": "k46gw988jcfag7pd87uefm4n",
+      "title": "第3课",
+      "file": "L03.json",
+      "stats": {
+        "sentences": 183,
+        "total": 183,
+        "word": 29,
+        "sentence": 154
+      },
+      "subtitle": "第3课 - 基础英语句子学习"
+    },
+    {
+      "order": 4,
+      "id": "kb4ledd8jsk2favk6tx951hh",
+      "title": "第4课",
+      "file": "L04.json",
+      "stats": {
+        "sentences": 146,
+        "total": 146,
+        "word": 9,
+        "sentence": 137
+      },
+      "subtitle": "第4课 - 基础英语句子学习"
+    },
+    {
+      "order": 5,
+      "id": "v5ecj1z0csddsna8pa6wtgcu",
+      "title": "第5课",
+      "file": "L05.json",
+      "stats": {
+        "sentences": 205,
+        "total": 205,
+        "word": 31,
+        "sentence": 174
+      },
+      "subtitle": "第5课 - 基础英语句子学习"
+    },
+    {
+      "order": 6,
+      "id": "o3vkggo07oqovexg6a01d1ln",
+      "title": "第6课",
+      "file": "L06.json",
+      "stats": {
+        "sentences": 212,
+        "total": 212,
+        "word": 54,
+        "sentence": 158
+      },
+      "subtitle": "第6课 - 基础英语句子学习"
+    },
+    {
+      "order": 7,
+      "id": "x8h491t5n9hupak3uytbcd2g",
+      "title": "第7课",
+      "file": "L07.json",
+      "stats": {
+        "sentences": 182,
+        "total": 182,
+        "sentence": 182
+      },
+      "subtitle": "第7课 - 基础英语句子学习"
+    },
+    {
+      "order": 8,
+      "id": "sk64v8u2r4kqlyj9050m71vy",
+      "title": "第8课",
+      "file": "L08.json",
+      "stats": {
+        "sentences": 220,
+        "total": 220,
+        "word": 29,
+        "sentence": 191
+      },
+      "subtitle": "第8课 - 基础英语句子学习"
+    },
+    {
+      "order": 9,
+      "id": "rce53tvh1q2lk39mo29fozsg",
+      "title": "第9课",
+      "file": "L09.json",
+      "stats": {
+        "sentences": 217,
+        "total": 217,
+        "word": 41,
+        "sentence": 176
+      },
+      "subtitle": "第9课 - 基础英语句子学习"
+    },
+    {
+      "order": 10,
+      "id": "prd83oeqjp8kh5gr1dg7s7yh",
+      "title": "第10课",
+      "file": "L10.json",
+      "stats": {
+        "sentences": 170,
+        "total": 170,
+        "word": 27,
+        "sentence": 143
+      },
+      "subtitle": "第10课 - 基础英语句子学习"
+    },
+    {
+      "order": 11,
+      "id": "pydt07nkaii7ebvd9krfp7wd",
+      "title": "第11课",
+      "file": "L11.json",
+      "stats": {
+        "sentences": 191,
+        "total": 191,
+        "word": 38,
+        "sentence": 153
+      },
+      "subtitle": "第11课 - 基础英语句子学习"
+    },
+    {
+      "order": 12,
+      "id": "ak6cl6i3nodq3vwkeg6t2kv8",
+      "title": "第12课",
+      "file": "L12.json",
+      "stats": {
+        "sentences": 566,
+        "total": 566,
+        "word": 114,
+        "sentence": 452
+      },
+      "subtitle": "第12课 - 基础英语句子学习"
+    },
+    {
+      "order": 13,
+      "id": "v68mh9a1484imqoy7khnymtw",
+      "title": "第13课",
+      "file": "L13.json",
+      "stats": {
+        "sentences": 137,
+        "total": 137,
+        "word": 33,
+        "sentence": 104
+      },
+      "subtitle": "第13课 - 基础英语句子学习"
+    },
+    {
+      "order": 14,
+      "id": "m14vbuoyn8mc9aroub0b5qph",
+      "title": "第14课",
+      "file": "L14.json",
+      "stats": {
+        "sentences": 163,
+        "total": 163,
+        "word": 31,
+        "sentence": 132
+      },
+      "subtitle": "第14课 - 基础英语句子学习"
+    },
+    {
+      "order": 15,
+      "id": "x071igcqwj4p4o3hzrdd08vf",
+      "title": "第15课",
+      "file": "L15.json",
+      "stats": {
+        "sentences": 125,
+        "total": 125,
+        "word": 24,
+        "sentence": 101
+      },
+      "subtitle": "第15课 - 基础英语句子学习"
+    },
+    {
+      "order": 16,
+      "id": "e6ly3919dcge476h4glmzh7a",
+      "title": "第16课",
+      "file": "L16.json",
+      "stats": {
+        "sentences": 135,
+        "total": 135,
+        "word": 29,
+        "sentence": 106
+      },
+      "subtitle": "第16课 - 基础英语句子学习"
+    },
+    {
+      "order": 17,
+      "id": "cqrny0046hgtj9vafkmc0mqx",
+      "title": "第17课",
+      "file": "L17.json",
+      "stats": {
+        "sentences": 138,
+        "total": 138,
+        "word": 23,
+        "sentence": 115
+      },
+      "subtitle": "第17课 - 基础英语句子学习"
+    },
+    {
+      "order": 18,
+      "id": "mdkmlhpx5ms8pmkpdz3vft62",
+      "title": "第18课",
+      "file": "L18.json",
+      "stats": {
+        "sentences": 116,
+        "total": 116,
+        "word": 30,
+        "sentence": 86
+      },
+      "subtitle": "第18课 - 基础英语句子学习"
+    },
+    {
+      "order": 19,
+      "id": "hbnah7sariz7pxxmyibbto0r",
+      "title": "第19课",
+      "file": "L19.json",
+      "stats": {
+        "sentences": 146,
+        "total": 146,
+        "word": 49,
+        "sentence": 97
+      },
+      "subtitle": "第19课 - 基础英语句子学习"
+    },
+    {
+      "order": 20,
+      "id": "tdnl3ovc9e66v2epd1yot1kz",
+      "title": "第20课",
+      "file": "L20.json",
+      "stats": {
+        "sentences": 133,
+        "total": 133,
+        "word": 43,
+        "sentence": 90
+      },
+      "subtitle": "第20课 - 基础英语句子学习"
+    },
+    {
+      "order": 21,
+      "id": "yqdlc1np5addcle455ydirf5",
+      "title": "第21课",
+      "file": "L21.json",
+      "stats": {
+        "sentences": 135,
+        "total": 135,
+        "word": 45,
+        "sentence": 90
+      },
+      "subtitle": "第21课 - 基础英语句子学习"
+    },
+    {
+      "order": 22,
+      "id": "enau88z2elp1pqg7cx66zhwd",
+      "title": "第22课",
+      "file": "L22.json",
+      "stats": {
+        "sentences": 139,
+        "total": 139,
+        "word": 38,
+        "sentence": 101
+      },
+      "subtitle": "第22课 - 基础英语句子学习"
+    },
+    {
+      "order": 23,
+      "id": "ihjl5puprwzyzlasvzix97ln",
+      "title": "第23课",
+      "file": "L23.json",
+      "stats": {
+        "sentences": 129,
+        "total": 129,
+        "word": 32,
+        "sentence": 97
+      },
+      "subtitle": "第23课 - 基础英语句子学习"
+    },
+    {
+      "order": 24,
+      "id": "dvvccbqbszif5qs2y8mcwrv7",
+      "title": "第24课",
+      "file": "L24.json",
+      "stats": {
+        "sentences": 109,
+        "total": 109,
+        "word": 28,
+        "sentence": 81
+      },
+      "subtitle": "第24课 - 基础英语句子学习"
+    },
+    {
+      "order": 25,
+      "id": "udvu8junkou8vd5psl239zi2",
+      "title": "第25课",
+      "file": "L25.json",
+      "stats": {
+        "sentences": 152,
+        "total": 152,
+        "word": 53,
+        "sentence": 99
+      },
+      "subtitle": "第25课 - 基础英语句子学习"
+    },
+    {
+      "order": 26,
+      "id": "djlota6rp0ahz55m9ewcfw9u",
+      "title": "第26课",
+      "file": "L26.json",
+      "stats": {
+        "sentences": 153,
+        "total": 153,
+        "word": 37,
+        "sentence": 116
+      },
+      "subtitle": "第26课 - 基础英语句子学习"
+    },
+    {
+      "order": 27,
+      "id": "j0m6qxsbjyo7q3lbyo820i46",
+      "title": "第27课",
+      "file": "L27.json",
+      "stats": {
+        "sentences": 129,
+        "total": 129,
+        "word": 54,
+        "sentence": 75
+      },
+      "subtitle": "第27课 - 基础英语句子学习"
+    },
+    {
+      "order": 28,
+      "id": "fju82juo2rugp261p7xokn4k",
+      "title": "第28课",
+      "file": "L28.json",
+      "stats": {
+        "sentences": 150,
+        "total": 150,
+        "word": 50,
+        "sentence": 100
+      },
+      "subtitle": "第28课 - 基础英语句子学习"
+    },
+    {
+      "order": 29,
+      "id": "vlpfjnabpy7i0wu7ttb4mzu3",
+      "title": "第29课",
+      "file": "L29.json",
+      "stats": {
+        "sentences": 127,
+        "total": 127,
+        "word": 43,
+        "sentence": 84
+      },
+      "subtitle": "第29课 - 基础英语句子学习"
+    },
+    {
+      "order": 30,
+      "id": "f8zyu1yxg5tn4i0jaugj7ji5",
+      "title": "第30课",
+      "file": "L30.json",
+      "stats": {
+        "sentences": 174,
+        "total": 174,
+        "word": 55,
+        "sentence": 119
+      },
+      "subtitle": "第30课 - 基础英语句子学习"
+    },
+    {
+      "order": 31,
+      "id": "wy9zg1racutrzgwmmoke4dpf",
+      "title": "第31课",
+      "file": "L31.json",
+      "stats": {
+        "sentences": 154,
+        "total": 154,
+        "word": 46,
+        "sentence": 108
+      },
+      "subtitle": "第31课 - 基础英语句子学习"
+    },
+    {
+      "order": 32,
+      "id": "u8ip941kyislhi2krtdvnp0d",
+      "title": "第32课",
+      "file": "L32.json",
+      "stats": {
+        "sentences": 157,
+        "total": 157,
+        "word": 46,
+        "sentence": 111
+      },
+      "subtitle": "第32课 - 基础英语句子学习"
+    },
+    {
+      "order": 33,
+      "id": "i7eg5adjhzvwvsk0gnvzgfw1",
+      "title": "第33课",
+      "file": "L33.json",
+      "stats": {
+        "sentences": 138,
+        "total": 138,
+        "word": 43,
+        "sentence": 95
+      },
+      "subtitle": "第33课 - 基础英语句子学习"
+    },
+    {
+      "order": 34,
+      "id": "vcdwl7ajgwnrafbwar2r0kdj",
+      "title": "第34课",
+      "file": "L34.json",
+      "stats": {
+        "sentences": 133,
+        "total": 133,
+        "word": 45,
+        "sentence": 88
+      },
+      "subtitle": "第34课 - 基础英语句子学习"
+    },
+    {
+      "order": 35,
+      "id": "bjles9ld8jra7w80gvkkzlvd",
+      "title": "第35课",
+      "file": "L35.json",
+      "stats": {
+        "sentences": 121,
+        "total": 121,
+        "word": 42,
+        "sentence": 79
+      },
+      "subtitle": "第35课 - 基础英语句子学习"
+    },
+    {
+      "order": 36,
+      "id": "hh3oxpg0mkxv2mjok0o6mcnz",
+      "title": "第36课",
+      "file": "L36.json",
+      "stats": {
+        "sentences": 139,
+        "total": 139,
+        "word": 38,
+        "sentence": 101
+      },
+      "subtitle": "第36课 - 基础英语句子学习"
+    },
+    {
+      "order": 37,
+      "id": "sq2c4fiw13apxjqhi27yqmfa",
+      "title": "第37课",
+      "file": "L37.json",
+      "stats": {
+        "sentences": 134,
+        "total": 134,
+        "word": 40,
+        "sentence": 94
+      },
+      "subtitle": "第37课 - 基础英语句子学习"
+    },
+    {
+      "order": 38,
+      "id": "vv5n4z0ha53m11xgyx73q2bo",
+      "title": "第38课",
+      "file": "L38.json",
+      "stats": {
+        "sentences": 202,
+        "total": 202,
+        "word": 43,
+        "sentence": 159
+      },
+      "subtitle": "第38课 - 基础英语句子学习"
+    },
+    {
+      "order": 39,
+      "id": "wztfovpcr9l779d4whns03b5",
+      "title": "第39课",
+      "file": "L39.json",
+      "stats": {
+        "sentences": 183,
+        "total": 183,
+        "word": 48,
+        "sentence": 135
+      },
+      "subtitle": "第39课 - 基础英语句子学习"
+    },
+    {
+      "order": 40,
+      "id": "annwysuwergvu9dirrwn5amm",
+      "title": "第40课",
+      "file": "L40.json",
+      "stats": {
+        "sentences": 146,
+        "total": 146,
+        "word": 37,
+        "sentence": 109
+      },
+      "subtitle": "第40课 - 基础英语句子学习"
+    },
+    {
+      "order": 41,
+      "id": "mml5qmcxkrhwefo3hq7e54h2",
+      "title": "第41课",
+      "file": "L41.json",
+      "stats": {
+        "sentences": 155,
+        "total": 155,
+        "word": 25,
+        "sentence": 130
+      },
+      "subtitle": "第41课 - 基础英语句子学习"
+    },
+    {
+      "order": 42,
+      "id": "xhqf0qwljlya0l1lb6ggvw5o",
+      "title": "第42课",
+      "file": "L42.json",
+      "stats": {
+        "sentences": 148,
+        "total": 148,
+        "word": 23,
+        "sentence": 125
+      },
+      "subtitle": "第42课 - 基础英语句子学习"
+    },
+    {
+      "order": 43,
+      "id": "jzns3pchigmiyqhpswwum3z2",
+      "title": "第43课",
+      "file": "L43.json",
+      "stats": {
+        "sentences": 142,
+        "total": 142,
+        "word": 35,
+        "sentence": 107
+      },
+      "subtitle": "第43课 - 基础英语句子学习"
+    },
+    {
+      "order": 44,
+      "id": "xc8v2v807xiyb4kr7dzzfh8e",
+      "title": "第44课",
+      "file": "L44.json",
+      "stats": {
+        "sentences": 177,
+        "total": 177,
+        "word": 44,
+        "sentence": 133
+      },
+      "subtitle": "第44课 - 基础英语句子学习"
+    },
+    {
+      "order": 45,
+      "id": "ui1kl5810hed279q9ldy16du",
+      "title": "第45课",
+      "file": "L45.json",
+      "stats": {
+        "sentences": 124,
+        "total": 124,
+        "word": 32,
+        "sentence": 92
+      },
+      "subtitle": "第45课 - 基础英语句子学习"
+    },
+    {
+      "order": 46,
+      "id": "pkshcrglpof5qic3xx6sv6an",
+      "title": "第46课",
+      "file": "L46.json",
+      "stats": {
+        "sentences": 128,
+        "total": 128,
+        "word": 34,
+        "sentence": 94
+      },
+      "subtitle": "第46课 - 基础英语句子学习"
+    },
+    {
+      "order": 47,
+      "id": "r8t2c3v610r3y9jo2q4m0bzz",
+      "title": "第47课",
+      "file": "L47.json",
+      "stats": {
+        "sentences": 129,
+        "total": 129,
+        "word": 35,
+        "sentence": 94
+      },
+      "subtitle": "第47课 - 基础英语句子学习"
+    },
+    {
+      "order": 48,
+      "id": "oibchqzg0eelsooaeaqopip8",
+      "title": "第48课",
+      "file": "L48.json",
+      "stats": {
+        "sentences": 133,
+        "total": 133,
+        "word": 42,
+        "sentence": 91
+      },
+      "subtitle": "第48课 - 基础英语句子学习"
+    },
+    {
+      "order": 49,
+      "id": "q3et1lhw2v8yfxa3f0ha5szg",
+      "title": "第49课",
+      "file": "L49.json",
+      "stats": {
+        "sentences": 173,
+        "total": 173,
+        "word": 55,
+        "sentence": 118
+      },
+      "subtitle": "第49课 - 基础英语句子学习"
+    },
+    {
+      "order": 50,
+      "id": "ys4kb349h3pwlab9xesrfl7z",
+      "title": "第50课",
+      "file": "L50.json",
+      "stats": {
+        "sentences": 156,
+        "total": 156,
+        "word": 56,
+        "sentence": 100
+      },
+      "subtitle": "第50课 - 基础英语句子学习"
+    },
+    {
+      "order": 51,
+      "id": "qj9nszqbxygxtdmslix2fh8k",
+      "title": "第51课",
+      "file": "L51.json",
+      "stats": {
+        "sentences": 145,
+        "total": 145,
+        "word": 36,
+        "sentence": 109
+      },
+      "subtitle": "第51课 - 基础英语句子学习"
+    },
+    {
+      "order": 52,
+      "id": "hd2gvz5vpnf0eqnrh9e5nl7h",
+      "title": "第52课",
+      "file": "L52.json",
+      "stats": {
+        "sentences": 144,
+        "total": 144,
+        "word": 36,
+        "sentence": 108
+      },
+      "subtitle": "第52课 - 基础英语句子学习"
+    },
+    {
+      "order": 53,
+      "id": "jebstwqzukzk6lxp7zf7ek02",
+      "title": "第53课",
+      "file": "L53.json",
+      "stats": {
+        "sentences": 154,
+        "total": 154,
+        "word": 52,
+        "sentence": 102
+      },
+      "subtitle": "第53课 - 基础英语句子学习"
+    },
+    {
+      "order": 54,
+      "id": "eiv1nehgd8u2rpzj7qbqite9",
+      "title": "第54课",
+      "file": "L54.json",
+      "stats": {
+        "sentences": 156,
+        "total": 156,
+        "word": 31,
+        "sentence": 125
+      },
+      "subtitle": "第54课 - 基础英语句子学习"
+    },
+    {
+      "order": 55,
+      "id": "rvzb528nc9emysoix6qlybuk",
+      "title": "第55课",
+      "file": "L55.json",
+      "stats": {
+        "sentences": 127,
+        "total": 127,
+        "word": 36,
+        "sentence": 91
+      },
+      "subtitle": "第55课 - 基础英语句子学习"
+    },
+    {
+      "order": 56,
+      "id": "eecgddzsf73cqdf94ps3javs",
+      "title": "第56课",
+      "file": "L56.json",
+      "stats": {
+        "sentences": 124,
+        "total": 124,
+        "word": 29,
+        "sentence": 95
+      },
+      "subtitle": "第56课 - 基础英语句子学习"
+    },
+    {
+      "order": 57,
+      "id": "cw5p9zu8ad1sz82ym0l7aki9",
+      "title": "第57课",
+      "file": "L57.json",
+      "stats": {
+        "sentences": 126,
+        "total": 126,
+        "sentence": 126
+      },
+      "subtitle": "第57课 - 基础英语句子学习"
+    },
+    {
+      "order": 58,
+      "id": "u4b6hxsegkaizwysvtq10hro",
+      "title": "第58课",
+      "file": "L58.json",
+      "stats": {
+        "sentences": 135,
+        "total": 135,
+        "word": 39,
+        "sentence": 96
+      },
+      "subtitle": "第58课 - 基础英语句子学习"
+    },
+    {
+      "order": 59,
+      "id": "u91ecbuul0jcg0inkvvv9rxk",
+      "title": "第59课",
+      "file": "L59.json",
+      "stats": {
+        "sentences": 156,
+        "total": 156,
+        "word": 44,
+        "sentence": 112
+      },
+      "subtitle": "第59课 - 基础英语句子学习"
+    },
+    {
+      "order": 60,
+      "id": "gq1aggbzlekspjqbrpebwng1",
+      "title": "第60课",
+      "file": "L60.json",
+      "stats": {
+        "sentences": 131,
+        "total": 131,
+        "word": 36,
+        "sentence": 95
+      },
+      "subtitle": "第60课 - 基础英语句子学习"
+    },
+    {
+      "order": 61,
+      "id": "rm6hnjiozsva6goo8db0uodg",
+      "title": "第61课",
+      "file": "L61.json",
+      "stats": {
+        "sentences": 144,
+        "total": 144,
+        "word": 38,
+        "sentence": 106
+      },
+      "subtitle": "第61课 - 基础英语句子学习"
+    }
+  ]
 }

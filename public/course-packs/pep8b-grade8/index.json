@@ -9,181 +9,450 @@
       "order": 1,
       "id": "q0i5o5rk4q53h6bj8fe1rk1w",
       "title": "Unit 1 What’s the matter?【单词】",
-      "file": "L01.json"
+      "file": "L01.json",
+      "stats": {
+        "sentences": 71,
+        "total": 73,
+        "word": 53,
+        "sentence": 20
+      },
+      "subtitle": "Unit 1 What’s the matter?【单词】"
     },
     {
       "order": 2,
       "id": "y6dlz9pm2vr133wqqka91mvg",
       "title": "Unit 1 What’s the matter?【例句】",
-      "file": "L02.json"
+      "file": "L02.json",
+      "stats": {
+        "sentences": 50,
+        "total": 358,
+        "word": 137,
+        "phrase": 103,
+        "sentence": 50,
+        "chunk": 59,
+        "combinedChunks": 9
+      },
+      "subtitle": "Section A"
     },
     {
       "order": 3,
       "id": "ecxhtmjimh85fbz3p5nown2x",
       "title": "Unit 1 What’s the matter?【例句】",
-      "file": "L03.json"
+      "file": "L03.json",
+      "stats": {
+        "sentences": 33,
+        "total": 360,
+        "word": 131,
+        "phrase": 96,
+        "sentence": 33,
+        "chunk": 73,
+        "combinedChunks": 27
+      },
+      "subtitle": "Section B"
     },
     {
       "order": 4,
       "id": "n8476175r2usawozmamhk0oq",
       "title": "Unit 2 I’ll help to clean up the city parks.【单词】",
-      "file": "L04.json"
+      "file": "L04.json",
+      "stats": {
+        "sentences": 56,
+        "total": 56,
+        "word": 41,
+        "sentence": 15
+      },
+      "subtitle": "Unit 2 I’ll help to clean up the city parks.【单词】"
     },
     {
       "order": 5,
       "id": "o52xwr4w2ub2j3yowe66vl1g",
       "title": "Unit 2 I’ll help to clean up the city parks.【例句】",
-      "file": "L05.json"
+      "file": "L05.json",
+      "stats": {
+        "sentences": 30,
+        "total": 348,
+        "word": 107,
+        "phrase": 103,
+        "sentence": 30,
+        "chunk": 79,
+        "combinedChunks": 29
+      },
+      "subtitle": "Section A"
     },
     {
       "order": 6,
       "id": "yi2sil94juemjw919zb9pzco",
       "title": "Unit 2 I’ll help to clean up the city parks.【例句】",
-      "file": "L06.json"
+      "file": "L06.json",
+      "stats": {
+        "sentences": 43,
+        "total": 418,
+        "word": 162,
+        "phrase": 109,
+        "sentence": 43,
+        "chunk": 84,
+        "combinedChunks": 20
+      },
+      "subtitle": "Section B"
     },
     {
       "order": 7,
       "id": "w5ewl5no3bkslxl7wsx585rw",
       "title": "Unit 3 Could you please clean your room?【单词】",
-      "file": "L07.json"
+      "file": "L07.json",
+      "stats": {
+        "sentences": 39,
+        "total": 41,
+        "word": 33,
+        "phrase": 2,
+        "sentence": 6
+      },
+      "subtitle": "Unit 3 Could you please clean your room?【单词】"
     },
     {
       "order": 8,
       "id": "ya0qh07i7q549byklxgrgg8i",
       "title": "Unit 3 Could you please clean your room?【例句】",
-      "file": "L08.json"
+      "file": "L08.json",
+      "stats": {
+        "sentences": 43,
+        "total": 327,
+        "word": 119,
+        "phrase": 99,
+        "sentence": 43,
+        "chunk": 56,
+        "combinedChunks": 10
+      },
+      "subtitle": "Section A"
     },
     {
       "order": 9,
       "id": "knexwvz4fi12axix51v9up4n",
       "title": "Unit 3 Could you please clean your room?【例句】",
-      "file": "L09.json"
+      "file": "L09.json",
+      "stats": {
+        "sentences": 29,
+        "total": 304,
+        "word": 99,
+        "phrase": 86,
+        "sentence": 29,
+        "chunk": 64,
+        "combinedChunks": 26
+      },
+      "subtitle": "Section B"
     },
     {
       "order": 10,
       "id": "pxykcfvtybp4fl3497r6f7ru",
       "title": "Unit 4 Why don’t you talk to your parents?【单词】",
-      "file": "L10.json"
+      "file": "L10.json",
+      "stats": {
+        "sentences": 47,
+        "total": 51,
+        "word": 43,
+        "sentence": 8
+      },
+      "subtitle": "Unit 4 Why don’t you talk to your parents?【单词】"
     },
     {
       "order": 11,
       "id": "jmi05gaxagi0qhhunqrhuf4l",
       "title": "Unit 4 Why don’t you talk to your parents?【例句】",
-      "file": "L11.json"
+      "file": "L11.json",
+      "stats": {
+        "sentences": 43,
+        "total": 400,
+        "word": 159,
+        "phrase": 104,
+        "sentence": 43,
+        "chunk": 80,
+        "combinedChunks": 14
+      },
+      "subtitle": "Section A"
     },
     {
       "order": 12,
       "id": "oiogri82coprpa21uuksa0iq",
       "title": "Unit 4 Why don’t you talk to your parents?【例句】",
-      "file": "L12.json"
+      "file": "L12.json",
+      "stats": {
+        "sentences": 42,
+        "total": 345,
+        "word": 126,
+        "phrase": 89,
+        "sentence": 42,
+        "chunk": 70,
+        "combinedChunks": 18
+      },
+      "subtitle": "Section B"
     },
     {
       "order": 13,
       "id": "cnpo1o1c1733mnup0aftcyoo",
       "title": "Unit 5 What were you doing when the rainstorm came?【单词】",
-      "file": "L13.json"
+      "file": "L13.json",
+      "stats": {
+        "sentences": 51,
+        "total": 51,
+        "word": 40,
+        "sentence": 11
+      },
+      "subtitle": "Unit 5 What were you doing when the rainstorm came?【单词】"
     },
     {
       "order": 14,
       "id": "vyt93ngoexn3sun7f61dgsce",
       "title": "Unit 5 What were you doing when the rainstorm came?【例句】",
-      "file": "L14.json"
+      "file": "L14.json",
+      "stats": {
+        "sentences": 47,
+        "total": 403,
+        "word": 175,
+        "phrase": 107,
+        "sentence": 47,
+        "chunk": 69,
+        "combinedChunks": 5
+      },
+      "subtitle": "Section A"
     },
     {
       "order": 15,
       "id": "w0n6asrbuxk05tbov1zsg7u1",
       "title": "Unit 5 What were you doing when the rainstorm came?【例句】",
-      "file": "L15.json"
+      "file": "L15.json",
+      "stats": {
+        "sentences": 37,
+        "total": 388,
+        "word": 156,
+        "phrase": 97,
+        "sentence": 37,
+        "chunk": 80,
+        "combinedChunks": 18
+      },
+      "subtitle": "Section B"
     },
     {
       "order": 16,
       "id": "gr8vljtvuluaj948vfkcts1v",
       "title": "Unit 6 An old man tried to move the mountains.【单词】",
-      "file": "L16.json"
+      "file": "L16.json",
+      "stats": {
+        "sentences": 53,
+        "total": 53,
+        "word": 43,
+        "sentence": 10
+      },
+      "subtitle": "Unit 6 An old man tried to move the mountains.【单词】"
     },
     {
       "order": 17,
       "id": "s5jw6njegnnpu3euit895a5v",
       "title": "Unit 6 An old man tried to move the mountains.【例句】",
-      "file": "L17.json"
+      "file": "L17.json",
+      "stats": {
+        "sentences": 61,
+        "total": 622,
+        "word": 208,
+        "phrase": 193,
+        "sentence": 61,
+        "chunk": 123,
+        "combinedChunks": 37
+      },
+      "subtitle": "Section A"
     },
     {
       "order": 18,
       "id": "gffje1gro93r8o408i4a8rtq",
       "title": "Unit 6 An old man tried to move the mountains.【例句】",
-      "file": "L18.json"
+      "file": "L18.json",
+      "stats": {
+        "sentences": 49,
+        "total": 471,
+        "word": 173,
+        "phrase": 121,
+        "sentence": 49,
+        "chunk": 98,
+        "combinedChunks": 30
+      },
+      "subtitle": "Section B"
     },
     {
       "order": 19,
       "id": "m7u08vix3p1159tte7pita8p",
       "title": "Unit 7 What’s the highest mountain in the world?【单词】",
-      "file": "L19.json"
+      "file": "L19.json",
+      "stats": {
+        "sentences": 70,
+        "total": 70,
+        "word": 48,
+        "sentence": 22
+      },
+      "subtitle": "Unit 7 What’s the highest mountain in the world?【单词】"
     },
     {
       "order": 20,
       "id": "j7eznikj4zkwjdfgwnrl0stj",
       "title": "Unit 7 What’s the highest mountain in the world?【例句】",
-      "file": "L20.json"
+      "file": "L20.json",
+      "stats": {
+        "sentences": 60,
+        "total": 514,
+        "word": 184,
+        "phrase": 160,
+        "sentence": 58,
+        "chunk": 89,
+        "combinedChunks": 23
+      },
+      "subtitle": "Section A"
     },
     {
       "order": 21,
       "id": "gl5o8far2ovr2096qw98k59x",
       "title": "Unit 7 What’s the highest mountain in the world?【例句】",
-      "file": "L21.json"
+      "file": "L21.json",
+      "stats": {
+        "sentences": 30,
+        "total": 365,
+        "word": 125,
+        "phrase": 106,
+        "sentence": 30,
+        "chunk": 77,
+        "combinedChunks": 27
+      },
+      "subtitle": "Section B"
     },
     {
       "order": 22,
       "id": "vcm7t64v71v60lynpvsjd9wu",
       "title": "Unit 8 Have you read Treasure Island yet?【单词】",
-      "file": "L22.json"
+      "file": "L22.json",
+      "stats": {
+        "sentences": 69,
+        "total": 75,
+        "word": 53,
+        "sentence": 20,
+        "chunk": 2
+      },
+      "subtitle": "Unit 8 Have you read Treasure Island yet?【单词】"
     },
     {
       "order": 23,
       "id": "dvsno534exsu8vtpkjy2xzj8",
       "title": "Unit 8 Have you read Treasure Island yet?【例句】",
-      "file": "L23.json"
+      "file": "L23.json",
+      "stats": {
+        "sentences": 37,
+        "total": 363,
+        "word": 137,
+        "phrase": 96,
+        "sentence": 38,
+        "chunk": 72,
+        "combinedChunks": 20
+      },
+      "subtitle": "Section B"
     },
     {
       "order": 24,
       "id": "qgic0181whedwc65ymtcfypu",
       "title": "Unit 8 Have you read Treasure Island yet?【例句】",
-      "file": "L24.json"
+      "file": "L24.json",
+      "stats": {
+        "sentences": 66,
+        "total": 507,
+        "word": 207,
+        "phrase": 123,
+        "sentence": 65,
+        "chunk": 94,
+        "combinedChunks": 18
+      },
+      "subtitle": "Section A"
     },
     {
       "order": 25,
       "id": "b4jn1wftdfof1s17n60xdgwk",
       "title": "Unit 9 Have you ever been to a museum?【单词】",
-      "file": "L25.json"
+      "file": "L25.json",
+      "stats": {
+        "sentences": 44,
+        "total": 52,
+        "word": 39,
+        "sentence": 13
+      },
+      "subtitle": "Unit 9 Have you ever been to a museum?【单词】"
     },
     {
       "order": 26,
       "id": "wiml5yk6stxsv65nnmz3dykv",
       "title": "Unit 9 Have you ever been to a museum?【例句】",
-      "file": "L26.json"
+      "file": "L26.json",
+      "stats": {
+        "sentences": 75,
+        "total": 572,
+        "word": 216,
+        "phrase": 165,
+        "sentence": 75,
+        "chunk": 103,
+        "combinedChunks": 13
+      },
+      "subtitle": "Section A"
     },
     {
       "order": 27,
       "id": "pogmq2qwxrdmb1j7qpu2s9rp",
       "title": "Unit 9 Have you ever been to a museum?【例句】",
-      "file": "L27.json"
+      "file": "L27.json",
+      "stats": {
+        "sentences": 35,
+        "total": 378,
+        "word": 141,
+        "phrase": 102,
+        "sentence": 35,
+        "chunk": 75,
+        "combinedChunks": 25
+      },
+      "subtitle": "Section B"
     },
     {
       "order": 28,
       "id": "jy0a86kgqqk4ehibatjz4d5e",
       "title": "Unit 10 I’ve had this bike for three years.【单词】",
-      "file": "L28.json"
+      "file": "L28.json",
+      "stats": {
+        "sentences": 50,
+        "total": 50,
+        "word": 37,
+        "sentence": 13
+      },
+      "subtitle": "Unit 10 I’ve had this bike for three years.【单词】"
     },
     {
       "order": 29,
       "id": "olwmrox8sskmuzh0lqpvohuh",
       "title": "Unit 10 I’ve had this bike for three years.【例句】",
-      "file": "L29.json"
+      "file": "L29.json",
+      "stats": {
+        "sentences": 65,
+        "total": 65,
+        "word": 1,
+        "sentence": 64
+      },
+      "subtitle": "Section A"
     },
     {
       "order": 30,
       "id": "y3it0901wd4dljrjggpzf3og",
       "title": "Unit 10 I’ve had this bike for three years.【例句】",
-      "file": "L30.json"
+      "file": "L30.json",
+      "stats": {
+        "sentences": 57,
+        "total": 533,
+        "word": 153,
+        "phrase": 179,
+        "sentence": 57,
+        "chunk": 111,
+        "combinedChunks": 33
+      },
+      "subtitle": "Section B"
     }
   ]
 }

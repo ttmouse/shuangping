@@ -10,273 +10,514 @@
       "id": "qjtmd7ssdof7juvpnfye5iiv",
       "title": "Friends S01E01 - 1",
       "file": "L01.json",
-      "subtitle": ""
+      "subtitle": "2025.04.21",
+      "stats": {
+        "sentences": 100,
+        "total": 105,
+        "word": 5,
+        "phrase": 1,
+        "sentence": 97,
+        "chunk": 2
+      }
     },
     {
       "order": 2,
       "id": "yy7d5sr4gdzk19xnqnwi7o5b",
       "title": "Friends S01E01 - 2",
       "file": "L02.json",
-      "subtitle": ""
+      "subtitle": "2025.04.21",
+      "stats": {
+        "sentences": 100,
+        "total": 107,
+        "word": 4,
+        "phrase": 2,
+        "sentence": 99,
+        "chunk": 2
+      }
     },
     {
       "order": 3,
       "id": "g4ncb6cp7xlz36vakkvvppo3",
       "title": "Friends S01E01 - 3",
       "file": "L03.json",
-      "subtitle": ""
+      "subtitle": "2025.04.21",
+      "stats": {
+        "sentences": 100,
+        "total": 105,
+        "word": 6,
+        "phrase": 1,
+        "sentence": 98
+      }
     },
     {
       "order": 4,
       "id": "i1ymb25suszimgxx630rn5l2",
       "title": "Friends S01E01 - 4",
       "file": "L04.json",
-      "subtitle": ""
+      "subtitle": "2025.04.21",
+      "stats": {
+        "sentences": 72,
+        "total": 72,
+        "word": 7,
+        "sentence": 65
+      }
     },
     {
       "order": 5,
       "id": "kl3l35y45uucrxvvloau5uab",
       "title": "Friends S01E02 - 5",
       "file": "L05.json",
-      "subtitle": ""
+      "subtitle": "2025.04.22",
+      "stats": {
+        "sentences": 100,
+        "total": 100,
+        "word": 3,
+        "sentence": 97
+      }
     },
     {
       "order": 6,
       "id": "x8sftxpo2kihcf1w9y2oik37",
       "title": "Friends S01E02 - 6",
       "file": "L06.json",
-      "subtitle": ""
+      "subtitle": "2025.04.22",
+      "stats": {
+        "sentences": 100,
+        "total": 100,
+        "word": 8,
+        "sentence": 92
+      }
     },
     {
       "order": 7,
       "id": "tkemdp5km66tg1dir9efnhzt",
       "title": "Friends S01E02 - 7",
       "file": "L07.json",
-      "subtitle": ""
+      "subtitle": "2025.04.22",
+      "stats": {
+        "sentences": 100,
+        "total": 100,
+        "word": 10,
+        "sentence": 90
+      }
     },
     {
       "order": 8,
       "id": "ub6lxj7h21evn8nvzvhxeu3v",
       "title": "Friends S01E02 - 8",
       "file": "L08.json",
-      "subtitle": ""
+      "subtitle": "2025.04.22",
+      "stats": {
+        "sentences": 62,
+        "total": 62,
+        "word": 3,
+        "sentence": 59
+      }
     },
     {
       "order": 9,
       "id": "azqk2yc1dfjj4hmfr4iwm254",
       "title": "Friends S01E03 - 9",
       "file": "L09.json",
-      "subtitle": ""
+      "subtitle": "2025.04.22",
+      "stats": {
+        "sentences": 100,
+        "total": 100,
+        "word": 4,
+        "sentence": 96
+      }
     },
     {
       "order": 10,
       "id": "o8foiqsiit2det1vrbvwfqfm",
       "title": "Friends S01E03 - 10",
       "file": "L10.json",
-      "subtitle": ""
+      "subtitle": "2025.04.22",
+      "stats": {
+        "sentences": 100,
+        "total": 100,
+        "word": 8,
+        "sentence": 92
+      }
     },
     {
       "order": 11,
       "id": "p240htkfzm630gtksebgyhf4",
       "title": "Friends S01E03 - 11",
       "file": "L11.json",
-      "subtitle": ""
+      "subtitle": "2025.04.22",
+      "stats": {
+        "sentences": 100,
+        "total": 100,
+        "word": 6,
+        "sentence": 94
+      }
     },
     {
       "order": 12,
       "id": "hjpbucbwce4xv7n7eyobfd0e",
       "title": "Friends S01E03 - 12",
       "file": "L12.json",
-      "subtitle": ""
+      "subtitle": "2025.04.22",
+      "stats": {
+        "sentences": 48,
+        "total": 48,
+        "word": 1,
+        "sentence": 47
+      }
     },
     {
       "order": 13,
       "id": "t3xxzynhqohl3nlu7m8lbdc7",
       "title": "Friends S01E04 - 13",
       "file": "L13.json",
-      "subtitle": ""
+      "subtitle": "2025.04.22",
+      "stats": {
+        "sentences": 100,
+        "total": 100,
+        "word": 1,
+        "sentence": 99
+      }
     },
     {
       "order": 14,
       "id": "kqj2x3ah3xr9u2iq13w6wbcz",
       "title": "Friends S01E04 - 14",
       "file": "L14.json",
-      "subtitle": ""
+      "subtitle": "2025.04.25",
+      "stats": {
+        "sentences": 100,
+        "total": 100,
+        "sentence": 100
+      }
     },
     {
       "order": 15,
       "id": "g69stj3vs9x5hmams7g9hk18",
       "title": "Friends S01E04 - 15",
       "file": "L15.json",
-      "subtitle": ""
+      "subtitle": "2025.04.25",
+      "stats": {
+        "sentences": 100,
+        "total": 100,
+        "word": 3,
+        "sentence": 97
+      }
     },
     {
       "order": 16,
       "id": "dwyy0gggv25wipbygh5oxupk",
       "title": "Friends S01E01",
       "file": "L16.json",
-      "subtitle": "The One Where Monica Gets a New Roommate-莫妮卡的新室友"
+      "subtitle": "The One Where Monica Gets a New Roommate-莫妮卡的新室友",
+      "stats": {
+        "sentences": 372,
+        "total": 372,
+        "word": 14,
+        "sentence": 358
+      }
     },
     {
       "order": 17,
       "id": "apb1jq5p3bunbs10wlabvlge",
       "title": "Friends S01E02",
       "file": "L17.json",
-      "subtitle": "The One With the Sonogram at the End-参加助产训练班"
+      "subtitle": "The One With the Sonogram at the End-参加助产训练班",
+      "stats": {
+        "sentences": 362,
+        "total": 362,
+        "word": 24,
+        "sentence": 338
+      }
     },
     {
       "order": 18,
       "id": "hhmm7jirszh845qxeduzcdaz",
       "title": "Friends S01E03",
       "file": "L18.json",
-      "subtitle": "The One With the Thumb-飞来横财"
+      "subtitle": "The One With the Thumb-飞来横财",
+      "stats": {
+        "sentences": 348,
+        "total": 348,
+        "word": 19,
+        "sentence": 329
+      }
     },
     {
       "order": 19,
       "id": "hvlud3jrfrdvdmwodou4igdg",
       "title": "Friends S01E04",
       "file": "L19.json",
-      "subtitle": "The One With George Stephanopoulos-乔治•史特喷那彼拉斯先生"
+      "subtitle": "The One With George Stephanopoulos-乔治•史特喷那彼拉斯先生",
+      "stats": {
+        "sentences": 357,
+        "total": 376,
+        "word": 16,
+        "phrase": 5,
+        "sentence": 349,
+        "chunk": 5,
+        "combinedChunks": 1
+      }
     },
     {
       "order": 20,
       "id": "zobkihruu118d5uz0yo8x1ej",
       "title": "Friends S01E05",
       "file": "L20.json",
-      "subtitle": "The One With the East German Laundry Detergent-洗衣服"
+      "subtitle": "The One With the East German Laundry Detergent-洗衣服",
+      "stats": {
+        "sentences": 359,
+        "total": 359,
+        "word": 17,
+        "sentence": 342
+      }
     },
     {
       "order": 21,
       "id": "t7kjipo05zb3bgxmioroaf40",
       "title": "Friends S01E06",
       "file": "L21.json",
-      "subtitle": "The One With the Butt-屁股秀"
+      "subtitle": "The One With the Butt-屁股秀",
+      "stats": {
+        "sentences": 350,
+        "total": 350,
+        "word": 6,
+        "sentence": 344
+      }
     },
     {
       "order": 22,
       "id": "qajwqhmk3p8zq6dretglgwv2",
       "title": "Friends S01E07",
       "file": "L22.json",
-      "subtitle": "The One With the Blackout-停电"
+      "subtitle": "The One With the Blackout-停电",
+      "stats": {
+        "sentences": 316,
+        "total": 316,
+        "word": 7,
+        "sentence": 309
+      }
     },
     {
       "order": 23,
       "id": "shvdo6lq6vbg2rz85xlxp13r",
       "title": "Friends S01E08",
       "file": "L23.json",
-      "subtitle": "The One Where Nana Dies Twice-（祖母）娜娜死了两回"
+      "subtitle": "The One Where Nana Dies Twice-（祖母）娜娜死了两回",
+      "stats": {
+        "sentences": 335,
+        "total": 335,
+        "word": 13,
+        "sentence": 322
+      }
     },
     {
       "order": 24,
       "id": "calst2mdl6rneaabyr9c92rz",
       "title": "Friends S01E09",
       "file": "L24.json",
-      "subtitle": "The One Where Underdog Gets Away-气球飞了"
+      "subtitle": "The One Where Underdog Gets Away-气球飞了",
+      "stats": {
+        "sentences": 354,
+        "total": 354,
+        "word": 12,
+        "sentence": 342
+      }
     },
     {
       "order": 25,
       "id": "git7c5km2j9gr9q2v8gkgl19",
       "title": "Friends S01E10",
       "file": "L25.json",
-      "subtitle": "The One With the Monkey-猴子"
+      "subtitle": "The One With the Monkey-猴子",
+      "stats": {
+        "sentences": 350,
+        "total": 350,
+        "word": 11,
+        "sentence": 339
+      }
     },
     {
       "order": 26,
       "id": "gzaoivm0m6919afpjfzqbfv3",
       "title": "Friends S01E11",
       "file": "L26.json",
-      "subtitle": "The One With Mrs. Bing-宾太太（钱德之母）"
+      "subtitle": "The One With Mrs. Bing-宾太太（钱德之母）",
+      "stats": {
+        "sentences": 359,
+        "total": 359,
+        "word": 7,
+        "sentence": 352
+      }
     },
     {
       "order": 27,
       "id": "vnqihvt05q7qgrw6kr4yizy3",
       "title": "Friends S01E12",
       "file": "L27.json",
-      "subtitle": "The One With the Dozen Lasagnes-十二碗面条"
+      "subtitle": "The One With the Dozen Lasagnes-十二碗面条",
+      "stats": {
+        "sentences": 310,
+        "total": 310,
+        "word": 11,
+        "sentence": 299
+      }
     },
     {
       "order": 28,
       "id": "m53wpotzig8kv9iarhff3npf",
       "title": "Friends S01E13",
       "file": "L28.json",
-      "subtitle": "The One With the Boobies-看胸脯"
+      "subtitle": "The One With the Boobies-看胸脯",
+      "stats": {
+        "sentences": 365,
+        "total": 365,
+        "word": 5,
+        "sentence": 360
+      }
     },
     {
       "order": 29,
       "id": "nil8d8q0lrsvxkq54fkxhqkg",
       "title": "Friends S01E14",
       "file": "L29.json",
-      "subtitle": "The One With the Candy Hearts-情人节糖果"
+      "subtitle": "The One With the Candy Hearts-情人节糖果",
+      "stats": {
+        "sentences": 326,
+        "total": 326,
+        "word": 14,
+        "sentence": 312
+      }
     },
     {
       "order": 30,
       "id": "pviv2uedx2nwfkg23mz3yz9y",
       "title": "Friends S01E15",
       "file": "L30.json",
-      "subtitle": "The One With the Stoned Guy-大麻客"
+      "subtitle": "The One With the Stoned Guy-大麻客",
+      "stats": {
+        "sentences": 328,
+        "total": 328,
+        "word": 17,
+        "sentence": 311
+      }
     },
     {
       "order": 31,
       "id": "lb4pssr2u92cz1p4w6760tv2",
       "title": "Friends S01E16",
       "file": "L31.json",
-      "subtitle": "The One With Two Parts, part 1-双胞胎两部曲（一）"
+      "subtitle": "The One With Two Parts, part 1-双胞胎两部曲（一）",
+      "stats": {
+        "sentences": 365,
+        "total": 365,
+        "word": 21,
+        "sentence": 344
+      }
     },
     {
       "order": 32,
       "id": "qn5dki0rkmpd0zdm4yx4lbs3",
       "title": "Friends S01E17",
       "file": "L32.json",
-      "subtitle": "The One With Two Parts, part 2-双胞胎两部曲（二）"
+      "subtitle": "The One With Two Parts, part 2-双胞胎两部曲（二）",
+      "stats": {
+        "sentences": 420,
+        "total": 420,
+        "word": 16,
+        "sentence": 404
+      }
     },
     {
       "order": 33,
       "id": "c86z64losjfb2kt1eq5i784z",
       "title": "Friends S01E18",
       "file": "L33.json",
-      "subtitle": "The One With All The Poker-玩扑克"
+      "subtitle": "The One With All The Poker-玩扑克",
+      "stats": {
+        "sentences": 361,
+        "total": 361,
+        "word": 5,
+        "sentence": 356
+      }
     },
     {
       "order": 34,
       "id": "eayoqwld7ttt7z8qjvce2pxg",
       "title": "Friends S01E19",
       "file": "L34.json",
-      "subtitle": "The One Where the Monkey Gets Away-猴子被送走"
+      "subtitle": "The One Where the Monkey Gets Away-猴子被送走",
+      "stats": {
+        "sentences": 414,
+        "total": 414,
+        "word": 6,
+        "sentence": 408
+      }
     },
     {
       "order": 35,
       "id": "s9mqjl03sivotpli1d23cp9g",
       "title": "Friends S01E20",
       "file": "L35.json",
-      "subtitle": "The One With the Evil Orthodontist-风流牙医"
+      "subtitle": "The One With the Evil Orthodontist-风流牙医",
+      "stats": {
+        "sentences": 409,
+        "total": 409,
+        "word": 10,
+        "sentence": 399
+      }
     },
     {
       "order": 36,
       "id": "iwqh8vd5mej1ulds991retjl",
       "title": "Friends S01E21",
       "file": "L36.json",
-      "subtitle": "The One With The Fake Monica-假莫妮卡"
+      "subtitle": "The One With The Fake Monica-假莫妮卡",
+      "stats": {
+        "sentences": 340,
+        "total": 340,
+        "word": 15,
+        "sentence": 325
+      }
     },
     {
       "order": 37,
       "id": "cpaone6k0xncotl36p2zc9es",
       "title": "Friends S01E22",
       "file": "L37.json",
-      "subtitle": "The One With the Ick Factor-倒人胃口的约会"
+      "subtitle": "The One With the Ick Factor-倒人胃口的约会",
+      "stats": {
+        "sentences": 349,
+        "total": 349,
+        "word": 9,
+        "sentence": 340
+      }
     },
     {
       "order": 38,
       "id": "ifono9vcep5l5xqttyfgcl5u",
       "title": "Friends S01E23",
       "file": "L38.json",
-      "subtitle": "The One With the Birth-本出世"
+      "subtitle": "The One With the Birth-本出世",
+      "stats": {
+        "sentences": 331,
+        "total": 331,
+        "word": 13,
+        "sentence": 318
+      }
     },
     {
       "order": 39,
       "id": "c6wadkljcwxt31mm55squqcj",
       "title": "Friends S01E24",
       "file": "L39.json",
-      "subtitle": "The One Where Rachel Finds Out-瑞秋恍然大悟"
+      "subtitle": "The One Where Rachel Finds Out-瑞秋恍然大悟",
+      "stats": {
+        "sentences": 291,
+        "total": 291,
+        "word": 3,
+        "sentence": 288
+      }
     }
   ]
 }

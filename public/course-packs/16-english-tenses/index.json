@@ -1,105 +1,262 @@
 {
- "id": "s8f38xsh7y6bkh5tovqw9vk5",
- "slug": "16-english-tenses",
- "title": "16个英语时态，一网打尽！",
- "description": "系统讲解英语全部 16 个时态（8 基础 + 8 进阶）：时态结构、时间轴逻辑、真实语境应用",
- "courseCount": 16,
- "courses": [
-  {
-   "order": 1,
-   "id": "asbf90pc180wuiobo4l9b1qj",
-   "title": "一般现在时 (Simple Present)",
-   "file": "L01.json"
-  },
-  {
-   "order": 2,
-   "id": "quie6gjrn1riw0inzni4jgkt",
-   "title": "现在进行时 (Present Continuous)",
-   "file": "L02.json"
-  },
-  {
-   "order": 3,
-   "id": "or7wswqzbp5mwgp9wx4ye76z",
-   "title": "现在完成时 (Present Perfect)",
-   "file": "L03.json"
-  },
-  {
-   "order": 4,
-   "id": "nhlu02crycnnm9s7tau42a5u",
-   "title": "现在完成进行时 (Present Perfect Continuous)",
-   "file": "L04.json"
-  },
-  {
-   "order": 5,
-   "id": "jsmynnt73uhxek3779lrh1e9",
-   "title": "一般过去时 (Simple Past)",
-   "file": "L05.json"
-  },
-  {
-   "order": 6,
-   "id": "v0kziln79jyz18mn0pkzv330",
-   "title": "过去进行时 (Past Continuous)",
-   "file": "L06.json"
-  },
-  {
-   "order": 7,
-   "id": "ca7in6113de0a4a7grsw13sj",
-   "title": "过去完成时 (Past Perfect)",
-   "file": "L07.json"
-  },
-  {
-   "order": 8,
-   "id": "botuhk0vgh587ehtptghqqqj",
-   "title": "过去完成进行时 (Past Perfect Continuous)",
-   "file": "L08.json"
-  },
-  {
-   "order": 9,
-   "id": "odhntptjnqp2yvfza17v3bxr",
-   "title": "一般将来时 (Simple Future)",
-   "file": "L09.json"
-  },
-  {
-   "order": 10,
-   "id": "nro6jt4m3l6xljm2gomg5tkw",
-   "title": "将来进行时 (Future Continuous)",
-   "file": "L10.json"
-  },
-  {
-   "order": 11,
-   "id": "mb9v41xfwxmnf7tbcbprwkn6",
-   "title": "将来完成时 (Future Perfect)",
-   "file": "L11.json"
-  },
-  {
-   "order": 12,
-   "id": "lyhpa29hk35w4umq5j9u8o5q",
-   "title": "将来完成进行时 (Future Perfect Continuous)",
-   "file": "L12.json"
-  },
-  {
-   "order": 13,
-   "id": "xjnkgjmxreu3m3e0cydleqjg",
-   "title": "一般过去将来时 (Simple Past Future)",
-   "file": "L13.json"
-  },
-  {
-   "order": 14,
-   "id": "o0yf4gng4r9g65sirnkbqc0a",
-   "title": "过去将来进行时 (Past Future Continuous)",
-   "file": "L14.json"
-  },
-  {
-   "order": 15,
-   "id": "khvie1stk1pai5li7jotun4x",
-   "title": "过去将来完成时 (Past Future Perfect)",
-   "file": "L15.json"
-  },
-  {
-   "order": 16,
-   "id": "r79n2eq496twicr1v9xlatq0",
-   "title": "过去将来完成进行时 (Past Future Perfect Continuous)",
-   "file": "L16.json"
-  }
- ]
+  "id": "s8f38xsh7y6bkh5tovqw9vk5",
+  "slug": "16-english-tenses",
+  "title": "16个英语时态，一网打尽！",
+  "description": "系统讲解英语全部 16 个时态（8 基础 + 8 进阶）：时态结构、时间轴逻辑、真实语境应用",
+  "courseCount": 16,
+  "courses": [
+    {
+      "order": 1,
+      "id": "asbf90pc180wuiobo4l9b1qj",
+      "title": "一般现在时 (Simple Present)",
+      "file": "L01.json",
+      "stats": {
+        "sentences": 10,
+        "total": 57,
+        "word": 24,
+        "phrase": 13,
+        "sentence": 10,
+        "chunk": 10
+      },
+      "subtitle": "表示经常性或习惯性的动作，或普遍真理。"
+    },
+    {
+      "order": 2,
+      "id": "quie6gjrn1riw0inzni4jgkt",
+      "title": "现在进行时 (Present Continuous)",
+      "file": "L02.json",
+      "stats": {
+        "sentences": 10,
+        "total": 68,
+        "word": 16,
+        "phrase": 22,
+        "sentence": 10,
+        "chunk": 20
+      },
+      "subtitle": "表示现在正在进行的动作"
+    },
+    {
+      "order": 3,
+      "id": "or7wswqzbp5mwgp9wx4ye76z",
+      "title": "现在完成时 (Present Perfect)",
+      "file": "L03.json",
+      "stats": {
+        "sentences": 10,
+        "total": 50,
+        "word": 13,
+        "phrase": 15,
+        "sentence": 10,
+        "chunk": 12
+      },
+      "subtitle": "表示过去发生的动作对现在有影响，或表示动作从过去开始一直持续到现在。可以理解为中文中想要表达“xxx了”的意思"
+    },
+    {
+      "order": 4,
+      "id": "nhlu02crycnnm9s7tau42a5u",
+      "title": "现在完成进行时 (Present Perfect Continuous)",
+      "file": "L04.json",
+      "stats": {
+        "sentences": 10,
+        "total": 87,
+        "word": 16,
+        "phrase": 31,
+        "sentence": 10,
+        "chunk": 25,
+        "combinedChunks": 5
+      },
+      "subtitle": "描述从过去某一时间开始一直持续到现在的动作，强调动作的持续性和延续性。在中文中，这种表达通常可以用“一直”来对应。"
+    },
+    {
+      "order": 5,
+      "id": "jsmynnt73uhxek3779lrh1e9",
+      "title": "一般过去时 (Simple Past)",
+      "file": "L05.json",
+      "stats": {
+        "sentences": 10,
+        "total": 86,
+        "word": 35,
+        "phrase": 10,
+        "sentence": 10,
+        "chunk": 25,
+        "combinedChunks": 6
+      },
+      "subtitle": "表示过去发生的动作或状态"
+    },
+    {
+      "order": 6,
+      "id": "v0kziln79jyz18mn0pkzv330",
+      "title": "过去进行时 (Past Continuous)",
+      "file": "L06.json",
+      "stats": {
+        "sentences": 10,
+        "total": 94,
+        "word": 31,
+        "phrase": 27,
+        "sentence": 10,
+        "chunk": 23,
+        "combinedChunks": 3
+      },
+      "subtitle": "表示过去某一时刻正在进行的动作"
+    },
+    {
+      "order": 7,
+      "id": "ca7in6113de0a4a7grsw13sj",
+      "title": "过去完成时 (Past Perfect)",
+      "file": "L07.json",
+      "stats": {
+        "sentences": 10,
+        "total": 107,
+        "word": 42,
+        "phrase": 27,
+        "sentence": 11,
+        "chunk": 24,
+        "combinedChunks": 3
+      },
+      "subtitle": "在过去某一时间或动作之前已经发生或完成了的动作"
+    },
+    {
+      "order": 8,
+      "id": "botuhk0vgh587ehtptghqqqj",
+      "title": "过去完成进行时 (Past Perfect Continuous)",
+      "file": "L08.json",
+      "stats": {
+        "sentences": 10,
+        "total": 116,
+        "word": 42,
+        "phrase": 26,
+        "sentence": 10,
+        "chunk": 27,
+        "combinedChunks": 11
+      },
+      "subtitle": "表示从过去某一时间开始一直持续到过去另一时间的动作"
+    },
+    {
+      "order": 9,
+      "id": "odhntptjnqp2yvfza17v3bxr",
+      "title": "一般将来时 (Simple Future)",
+      "file": "L09.json",
+      "stats": {
+        "sentences": 10,
+        "total": 84,
+        "word": 24,
+        "phrase": 18,
+        "sentence": 10,
+        "chunk": 26,
+        "combinedChunks": 6
+      },
+      "subtitle": "表示将来要发生的动作或状态。"
+    },
+    {
+      "order": 10,
+      "id": "nro6jt4m3l6xljm2gomg5tkw",
+      "title": "将来进行时 (Future Continuous)",
+      "file": "L10.json",
+      "stats": {
+        "sentences": 10,
+        "total": 70,
+        "word": 21,
+        "phrase": 15,
+        "sentence": 10,
+        "chunk": 22,
+        "combinedChunks": 2
+      },
+      "subtitle": "表示将来某一时刻正在进行的动作"
+    },
+    {
+      "order": 11,
+      "id": "mb9v41xfwxmnf7tbcbprwkn6",
+      "title": "将来完成时 (Future Perfect)",
+      "file": "L11.json",
+      "stats": {
+        "sentences": 10,
+        "total": 76,
+        "word": 15,
+        "phrase": 29,
+        "sentence": 10,
+        "chunk": 21,
+        "combinedChunks": 1
+      },
+      "subtitle": "表示在将来某一时间之前已经完成的动作"
+    },
+    {
+      "order": 12,
+      "id": "lyhpa29hk35w4umq5j9u8o5q",
+      "title": "将来完成进行时 (Future Perfect Continuous)",
+      "file": "L12.json",
+      "stats": {
+        "sentences": 10,
+        "total": 97,
+        "word": 14,
+        "phrase": 31,
+        "sentence": 12,
+        "chunk": 30,
+        "combinedChunks": 10
+      },
+      "subtitle": "表示从将来某一时间开始一直持续到将来另一时间的动作"
+    },
+    {
+      "order": 13,
+      "id": "xjnkgjmxreu3m3e0cydleqjg",
+      "title": "一般过去将来时 (Simple Past Future)",
+      "file": "L13.json",
+      "stats": {
+        "sentences": 10,
+        "total": 101,
+        "word": 35,
+        "phrase": 17,
+        "sentence": 11,
+        "chunk": 29,
+        "combinedChunks": 9
+      },
+      "subtitle": "表示从过去某一时间看将来要发生的动作或状态"
+    },
+    {
+      "order": 14,
+      "id": "o0yf4gng4r9g65sirnkbqc0a",
+      "title": "过去将来进行时 (Past Future Continuous)",
+      "file": "L14.json",
+      "stats": {
+        "sentences": 10,
+        "total": 106,
+        "word": 35,
+        "phrase": 17,
+        "sentence": 10,
+        "chunk": 32,
+        "combinedChunks": 12
+      },
+      "subtitle": "表示从过去某一时间看将来某一时刻正在进行的动作"
+    },
+    {
+      "order": 15,
+      "id": "khvie1stk1pai5li7jotun4x",
+      "title": "过去将来完成时 (Past Future Perfect)",
+      "file": "L15.json",
+      "stats": {
+        "sentences": 10,
+        "total": 116,
+        "word": 36,
+        "phrase": 29,
+        "sentence": 10,
+        "chunk": 30,
+        "combinedChunks": 11
+      },
+      "subtitle": "表示从过去某一时间看将来某一时间之前已经完成的动作"
+    },
+    {
+      "order": 16,
+      "id": "r79n2eq496twicr1v9xlatq0",
+      "title": "过去将来完成进行时 (Past Future Perfect Continuous)",
+      "file": "L16.json",
+      "stats": {
+        "sentences": 10,
+        "total": 141,
+        "word": 37,
+        "phrase": 30,
+        "sentence": 10,
+        "chunk": 42,
+        "combinedChunks": 22
+      },
+      "subtitle": "表示从过去某一时间看将来某一时间开始一直持续到将来另一时间的动作"
+    }
+  ]
 }

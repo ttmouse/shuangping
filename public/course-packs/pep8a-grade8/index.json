@@ -9,145 +9,362 @@
       "order": 1,
       "id": "uwzi7uzcygzk42wsc6jexwiz",
       "title": "Unit 1 Happy Holiday【单词】",
-      "file": "L01.json"
+      "file": "L01.json",
+      "stats": {
+        "sentences": 59,
+        "total": 59,
+        "word": 52,
+        "sentence": 7
+      },
+      "subtitle": "Unit 1 Happy Holiday【单词】"
     },
     {
       "order": 2,
       "id": "fdf9sx6nbjho48wx88cw80nb",
       "title": "Unit 1 Happy Holiday【例句】",
-      "file": "L02.json"
+      "file": "L02.json",
+      "stats": {
+        "sentences": 12,
+        "total": 66,
+        "word": 36,
+        "phrase": 12,
+        "sentence": 12,
+        "chunk": 6
+      },
+      "subtitle": "Section A"
     },
     {
       "order": 3,
       "id": "n0ccre7v13jpyp9l30ws81uc",
       "title": "Unit 1 Happy Holiday【例句】",
-      "file": "L03.json"
+      "file": "L03.json",
+      "stats": {
+        "sentences": 24,
+        "total": 222,
+        "word": 80,
+        "phrase": 56,
+        "sentence": 24,
+        "chunk": 49,
+        "combinedChunks": 13
+      },
+      "subtitle": "Section B"
     },
     {
       "order": 4,
       "id": "i4jb1hrrs69wmwche163s5uc",
       "title": "Unit 2 Home Sweet Home【单词】",
-      "file": "L04.json"
+      "file": "L04.json",
+      "stats": {
+        "sentences": 61,
+        "total": 68,
+        "word": 54,
+        "phrase": 1,
+        "sentence": 13
+      },
+      "subtitle": "Unit 2 Home Sweet Home【单词】"
     },
     {
       "order": 5,
       "id": "pce4etmbtfnw4p5ny53m3wlf",
       "title": "Unit 2 Home Sweet Home【例句】",
-      "file": "L05.json"
+      "file": "L05.json",
+      "stats": {
+        "sentences": 10,
+        "total": 55,
+        "word": 27,
+        "phrase": 19,
+        "sentence": 9
+      },
+      "subtitle": "Section A"
     },
     {
       "order": 6,
       "id": "voow2y2g047d304ce539dcpc",
       "title": "Unit 2 Home Sweet Home【例句】",
-      "file": "L06.json"
+      "file": "L06.json",
+      "stats": {
+        "sentences": 26,
+        "total": 213,
+        "word": 75,
+        "phrase": 60,
+        "sentence": 26,
+        "chunk": 41,
+        "combinedChunks": 11
+      },
+      "subtitle": "Section B"
     },
     {
       "order": 7,
       "id": "ii793ip27clp0k6m9mxd3xui",
       "title": "Unit 3 Same or Different?【单词】",
-      "file": "L07.json"
+      "file": "L07.json",
+      "stats": {
+        "sentences": 63,
+        "total": 63,
+        "word": 52,
+        "sentence": 11
+      },
+      "subtitle": "Unit 3 Same or Different?【单词】"
     },
     {
       "order": 8,
       "id": "qb8loxfaf57l8unfub212c0e",
       "title": "Unit 3 Same or Different?【例句】",
-      "file": "L08.json"
+      "file": "L08.json",
+      "stats": {
+        "sentences": 31,
+        "total": 160,
+        "word": 67,
+        "phrase": 38,
+        "sentence": 31,
+        "chunk": 21,
+        "combinedChunks": 3
+      },
+      "subtitle": "Section A"
     },
     {
       "order": 9,
       "id": "xwxjma7ro0o9of8eo2246yza",
       "title": "Unit 3 Same or Different?【例句】",
-      "file": "L09.json"
+      "file": "L09.json",
+      "stats": {
+        "sentences": 30,
+        "total": 238,
+        "word": 100,
+        "phrase": 56,
+        "sentence": 30,
+        "chunk": 46,
+        "combinedChunks": 6
+      },
+      "subtitle": "Section B"
     },
     {
       "order": 10,
       "id": "ontxmn4f5gkvhs5d7ow2ql0n",
       "title": "Unit 4 Amazing Plants and Animals【单词】",
-      "file": "L10.json"
+      "file": "L10.json",
+      "stats": {
+        "sentences": 63,
+        "total": 63,
+        "word": 51,
+        "sentence": 12
+      },
+      "subtitle": "Unit 4 Amazing Plants and Animals【单词】"
     },
     {
       "order": 11,
       "id": "ey4vmlm4hwdt95o5b1z5v394",
       "title": "Unit 4 Amazing Plants and Animals【例句】",
-      "file": "L11.json"
+      "file": "L11.json",
+      "stats": {
+        "sentences": 27,
+        "total": 124,
+        "word": 54,
+        "phrase": 31,
+        "sentence": 25,
+        "chunk": 13,
+        "combinedChunks": 1
+      },
+      "subtitle": "Section A"
     },
     {
       "order": 12,
       "id": "fxsji1knab7ul21g0fw7cpon",
       "title": "Unit 4 Amazing Plants and Animals【例句】",
-      "file": "L12.json"
+      "file": "L12.json",
+      "stats": {
+        "sentences": 23,
+        "total": 216,
+        "word": 81,
+        "phrase": 52,
+        "sentence": 23,
+        "chunk": 46,
+        "combinedChunks": 14
+      },
+      "subtitle": "Section B"
     },
     {
       "order": 13,
       "id": "d69d6dnxjlpk9pow6h228ij0",
       "title": "Unit 5 What a Delicious Meal!【单词】",
-      "file": "L13.json"
+      "file": "L13.json",
+      "stats": {
+        "sentences": 64,
+        "total": 71,
+        "word": 53,
+        "phrase": 3,
+        "sentence": 15
+      },
+      "subtitle": "Unit 5 What a Delicious Meal!【单词】"
     },
     {
       "order": 14,
       "id": "j7ee12sa3j8y4wipqnq6buaj",
       "title": "Unit 5 What a Delicious Meal!【例句】",
-      "file": "L14.json"
+      "file": "L14.json",
+      "stats": {
+        "sentences": 22,
+        "total": 143,
+        "word": 67,
+        "phrase": 34,
+        "sentence": 22,
+        "chunk": 17,
+        "combinedChunks": 3
+      },
+      "subtitle": "Section A\n\n"
     },
     {
       "order": 15,
       "id": "xo2swpshb8wuhlqu0pe550c3",
       "title": "Unit 5 What a Delicious Meal!【例句】",
-      "file": "L15.json"
+      "file": "L15.json",
+      "stats": {
+        "sentences": 20,
+        "total": 226,
+        "word": 80,
+        "phrase": 62,
+        "sentence": 20,
+        "chunk": 50,
+        "combinedChunks": 14
+      },
+      "subtitle": "Section B"
     },
     {
       "order": 16,
       "id": "whwhsw0288cg6iygvw0lvrsd",
       "title": "Unit 6 Plan for Yourself【单词】",
-      "file": "L16.json"
+      "file": "L16.json",
+      "stats": {
+        "sentences": 57,
+        "total": 63,
+        "word": 49,
+        "phrase": 4,
+        "sentence": 10
+      },
+      "subtitle": "Unit 6 Plan for Yourself【单词】"
     },
     {
       "order": 17,
       "id": "e923od3s2xum8o6pm24rap55",
       "title": "Unit 6 Plan for Yourself【例句】",
-      "file": "L17.json"
+      "file": "L17.json",
+      "stats": {
+        "sentences": 29,
+        "total": 172,
+        "word": 66,
+        "phrase": 53,
+        "sentence": 29,
+        "chunk": 22,
+        "combinedChunks": 2
+      },
+      "subtitle": "Section A"
     },
     {
       "order": 18,
       "id": "tpmq50ahqveibs5vtavbv574",
       "title": "Unit 6 Plan for Yourself【例句】",
-      "file": "L18.json"
+      "file": "L18.json",
+      "stats": {
+        "sentences": 26,
+        "total": 197,
+        "word": 71,
+        "phrase": 62,
+        "sentence": 26,
+        "chunk": 34,
+        "combinedChunks": 4
+      },
+      "subtitle": "Section B"
     },
     {
       "order": 19,
       "id": "wjelrmd43qmjmtoze6ozslr8",
       "title": "Unit 7 When Tomorrow Comes【单词】",
-      "file": "L19.json"
+      "file": "L19.json",
+      "stats": {
+        "sentences": 61,
+        "total": 61,
+        "word": 57,
+        "sentence": 4
+      },
+      "subtitle": "Unit 7 When Tomorrow Comes【单词】"
     },
     {
       "order": 20,
       "id": "gyoo9xmbwuuuagi3qfjm6501",
       "title": "Unit 8 Let’s Communicate!【单词】",
-      "file": "L20.json"
+      "file": "L20.json",
+      "stats": {
+        "sentences": 69,
+        "total": 79,
+        "word": 54,
+        "phrase": 7,
+        "sentence": 18
+      },
+      "subtitle": "Unit 8 Let’s Communicate!【单词】"
     },
     {
       "order": 21,
       "id": "h3a5b7hw5yzzna07ifj9yw9h",
       "title": "Unit 7 When Tomorrow Comes【例句】",
-      "file": "L21.json"
+      "file": "L21.json",
+      "stats": {
+        "sentences": 16,
+        "total": 109,
+        "word": 40,
+        "phrase": 37,
+        "sentence": 16,
+        "chunk": 14,
+        "combinedChunks": 2
+      },
+      "subtitle": "Section A"
     },
     {
       "order": 22,
       "id": "g0axllx57olb2x4tlzskyj0r",
       "title": "Unit 7 When Tomorrow Comes【例句】",
-      "file": "L22.json"
+      "file": "L22.json",
+      "stats": {
+        "sentences": 33,
+        "total": 203,
+        "word": 78,
+        "phrase": 62,
+        "sentence": 33,
+        "chunk": 29,
+        "combinedChunks": 1
+      },
+      "subtitle": "Section B"
     },
     {
       "order": 23,
       "id": "kj6li5pflrxbenqzs7jg7dyi",
       "title": "Unit 8 Let’s Communicate!【例句】",
-      "file": "L23.json"
+      "file": "L23.json",
+      "stats": {
+        "sentences": 13,
+        "total": 134,
+        "word": 55,
+        "phrase": 38,
+        "sentence": 13,
+        "chunk": 26,
+        "combinedChunks": 2
+      },
+      "subtitle": "Section A"
     },
     {
       "order": 24,
       "id": "z1tjiq4g0mvqpg054ogebnqo",
       "title": "Unit 8 Let’s Communicate!【例句】",
-      "file": "L24.json"
+      "file": "L24.json",
+      "stats": {
+        "sentences": 22,
+        "total": 221,
+        "word": 81,
+        "phrase": 64,
+        "sentence": 22,
+        "chunk": 43,
+        "combinedChunks": 11
+      },
+      "subtitle": "Section B"
     }
   ]
 }

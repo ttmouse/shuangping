@@ -9,511 +9,1208 @@
       "order": 1,
       "id": "ttlwem8iu9i6xprc0zqi4ats",
       "title": "L01 First Identity Check",
-      "file": "L01.json"
+      "file": "L01.json",
+      "stats": {
+        "sentences": 18,
+        "total": 74,
+        "word": 33,
+        "phrase": 23,
+        "sentence": 18
+      },
+      "subtitle": "用 be 句型完成真实的开课身份确认：介绍自己、确认对方、指出房间和课程，并能否定错误身份。 场景：新学员进教室，确认老师、同学、房间和课程。 目标词：I, you, he, who, this, that, a, the, be, not。核心句型：I am ... / You are ... / He is ... / This is ... / That is ... / ... is not ... / Who is ...? / Are you ...?。"
     },
     {
       "order": 2,
       "id": "bv94er3bl0l0pa62zbkq56c2",
       "title": "L02 Help Desk Actions",
-      "file": "L02.json"
+      "file": "L02.json",
+      "stats": {
+        "sentences": 20,
+        "total": 89,
+        "word": 39,
+        "phrase": 30,
+        "sentence": 20
+      },
+      "subtitle": "用核心动作词完成一个真实帮忙流程：提出问题、拿到票、写名字、保留便条、发送清单。 场景：学员在服务台/课堂入口求助，工作人员帮他处理票、名字、便条和清单。 目标词：do, have, make, get, give, take, put, keep, let, send。核心句型：I have ... / What do I do? / Do this first. / I need to get ... / Give me ... / Take ... / Put ... on/in ... / Keep ...。"
     },
     {
       "order": 3,
       "id": "sp5fl09f9tzmmfc65udgt1vx",
       "title": "L03 Polite Survival Talk",
-      "file": "L03.json"
+      "file": "L03.json",
+      "stats": {
+        "sentences": 18,
+        "total": 76,
+        "word": 40,
+        "phrase": 18,
+        "sentence": 18
+      },
+      "subtitle": "用 come/go/say/see/may/will/please/yes/well 支撑真实对话：进门、请求重复、确认看懂、继续行动。 场景：学员进入教室，没听清时请求重复，确认看到内容，然后继续行动。 目标词：go, come, see, say, seem, may, will, please, yes, well。核心句型：Please ... / May I ...? / Yes, ... / I will ... / Say ... / I see ... / It seems ... / ... well。"
     },
     {
       "order": 4,
       "id": "t8t8hhbxi16qex6laa2114jr",
       "title": "L04 Place, Source, Purpose",
-      "file": "L04.json"
+      "file": "L04.json",
+      "stats": {
+        "sentences": 20,
+        "total": 102,
+        "word": 54,
+        "phrase": 28,
+        "sentence": 20
+      },
+      "subtitle": "用 in/on/at/to/from/with/for/of/by/as 把句子扩展成位置、来源、对象、用途、方式和身份。 场景：学员来到车站，找教室，说明自己从哪里来、为了什么来、和谁一起走。 目标词：in, on, at, to, from, with, for, of, by, as。核心句型：in/on/at ... / go to ... / come from ... / with ... / for ... / of ... / by ... / as ...。"
     },
     {
       "order": 5,
       "id": "uco2xs32ypeck907ke0biewc",
       "title": "L05 Route and Position Words",
-      "file": "L05.json"
+      "file": "L05.json",
+      "stats": {
+        "sentences": 20,
+        "total": 81,
+        "word": 22,
+        "phrase": 39,
+        "sentence": 20
+      },
+      "subtitle": "用方向词说清动作路线和物品位置：起身、出去、穿过、往前、在附近。 场景：学员跟着向导找教室和车站，同时处理书、票、钥匙、帽子等物品位置。 目标词：up, down, out, off, over, under, across, through, forward, near。核心句型：get up / put ... down / go out / take ... off / under ... / over ... / across ... / through ...。"
     },
     {
       "order": 6,
       "id": "x2y2zxsubzfawj8gdj33k253",
       "title": "L06 Time and Relation Check",
-      "file": "L06.json"
+      "file": "L06.json",
+      "stats": {
+        "sentences": 18,
+        "total": 102,
+        "word": 49,
+        "phrase": 33,
+        "sentence": 18,
+        "chunk": 2
+      },
+      "subtitle": "用关系词说清话题、时间先后、位置关系、距离和比较。 场景：学员到教室前，确认课程话题、集合时间、物品位置和路线远近。 目标词：about, after, against, among, before, between, till, than, far, here。核心句型：about ... / before/after ... / till ... / between ... and ... / among ... / against ... / far from here / ... than ...。"
     },
     {
       "order": 7,
       "id": "k8u5yht2tg2kyk0l0muqcpq7",
       "title": "L07 Quantity and Choice Words",
-      "file": "L07.json"
+      "file": "L07.json",
+      "stats": {
+        "sentences": 20,
+        "total": 83,
+        "word": 36,
+        "phrase": 27,
+        "sentence": 20
+      },
+      "subtitle": "在点水、拿票和选择物品时说清全部、一些、任何、没有、另一个、足够。 场景：学员在教室入口领取水、票和杯子，确认数量是否够用。 目标词：all, any, every, little, much, no, other, some, such, enough。核心句型：all ... / any ...? / every ... / a little ... / not much ... / no ... / other ... / some ...。"
     },
     {
       "order": 8,
       "id": "hngpk7vskpwsvovqf4qlytcu",
       "title": "L08 Connect Ideas in One Breath",
-      "file": "L08.json"
+      "file": "L08.json",
+      "stats": {
+        "sentences": 20,
+        "total": 139,
+        "word": 62,
+        "phrase": 37,
+        "sentence": 20,
+        "chunk": 20
+      },
+      "subtitle": "把短句连成原因、转折、选择、条件、让步、同时动作和下一步。 场景：学员说明为什么来、有什么问题、下一步怎么做，把零散句子连成一段话。 目标词：and, because, but, or, if, though, while, so, then, again。核心句型：..., and ... / because ... / but ... / ... or ...? / if ..., ... / though ..., ... / while ... / so ...。"
     },
     {
       "order": 9,
       "id": "ru49nz74ijxfvrlmb10k5rqi",
       "title": "L09 Ask and Keep the Talk Going",
-      "file": "L09.json"
+      "file": "L09.json",
+      "stats": {
+        "sentences": 20,
+        "total": 91,
+        "word": 45,
+        "phrase": 26,
+        "sentence": 20
+      },
+      "subtitle": "用疑问词、there、now、still、ever、only、together 完成真实问答和自救。 场景：学员在教室门口连续提问，确认在哪里、什么时候、为什么，以及现在还能不能一起行动。 目标词：how, when, where, why, there, now, still, ever, only, together。核心句型：How ...? / When ...? / Where ...? / Why ...? / There is ... / now / still / ever。"
     },
     {
       "order": 10,
       "id": "zqih30pyxbvcb5g50xzvyy1r",
       "title": "L10 Yesterday, Tomorrow, and Directions",
-      "file": "L10.json"
+      "file": "L10.json",
+      "stats": {
+        "sentences": 19,
+        "total": 85,
+        "word": 35,
+        "phrase": 31,
+        "sentence": 19
+      },
+      "subtitle": "用昨天、明天、程度副词和东西南北说明过去、计划和地图方向。 场景：学员看一张小镇地图，说昨天怎么来、明天去哪，以及目标地点在东西南北哪个方向。 目标词：almost, even, quite, very, tomorrow, yesterday, north, south, east, west。核心句型：yesterday I ... / tomorrow I will ... / north/south/east/west of ... / almost ... / even ... / quite ... / very ...。"
     },
     {
       "order": 11,
       "id": "hqd4pdt1hfmdzq2p6kj7dhr2",
       "title": "L11 Shape and Garden Picture",
-      "file": "L11.json"
+      "file": "L11.json",
+      "stats": {
+        "sentences": 18,
+        "total": 86,
+        "word": 37,
+        "phrase": 31,
+        "sentence": 18
+      },
+      "subtitle": "看一张简单花园图，说清形状、线条、小动物和树枝上的位置关系。 场景：学员看一张花园门口的图：门上有拱形、图上有线条和形状，树枝上有鸟、蚂蚁、蜜蜂和浆果。 目标词：angle, arch, circle, line, square, ant, bee, berry, bird, branch。核心句型：This is a ... / Put ... under ... / ... is in/on/under/near ... / I see ... in the picture。"
     },
     {
       "order": 12,
       "id": "d4e8jbhmlpe333lwg9vfz0lw",
       "title": "L12 Farm and Garden Animals",
-      "file": "L12.json"
+      "file": "L12.json",
+      "stats": {
+        "sentences": 18,
+        "total": 86,
+        "word": 35,
+        "phrase": 33,
+        "sentence": 18
+      },
+      "subtitle": "看农场和花园图，说出常见动物、云、羽毛、鱼和昆虫的位置。 场景：学员看一张农场花园图：猫狗在花园，牛和家禽在农场，鱼在水里，苍蝇和羽毛在旁边。 目标词：cat, cloud, cow, dog, farm, feather, fish, fly, fowl, garden。核心句型：I see ... / ... is in/on/near/under/over ... / There is ...。"
     },
     {
       "order": 13,
       "id": "h8h62gjuz423j1pqymqm8fjs",
       "title": "L13 Island Animal Picture",
-      "file": "L13.json"
+      "file": "L13.json",
+      "stats": {
+        "sentences": 18,
+        "total": 85,
+        "word": 35,
+        "phrase": 32,
+        "sentence": 18
+      },
+      "subtitle": "看一张岛上的夜晚图，说出动物、月亮、叶子、根和橙子的位置。 场景：学员看一张岛上动物图：山羊、马、猴子、猪、老鼠在岛上，月亮在上方，叶子和根在树旁。 目标词：goat, horse, island, leaf, monkey, moon, orange, pig, rat, root。核心句型：I see ... / ... is on/under/near/over ... / ... has ...。"
     },
     {
       "order": 14,
       "id": "d66fet53upj3dd5qu3npbtz4",
       "title": "L14 Spring Field Picture",
-      "file": "L14.json"
+      "file": "L14.json",
+      "stats": {
+        "sentences": 18,
+        "total": 85,
+        "word": 33,
+        "phrase": 34,
+        "sentence": 18
+      },
+      "subtitle": "看春天田野图，说出种子、树、蛇、羊、太阳、星星、翅膀、尾巴和虫子。 场景：学员看一张春天田野图：树下有种子和虫子，羊和蛇在附近，太阳、星星和鸟的翅膀都在图里。 目标词：seed, sheep, snake, spring, star, sun, tail, tree, wing, worm。核心句型：In spring, ... / ... is under/over/near ... / ... has ... / I see ...。"
     },
     {
       "order": 15,
       "id": "rnum320inba3kqe4rjt1gh8l",
       "title": "L15 First Body Picture",
-      "file": "L15.json"
+      "file": "L15.json",
+      "stats": {
+        "sentences": 18,
+        "total": 78,
+        "word": 34,
+        "phrase": 26,
+        "sentence": 18
+      },
+      "subtitle": "看健康课图片，说出人、身体部位和一个 army 场景词。 场景：学员在健康课看身体图：图里有男孩、婴儿、手臂、骨头、大脑、胸口、下巴、耳朵、眼睛，还有一张 army 医生图。 目标词：arm, army, baby, bone, boy, brain, chest, chin, ear, eye。核心句型：This is my ... / ... has ... / ... is in/under/near ... / I see ...。"
     },
     {
       "order": 16,
       "id": "d17j7jdrvb8efbrf0rtva9iq",
       "title": "L16 Body and Hospital Picture",
-      "file": "L16.json"
+      "file": "L16.json",
+      "stats": {
+        "sentences": 16,
+        "total": 70,
+        "word": 31,
+        "phrase": 23,
+        "sentence": 16
+      },
+      "subtitle": "看健康课图片，继续说脸、手脚、头发、头、心脏、膝盖和医院。 场景：学员在健康课看一张医院图片：女孩在医院，图片上标出脸、手、手指、脚、膝盖、头发、头和心脏。 目标词：face, finger, foot, girl, hair, hand, head, heart, hospital, knee。核心句型：This is my ... / ... has ... / ... is on/in/over/near ... / I see ... in the picture。"
     },
     {
       "order": 17,
       "id": "lpme40sh8st88butz9jhkdvn",
       "title": "L17 Clinic Body Picture",
-      "file": "L17.json"
+      "file": "L17.json",
+      "stats": {
+        "sentences": 19,
+        "total": 83,
+        "word": 36,
+        "phrase": 28,
+        "sentence": 19
+      },
+      "subtitle": "看诊所身体图，说明腿、嘴、鼻子、皮肤、胃、肌肉、神经和针。 场景：学员在诊所看身体图和桌上的针，继续用位置、拥有和不舒服句描述身体部位。 目标词：leg, lip, mouth, muscle, neck, needle, nerve, nose, skin, stomach。核心句型：This is a/an ... / ... is under ... / This is my ... / ... is near ... / This is a ... / ... is in ... / ... is on ... / Do you see ...?。"
     },
     {
       "order": 18,
       "id": "kx8zq83lwnnseel1t5pfh4u6",
       "title": "L18 Body and Bedroom Things",
-      "file": "L18.json"
+      "file": "L18.json",
+      "stats": {
+        "sentences": 16,
+        "total": 72,
+        "word": 29,
+        "phrase": 27,
+        "sentence": 16
+      },
+      "subtitle": "把喉咙、拇指、脚趾、舌头、牙齿和浴室/卧室物品放进同一组生活图里。 场景：学员看一张家里的健康照护图：身体卡片旁边有脸盆、篮子、浴缸、床和铃。 目标词：throat, thumb, toe, tongue, tooth, basin, basket, bath, bed, bell。核心句型：This is my ... / ... is in/on/under/near ... / Put ... near/under ...。"
     },
     {
       "order": 19,
       "id": "m9hm84gqhso6aswm4jyawz2s",
       "title": "L19 Room Repair Picture",
-      "file": "L19.json"
+      "file": "L19.json",
+      "stats": {
+        "sentences": 16,
+        "total": 76,
+        "word": 29,
+        "phrase": 31,
+        "sentence": 16
+      },
+      "subtitle": "看房间维修图，说出板、瓶子、盒子、砖、桶、灯泡、窗帘、垫子、门和下水口。 场景：学员看一张房间维修图：门边有板和砖，盒子里有瓶子，桶靠近下水口，灯泡、窗帘和垫子都在房间里。 目标词：board, bottle, box, brick, bucket, bulb, curtain, cushion, door, drain。核心句型：There is ... / Put ... in/on/near ... / ... is under/over/near ...。"
     },
     {
       "order": 20,
       "id": "hdkkmveq9m6xczdl4zq0bzf5",
       "title": "L20 House and Kitchen Objects",
-      "file": "L20.json"
+      "file": "L20.json",
+      "stats": {
+        "sentences": 16,
+        "total": 76,
+        "word": 31,
+        "phrase": 29,
+        "sentence": 16
+      },
+      "subtitle": "看家里厨房图，说出抽屉、地板、框、房子、壶、钥匙、锁、炉、管子和锅的位置。 场景：学员看一张房子厨房图：钥匙和锁在抽屉旁，壶、锅和炉在厨房里，管子在地板下。 目标词：drawer, floor, frame, house, kettle, key, lock, oven, pipe, pot。核心句型：... is in/on/under/near ... / Put ... in ... / ... has ...。"
     },
     {
       "order": 21,
       "id": "o2lihexeosuzkdx2eej6o5k4",
       "title": "L21 House Table and Food Picture",
-      "file": "L21.json"
+      "file": "L21.json",
+      "stats": {
+        "sentences": 16,
+        "total": 72,
+        "word": 31,
+        "phrase": 25,
+        "sentence": 16
+      },
+      "subtitle": "看家里桌面图，说出屋顶、墙、窗、桌、托盘、海绵、苹果和蛋糕的位置。 场景：学员看一张厨房/屋内图：墙上有架子和窗，桌上有托盘、苹果和蛋糕，屋外有水泵和屋顶。 目标词：pump, roof, shelf, sponge, table, tray, wall, window, apple, cake。核心句型：... is on/under/near/over/in ... / Put ... on ... / I see ...。"
     },
     {
       "order": 22,
       "id": "t41kmgexuqha745sjytt2lo6",
       "title": "L22 Simple Meal Tools",
-      "file": "L22.json"
+      "file": "L22.json",
+      "stats": {
+        "sentences": 16,
+        "total": 73,
+        "word": 29,
+        "phrase": 28,
+        "sentence": 16
+      },
+      "subtitle": "看一套餐桌图，说出食物、餐具、杯子和包的位置。 场景：学员看一张简单餐桌图：盘子上有奶酪和鸡蛋，叉刀勺在旁边，坚果和土豆在包里。 目标词：cheese, cup, egg, fork, knife, nut, plate, potato, spoon, bag。核心句型：... is on/in/near ... / Put ... in ... / This is a ...。"
     },
     {
       "order": 23,
       "id": "dob4gelrx7o66wr2x9oa46ty",
       "title": "L23 Clothes and Small Things",
-      "file": "L23.json"
+      "file": "L23.json",
+      "stats": {
+        "sentences": 16,
+        "total": 72,
+        "word": 30,
+        "phrase": 26,
+        "sentence": 16
+      },
+      "subtitle": "看衣物桌面图，说出靴子、刷子、纽扣、外套、衣领、梳子、裙子、手套、帽子和宝石。 场景：学员看一张衣物整理图：靴子在门边，外套上有纽扣和衣领，包里有刷子、梳子和手套。 目标词：boot, brush, button, coat, collar, comb, dress, glove, hat, jewel。核心句型：... is on/in/under/near ... / Put ... near/on ... / This is a ...。"
     },
     {
       "order": 24,
       "id": "xiorj9w91er1gzvtqlps86c6",
       "title": "L24 More Clothes and Carry Things",
-      "file": "L24.json"
+      "file": "L24.json",
+      "stats": {
+        "sentences": 16,
+        "total": 73,
+        "word": 30,
+        "phrase": 27,
+        "sentence": 16
+      },
+      "subtitle": "看出门前整理图，说出口袋、戒指、衬衫、鞋、短裙、袜子、长袜、裤子、伞和手表。 场景：学员看一张出门前整理图：口袋里有戒指和手表，鞋袜在桌下，伞在门边。 目标词：pocket, ring, shirt, shoe, skirt, sock, stocking, trousers, umbrella, watch。核心句型：... is in/on/under/near ... / Put ... near/under ... / This is a ...。"
     },
     {
       "order": 25,
       "id": "zxo29am5do26ry745lmw1ovn",
       "title": "L25 Old Town Transport Picture",
-      "file": "L25.json"
+      "file": "L25.json",
+      "stats": {
+        "sentences": 16,
+        "total": 71,
+        "word": 27,
+        "phrase": 28,
+        "sentence": 16
+      },
+      "subtitle": "看小镇交通图，说出船、刹车、桥、马车、车、教堂、发动机、旗、喇叭和图书馆。 场景：学员看一张小镇交通图：桥边有船，马车和手推车在路上，教堂和图书馆旁边有旗和喇叭。 目标词：boat, brake, bridge, carriage, cart, church, engine, flag, horn, library。核心句型：... is near/on/in/over ... / ... has ... / I see ...。"
     },
     {
       "order": 26,
       "id": "arxo8r5pengujech94ee1072",
       "title": "L26 Station and Travel Places",
-      "file": "L26.json"
+      "file": "L26.json",
+      "stats": {
+        "sentences": 16,
+        "total": 73,
+        "word": 29,
+        "phrase": 28,
+        "sentence": 16
+      },
+      "subtitle": "看交通和学校地图，说出地图、办公室、飞机、监狱、铁轨、收据、帆、学校、船和车站。 场景：学员看一张小镇交通地图：学校、办公室、车站、铁轨、飞机、船和监狱都标在图上。 目标词：map, office, plane, prison, rail, receipt, sail, school, ship, station。核心句型：... is in/on/near/over ... / ... has ... / I see ...。"
     },
     {
       "order": 27,
       "id": "caduxofasflpzu0c50kt1p2u",
       "title": "L27 Town Street and Train Things",
-      "file": "L27.json"
+      "file": "L27.json",
+      "stats": {
+        "sentences": 16,
+        "total": 72,
+        "word": 28,
+        "phrase": 28,
+        "sentence": 16
+      },
+      "subtitle": "看小镇街道图，说出商店、街道、票、镇、火车、轮子、哨子、球、带子和刀片。 场景：学员看一张小镇街道图：火车在车站，商店在街上，票和轮子、哨子、球、带子、刀片都在图里。 目标词：store, street, ticket, town, train, wheel, whistle, ball, band, blade。核心句型：... is in/on/near/at ... / ... is for ... / I see ...。"
     },
     {
       "order": 28,
       "id": "v7pt2sy2e1iiwwl3f96hwg2l",
       "title": "L28 Desk Tools and Small Objects",
-      "file": "L28.json"
+      "file": "L28.json",
+      "stats": {
+        "sentences": 16,
+        "total": 73,
+        "word": 31,
+        "phrase": 26,
+        "sentence": 16
+      },
+      "subtitle": "看一张工具桌图，说出书、相机、卡片、链、钟、线、滴、枪、锤子和钩子。 场景：学员看一张工具桌图：书和卡片在桌上，相机、钟、线、链、钩子和锤子都在旁边。 目标词：book, camera, card, chain, clock, cord, drop, gun, hammer, hook。核心句型：... is on ... / ... is in ... / Do you see ...? / Where is ...? / ... has ... / ... is near ... / statement / I see ...。"
     },
     {
       "order": 29,
       "id": "itet7mrsxpplpa7svcb79tsw",
       "title": "L29 Writing and Farm Tools",
-      "file": "L29.json"
+      "file": "L29.json",
+      "stats": {
+        "sentences": 16,
+        "total": 71,
+        "word": 28,
+        "phrase": 27,
+        "sentence": 16
+      },
+      "subtitle": "看写字工具和农具图，说出结、火柴、钉子、网、包裹、钢笔、铅笔、图片、别针和犁。 场景：学员看一张工具和写字桌图：绳结、火柴、钉子、网、包裹、钢笔、铅笔、图片、别针和犁都在图中。 目标词：knot, match, nail, net, parcel, pen, pencil, picture, pin, plough。核心句型：... is in/on/near ... / Put ... in ... / I see ...。"
     },
     {
       "order": 30,
       "id": "sw9gjlj9bi19zrb7arwnh3g1",
       "title": "L30 Tool Box Picture",
-      "file": "L30.json"
+      "file": "L30.json",
+      "stats": {
+        "sentences": 17,
+        "total": 79,
+        "word": 32,
+        "phrase": 30,
+        "sentence": 17
+      },
+      "subtitle": "看工具箱图，说出杆、剪刀、螺丝、铲子、邮票、茎、棍、线、鞭子和金属丝。 场景：学员看一张工具箱和花园工具图：杆、棍、螺丝、剪刀、线、邮票、铲子、茎、鞭子和金属丝都在图中。 目标词：rod, scissors, screw, spade, stamp, stem, stick, thread, whip, wire。核心句型：... is on/in/under/near ... / Put ... in ... / I see ...。"
     },
     {
       "order": 31,
       "id": "u41k6yzwel7jzftjl42b9n89",
       "title": "L31 Family and Work Roles",
-      "file": "L31.json"
+      "file": "L31.json",
+      "stats": {
+        "sentences": 20,
+        "total": 89,
+        "word": 36,
+        "phrase": 33,
+        "sentence": 20
+      },
+      "subtitle": "用家庭、公司、厨师、专家、国家和委员会说清人物关系和组织关系。 场景：学员在社区中心填写表格，介绍自己的家庭成员、朋友，以及公司里的厨师、专家和委员会。 目标词：brother, committee, company, cook, country, daughter, expert, family, father, friend。核心句型：This is my ... / Who is ...? / Is ... here? / I have ... in ... / ... is in/with/from ... / ... has ...。"
     },
     {
       "order": 32,
       "id": "d6k7qj4b1jhzc6iw159x9e6q",
       "title": "L32 Public Office Roles",
-      "file": "L32.json"
+      "file": "L32.json",
+      "stats": {
+        "sentences": 20,
+        "total": 89,
+        "word": 34,
+        "phrase": 35,
+        "sentence": 20
+      },
+      "subtitle": "用政府、团队、向导、法官、经理、母亲、国家、组织和所有者说清公共办公室人物。 场景：学员跟着向导参观公共办公室，看到政府、组织、经理、法官、所有者和一个团队。 目标词：government, group, guide, judge, man, manager, mother, nation, organization, owner。核心句型：Who is ...? / Is ... in ...? / ... is in/with/near ... / ... has ... / This ... is ...。"
     },
     {
       "order": 33,
       "id": "pwvnfhrrhm2h3ivl2unu9105",
       "title": "L33 Office People and Accounts",
-      "file": "L33.json"
+      "file": "L33.json",
+      "stats": {
+        "sentences": 20,
+        "total": 90,
+        "word": 34,
+        "phrase": 36,
+        "sentence": 20
+      },
+      "subtitle": "用办公室角色和家庭成员，说清人、秘书、代表、搬运工、仆人、姐妹、儿子、女人、社会和账户。 场景：学员在办公室办理一个社会组织账户，遇到秘书、代表、搬运工和不同家庭成员。 目标词：person, porter, representative, secretary, servant, sister, society, son, woman, account。核心句型：Who is ...? / I have ... / Is ... near ...? / ... is a ... / ... has ... / ... is for ... / ... is with/near ...。"
     },
     {
       "order": 34,
       "id": "c41uhnbrw7jjlh8kryhkspnb",
       "title": "L34 Business Agreement Words",
-      "file": "L34.json"
+      "file": "L34.json",
+      "stats": {
+        "sentences": 20,
+        "total": 95,
+        "word": 32,
+        "phrase": 43,
+        "sentence": 20
+      },
+      "subtitle": "用商业办公室场景练广告、协议、批准、权力机构、业务、竞争、信用、犯罪、债务和交换。 场景：学员在商业办公室处理广告、协议、批准、账户和债务，同时听到竞争、犯罪和交换等词。 目标词：advertisement, agreement, approval, authority, business, competition, credit, crime, debt, exchange。核心句型：Is ... for ...? / Give ... to ... / Make ... with ... / ... is for ... / ... has ... / ... is in/on/with ... / ... gives ...。"
     },
     {
       "order": 35,
       "id": "os7wwm6z5pgtnliezdle1egq",
       "title": "L35 Market Money and Law Words",
-      "file": "L35.json"
+      "file": "L35.json",
+      "stats": {
+        "sentences": 20,
+        "total": 98,
+        "word": 38,
+        "phrase": 40,
+        "sentence": 20
+      },
+      "subtitle": "用市场和付款场景练行业、保险、法律、市场、矿、钱、出价、订单、付款与和平。 场景：学员在市场办公室处理订单、付款、报价和保险，同时看到行业、法律、矿和和平相关信息。 目标词：industry, insurance, law, market, mine, money, offer, order, payment, peace。核心句型：... is in/for/from ... / ... has ... / ... makes ...。"
     },
     {
       "order": 36,
       "id": "yuad38kjkrbknxyw7cni324v",
       "title": "L36 Business, Tax, and Transport",
-      "file": "L36.json"
+      "file": "L36.json",
+      "stats": {
+        "sentences": 22,
+        "total": 104,
+        "word": 40,
+        "phrase": 42,
+        "sentence": 22
+      },
+      "subtitle": "用商业流程说价格、生产、利润、财产、抗议、惩罚、奖励、税、贸易和运输。 场景：学员在市场办公室看一份商业记录：价格、订单、生产、利润、税、运输和贸易都在里面。 目标词：price, produce, profit, property, protest, punishment, reward, tax, trade, transport。核心句型：... is for/on/in ... / ... produces ... / ... has ... / ... gives ...。"
     },
     {
       "order": 37,
       "id": "u1ebojsa17c7d0fe9qn44yrv",
       "title": "L37 Learning, Error, and War Words",
-      "file": "L37.json"
+      "file": "L37.json",
+      "stats": {
+        "sentences": 16,
+        "total": 73,
+        "word": 29,
+        "phrase": 28,
+        "sentence": 16
+      },
+      "subtitle": "用课堂讨论和新闻记录练答案、论点、艺术、注意、信念、复制、讨论、教育、错误和战争。 场景：学员在课堂上看一页学习材料，里面有答案、错误、讨论、艺术、教育和一条关于战争的新闻。 目标词：war, answer, argument, art, attention, belief, copy, discussion, education, error。核心句型：... is on ... / ... is not ... / ... is in ... / ... gives ... / ... is about ... / ... has ...。"
     },
     {
       "order": 38,
       "id": "mbdtsvbfb1955uuts3gb3f6j",
       "title": "L38 Knowledge and Language Words",
-      "file": "L38.json"
+      "file": "L38.json",
+      "stats": {
+        "sentences": 20,
+        "total": 90,
+        "word": 43,
+        "phrase": 27,
+        "sentence": 20
+      },
+      "subtitle": "用学习桌场景练例子、事实、小说、历史、想法、乐器、知识、语言、学习和信。 场景：学员在学习桌上看书、信和课堂材料，老师用例子、事实、历史、语言和知识来解释。 目标词：example, fact, fiction, history, idea, instrument, knowledge, language, learning, letter。核心句型：This is ... / ... is in ... / ... has ... / ... is fiction / ... is for ... / ... is/are ... / ... makes ... / ... gives ...。"
     },
     {
       "order": 39,
       "id": "px5zcooe7tthfa33r5za8zs3",
       "title": "L39 Meeting Notes and Numbers",
-      "file": "L39.json"
+      "file": "L39.json",
+      "stats": {
+        "sentences": 20,
+        "total": 95,
+        "word": 39,
+        "phrase": 36,
+        "sentence": 20
+      },
+      "subtitle": "用会议记录场景练清单、会议、记忆、音乐、名字、新闻、噪音、便条、数字和观察。 场景：学员在课堂会议里看清单、便条和新闻，记录名字、数字、观察和噪音。 目标词：list, meeting, memory, music, name, news, noise, note, number, observation。核心句型：... is on ... / put ... on ... / ... is in ... / ... is for ... / There is ... / ... is/are ... / ... is near ... / ... is about ...。"
     },
     {
       "order": 40,
       "id": "zcz9xhdez6yg7h5ryhn6xaac",
       "title": "L40 Reading, Record, and Requests",
-      "file": "L40.json"
+      "file": "L40.json",
+      "stats": {
+        "sentences": 22,
+        "total": 100,
+        "word": 41,
+        "phrase": 37,
+        "sentence": 22
+      },
+      "subtitle": "用阅读材料和记录场景练观点、页面、印刷、散文、问题、阅读、原因、记录、宗教和请求。 场景：学员读一页材料，里面有问题、原因、观点、请求、记录、散文和宗教讨论。 目标词：opinion, page, print, prose, question, reading, reason, record, religion, request。核心句型：I have ... / What is your ...? / Give me ... / Put ... on ... / ... is on/in/about/for ... / ... has ...。"
     },
     {
       "order": 41,
       "id": "tr6fm4763f2woh6abdtrnx2d",
       "title": "L41 Story, Sound, and Science Words",
-      "file": "L41.json"
+      "file": "L41.json",
+      "stats": {
+        "sentences": 16,
+        "total": 71,
+        "word": 25,
+        "phrase": 30,
+        "sentence": 16
+      },
+      "subtitle": "用课堂材料说规则、科学、选择、故事、陈述、建议、尊重、节奏、歌曲和声音。 场景：学员在课堂上读一个科学故事，听一首歌，看规则、陈述、建议和选择。 目标词：respect, rhythm, rule, science, selection, song, sound, statement, story, suggestion。核心句型：I have ... for ... / Where is ...? / Put ... on ... / ... gives ... / ... is about/from/in ...。"
     },
     {
       "order": 42,
       "id": "wyvqw1vcjj9swa0goezgwsh9",
       "title": "L42 Talk, Teaching, and Writing",
-      "file": "L42.json"
+      "file": "L42.json",
+      "stats": {
+        "sentences": 17,
+        "total": 84,
+        "word": 37,
+        "phrase": 30,
+        "sentence": 17
+      },
+      "subtitle": "用课堂输出场景练谈话、教学、测试、理论、想法、诗句、观点、词、写作和娱乐。 场景：学员在课堂上做测试、谈论理论和想法，读诗句，写单词，并说出自己的观点。 目标词：talk, teaching, test, theory, thought, verse, view, word, writing, amusement。核心句型：I have ... about ... / ... is about ... / I ... / ... has ... / Put ... in ... / ... is for ... / ... is in ... / Say ... with ...。"
     },
     {
       "order": 43,
       "id": "pzj7rv5cbzs97fzq3u8z1oxz",
       "title": "L43 First Feeling Words",
-      "file": "L43.json"
+      "file": "L43.json",
+      "stats": {
+        "sentences": 17,
+        "total": 77,
+        "word": 41,
+        "phrase": 19,
+        "sentence": 17
+      },
+      "subtitle": "用个人感受和安全场景练吸引、安慰、危险、欲望、厌恶、怀疑、恐惧、感觉、和谐和恨。 场景：学员在课堂上学习如何说感受：恐惧、危险、舒适、和谐、怀疑、欲望、厌恶和恨都被放进安全表达里。 目标词：attraction, comfort, danger, desire, disgust, doubt, fear, feeling, harmony, hate。核心句型：I have a feeling of ... / ... gives me ... / Keep ... far from ... / I need ... / ... gives ... / I have ... for ... / ... is in ... / I have doubt about ...。"
     },
     {
       "order": 44,
       "id": "k3rdrruttmbsxnpropyuw1f0",
       "title": "L44 Help, Need, and Positive Feelings",
-      "file": "L44.json"
+      "file": "L44.json",
+      "stats": {
+        "sentences": 17,
+        "total": 75,
+        "word": 41,
+        "phrase": 17,
+        "sentence": 17
+      },
+      "subtitle": "用自我表达场景练帮助、希望、幽默、冲动、兴趣、笑、爱、心智、需要和愉悦。 场景：学员学习表达需要帮助、心里的希望和兴趣，以及幽默、笑、爱和愉悦。 目标词：help, hope, humor, impulse, interest, laugh, love, mind, need, pleasure。核心句型：I need ... / Please ... me / I have ... / ... gives me ... / ... is in ... / ... makes me ... / ... has ... / I ... with ...。"
     },
     {
       "order": 45,
       "id": "dxpuxevdwbb9z6mhhvpkof9p",
       "title": "L45 Difficult Feelings and Body Trouble",
-      "file": "L45.json"
+      "file": "L45.json",
+      "stats": {
+        "sentences": 17,
+        "total": 77,
+        "word": 31,
+        "phrase": 29,
+        "sentence": 17
+      },
+      "subtitle": "用安全的健康/感受场景练后悔、自我、感觉、羞耻、震惊、惊讶、诡计、麻烦、咬伤和血。 场景：学员学习描述不舒服和复杂感受：后悔、羞耻、震惊、惊讶、麻烦、咬伤和血都用安全识别句处理。 目标词：regret, self, sense, shame, shock, surprise, trick, trouble, bite, blood。核心句型：I have ... about ... / I have ... after ... / The word ... is on ... / ... is about ... / I have a sense of ... / ... is in ... / I have a feeling of ... / ... gives me ...。"
     },
     {
       "order": 46,
       "id": "w7yjpi90lmegs70i532x1hzy",
       "title": "L46 Body, Care, and Health Signals",
-      "file": "L46.json"
+      "file": "L46.json",
+      "stats": {
+        "sentences": 18,
+        "total": 79,
+        "word": 32,
+        "phrase": 29,
+        "sentence": 18
+      },
+      "subtitle": "用安全、克制的句子说明身体、呼吸、咳嗽、哭声、疾病、消化、听觉、照护和死亡记录。 场景：学员在医院或健康记录场景里描述身体信号，不制造恐怖或戏剧化情节。 目标词：blow, body, breath, care, cough, cry, death, digestion, disease, hearing。核心句型：... needs ... / Take care of ... / I take ... / ... comes ... / I have ... / ... gives me ... / A ... is a ... / ... comes from ...。"
     },
     {
       "order": 47,
       "id": "uta8y6vqcp73o1xg45qrbhxi",
       "title": "L47 Pain, Rest, and Five Senses",
-      "file": "L47.json"
+      "file": "L47.json",
+      "stats": {
+        "sentences": 23,
+        "total": 94,
+        "word": 43,
+        "phrase": 28,
+        "sentence": 23
+      },
+      "subtitle": "用身体感受、休息和感官句表达疼痛、睡眠、气味、味觉、触觉、声音、微笑、喷嚏和记录里的 sex。 场景：学员在健康问答中描述身体感受和感官，不展开成人内容，只把 sex 当作记录字段处理。 目标词：pain, rest, sex, sleep, smell, smile, sneeze, taste, touch, voice。核心句型：I have ... / I need ... / ... gives ... / ... is a sense / The ... is for ... / The record has ...。"
     },
     {
       "order": 48,
       "id": "e65qhqkna0mp9j2e5dus2x7d",
       "title": "L48 Events, Time, and Life Records",
-      "file": "L48.json"
+      "file": "L48.json",
+      "stats": {
+        "sentences": 20,
+        "total": 91,
+        "word": 37,
+        "phrase": 34,
+        "sentence": 20
+      },
+      "subtitle": "用记录、日历和故事句表达伤口、出生、日期、事件、结束、存在、经验、小时、分钟和月份。 场景：学员阅读一份生活记录：一天里的事件、一个伤口、一段经验和时间单位都被放进可练句子里。 目标词：wound, birth, day, end, event, existence, experience, hour, minute, month。核心句型：I have ... on ... / ... gives ... / ... is in ... / The record has ... / This ... has ... / ... has ... / I have ... about ... / ... is about ...。"
     },
     {
       "order": 49,
       "id": "xvhua8a4uzs0s1jt8qdbvf3g",
       "title": "L49 Morning, Night, and Time Stages",
-      "file": "L49.json"
+      "file": "L49.json",
+      "stats": {
+        "sentences": 16,
+        "total": 73,
+        "word": 32,
+        "phrase": 25,
+        "sentence": 16
+      },
+      "subtitle": "用一天、一周、一个月和一年说明早晨、夜晚、阶段、开始、停止、夏天、冬天和时间。 场景：学员看一张简单时间表，用非常短的句子说一天、星期、月份和年份里的时间关系。 目标词：morning, night, stage, start, stop, summer, time, week, winter, year。核心句型：... is the start of ... / I start in ... / ... is the end of ... / I stop at ... / ... has ... / This ... starts ... / This ... stops ... / What time is it?。"
     },
     {
       "order": 50,
       "id": "uluf4l7hkaxlehcgknsjzaea",
       "title": "L50 Field, Fire, and Nature Words",
-      "file": "L50.json"
+      "file": "L50.json",
+      "stats": {
+        "sentences": 17,
+        "total": 79,
+        "word": 37,
+        "phrase": 25,
+        "sentence": 17
+      },
+      "subtitle": "用自然场景说空气、动物、土地、田野、火、火焰、花、力量、水果和谷物。 场景：学员看一张田野图，描述空气、动物、土地、花、水果、谷物和安全距离里的火。 目标词：air, animal, earth, field, fire, flame, flower, force, fruit, grain。核心句型：There is ... over ... / I take ... of ... / ... is in ... / Give ... to ... / ... is under ... / Put ... in ... / ... has ... / Keep ... far from ...。"
     },
     {
       "order": 51,
       "id": "gb8ygost48u1iwug7bexptmd",
       "title": "L51 Grass, Light, and Mountain Air",
-      "file": "L51.json"
+      "file": "L51.json",
+      "stats": {
+        "sentences": 17,
+        "total": 80,
+        "word": 37,
+        "phrase": 26,
+        "sentence": 17
+      },
+      "subtitle": "用自然画面说明草、港口、热、冰、昆虫、土地、光、雾、山和植物。 场景：学员看一张山地和港口附近的自然图，用短句描述地面、植物、光、热、冰和雾。 目标词：grass, harbor, heat, ice, insect, land, light, mist, mountain, plant。核心句型：I see ... on ... / ... has ... / ... is in ... / ... needs ... / ... comes from ... / ... gives ... / I need ... / Keep ... in ...。"
     },
     {
       "order": 52,
       "id": "tdkypnc40jnw0twtlpat8m6d",
       "title": "L52 Rain, River, Road, and Sky",
-      "file": "L52.json"
+      "file": "L52.json",
+      "stats": {
+        "sentences": 18,
+        "total": 88,
+        "word": 43,
+        "phrase": 27,
+        "sentence": 18
+      },
+      "subtitle": "用天气和路边场景说明雨、光线、河、路、沙、海、阴影、天空、烟和雪。 场景：学员看一张天气变化图，描述天空、河路、海边、树荫、烟和山上的雪。 目标词：rain, ray, river, road, sand, sea, shade, sky, smoke, snow。核心句型：... comes from ... / ... is/are ... / I see ... from ... / ... comes ... / ... is near ... / There is ... / ... is under ... / ... gives ...。"
     },
     {
       "order": 53,
       "id": "clx42exmjlrzgzodewgdoj3v",
       "title": "L53 Water, Weather, and Useful Materials",
-      "file": "L53.json"
+      "file": "L53.json",
+      "stats": {
+        "sentences": 17,
+        "total": 75,
+        "word": 39,
+        "phrase": 19,
+        "sentence": 17
+      },
+      "subtitle": "用天气、水和日常物说明空间、蒸汽、石头、雷、水、波浪、天气、风、黄铜和面包。 场景：学员看天气和水边场景，再看桌上的乐器和面包，用简单句连接自然与材料。 目标词：space, steam, stone, thunder, water, wave, weather, wind, brass, bread。核心句型：There is ... / ... is/are ... / ... needs ... / I ... / ... comes from ... / The ... gives ... / The ... is near ... / Put ... on ...。"
     },
     {
       "order": 54,
       "id": "h7r26cohxoal0kbo5ggptkg2",
       "title": "L54 Cloth, Color, and Table Materials",
-      "file": "L54.json"
+      "file": "L54.json",
+      "stats": {
+        "sentences": 18,
+        "total": 80,
+        "word": 43,
+        "phrase": 19,
+        "sentence": 18
+      },
+      "subtitle": "用桌面和工具场景说明黄油、帆布、粉笔、布、煤、颜色、铜、软木、棉花和饮料。 场景：学员看一张桌面物品图：面包、画布、粉笔、布、瓶子、乐器和一杯水。 目标词：butter, canvas, chalk, cloth, coal, color, copper, cork, cotton, drink。核心句型：Put ... on ... / The ... has ... / ... is ... / ... is on ... / ... is in ... / Keep ... in ... / The ... gives ... / ... is/are ...。"
     },
     {
       "order": 55,
       "id": "pbv7nhz0gput454nmo76u69m",
       "title": "L55 Food and Everyday Materials",
-      "file": "L55.json"
+      "file": "L55.json",
+      "stats": {
+        "sentences": 20,
+        "total": 87,
+        "word": 50,
+        "phrase": 17,
+        "sentence": 20
+      },
+      "subtitle": "用桌面、瓶子、窗户、商店和桥说明灰尘、食物、玻璃、金、墨水、铁、果冻、皮革、亚麻和液体。 场景：学员看一张日常材料图：桌子、窗户、瓶子、商店、桥和食物都在同一组可替换句里。 目标词：dust, food, glass, gold, ink, iron, jelly, leather, linen, liquid。核心句型：Take ... off ... / The ... has ... / Put ... on ... / I need ... / ... is in ... / ... is ... / I have ... / The ... is ...。"
     },
     {
       "order": 56,
       "id": "rdpzn5n78tcor397ykncyh2i",
       "title": "L56 Meal, Paper, and Safe Materials",
-      "file": "L56.json"
+      "file": "L56.json",
+      "stats": {
+        "sentences": 20,
+        "total": 92,
+        "word": 54,
+        "phrase": 18,
+        "sentence": 20
+      },
+      "subtitle": "用餐桌、瓶子、墙、纸和桥说明餐、肉、金属、牛奶、油、油漆、纸、糊、毒物和抛光剂。 场景：学员看一张厨房和工具桌图片，把食物、液体、纸张和危险材料放进安全位置句。 目标词：meal, meat, metal, milk, oil, paint, paper, paste, poison, polish。核心句型：The ... is on ... / ... has ... / ... is ... / The ... has ... / ... is in ... / I drink ... / ... needs ... / Put ... on ...。"
     },
     {
       "order": 57,
       "id": "t813c9knmfqt1b2qp3aanrlu",
       "title": "L57 Powder, Soup, and More Materials",
-      "file": "L57.json"
+      "file": "L57.json",
+      "stats": {
+        "sentences": 20,
+        "total": 86,
+        "word": 52,
+        "phrase": 14,
+        "sentence": 20
+      },
+      "subtitle": "用厨房、浴室、商店和桥说明粉、米、盐、丝、银、肥皂、汤、钢、物质和糖。 场景：学员看一张厨房和材料图，把粉末、食物、布料、金属和肥皂放进容器或用途句。 目标词：powder, rice, salt, silk, silver, soap, soup, steel, substance, sugar。核心句型：Put ... in ... / I have ... / I need ... / ... has ... / ... is in ... / ... is ...。"
     },
     {
       "order": 58,
       "id": "knceqajyvkfxfxb40r3cu5ut",
       "title": "L58 Wood, Wool, and Safe Action Words",
-      "file": "L58.json"
+      "file": "L58.json",
+      "stats": {
+        "sentences": 23,
+        "total": 97,
+        "word": 42,
+        "phrase": 32,
+        "sentence": 23
+      },
+      "subtitle": "用材料和故事场景说明锡、蜡、酒、木头、羊毛，以及行动、攻击、尝试、燃烧和爆裂。 场景：学员先描述桌上的材料，再用故事/记录句安全识别几个动作事件词。 目标词：tin, wax, wine, wood, wool, act, attack, attempt, burn, burst。核心句型：... is in ... / The ... has ... / I act in ... / ... is in fiction / I attempt ... / The ... is in ... / ... comes ... / The ... is on ...。"
     },
     {
       "order": 59,
       "id": "ppeq26iq8bthf4gzwepqvo7m",
       "title": "L59 Movement Events and Safe Conflict Words",
-      "file": "L59.json"
+      "file": "L59.json",
+      "stats": {
+        "sentences": 20,
+        "total": 91,
+        "word": 37,
+        "phrase": 34,
+        "sentence": 20
+      },
+      "subtitle": "用路、纸、飞机、手和故事说明裂缝、压碎、驾驶、跌倒、打斗、飞行、折叠、抓握、加入和旅程。 场景：学员看一组动作卡片：路上驾驶、纸张折叠、飞机飞行、手的抓握，以及故事中的安全冲突词。 目标词：crack, crush, driving, fall, fight, flight, fold, grip, join, journey。核心句型：The ... is in ... / The ... has ... / Crush ... with ... / I crush ... / ... is on ... / I fall on ... / ... is in fiction / ... is/are ...。"
     },
     {
       "order": 60,
       "id": "xzcjdwej6k5q59iso989r3k0",
       "title": "L60 Everyday Movement and Play",
-      "file": "L60.json"
+      "file": "L60.json",
+      "stats": {
+        "sentences": 24,
+        "total": 101,
+        "word": 39,
+        "phrase": 38,
+        "sentence": 24
+      },
+      "subtitle": "用身体、球、地图、盒子、车和纸页说明跳、踢、亲吻、带领、举起、看、运动、移动、玩和拉。 场景：学员看一组日常动作图：孩子玩球、家人表达爱、地图带路、手移动物体。 目标词：jump, kick, kiss, lead, lift, look, motion, move, play, pull。核心句型：I jump on ... / The ... will ... / I kick ... / I ... with my ... / A ... is ... / ... gives ... / I lead ... / I lift ...。"
     },
     {
       "order": 61,
       "id": "ivimipxvgj645z3eyxt90c0p",
       "title": "L61 Push, Turn, and Safe Movement",
-      "file": "L61.json"
+      "file": "L61.json",
+      "stats": {
+        "sentences": 23,
+        "total": 92,
+        "word": 36,
+        "phrase": 33,
+        "sentence": 23
+      },
+      "subtitle": "用球、车、纸、手、海和轮子说明推、滚、擦、跑、摇、滑、砸、游泳、转和扭。 场景：学员看一组安全动作图，用手、球、车、纸、轮子和海来练移动动作。 目标词：push, roll, rub, run, shake, slip, smash, swim, turn, twist。核心句型：I push ... / The ... moves ... / I roll ... / The ... will ... / I rub ... / I ... / I run on ... / I shake ...。"
     },
     {
       "order": 62,
       "id": "xza9jk4fcctt6uxfvqbswnyb",
       "title": "L62 Walking, Washing, and Basic Structure",
-      "file": "L62.json"
+      "file": "L62.json",
+      "stats": {
+        "sentences": 25,
+        "total": 112,
+        "word": 52,
+        "phrase": 35,
+        "sentence": 25
+      },
+      "subtitle": "用水、路、页面、桌子、身体、秤和房间说明容器、走、洗、加法、数量、装置、背部、平衡、底座和一点。 场景：学员从日常动作进入结构词：走路、洗手、看页面上的数量，再看桌子、身体和工具。 目标词：vessel, walk, wash, addition, amount, apparatus, back, balance, base, bit。核心句型：The ... is on ... / ... is/are ... / I walk on ... / The ... will ... / I ... / I ... with ... / ... is on ... / ... gives ...。"
     },
     {
       "order": 63,
       "id": "u82zpnke5uqwaypv72c7dadi",
       "title": "L63 Building, Connection, and Map Details",
-      "file": "L63.json"
+      "file": "L63.json",
+      "stats": {
+        "sentences": 24,
+        "total": 110,
+        "word": 41,
+        "phrase": 45,
+        "sentence": 24
+      },
+      "subtitle": "用地图、页面、路、水、书和记录说明建筑、条件、连接、封面、水流、曲线、度数、细节、方向和距离。 场景：学员看地图和页面：建筑、路、河流、书封面、细节、方向和距离都在同一张图上。 目标词：building, condition, connection, cover, current, curve, degree, detail, direction, distance。核心句型：The ... is near ... / I see ... / The ... is in ... / The ... has ... / There is ... / ... is/are ... / statement / The ... is on ...。"
     },
     {
       "order": 64,
       "id": "f3nzqs1jq13465e34ei41qcn",
       "title": "L64 Edges, Levels, and Measures",
-      "file": "L64.json"
+      "file": "L64.json",
+      "stats": {
+        "sentences": 24,
+        "total": 109,
+        "word": 43,
+        "phrase": 42,
+        "sentence": 24
+      },
+      "subtitle": "用页面、线、桌子、房子、墙、秤和纸说明划分、边缘、正面、洞、水平、限制、标记、质量、测量和中间。 场景：学员看一张标注图：线、边缘、中间、标记、洞、正面和秤上的数值都被拆成可练句子。 目标词：division, edge, front, hole, level, limit, mark, mass, measure, middle。核心句型：... is on ... / ... makes ... / The ... is on ... / The ... has ... / ... is/are ... / The ... is in ... / The ... gives ... / Measure ...。"
     },
     {
       "order": 65,
       "id": "yl2u5z9838qc4ydu7nbjtk3y",
       "title": "L65 Place, Position, Room, and Scale",
-      "file": "L65.json"
+      "file": "L65.json",
+      "stats": {
+        "sentences": 24,
+        "total": 111,
+        "word": 46,
+        "phrase": 41,
+        "sentence": 24
+      },
+      "subtitle": "用盒子、地图、线、房间、秤和座位说明部分、地方、点、位置、质量、范围、速率、房间、刻度和座位。 场景：学员看一张房间地图和一把秤，把位置、点、范围、速率、质量和座位都放进可见句子。 目标词：part, place, point, position, quality, range, rate, room, scale, seat。核心句型：The ... is in ... / The ... has ... / This ... is near ... / I see ... / The ... is on ... / question / ... is/are ... / ... is on ...。"
     },
     {
       "order": 66,
       "id": "hzez0gjwdyg0xl9226xdh5rs",
       "title": "L66 Side, Size, and Structure",
-      "file": "L66.json"
+      "file": "L66.json",
+      "stats": {
+        "sentences": 24,
+        "total": 107,
+        "word": 43,
+        "phrase": 40,
+        "sentence": 24
+      },
+      "subtitle": "用盒子、路牌、记录、列表、地板、绳子和建筑说明边、标志、尺寸、斜坡、分类、步骤、拉伸、结构、东西和顶部。 场景：学员看一张标注图：盒子的边和顶部、路上的标志和斜坡、列表上的分类、建筑的结构。 目标词：side, sign, size, slope, sort, step, stretch, structure, thing, top。核心句型：The ... is on ... / The ... has ... / ... is in ... / I sort ... / I ... / I take ... / I stretch ... / ... has ...。"
     },
     {
       "order": 67,
       "id": "ofbinynq3i5tw4bft1fjq7qb",
       "title": "L67 Value, Weight, Cause, and Change",
-      "file": "L67.json"
+      "file": "L67.json",
+      "stats": {
+        "sentences": 26,
+        "total": 118,
+        "word": 53,
+        "phrase": 39,
+        "sentence": 26
+      },
+      "subtitle": "用秤、记录、地图、页面和故事说明单位、价值、方式、重量、调整、行为、原因、机会、变化和比较。 场景：学员看记录页和秤：单位、数值、重量、变化、比较、行为和原因都被放进简单句。 目标词：unit, value, way, weight, adjustment, behavior, cause, chance, change, comparison。核心句型：... is on ... / The ... has ... / ... is in ... / I ... / The ... gives ... / ... is/are ... / ... has ... / What is ...?。"
     },
     {
       "order": 68,
       "id": "htl0qwkklgohv6l6bzctiy6v",
       "title": "L68 Control, Design, and Development",
-      "file": "L68.json"
+      "file": "L68.json",
+      "stats": {
+        "sentences": 25,
+        "total": 112,
+        "word": 55,
+        "phrase": 32,
+        "sentence": 25
+      },
+      "subtitle": "用记录、页面、故事、科学和系统说明控制、损坏、决定、设计、破坏、发展、发现、分配、影响和扩张。 场景：学员看一个项目记录页：设计、决定、发展、发现、分配、效果和扩张都写在页面上。 目标词：control, damage, decision, design, destruction, development, discovery, distribution, effect, expansion。核心句型：... has ... / I ... / The ... has ... / ... is in ... / ... is/are ... / ... is on ... / ... is in fiction / ... gives ...。"
     },
     {
       "order": 69,
       "id": "skcz6jlzcgvuwq2ju2fnypvi",
       "title": "L69 Machine, Process, and Purpose",
-      "file": "L69.json"
+      "file": "L69.json",
+      "stats": {
+        "sentences": 26,
+        "total": 115,
+        "word": 53,
+        "phrase": 36,
+        "sentence": 26
+      },
+      "subtitle": "用页面、植物、秤、科学、记录、机器和工作说明形式、增长、增加、发明、损失、机器、操作、力量、过程和目的。 场景：学员看一张机器和项目记录页：机器有操作和力量，过程有目的，植物有增长。 目标词：form, growth, increase, invention, loss, machine, operation, power, process, purpose。核心句型：... is on ... / The ... has ... / I ... / ... has ... / ... is in ... / What is ...? / ... needs ... / ... gives ...。"
     },
     {
       "order": 70,
       "id": "xfk4mpdratao04fkbgpg6p7e",
       "title": "L70 System, Work, Support, and Waste",
-      "file": "L70.json"
+      "file": "L70.json",
+      "stats": {
+        "sentences": 25,
+        "total": 116,
+        "word": 53,
+        "phrase": 38,
+        "sentence": 25
+      },
+      "subtitle": "用身体、记录、机器、桌子、盒子、墙和布说明反应、关系、支持、系统、倾向、使用、废物、工作、装饰和缝线。 场景：学员看一个工作间：机器系统、桌子支撑、盒中废物、墙上装饰、布上缝线，都能用短句说明。 目标词：reaction, relation, support, system, tendency, use, waste, work, ornament, stitch。核心句型：... has ... / ... is/are ... / ... is between ... / ... is under ... / The ... has ... / ... is in ... / I use ... / The ... is on ...。"
     },
     {
       "order": 71,
       "id": "j1i9i9dvvpaxdqtdk6p4ljuf",
       "title": "L71 First Judgment Words",
-      "file": "L71.json"
+      "file": "L71.json",
+      "stats": {
+        "sentences": 25,
+        "total": 111,
+        "word": 40,
+        "phrase": 42,
+        "sentence": 25,
+        "chunk": 4
+      },
+      "subtitle": "用答案、陈述、系统、机器、清水和工作说明能够、坏、确定、清楚、普通、复杂、完成、不同、相等和错误。 场景：学员看一组答案和记录，判断一个回答、一条规则、一台机器和一项工作是否清楚、完整、相同或错误。 目标词：able, bad, certain, clear, common, complex, complete, different, equal, false。核心句型：Is ...? / ... because ... / ... and ... are different/equal / ... is not ... / ... is ...。"
     },
     {
       "order": 72,
       "id": "olq8bl57d187gr81pshpg918",
       "title": "L72 Good, Right, Possible, and Necessary",
-      "file": "L72.json"
+      "file": "L72.json",
+      "stats": {
+        "sentences": 26,
+        "total": 125,
+        "word": 51,
+        "phrase": 40,
+        "sentence": 26,
+        "chunk": 8
+      },
+      "subtitle": "用想法、规则、答案、食物、工作和条件说明愚蠢、一般、好、重要、必要、正常、可能、很可能、正确和相同。 场景：学员判断答案、规则、工作和条件：哪些好、正确、重要、必要、正常、可能或相同。 目标词：foolish, general, good, important, necessary, normal, possible, probable, right, same。核心句型：Is ...? / ... because ... / ... and ... are the same / ... is not ...。"
     },
     {
       "order": 73,
       "id": "j9wkgsmz75pjjlu94wlc05tq",
       "title": "L73 True, Wrong, Simple, and Strange",
-      "file": "L73.json"
+      "file": "L73.json",
+      "stats": {
+        "sentences": 26,
+        "total": 106,
+        "word": 35,
+        "phrase": 41,
+        "sentence": 26,
+        "chunk": 4
+      },
+      "subtitle": "用答案、路、故事、声音、线、水、洞和动物说明分开的、简单的、特别的、奇怪的、真实的、明智的、错误的、弯曲的、深的和胖的。 场景：学员继续做判断：答案真假、道路形状、水和洞的深度、动物状态，以及想法是否奇怪。 目标词：separate, simple, special, strange, true, wise, wrong, bent, deep, fat。核心句型：The ... are ... / The ... is ... / This ... is ... / question / ... is/are ... / ... because ... / ... is different from ... / ... but ...。"
     },
     {
       "order": 74,
       "id": "zmmumcy76hlqvf3r85y8u8so",
       "title": "L74 Flat, High, Low, and Opposite",
-      "file": "L74.json"
+      "file": "L74.json",
+      "stats": {
+        "sentences": 26,
+        "total": 110,
+        "word": 41,
+        "phrase": 41,
+        "sentence": 26,
+        "chunk": 2
+      },
+      "subtitle": "用桌子、路、山、布、盒子、管子、线和座位说明平的、很大的、悬挂的、高的、空心的、左边、长的、低的、窄的和相对的。 场景：学员看一张房间和道路图，判断物体高低、长短、窄宽、左右和相对位置。 目标词：flat, great, hanging, high, hollow, left, long, low, narrow, opposite。核心句型：The ... is ... / The ... is on the left / The left ... is ... / ... is opposite ... / Is ... long? / ... is/are ... / ... is different from ... / ... is not ...。"
     },
     {
       "order": 75,
       "id": "a6vnzed9sblcqs2rcjedvare",
       "title": "L75 Round, Small, Straight, and Awake",
-      "file": "L75.json"
+      "file": "L75.json",
+      "stats": {
+        "sentences": 26,
+        "total": 104,
+        "word": 41,
+        "phrase": 35,
+        "sentence": 26,
+        "chunk": 2
+      },
+      "subtitle": "用线、路、球、轮子、盒子、房间、建筑、树、墙、纸和人说明平行、圆的、短的、小的、直的、高的、厚的、薄的、宽的和醒着的。 场景：学员继续看形状和房间图，判断线条、道路、球、轮子、盒子、门和人的状态。 目标词：parallel, round, short, small, straight, tall, thick, thin, wide, awake。核心句型：Are ...? / ... not ... / ... is different from ... / ... is not ... / I am ... because ... / ... is ...。"
     },
     {
       "order": 76,
       "id": "l831p2951dajoti3fpz4ghm7",
       "title": "L76 Early, Late, Past, and Future",
-      "file": "L76.json"
+      "file": "L76.json",
+      "stats": {
+        "sentences": 26,
+        "total": 120,
+        "word": 55,
+        "phrase": 35,
+        "sentence": 26,
+        "chunk": 4
+      },
+      "subtitle": "用时间线、步骤、记录和物品说明早、第一、固定、频繁、未来、最后、晚、新、旧和过去。 场景：学员看一张日程和时间线，判断步骤、日期、物品和记忆属于早晚、新旧、过去或未来。 目标词：early, first, fixed, frequent, future, last, late, new, old, past。核心句型：Am I ...? / I am ... because ... / This is ... not ... / ... is different from ... / ... is after ... / ... because ...。"
     },
     {
       "order": 77,
       "id": "apj8nrms30pcjan3cfl88p0y",
       "title": "L77 Present, Ready, Slow, and Beautiful",
-      "file": "L77.json"
+      "file": "L77.json",
+      "stats": {
+        "sentences": 26,
+        "total": 105,
+        "word": 48,
+        "phrase": 29,
+        "sentence": 26,
+        "chunk": 2
+      },
+      "subtitle": "用当前状态、动作速度、规则、步骤、等待、年轻和美丽判断 present、quick、ready、regular、second、slow、sudden、waiting、young、beautiful。 场景：学员看一张日程状态图，描述人是否在场、是否准备好、动作快慢、变化是否突然，以及花是否美。 目标词：present, quick, ready, regular, second, slow, sudden, waiting, young, beautiful。核心句型：Are you ...? / I am ... because ... / ... is different from ... / This is the ... / ... gives ... / ... is not ...。"
     },
     {
       "order": 78,
       "id": "zqcbuw41hcsquc6cuh7zzhyo",
       "title": "L78 Color and Surface Words",
-      "file": "L78.json"
+      "file": "L78.json",
+      "stats": {
+        "sentences": 26,
+        "total": 106,
+        "word": 45,
+        "phrase": 33,
+        "sentence": 26,
+        "chunk": 2
+      },
+      "subtitle": "用盒子、天空、光、木头、房间、布、草、云、烟、苹果和花说明黑、蓝、亮、棕、干净、暗、脏、绿、灰和红。 场景：学员看一张彩色房间和自然图，判断物体颜色、明暗和干净/脏。 目标词：black, blue, bright, brown, clean, dark, dirty, green, grey, red。核心句型：Is ...? / ... because ... / ... is different from ... / ... is not ... / ... needs ...。"
     },
     {
       "order": 79,
       "id": "jk9epx1p0fnsdowrf0zytvou",
       "title": "L79 Texture, Taste, and Safe Heat Words",
-      "file": "L79.json"
+      "file": "L79.json",
+      "stats": {
+        "sentences": 27,
+        "total": 107,
+        "word": 40,
+        "phrase": 38,
+        "sentence": 27,
+        "chunk": 2
+      },
+      "subtitle": "用石头、路、刀刃、玻璃、糊、果冻、雪、纸、瓶子、机器、味道和水说明粗糙、锋利、光滑、黏、白、黄、酸、自动、苦和沸腾。 场景：学员看一组物体状态：材料表面、颜色、味道和加热状态都用安全识别句表达。 目标词：rough, sharp, smooth, sticky, white, yellow, acid, automatic, bitter, boiling。核心句型：Is ...? / ... is different from ... / ... is not ... / Do not ... / ... needs ... / ... because ...。"
     },
     {
       "order": 80,
       "id": "h3gqmx8xctyzyeeuq5nx2hmc",
       "title": "L80 Broken, Cold, Electric, and Safe States",
-      "file": "L80.json"
+      "file": "L80.json",
+      "stats": {
+        "sentences": 27,
+        "total": 110,
+        "word": 42,
+        "phrase": 39,
+        "sentence": 27,
+        "chunk": 2
+      },
+      "subtitle": "用玻璃、机器、瓶子、水、纸、植物、花、布、绳子和身体说明破损、化学、冷、切口、死亡、精细、干、弹性、电动和虚弱。 场景：学员看一组状态图：坏掉的玻璃、瓶中的化学物、冷水、纸上的切口、枯死植物和电动机器。 目标词：broken, chemical, cold, cut, dead, delicate, dry, elastic, electric, feeble。核心句型：The ... is ... / ... is/are ... / ... has ... / The ... is on ... / The ... has ... / Is ... broken? / ... is not ... / ... because ...。"
     },
     {
       "order": 81,
       "id": "r90kkagvbmp5t63nw4goa6zh",
       "title": "L81 Healthy, Loud, Material, and Mixed",
-      "file": "L81.json"
+      "file": "L81.json",
+      "stats": {
+        "sentences": 26,
+        "total": 99,
+        "word": 28,
+        "phrase": 43,
+        "sentence": 26,
+        "chunk": 2
+      },
+      "subtitle": "用瓶子、石头、身体、植物、声音、材料和医疗记录说明满、硬、健康、生病、活着、松、响、材料、医疗和混合。 场景：学员看一组状态图和健康记录，判断身体、植物、瓶子、声音和材料的状态。 目标词：full, hard, healthy, ill, living, loose, loud, material, medical, mixed。核心句型：Is ...? / ... is different from ... / ... is not ... / ... is in ... / ... because ...。"
     },
     {
       "order": 82,
       "id": "z73ys4be5dd906zei740uic5",
       "title": "L82 Open, Safe, Soft, and Strong",
-      "file": "L82.json"
+      "file": "L82.json",
+      "stats": {
+        "sentences": 27,
+        "total": 110,
+        "word": 38,
+        "phrase": 41,
+        "sentence": 27,
+        "chunk": 4
+      },
+      "subtitle": "用门、盒子、身体、房间、石头、绳子、桥和食物说明开、身体的、安静、安全、关闭、软、固体、硬挺、强壮和甜。 场景：学员看一张房间和物品状态图，判断门开关、房间安静安全、材料软硬和食物甜。 目标词：open, physical, quiet, safe, shut, soft, solid, stiff, strong, sweet。核心句型：The ... is ... / ... is/are ... / ... is ... / Is ... open? / Keep ... because ... / ... is different from ... / ... is not ... / ... because ...。"
     },
     {
       "order": 83,
       "id": "itb4e81tnstdxzidlsqncml0",
       "title": "L83 Tight, Tired, Warm, and Social Feelings",
-      "file": "L83.json"
+      "file": "L83.json",
+      "stats": {
+        "sentences": 28,
+        "total": 120,
+        "word": 44,
+        "phrase": 42,
+        "sentence": 28,
+        "chunk": 6
+      },
+      "subtitle": "用绳子、身体、水、布、故事、票、办公室和意识状态说明紧、累、暴力、温暖、湿、生气、便宜、首要/主管、有意识和残酷。 场景：学员看状态卡和故事记录，描述身体疲劳、温度湿度、价格、办公室角色和安全情绪词。 目标词：tight, tired, violent, warm, wet, angry, cheap, chief, conscious, cruel。核心句型：The ... is ... / I am ... / The ... is in ... / The ... has ... / I am ... because ... / ... is not ... / ... is different from ... / ... because ...。"
     },
     {
       "order": 84,
       "id": "eyvnuefcybllvk2sc7skeips",
       "title": "L84 Dear, Free, Happy, and Family Words",
-      "file": "L84.json"
+      "file": "L84.json",
+      "stats": {
+        "sentences": 28,
+        "total": 115,
+        "word": 47,
+        "phrase": 38,
+        "sentence": 28,
+        "chunk": 2
+      },
+      "subtitle": "用书、朋友、身体、记录、田地、情绪和家庭说明亲爱的/贵的、依赖的、女性、免费的、肥沃的、快乐、友善、喜欢、男性和已婚。 场景：学员看家庭和记录卡，表达人和动物的性别、婚姻记录、快乐、友善、喜欢和土地肥沃。 目标词：dear, dependent, female, free, fertile, happy, kind, like, male, married。核心句型：I am ... because ... / I like ... / ... is ... / ... is not ... / ... has ... / ... is dependent on ... / ... gives ...。"
     },
     {
       "order": 85,
       "id": "mnu6bc47vle9nb2sz16ycdu5",
       "title": "L85 Public, Private, Serious, and Final Social Words",
-      "file": "L85.json"
+      "file": "L85.json",
+      "stats": {
+        "sentences": 28,
+        "total": 125,
+        "word": 52,
+        "phrase": 39,
+        "sentence": 28,
+        "chunk": 6
+      },
+      "subtitle": "用记录、办公室、自然、故事、家庭、房间、道路、朋友、情绪和决定说明军事、自然、政治、贫穷、私人、公共、负责、悲伤、秘密和严肃。 场景：学员看社会属性和情绪记录卡，用安全中性的句子表达公开/私人、军事/政治、负责、悲伤、秘密和严肃。 目标词：military, natural, political, poor, private, public, responsible, sad, secret, serious。核心句型：The ... is ... / ... has ... / I am ... / Is ... private? / ... is not ... / ... is ... / I am ... because ... / ... needs ...。"
     }
   ]
 }

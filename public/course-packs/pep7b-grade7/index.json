@@ -9,145 +9,362 @@
       "order": 1,
       "id": "u1tnpz3px74xrsdwhxvx123a",
       "title": "Unit 1 Animal Friends【单词】",
-      "file": "L01.json"
+      "file": "L01.json",
+      "stats": {
+        "sentences": 44,
+        "total": 46,
+        "word": 36,
+        "phrase": 1,
+        "sentence": 9
+      },
+      "subtitle": "Unit 1 Animal Friends【单词】"
     },
     {
       "order": 2,
       "id": "sadm8uu4y989o0int9yxi3lr",
       "title": "Unit 1 Animal Friends【例句】",
-      "file": "L02.json"
+      "file": "L02.json",
+      "stats": {
+        "sentences": 17,
+        "total": 93,
+        "word": 46,
+        "phrase": 24,
+        "sentence": 17,
+        "chunk": 6
+      },
+      "subtitle": "Section A Why do you like animals?"
     },
     {
       "order": 3,
       "id": "liw704cuwp2mboisfduode4h",
       "title": "Unit 1 Animal Friends【例句】",
-      "file": "L03.json"
+      "file": "L03.json",
+      "stats": {
+        "sentences": 35,
+        "total": 235,
+        "word": 108,
+        "phrase": 58,
+        "sentence": 35,
+        "chunk": 32,
+        "combinedChunks": 2
+      },
+      "subtitle": "Section B How are animals part of our lives?"
     },
     {
       "order": 4,
       "id": "shbz4j091cndgs7qta49q9do",
       "title": "Unit 2 No Rules, No Order【单词】",
-      "file": "L04.json"
+      "file": "L04.json",
+      "stats": {
+        "sentences": 58,
+        "total": 60,
+        "word": 47,
+        "sentence": 13
+      },
+      "subtitle": "Unit 2 No Rules, No Order【单词】"
     },
     {
       "order": 5,
       "id": "tlas3vurjm3qcedip195x77k",
       "title": "Unit 2 No Rules, No Order【例句】",
-      "file": "L05.json"
+      "file": "L05.json",
+      "stats": {
+        "sentences": 24,
+        "total": 131,
+        "word": 57,
+        "phrase": 38,
+        "sentence": 24,
+        "chunk": 12
+      },
+      "subtitle": "Section A What rules do we follow?"
     },
     {
       "order": 6,
       "id": "rwy2iy2osqrfiwonc59irp5f",
       "title": "Unit 2 No Rules, No Order【例句】",
-      "file": "L06.json"
+      "file": "L06.json",
+      "stats": {
+        "sentences": 25,
+        "total": 196,
+        "word": 77,
+        "phrase": 58,
+        "sentence": 25,
+        "chunk": 32,
+        "combinedChunks": 4
+      },
+      "subtitle": "Section B How can rules help us?"
     },
     {
       "order": 7,
       "id": "deng1suhjq6t05wzk6bkwpr1",
       "title": "Unit 3 Keep Fit【单词】",
-      "file": "L07.json"
+      "file": "L07.json",
+      "stats": {
+        "sentences": 55,
+        "total": 57,
+        "word": 45,
+        "sentence": 12
+      },
+      "subtitle": "Unit 3 Keep Fit【单词】"
     },
     {
       "order": 8,
       "id": "rei86nayjjru8w39lrtwubnn",
       "title": "Unit 3 Keep Fit【例句】",
-      "file": "L08.json"
+      "file": "L08.json",
+      "stats": {
+        "sentences": 42,
+        "total": 228,
+        "word": 107,
+        "phrase": 49,
+        "sentence": 42,
+        "chunk": 27,
+        "combinedChunks": 3
+      },
+      "subtitle": "Section A How often do you do sport or exercise?"
     },
     {
       "order": 9,
       "id": "q2nm0ykspiclx52pw3lfffss",
       "title": "Unit 3 Keep Fit【例句】",
-      "file": "L09.json"
+      "file": "L09.json",
+      "stats": {
+        "sentences": 30,
+        "total": 243,
+        "word": 101,
+        "phrase": 58,
+        "sentence": 30,
+        "chunk": 47,
+        "combinedChunks": 7
+      },
+      "subtitle": "Section B How is exercise good for us?"
     },
     {
       "order": 10,
       "id": "iuiz2wz5utg76ukd1g0ur1s4",
       "title": "Unit 4 Eat Well【单词】",
-      "file": "L10.json"
+      "file": "L10.json",
+      "stats": {
+        "sentences": 58,
+        "total": 58,
+        "word": 47,
+        "sentence": 11
+      },
+      "subtitle": "Unit 4 Eat Well【单词】"
     },
     {
       "order": 11,
       "id": "exwyj0njiiydd708vxtv0vwx",
       "title": "Unit 4 Eat Well【例句】",
-      "file": "L11.json"
+      "file": "L11.json",
+      "stats": {
+        "sentences": 40,
+        "total": 256,
+        "word": 118,
+        "phrase": 58,
+        "sentence": 40,
+        "chunk": 38,
+        "combinedChunks": 2
+      },
+      "subtitle": "Section A What do we like to eat?"
     },
     {
       "order": 12,
       "id": "ldrdu4bn4d0yxa627u8dhe87",
       "title": "Unit 4 Eat Well【例句】",
-      "file": "L12.json"
+      "file": "L12.json",
+      "stats": {
+        "sentences": 34,
+        "total": 284,
+        "word": 134,
+        "phrase": 70,
+        "sentence": 34,
+        "chunk": 38,
+        "combinedChunks": 8
+      },
+      "subtitle": "Section B How do we make healthy eating choices?"
     },
     {
       "order": 13,
       "id": "vi3b7es2w52aoe9cn90g6dwt",
       "title": "Unit 5 Here and Now【单词】",
-      "file": "L13.json"
+      "file": "L13.json",
+      "stats": {
+        "sentences": 64,
+        "total": 68,
+        "word": 46,
+        "phrase": 2,
+        "sentence": 20
+      },
+      "subtitle": "Unit 5 Here and Now【单词】"
     },
     {
       "order": 14,
       "id": "ipxd9ewhyatq5cko94g71e8b",
       "title": "Unit 5 Here and Now【例句】",
-      "file": "L14.json"
+      "file": "L14.json",
+      "stats": {
+        "sentences": 28,
+        "total": 228,
+        "word": 102,
+        "phrase": 39,
+        "sentence": 27,
+        "chunk": 50,
+        "combinedChunks": 10
+      },
+      "subtitle": "Section A What are you doing right now?"
     },
     {
       "order": 15,
       "id": "sqtpwxsgp1df1ew5c0ynnwl6",
       "title": "Unit 5 Here and Now【例句】",
-      "file": "L15.json"
+      "file": "L15.json",
+      "stats": {
+        "sentences": 26,
+        "total": 249,
+        "word": 82,
+        "phrase": 83,
+        "sentence": 26,
+        "chunk": 48,
+        "combinedChunks": 10
+      },
+      "subtitle": "Section B How do we share our lives with others?"
     },
     {
       "order": 16,
       "id": "vjb4ck47sdq67cpoqsdqnowf",
       "title": "Unit 6 Rain or Shine【单词】",
-      "file": "L16.json"
+      "file": "L16.json",
+      "stats": {
+        "sentences": 64,
+        "total": 66,
+        "word": 50,
+        "sentence": 16
+      },
+      "subtitle": "Unit 6 Rain or Shine【单词】"
     },
     {
       "order": 17,
       "id": "j4x7bshcos2su19clwcj4e89",
       "title": "Unit 6 Rain or Shine【例句】",
-      "file": "L17.json"
+      "file": "L17.json",
+      "stats": {
+        "sentences": 23,
+        "total": 132,
+        "word": 52,
+        "phrase": 33,
+        "sentence": 23,
+        "chunk": 23,
+        "combinedChunks": 1
+      },
+      "subtitle": "Section A What’s the weather like?"
     },
     {
       "order": 18,
       "id": "amfclkp271nm165pvq91b035",
       "title": "Unit 6 Rain or Shine【例句】",
-      "file": "L18.json"
+      "file": "L18.json",
+      "stats": {
+        "sentences": 32,
+        "total": 243,
+        "word": 95,
+        "phrase": 72,
+        "sentence": 32,
+        "chunk": 39,
+        "combinedChunks": 5
+      },
+      "subtitle": "Section B How do we feel about the weather?"
     },
     {
       "order": 19,
       "id": "q0e93j25cv78l835j9tbnciq",
       "title": "Unit 7 A Day to Remember【单词】",
-      "file": "L19.json"
+      "file": "L19.json",
+      "stats": {
+        "sentences": 50,
+        "total": 50,
+        "word": 42,
+        "sentence": 8
+      },
+      "subtitle": "Unit 7 A Day to Remember【单词】"
     },
     {
       "order": 20,
       "id": "desmn8xvv2p7eoa2rylixj55",
       "title": "Unit 7 A Day to Remember【例句】",
-      "file": "L20.json"
+      "file": "L20.json",
+      "stats": {
+        "sentences": 31,
+        "total": 210,
+        "word": 95,
+        "phrase": 48,
+        "sentence": 31,
+        "chunk": 29,
+        "combinedChunks": 7
+      },
+      "subtitle": "Section A What was your special day like?"
     },
     {
       "order": 21,
       "id": "zs4m10phm5voovm9avc3kbcj",
       "title": "Unit 7 A Day to Remember【例句】",
-      "file": "L21.json"
+      "file": "L21.json",
+      "stats": {
+        "sentences": 23,
+        "total": 193,
+        "word": 86,
+        "phrase": 44,
+        "sentence": 23,
+        "chunk": 34,
+        "combinedChunks": 6
+      },
+      "subtitle": "Section B What did you learn on that special day?"
     },
     {
       "order": 22,
       "id": "qxseyssrnx30il9r0y324rzr",
       "title": "Unit 8 Once upon a Time【单词】",
-      "file": "L22.json"
+      "file": "L22.json",
+      "stats": {
+        "sentences": 68,
+        "total": 72,
+        "word": 52,
+        "phrase": 1,
+        "sentence": 19
+      },
+      "subtitle": "Unit 8 Once upon a Time【单词】"
     },
     {
       "order": 23,
       "id": "cwesona576uwg6izdpz89ilm",
       "title": "Unit 8 Once upon a Time【例句】",
-      "file": "L23.json"
+      "file": "L23.json",
+      "stats": {
+        "sentences": 43,
+        "total": 269,
+        "word": 100,
+        "phrase": 82,
+        "sentence": 43,
+        "chunk": 39,
+        "combinedChunks": 5
+      },
+      "subtitle": "Section A What are your favourite stories?"
     },
     {
       "order": 24,
       "id": "des4qb7nnw9xz77ismrxsg5f",
       "title": "Unit 8 Once upon a Time【例句】",
-      "file": "L24.json"
+      "file": "L24.json",
+      "stats": {
+        "sentences": 21,
+        "total": 199,
+        "word": 72,
+        "phrase": 56,
+        "sentence": 21,
+        "chunk": 41,
+        "combinedChunks": 9
+      },
+      "subtitle": "Section B What can stories teach us?"
     }
   ]
 }

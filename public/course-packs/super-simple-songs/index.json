@@ -1,309 +1,631 @@
 {
- "id": "kj8s04ewyd9lmiwvlhjycuz2",
- "slug": "super-simple-songs",
- "title": "【音乐】Super Simple Song",
- "description": "全球公认幼儿英语启蒙神器 SSS：简单清晰慢速，任何年龄零基础都有效",
- "courseCount": 50,
- "courses": [
-  {
-   "order": 1,
-   "id": "j8sqhbf67kbyesxw1zgzbah4",
-   "title": "001. Five Little Monkeys",
-   "file": "L01.json"
-  },
-  {
-   "order": 2,
-   "id": "v3tafsvt6wol7owvr2h22tt1",
-   "title": "002. Twinkle Twinkle Little Star",
-   "file": "L02.json"
-  },
-  {
-   "order": 3,
-   "id": "a2xb03ust1fq6wnifj0oc9sb",
-   "title": "003. Hickory Dickory...Crash!",
-   "file": "L03.json"
-  },
-  {
-   "order": 4,
-   "id": "mygocifp956hkn35qouy6n4d",
-   "title": "004. Row Row Row Your Boat",
-   "file": "L04.json"
-  },
-  {
-   "order": 5,
-   "id": "gr8ost3xhf9zoc05ydmwj1lh",
-   "title": "005. BINGO",
-   "file": "L05.json"
-  },
-  {
-   "order": 6,
-   "id": "hocg7y8p6lqtfz4f2qauiltg",
-   "title": "006. S-A-N-T-A",
-   "file": "L06.json"
-  },
-  {
-   "order": 7,
-   "id": "k25c6x0e4bdn70390mbaqh1s",
-   "title": "007. The Months Chant",
-   "file": "L07.json"
-  },
-  {
-   "order": 8,
-   "id": "y641uwmzdaw0beqqq494yvac",
-   "title": "008. Ten In The Bed",
-   "file": "L08.json"
-  },
-  {
-   "order": 9,
-   "id": "sn8pig8ilrx3cqd5hctzjyjs",
-   "title": "009. Little Snowflake",
-   "file": "L09.json"
-  },
-  {
-   "order": 10,
-   "id": "i09d3irjvp481k3cvc5nabgy",
-   "title": "010. Open Shut Them",
-   "file": "L10.json"
-  },
-  {
-   "order": 11,
-   "id": "n9dw3wobn0wmistxncvv0bck",
-   "title": "011. Jingle Bells (Learn - Sing)",
-   "file": "L11.json"
-  },
-  {
-   "order": 12,
-   "id": "qqxyscrjdjc8isvl6qnflzn9",
-   "title": "012. Head Shoulders Knees - Toes (Sing It)",
-   "file": "L12.json"
-  },
-  {
-   "order": 13,
-   "id": "ag6jhoiykgjhp5ndqxncgphd",
-   "title": "013. Head Shoulders Knees - Toes (Learn It)",
-   "file": "L13.json"
-  },
-  {
-   "order": 14,
-   "id": "pm2xsygzfz1zg2wh1p1yfn4d",
-   "title": "014. Sweet Dreams",
-   "file": "L14.json"
-  },
-  {
-   "order": 15,
-   "id": "qsvl63rev9vzzqqfbgxpv1lp",
-   "title": "015. Old MacDonald",
-   "file": "L15.json"
-  },
-  {
-   "order": 16,
-   "id": "n8zqlz1eo82hbml271hfyu1n",
-   "title": "016. Walking In The Jungle",
-   "file": "L16.json"
-  },
-  {
-   "order": 17,
-   "id": "jwl6nxi7qylhp0ydoii01zy8",
-   "title": "017. The Animals On The Farm",
-   "file": "L17.json"
-  },
-  {
-   "order": 18,
-   "id": "dkfwkqwvzbh4y606jtn95k4k",
-   "title": "018. Do You Like Broccoli Ice Cream？",
-   "file": "L18.json"
-  },
-  {
-   "order": 19,
-   "id": "ks1z21c5p2et7nv82mparldy",
-   "title": "019. Count - Move",
-   "file": "L19.json"
-  },
-  {
-   "order": 20,
-   "id": "mggi09hwrdrui0fvygreq6mc",
-   "title": "020. If You're Happy",
-   "file": "L20.json"
-  },
-  {
-   "order": 21,
-   "id": "g3h49y5tyi7dzgvg7vlnclfo",
-   "title": "021. How's The Weather?",
-   "file": "L21.json"
-  },
-  {
-   "order": 22,
-   "id": "lp4vszl5d2c9o7xcqj2fgfpf",
-   "title": "022. One Little Finger",
-   "file": "L22.json"
-  },
-  {
-   "order": 23,
-   "id": "r3r1vgojyauscq821e8cpsd2",
-   "title": "023. Counting Bananas",
-   "file": "L23.json"
-  },
-  {
-   "order": 24,
-   "id": "ejmkrxhfuqdtfjzw7rdhyt1b",
-   "title": "024. One Potato, Two Potatoes",
-   "file": "L24.json"
-  },
-  {
-   "order": 25,
-   "id": "gyoeg535d4z1ld10nhgjzuwn",
-   "title": "025. I See Something Blue",
-   "file": "L25.json"
-  },
-  {
-   "order": 26,
-   "id": "y0c7evbbaknqaodcxqgjpp6k",
-   "title": "026. I See Something Pink",
-   "file": "L26.json"
-  },
-  {
-   "order": 27,
-   "id": "pcrbk65k7ighr4dpk46rft5m",
-   "title": "027. Let's Go To The Zoo",
-   "file": "L27.json"
-  },
-  {
-   "order": 28,
-   "id": "k368dpztb0hbvh5oubj5edun",
-   "title": "028. The Wheels On The Bus",
-   "file": "L28.json"
-  },
-  {
-   "order": 29,
-   "id": "kungikp34s4b2bi2thrzgdaa",
-   "title": "029. Mary Had A Kangaroo",
-   "file": "L29.json"
-  },
-  {
-   "order": 30,
-   "id": "tr3ouq2auiz5grfo0wm91slp",
-   "title": "030. I Have A Pet",
-   "file": "L30.json"
-  },
-  {
-   "order": 31,
-   "id": "sqfwikkuj6aerqoopp7n1srg",
-   "title": "031. Go Away!",
-   "file": "L31.json"
-  },
-  {
-   "order": 32,
-   "id": "eotm62onje6bi9ljdvgwae4o",
-   "title": "032. Can You Make A Happy Face？",
-   "file": "L32.json"
-  },
-  {
-   "order": 33,
-   "id": "hqesyk9benn5ijmb3twb6lpl",
-   "title": "033. Five Creepy Spiders",
-   "file": "L33.json"
-  },
-  {
-   "order": 34,
-   "id": "b7l7m4z4qbz95j5sp66axkmy",
-   "title": "034. Knock Knock, Trick Or Treat？",
-   "file": "L34.json"
-  },
-  {
-   "order": 35,
-   "id": "tq9ydrdp23ta27u8vs4q3xus",
-   "title": "035. This Is The Way We Carve A Pumpkin",
-   "file": "L35.json"
-  },
-  {
-   "order": 36,
-   "id": "c75ophrvz1zioetjd605bius",
-   "title": "036. Who Took The Candy？",
-   "file": "L36.json"
-  },
-  {
-   "order": 37,
-   "id": "f2e17myfy1agtecs4s3x1wm0",
-   "title": "037. One For You, One For Me",
-   "file": "L37.json"
-  },
-  {
-   "order": 38,
-   "id": "aeq5r8wfnfxwufrl3dq5yg2k",
-   "title": "038. Go Away, Spooky Goblin!",
-   "file": "L38.json"
-  },
-  {
-   "order": 39,
-   "id": "ux76jrfztobgxj59xxwhap47",
-   "title": "039. Put On Your Shoes",
-   "file": "L39.json"
-  },
-  {
-   "order": 40,
-   "id": "a1sdm103gkuujk9uxp4l9sid",
-   "title": "040. We Wish You A Merry Christmas",
-   "file": "L40.json"
-  },
-  {
-   "order": 41,
-   "id": "e5pv5zzwyu206zp9gon5czt2",
-   "title": "041. Decorate The Christmas Tree",
-   "file": "L41.json"
-  },
-  {
-   "order": 42,
-   "id": "vknc182bed8s7d37x173571p",
-   "title": "042. What Do You Want For Christmas？",
-   "file": "L42.json"
-  },
-  {
-   "order": 43,
-   "id": "iu6kdl3i78x2peq8gjf2j24x",
-   "title": "043. Santa's On His Way",
-   "file": "L43.json"
-  },
-  {
-   "order": 44,
-   "id": "scz2ly0mxxkuarwc3sfqf2d8",
-   "title": "044. Count Down - Move",
-   "file": "L44.json"
-  },
-  {
-   "order": 45,
-   "id": "zs3knbc9y5r8na27kthopajg",
-   "title": "045. I'm A Little Snowman",
-   "file": "L45.json"
-  },
-  {
-   "order": 46,
-   "id": "yzkfyk7140ccmj4hvbqhafa9",
-   "title": "046. Skidamarink",
-   "file": "L46.json"
-  },
-  {
-   "order": 47,
-   "id": "depdnuf5dnhhixgtx8fsw8lb",
-   "title": "047. My Teddy Bear",
-   "file": "L47.json"
-  },
-  {
-   "order": 48,
-   "id": "p2mtl4qgxmvuqy3whzht6xai",
-   "title": "048. Yes, I Can!",
-   "file": "L48.json"
-  },
-  {
-   "order": 49,
-   "id": "fs99cjx8pk5v00zvrp6gd986",
-   "title": "049. Wag Your Tail",
-   "file": "L49.json"
-  },
-  {
-   "order": 50,
-   "id": "rjeo0u0l9zrbyj3c4gkr0884",
-   "title": "050. What Do You Hear？",
-   "file": "L50.json"
-  }
- ]
+  "id": "kj8s04ewyd9lmiwvlhjycuz2",
+  "slug": "super-simple-songs",
+  "title": "【音乐】Super Simple Song",
+  "description": "全球公认幼儿英语启蒙神器 SSS：简单清晰慢速，任何年龄零基础都有效",
+  "courseCount": 50,
+  "courses": [
+    {
+      "order": 1,
+      "id": "j8sqhbf67kbyesxw1zgzbah4",
+      "title": "001. Five Little Monkeys",
+      "file": "L01.json",
+      "stats": {
+        "sentences": 20,
+        "total": 20,
+        "sentence": 20
+      },
+      "subtitle": "001. Five Little Monkeys"
+    },
+    {
+      "order": 2,
+      "id": "v3tafsvt6wol7owvr2h22tt1",
+      "title": "002. Twinkle Twinkle Little Star",
+      "file": "L02.json",
+      "stats": {
+        "sentences": 11,
+        "total": 11,
+        "sentence": 11
+      },
+      "subtitle": "002. Twinkle Twinkle Little Star"
+    },
+    {
+      "order": 3,
+      "id": "a2xb03ust1fq6wnifj0oc9sb",
+      "title": "003. Hickory Dickory...Crash!",
+      "file": "L03.json",
+      "stats": {
+        "sentences": 37,
+        "total": 37,
+        "sentence": 37
+      },
+      "subtitle": "003. Hickory Dickory...Crash!"
+    },
+    {
+      "order": 4,
+      "id": "mygocifp956hkn35qouy6n4d",
+      "title": "004. Row Row Row Your Boat",
+      "file": "L04.json",
+      "stats": {
+        "sentences": 21,
+        "total": 21,
+        "sentence": 21
+      },
+      "subtitle": "004. Row Row Row Your Boat"
+    },
+    {
+      "order": 5,
+      "id": "gr8ost3xhf9zoc05ydmwj1lh",
+      "title": "005. BINGO",
+      "file": "L05.json",
+      "stats": {
+        "sentences": 24,
+        "total": 24,
+        "word": 4,
+        "sentence": 20
+      },
+      "subtitle": "005. BINGO"
+    },
+    {
+      "order": 6,
+      "id": "hocg7y8p6lqtfz4f2qauiltg",
+      "title": "006. S-A-N-T-A",
+      "file": "L06.json",
+      "stats": {
+        "sentences": 23,
+        "total": 23,
+        "sentence": 23
+      },
+      "subtitle": "006. S-A-N-T-A"
+    },
+    {
+      "order": 7,
+      "id": "k25c6x0e4bdn70390mbaqh1s",
+      "title": "007. The Months Chant",
+      "file": "L07.json",
+      "stats": {
+        "sentences": 37,
+        "total": 37,
+        "word": 36,
+        "sentence": 1
+      },
+      "subtitle": "007. The Months Chant"
+    },
+    {
+      "order": 8,
+      "id": "y641uwmzdaw0beqqq494yvac",
+      "title": "008. Ten In The Bed",
+      "file": "L08.json",
+      "stats": {
+        "sentences": 28,
+        "total": 28,
+        "sentence": 28
+      },
+      "subtitle": "008. Ten In The Bed"
+    },
+    {
+      "order": 9,
+      "id": "sn8pig8ilrx3cqd5hctzjyjs",
+      "title": "009. Little Snowflake",
+      "file": "L09.json",
+      "stats": {
+        "sentences": 18,
+        "total": 18,
+        "sentence": 18
+      },
+      "subtitle": "009. Little Snowflake"
+    },
+    {
+      "order": 10,
+      "id": "i09d3irjvp481k3cvc5nabgy",
+      "title": "010. Open Shut Them",
+      "file": "L10.json",
+      "stats": {
+        "sentences": 30,
+        "total": 30,
+        "sentence": 30
+      },
+      "subtitle": "010. Open Shut Them"
+    },
+    {
+      "order": 11,
+      "id": "n9dw3wobn0wmistxncvv0bck",
+      "title": "011. Jingle Bells (Learn - Sing)",
+      "file": "L11.json",
+      "stats": {
+        "sentences": 32,
+        "total": 32,
+        "sentence": 32
+      },
+      "subtitle": "011. Jingle Bells (Learn - Sing)"
+    },
+    {
+      "order": 12,
+      "id": "qqxyscrjdjc8isvl6qnflzn9",
+      "title": "012. Head Shoulders Knees - Toes (Sing It)",
+      "file": "L12.json",
+      "stats": {
+        "sentences": 7,
+        "total": 7,
+        "sentence": 7
+      },
+      "subtitle": "012. Head Shoulders Knees - Toes (Sing It)"
+    },
+    {
+      "order": 13,
+      "id": "ag6jhoiykgjhp5ndqxncgphd",
+      "title": "013. Head Shoulders Knees - Toes (Learn It)",
+      "file": "L13.json",
+      "stats": {
+        "sentences": 11,
+        "total": 11,
+        "word": 1,
+        "sentence": 10
+      },
+      "subtitle": "013. Head Shoulders Knees - Toes (Learn It)"
+    },
+    {
+      "order": 14,
+      "id": "pm2xsygzfz1zg2wh1p1yfn4d",
+      "title": "014. Sweet Dreams",
+      "file": "L14.json",
+      "stats": {
+        "sentences": 5,
+        "total": 5,
+        "sentence": 5
+      },
+      "subtitle": "014. Sweet Dreams"
+    },
+    {
+      "order": 15,
+      "id": "qsvl63rev9vzzqqfbgxpv1lp",
+      "title": "015. Old MacDonald",
+      "file": "L15.json",
+      "stats": {
+        "sentences": 44,
+        "total": 51,
+        "word": 3,
+        "phrase": 2,
+        "sentence": 44,
+        "chunk": 2
+      },
+      "subtitle": "015. Old MacDonald"
+    },
+    {
+      "order": 16,
+      "id": "n8zqlz1eo82hbml271hfyu1n",
+      "title": "016. Walking In The Jungle",
+      "file": "L16.json",
+      "stats": {
+        "sentences": 44,
+        "total": 44,
+        "word": 4,
+        "sentence": 40
+      },
+      "subtitle": "016. Walking In The Jungle"
+    },
+    {
+      "order": 17,
+      "id": "jwl6nxi7qylhp0ydoii01zy8",
+      "title": "017. The Animals On The Farm",
+      "file": "L17.json",
+      "stats": {
+        "sentences": 25,
+        "total": 25,
+        "sentence": 25
+      },
+      "subtitle": "017. The Animals On The Farm"
+    },
+    {
+      "order": 18,
+      "id": "dkfwkqwvzbh4y606jtn95k4k",
+      "title": "018. Do You Like Broccoli Ice Cream？",
+      "file": "L18.json",
+      "stats": {
+        "sentences": 24,
+        "total": 56,
+        "word": 24,
+        "sentence": 24,
+        "chunk": 8
+      },
+      "subtitle": "018. Do You Like Broccoli Ice Cream？"
+    },
+    {
+      "order": 19,
+      "id": "ks1z21c5p2et7nv82mparldy",
+      "title": "019. Count - Move",
+      "file": "L19.json",
+      "stats": {
+        "sentences": 24,
+        "total": 24,
+        "word": 20,
+        "sentence": 4
+      },
+      "subtitle": "019. Count - Move"
+    },
+    {
+      "order": 20,
+      "id": "mggi09hwrdrui0fvygreq6mc",
+      "title": "020. If You're Happy",
+      "file": "L20.json",
+      "stats": {
+        "sentences": 20,
+        "total": 20,
+        "sentence": 20
+      },
+      "subtitle": "020. If You're Happy"
+    },
+    {
+      "order": 21,
+      "id": "g3h49y5tyi7dzgvg7vlnclfo",
+      "title": "021. How's The Weather?",
+      "file": "L21.json",
+      "stats": {
+        "sentences": 23,
+        "total": 23,
+        "sentence": 23
+      },
+      "subtitle": "021. How's The Weather?"
+    },
+    {
+      "order": 22,
+      "id": "lp4vszl5d2c9o7xcqj2fgfpf",
+      "title": "022. One Little Finger",
+      "file": "L22.json",
+      "stats": {
+        "sentences": 30,
+        "total": 30,
+        "sentence": 30
+      },
+      "subtitle": "022. One Little Finger"
+    },
+    {
+      "order": 23,
+      "id": "r3r1vgojyauscq821e8cpsd2",
+      "title": "023. Counting Bananas",
+      "file": "L23.json",
+      "stats": {
+        "sentences": 17,
+        "total": 17,
+        "sentence": 17
+      },
+      "subtitle": "023. Counting Bananas"
+    },
+    {
+      "order": 24,
+      "id": "ejmkrxhfuqdtfjzw7rdhyt1b",
+      "title": "024. One Potato, Two Potatoes",
+      "file": "L24.json",
+      "stats": {
+        "sentences": 12,
+        "total": 12,
+        "sentence": 12
+      },
+      "subtitle": "024. One Potato, Two Potatoes"
+    },
+    {
+      "order": 25,
+      "id": "gyoeg535d4z1ld10nhgjzuwn",
+      "title": "025. I See Something Blue",
+      "file": "L25.json",
+      "stats": {
+        "sentences": 18,
+        "total": 18,
+        "word": 2,
+        "sentence": 16
+      },
+      "subtitle": "025. I See Something Blue"
+    },
+    {
+      "order": 26,
+      "id": "y0c7evbbaknqaodcxqgjpp6k",
+      "title": "026. I See Something Pink",
+      "file": "L26.json",
+      "stats": {
+        "sentences": 18,
+        "total": 18,
+        "word": 4,
+        "sentence": 14
+      },
+      "subtitle": "026. I See Something Pink"
+    },
+    {
+      "order": 27,
+      "id": "pcrbk65k7ighr4dpk46rft5m",
+      "title": "027. Let's Go To The Zoo",
+      "file": "L27.json",
+      "stats": {
+        "sentences": 20,
+        "total": 20,
+        "sentence": 20
+      },
+      "subtitle": "027. Let's Go To The Zoo"
+    },
+    {
+      "order": 28,
+      "id": "k368dpztb0hbvh5oubj5edun",
+      "title": "028. The Wheels On The Bus",
+      "file": "L28.json",
+      "stats": {
+        "sentences": 15,
+        "total": 15,
+        "sentence": 15
+      },
+      "subtitle": "028. The Wheels On The Bus"
+    },
+    {
+      "order": 29,
+      "id": "kungikp34s4b2bi2thrzgdaa",
+      "title": "029. Mary Had A Kangaroo",
+      "file": "L29.json",
+      "stats": {
+        "sentences": 17,
+        "total": 19,
+        "word": 1,
+        "phrase": 1,
+        "sentence": 17
+      },
+      "subtitle": "029. Mary Had A Kangaroo"
+    },
+    {
+      "order": 30,
+      "id": "tr3ouq2auiz5grfo0wm91slp",
+      "title": "030. I Have A Pet",
+      "file": "L30.json",
+      "stats": {
+        "sentences": 22,
+        "total": 22,
+        "sentence": 22
+      },
+      "subtitle": "030. I Have A Pet"
+    },
+    {
+      "order": 31,
+      "id": "sqfwikkuj6aerqoopp7n1srg",
+      "title": "031. Go Away!",
+      "file": "L31.json",
+      "stats": {
+        "sentences": 19,
+        "total": 22,
+        "phrase": 2,
+        "sentence": 19,
+        "chunk": 1
+      },
+      "subtitle": "031. Go Away!"
+    },
+    {
+      "order": 32,
+      "id": "eotm62onje6bi9ljdvgwae4o",
+      "title": "032. Can You Make A Happy Face？",
+      "file": "L32.json",
+      "stats": {
+        "sentences": 12,
+        "total": 12,
+        "sentence": 12
+      },
+      "subtitle": "032. Can You Make A Happy Face？"
+    },
+    {
+      "order": 33,
+      "id": "hqesyk9benn5ijmb3twb6lpl",
+      "title": "033. Five Creepy Spiders",
+      "file": "L33.json",
+      "stats": {
+        "sentences": 23,
+        "total": 23,
+        "sentence": 23
+      },
+      "subtitle": "033. Five Creepy Spiders"
+    },
+    {
+      "order": 34,
+      "id": "b7l7m4z4qbz95j5sp66axkmy",
+      "title": "034. Knock Knock, Trick Or Treat？",
+      "file": "L34.json",
+      "stats": {
+        "sentences": 33,
+        "total": 33,
+        "sentence": 33
+      },
+      "subtitle": "034. Knock Knock, Trick Or Treat？"
+    },
+    {
+      "order": 35,
+      "id": "tq9ydrdp23ta27u8vs4q3xus",
+      "title": "035. This Is The Way We Carve A Pumpkin",
+      "file": "L35.json",
+      "stats": {
+        "sentences": 21,
+        "total": 101,
+        "word": 36,
+        "phrase": 24,
+        "sentence": 21,
+        "chunk": 20
+      },
+      "subtitle": "035. This Is The Way We Carve A Pumpkin"
+    },
+    {
+      "order": 36,
+      "id": "c75ophrvz1zioetjd605bius",
+      "title": "036. Who Took The Candy？",
+      "file": "L36.json",
+      "stats": {
+        "sentences": 16,
+        "total": 16,
+        "sentence": 16
+      },
+      "subtitle": "036. Who Took The Candy？"
+    },
+    {
+      "order": 37,
+      "id": "f2e17myfy1agtecs4s3x1wm0",
+      "title": "037. One For You, One For Me",
+      "file": "L37.json",
+      "stats": {
+        "sentences": 31,
+        "total": 31,
+        "sentence": 31
+      },
+      "subtitle": "037. One For You, One For Me"
+    },
+    {
+      "order": 38,
+      "id": "aeq5r8wfnfxwufrl3dq5yg2k",
+      "title": "038. Go Away, Spooky Goblin!",
+      "file": "L38.json",
+      "stats": {
+        "sentences": 20,
+        "total": 28,
+        "phrase": 4,
+        "sentence": 20,
+        "chunk": 4
+      },
+      "subtitle": "038. Go Away, Spooky Goblin!"
+    },
+    {
+      "order": 39,
+      "id": "ux76jrfztobgxj59xxwhap47",
+      "title": "039. Put On Your Shoes",
+      "file": "L39.json",
+      "stats": {
+        "sentences": 23,
+        "total": 23,
+        "sentence": 23
+      },
+      "subtitle": "039. Put On Your Shoes"
+    },
+    {
+      "order": 40,
+      "id": "a1sdm103gkuujk9uxp4l9sid",
+      "title": "040. We Wish You A Merry Christmas",
+      "file": "L40.json",
+      "stats": {
+        "sentences": 30,
+        "total": 30,
+        "sentence": 30
+      },
+      "subtitle": "040. We Wish You A Merry Christmas"
+    },
+    {
+      "order": 41,
+      "id": "e5pv5zzwyu206zp9gon5czt2",
+      "title": "041. Decorate The Christmas Tree",
+      "file": "L41.json",
+      "stats": {
+        "sentences": 21,
+        "total": 21,
+        "sentence": 21
+      },
+      "subtitle": "041. Decorate The Christmas Tree"
+    },
+    {
+      "order": 42,
+      "id": "vknc182bed8s7d37x173571p",
+      "title": "042. What Do You Want For Christmas？",
+      "file": "L42.json",
+      "stats": {
+        "sentences": 35,
+        "total": 35,
+        "sentence": 35
+      },
+      "subtitle": "042. What Do You Want For Christmas？"
+    },
+    {
+      "order": 43,
+      "id": "iu6kdl3i78x2peq8gjf2j24x",
+      "title": "043. Santa's On His Way",
+      "file": "L43.json",
+      "stats": {
+        "sentences": 28,
+        "total": 28,
+        "sentence": 28
+      },
+      "subtitle": "043. Santa's On His Way"
+    },
+    {
+      "order": 44,
+      "id": "scz2ly0mxxkuarwc3sfqf2d8",
+      "title": "044. Count Down - Move",
+      "file": "L44.json",
+      "stats": {
+        "sentences": 24,
+        "total": 24,
+        "word": 20,
+        "sentence": 4
+      },
+      "subtitle": "044. Count Down - Move"
+    },
+    {
+      "order": 45,
+      "id": "zs3knbc9y5r8na27kthopajg",
+      "title": "045. I'm A Little Snowman",
+      "file": "L45.json",
+      "stats": {
+        "sentences": 12,
+        "total": 12,
+        "sentence": 12
+      },
+      "subtitle": "045. I'm A Little Snowman"
+    },
+    {
+      "order": 46,
+      "id": "yzkfyk7140ccmj4hvbqhafa9",
+      "title": "046. Skidamarink",
+      "file": "L46.json",
+      "stats": {
+        "sentences": 16,
+        "total": 16,
+        "sentence": 16
+      },
+      "subtitle": "046. Skidamarink"
+    },
+    {
+      "order": 47,
+      "id": "depdnuf5dnhhixgtx8fsw8lb",
+      "title": "047. My Teddy Bear",
+      "file": "L47.json",
+      "stats": {
+        "sentences": 24,
+        "total": 24,
+        "sentence": 24
+      },
+      "subtitle": "047. My Teddy Bear"
+    },
+    {
+      "order": 48,
+      "id": "p2mtl4qgxmvuqy3whzht6xai",
+      "title": "048. Yes, I Can!",
+      "file": "L48.json",
+      "stats": {
+        "sentences": 25,
+        "total": 25,
+        "sentence": 25
+      },
+      "subtitle": "048. Yes, I Can!"
+    },
+    {
+      "order": 49,
+      "id": "fs99cjx8pk5v00zvrp6gd986",
+      "title": "049. Wag Your Tail",
+      "file": "L49.json",
+      "stats": {
+        "sentences": 23,
+        "total": 23,
+        "sentence": 23
+      },
+      "subtitle": "049. Wag Your Tail"
+    },
+    {
+      "order": 50,
+      "id": "rjeo0u0l9zrbyj3c4gkr0884",
+      "title": "050. What Do You Hear？",
+      "file": "L50.json",
+      "stats": {
+        "sentences": 38,
+        "total": 38,
+        "sentence": 38
+      },
+      "subtitle": "050. What Do You Hear？"
+    }
+  ]
 }

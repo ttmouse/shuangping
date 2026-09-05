@@ -9,157 +9,391 @@
       "order": 1,
       "id": "pfplo0j0cb1o8ojat6r6qb8b",
       "title": "Unit 1 Helping at home-【单词】",
-      "file": "L01.json"
+      "file": "L01.json",
+      "stats": {
+        "sentences": 20,
+        "total": 20,
+        "word": 17,
+        "sentence": 3
+      },
+      "subtitle": "Unit 1 Helping at home-【单词】\n"
     },
     {
       "order": 2,
       "id": "zcrj4038lgtepa3xosv8lw2y",
       "title": "Unit 1 Helping at home--Lesson A-【例句】",
-      "file": "L02.json"
+      "file": "L02.json",
+      "stats": {
+        "sentences": 11,
+        "total": 54,
+        "word": 19,
+        "phrase": 18,
+        "sentence": 11,
+        "chunk": 6
+      },
+      "subtitle": "Unit 1 Helping at home--Lesson A-【例句】\n"
     },
     {
       "order": 3,
       "id": "nb8nkptf2xc7juw3epjke5ih",
       "title": "Unit 1 Helping at home--Lesson B-【例句】",
-      "file": "L03.json"
+      "file": "L03.json",
+      "stats": {
+        "sentences": 20,
+        "total": 92,
+        "word": 35,
+        "phrase": 31,
+        "sentence": 20,
+        "chunk": 6
+      },
+      "subtitle": "Unit 1 Helping at home--Lesson B-【例句】\n"
     },
     {
       "order": 4,
       "id": "j3dl4yd637h2ahnj2oem0mtm",
       "title": "Unit 1 Helping at home--Lesson C-【例句】",
-      "file": "L04.json"
+      "file": "L04.json",
+      "stats": {
+        "sentences": 10,
+        "total": 53,
+        "word": 20,
+        "phrase": 17,
+        "sentence": 10,
+        "chunk": 6
+      },
+      "subtitle": "Unit 1 Helping at home--Lesson C-【例句】\n"
     },
     {
       "order": 5,
       "id": "bskk6zc5a2ds5yc38ya8ckxk",
       "title": "Unit 2 My friends-【单词】",
-      "file": "L05.json"
+      "file": "L05.json",
+      "stats": {
+        "sentences": 14,
+        "total": 14,
+        "word": 14
+      },
+      "subtitle": "Unit 2 My friends-【单词】\n"
     },
     {
       "order": 6,
       "id": "wgb7ysplkg7ur8ds1u986oeb",
       "title": "Unit 2 My friends--Lesson A-【例句】",
-      "file": "L06.json"
+      "file": "L06.json",
+      "stats": {
+        "sentences": 21,
+        "total": 124,
+        "word": 54,
+        "phrase": 25,
+        "sentence": 21,
+        "chunk": 22,
+        "combinedChunks": 2
+      },
+      "subtitle": "Unit 2 My friends--Lesson A-【例句】\n"
     },
     {
       "order": 7,
       "id": "ha2xlhk1eu0ry93masde437l",
       "title": "Unit 2 My friends--Lesson B-【例句】",
-      "file": "L07.json"
+      "file": "L07.json",
+      "stats": {
+        "sentences": 20,
+        "total": 173,
+        "word": 88,
+        "phrase": 27,
+        "sentence": 20,
+        "chunk": 32,
+        "combinedChunks": 6
+      },
+      "subtitle": "Unit 2 My friends--Lesson B-【例句】\n"
     },
     {
       "order": 8,
       "id": "imwh8mr7e6hzuiv7lj27iuze",
       "title": "Unit 2 My friends--Lesson C-【例句】",
-      "file": "L08.json"
+      "file": "L08.json",
+      "stats": {
+        "sentences": 10,
+        "total": 73,
+        "word": 31,
+        "phrase": 14,
+        "sentence": 10,
+        "chunk": 15,
+        "combinedChunks": 3
+      },
+      "subtitle": "Unit 2 My friends--Lesson C-【例句】\n"
     },
     {
       "order": 9,
       "id": "gs6hx9i4rzmtasbtg7m1purn",
       "title": "Unit 3 Places we live in-【单词】",
-      "file": "L09.json"
+      "file": "L09.json",
+      "stats": {
+        "sentences": 18,
+        "total": 18,
+        "word": 17,
+        "sentence": 1
+      },
+      "subtitle": "Unit 3 Places we live in-【单词】\n"
     },
     {
       "order": 10,
       "id": "vnnrjvuqa5yimwxe24ze6poi",
       "title": "Unit 3 Places we live in--Lesson A-【例句】",
-      "file": "L10.json"
+      "file": "L10.json",
+      "stats": {
+        "sentences": 17,
+        "total": 108,
+        "word": 48,
+        "phrase": 27,
+        "sentence": 17,
+        "chunk": 12,
+        "combinedChunks": 4
+      },
+      "subtitle": "Unit 3 Places we live in--Lesson A-【例句】\n"
     },
     {
       "order": 11,
       "id": "feqbpimdhu69u1osuod3pwv6",
       "title": "Unit 3 Places we live in--Lesson B-【例句】",
-      "file": "L11.json"
+      "file": "L11.json",
+      "stats": {
+        "sentences": 14,
+        "total": 117,
+        "word": 57,
+        "phrase": 26,
+        "sentence": 14,
+        "chunk": 19,
+        "combinedChunks": 1
+      },
+      "subtitle": "Unit 3 Places we live in--Lesson B-【例句】\n"
     },
     {
       "order": 12,
       "id": "xtxb8158bf1ky90nrsjjaz5d",
       "title": "Unit 3 Places we live in--Lesson C-【例句】",
-      "file": "L12.json"
+      "file": "L12.json",
+      "stats": {
+        "sentences": 9,
+        "total": 85,
+        "word": 35,
+        "phrase": 17,
+        "sentence": 9,
+        "chunk": 20,
+        "combinedChunks": 4
+      },
+      "subtitle": "Unit 3 Places we live in--Lesson C-【例句】\n"
     },
     {
       "order": 13,
       "id": "gzl2ilbmw8j062nchdciokwq",
       "title": "Unit 4 Helping in the community-【单词】",
-      "file": "L13.json"
+      "file": "L13.json",
+      "stats": {
+        "sentences": 14,
+        "total": 14,
+        "word": 10,
+        "sentence": 4
+      },
+      "subtitle": "Unit 4 Helping in the community-【单词】\n"
     },
     {
       "order": 14,
       "id": "xmyma4a4bs6fwc3potcxsb5f",
       "title": "Unit 4 Helping in the community--Lesson A-【例句】",
-      "file": "L14.json"
+      "file": "L14.json",
+      "stats": {
+        "sentences": 17,
+        "total": 100,
+        "word": 40,
+        "phrase": 29,
+        "sentence": 17,
+        "chunk": 14
+      },
+      "subtitle": "Unit 4 Helping in the community--Lesson A-【例句】\n"
     },
     {
       "order": 15,
       "id": "kg79cdmweqqyophw0vqxbrov",
       "title": "Unit 4 Helping in the community--Lesson B-【例句】",
-      "file": "L15.json"
+      "file": "L15.json",
+      "stats": {
+        "sentences": 14,
+        "total": 103,
+        "word": 32,
+        "phrase": 37,
+        "sentence": 14,
+        "chunk": 19,
+        "combinedChunks": 1
+      },
+      "subtitle": "Unit 4 Helping in the community--Lesson B-【例句】\n"
     },
     {
       "order": 16,
       "id": "f4qmfzgoilr6h9n9pr1cq7uq",
       "title": "Unit 4 Helping in the community--Lesson C-【例句】",
-      "file": "L16.json"
+      "file": "L16.json",
+      "stats": {
+        "sentences": 7,
+        "total": 75,
+        "word": 22,
+        "phrase": 24,
+        "sentence": 7,
+        "chunk": 17,
+        "combinedChunks": 5
+      },
+      "subtitle": "Unit 4 Helping in the community--Lesson C-【例句】\n"
     },
     {
       "order": 17,
       "id": "vjwvslqp9hb6wvxmc0nhfvdu",
       "title": "Unit 5 The weather and us-【单词】",
-      "file": "L17.json"
+      "file": "L17.json",
+      "stats": {
+        "sentences": 24,
+        "total": 24,
+        "word": 24
+      },
+      "subtitle": "Unit 5 The weather and us-【单词】\n"
     },
     {
       "order": 18,
       "id": "hdb42acot4ne5iqub1du2cy4",
       "title": "Unit 5 The weather and us--Lesson A-【例句】",
-      "file": "L18.json"
+      "file": "L18.json",
+      "stats": {
+        "sentences": 20,
+        "total": 156,
+        "word": 81,
+        "phrase": 19,
+        "sentence": 20,
+        "chunk": 30,
+        "combinedChunks": 6
+      },
+      "subtitle": "Unit 5 The weather and us--Lesson A-【例句】\n"
     },
     {
       "order": 19,
       "id": "ugyylb6vvm5dso37z4amm2xd",
       "title": "Unit 5 The weather and us--Lesson B-【例句】",
-      "file": "L19.json"
+      "file": "L19.json",
+      "stats": {
+        "sentences": 14,
+        "total": 126,
+        "word": 56,
+        "phrase": 26,
+        "sentence": 14,
+        "chunk": 23,
+        "combinedChunks": 7
+      },
+      "subtitle": "Unit 5 The weather and us--Lesson B-【例句】\n"
     },
     {
       "order": 20,
       "id": "jvy173wtlaj0ti9xr4qe8a5c",
       "title": "Unit 5 The weather and us--Lesson C-【例句】",
-      "file": "L20.json"
+      "file": "L20.json",
+      "stats": {
+        "sentences": 8,
+        "total": 80,
+        "word": 32,
+        "phrase": 20,
+        "sentence": 8,
+        "chunk": 17,
+        "combinedChunks": 3
+      },
+      "subtitle": "Unit 5 The weather and us--Lesson C-【例句】\n"
     },
     {
       "order": 21,
       "id": "lu1d0idb96r6an94vgcra5pd",
       "title": "Unit 6 Changing for the seasons-【单词】",
-      "file": "L21.json"
+      "file": "L21.json",
+      "stats": {
+        "sentences": 21,
+        "total": 21,
+        "word": 20,
+        "sentence": 1
+      },
+      "subtitle": "Unit 6 Changing for the seasons-【单词】\n"
     },
     {
       "order": 22,
       "id": "rk1g4d2c0vsqktauz52bogsu",
       "title": "Unit 6 Changing for the seasons--Lesson A-【例句】",
-      "file": "L22.json"
+      "file": "L22.json",
+      "stats": {
+        "sentences": 16,
+        "total": 102,
+        "word": 57,
+        "phrase": 17,
+        "sentence": 16,
+        "chunk": 12
+      },
+      "subtitle": "Unit 6 Changing for the seasons--Lesson A-【例句】\n"
     },
     {
       "order": 23,
       "id": "sz63c3t7f52rnr5au56d14hq",
       "title": "Unit 6 Changing for the seasons--Lesson B-【例句】",
-      "file": "L23.json"
+      "file": "L23.json",
+      "stats": {
+        "sentences": 11,
+        "total": 139,
+        "word": 61,
+        "phrase": 27,
+        "sentence": 11,
+        "chunk": 28,
+        "combinedChunks": 12
+      },
+      "subtitle": "Unit 6 Changing for the seasons--Lesson B-【例句】\n"
     },
     {
       "order": 24,
       "id": "szda9bpj0bkaz63znjezu5a2",
       "title": "Unit 6 Changing for the seasons--Lesson C-【例句】",
-      "file": "L24.json"
+      "file": "L24.json",
+      "stats": {
+        "sentences": 9,
+        "total": 80,
+        "word": 28,
+        "phrase": 23,
+        "sentence": 9,
+        "chunk": 17,
+        "combinedChunks": 3
+      },
+      "subtitle": "Unit 6 Changing for the seasons--Lesson C-【例句】\n"
     },
     {
       "order": 25,
       "id": "lm29asby0xvpq9wzmj6vb2qi",
       "title": "Revision Let's help!-【例句】",
-      "file": "L25.json"
+      "file": "L25.json",
+      "stats": {
+        "sentences": 14,
+        "total": 63,
+        "word": 32,
+        "phrase": 15,
+        "sentence": 14,
+        "chunk": 2
+      },
+      "subtitle": "Revision Let's help!--Lesson 1-【例句】\n"
     },
     {
       "order": 26,
       "id": "f1szjwci5juz3wg8jixj7h2c",
       "title": "Revision Let's help!-【例句】",
-      "file": "L26.json"
+      "file": "L26.json",
+      "stats": {
+        "sentences": 10,
+        "total": 105,
+        "word": 41,
+        "phrase": 26,
+        "sentence": 10,
+        "chunk": 22,
+        "combinedChunks": 6
+      },
+      "subtitle": "Revision Let's help!--Lesson 2-【例句】\n"
     }
   ]
 }

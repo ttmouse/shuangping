@@ -10,168 +10,312 @@
       "id": "gahvlzbq8dgurw5qemu6hd8z",
       "title": "Friends S04E01",
       "file": "L01.json",
-      "subtitle": "The One With The Jellyfish - 水母惊情"
+      "subtitle": "The One With The Jellyfish - 水母惊情",
+      "stats": {
+        "sentences": 339,
+        "total": 339,
+        "word": 7,
+        "sentence": 332
+      }
     },
     {
       "order": 2,
       "id": "pjud3o0gos4mr3a2ms2fto42",
       "title": "Friends S04E02",
       "file": "L02.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 340,
+        "total": 340,
+        "word": 6,
+        "sentence": 334
+      }
     },
     {
       "order": 3,
       "id": "ylqx6iutyenusypc1ho4w3vb",
       "title": "Friends S04E03",
       "file": "L03.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 351,
+        "total": 351,
+        "word": 1,
+        "sentence": 350
+      }
     },
     {
       "order": 4,
       "id": "r589qydetsuw0mekviuxdqsc",
       "title": "Friends S04E04",
       "file": "L04.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 329,
+        "total": 329,
+        "word": 3,
+        "sentence": 326
+      }
     },
     {
       "order": 5,
       "id": "h5vb6goz3eydmfcfhlp3vb27",
       "title": "Friends S04E05",
       "file": "L05.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 334,
+        "total": 334,
+        "word": 9,
+        "sentence": 325
+      }
     },
     {
       "order": 6,
       "id": "r44sj58hoyjt6l5knvu2g63i",
       "title": "Friends S04E06",
       "file": "L06.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 325,
+        "total": 325,
+        "word": 4,
+        "sentence": 321
+      }
     },
     {
       "order": 7,
       "id": "el4bweeufdp4vc59l03bbw74",
       "title": "Friends S04E07",
       "file": "L07.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 318,
+        "total": 318,
+        "word": 2,
+        "sentence": 316
+      }
     },
     {
       "order": 8,
       "id": "spb9kjdc97ty0qcvh1thb8va",
       "title": "Friends S04E08",
       "file": "L08.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 342,
+        "total": 342,
+        "word": 5,
+        "sentence": 337
+      }
     },
     {
       "order": 9,
       "id": "iy4wpgrml3miihzc1n3v79sp",
       "title": "Friends S04E09",
       "file": "L09.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 392,
+        "total": 392,
+        "word": 4,
+        "sentence": 388
+      }
     },
     {
       "order": 10,
       "id": "bvrspdnqvtc7nib9alwe05sp",
       "title": "Friends S04E10",
       "file": "L10.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 353,
+        "total": 353,
+        "word": 8,
+        "sentence": 345
+      }
     },
     {
       "order": 11,
       "id": "lljvbm8sbj981qaueqykypvd",
       "title": "Friends S04E11",
       "file": "L11.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 399,
+        "total": 399,
+        "word": 7,
+        "sentence": 392
+      }
     },
     {
       "order": 12,
       "id": "acwvpyhqco1xhflnv659mp6e",
       "title": "Friends S04E12",
       "file": "L12.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 371,
+        "total": 371,
+        "word": 7,
+        "sentence": 364
+      }
     },
     {
       "order": 13,
       "id": "dcrp9dgaclvvssmpwodgfzaj",
       "title": "Friends S04E13",
       "file": "L13.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 407,
+        "total": 407,
+        "word": 5,
+        "sentence": 402
+      }
     },
     {
       "order": 14,
       "id": "q3u2z0oletifekoiscdpby7q",
       "title": "Friends S04E14",
       "file": "L14.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 415,
+        "total": 415,
+        "word": 8,
+        "sentence": 407
+      }
     },
     {
       "order": 15,
       "id": "s5ljepysr6tcx367nkn068rl",
       "title": "Friends S04E15",
       "file": "L15.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 399,
+        "total": 399,
+        "word": 7,
+        "sentence": 392
+      }
     },
     {
       "order": 16,
       "id": "u8cv4zex1vl7k8cmftlizkio",
       "title": "Friends S04E16",
       "file": "L16.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 335,
+        "total": 335,
+        "word": 6,
+        "sentence": 329
+      }
     },
     {
       "order": 17,
       "id": "otvfnxcy4hp1u5lt7yr3pw65",
       "title": "Friends S04E17",
       "file": "L17.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 332,
+        "total": 332,
+        "word": 2,
+        "sentence": 330
+      }
     },
     {
       "order": 18,
       "id": "tuhgvzkkujhqig4g3fzx1281",
       "title": "Friends S04E18",
       "file": "L18.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 379,
+        "total": 379,
+        "word": 5,
+        "sentence": 374
+      }
     },
     {
       "order": 19,
       "id": "x6d8hccxmllf08khu4elbd81",
       "title": "Friends S04E19",
       "file": "L19.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 370,
+        "total": 370,
+        "word": 4,
+        "sentence": 366
+      }
     },
     {
       "order": 20,
       "id": "ju1xqckuim8tiejmlbf7dorg",
       "title": "Friends S04E20",
       "file": "L20.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 349,
+        "total": 349,
+        "word": 8,
+        "sentence": 341
+      }
     },
     {
       "order": 21,
       "id": "lqofzsh0rdc3439rs1bq7lva",
       "title": "Friends S04E21",
       "file": "L21.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 366,
+        "total": 366,
+        "word": 11,
+        "sentence": 355
+      }
     },
     {
       "order": 22,
       "id": "rvgft21v4srswbfr6ghhxq16",
       "title": "Friends S04E22",
       "file": "L22.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 376,
+        "total": 376,
+        "word": 9,
+        "sentence": 367
+      }
     },
     {
       "order": 23,
       "id": "nfhmk16q732lld8gq64yyea6",
       "title": "Friends S04E23",
       "file": "L23.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 404,
+        "total": 404,
+        "word": 5,
+        "sentence": 399
+      }
     },
     {
       "order": 24,
       "id": "uize7ygzomey3m92ixrupqmq",
       "title": "Friends S04E24",
       "file": "L24.json",
-      "subtitle": ""
+      "subtitle": "2025.04.10",
+      "stats": {
+        "sentences": 340,
+        "total": 340,
+        "word": 9,
+        "sentence": 331
+      }
     }
   ]
 }

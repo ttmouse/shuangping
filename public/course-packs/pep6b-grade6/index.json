@@ -9,109 +9,273 @@
       "order": 1,
       "id": "uuf361xvf1ofb1zdkbauoxfp",
       "title": "Unit 1 How tall are you?-【单词】",
-      "file": "L01.json"
+      "file": "L01.json",
+      "stats": {
+        "sentences": 21,
+        "total": 21,
+        "word": 20,
+        "sentence": 1
+      },
+      "subtitle": "Unit 1 How tall are you?-【单词】\n"
     },
     {
       "order": 2,
       "id": "fxa2shi82h73lbmbn1dh0k0i",
       "title": "Unit 1 How tall are you?-Part A--【例句】",
-      "file": "L02.json"
+      "file": "L02.json",
+      "stats": {
+        "sentences": 10,
+        "total": 92,
+        "word": 34,
+        "phrase": 26,
+        "sentence": 10,
+        "chunk": 20,
+        "combinedChunks": 2
+      },
+      "subtitle": "Part A（How tall/old are you?）"
     },
     {
       "order": 3,
       "id": "mlh5vg16s4olnejuazoyuz16",
       "title": "Unit 1 How tall are you?-Part B--【例句】",
-      "file": "L03.json"
+      "file": "L03.json",
+      "stats": {
+        "sentences": 10,
+        "total": 69,
+        "word": 32,
+        "phrase": 15,
+        "sentence": 10,
+        "chunk": 12
+      },
+      "subtitle": "Part B（What size are your shoes? How heavy are you?）"
     },
     {
       "order": 4,
       "id": "x77p1rwlg3iwsi719bjocwzr",
       "title": "Unit 1 How tall are you?-Part C--【例句】",
-      "file": "L04.json"
+      "file": "L04.json",
+      "stats": {
+        "sentences": 7,
+        "total": 67,
+        "word": 23,
+        "phrase": 23,
+        "sentence": 7,
+        "chunk": 13,
+        "combinedChunks": 1
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 5,
       "id": "ahiwmv106y92zfypfqohp7sm",
       "title": "Unit 2 Last weekend-【单词】",
-      "file": "L05.json"
+      "file": "L05.json",
+      "stats": {
+        "sentences": 24,
+        "total": 24,
+        "word": 23,
+        "sentence": 1
+      },
+      "subtitle": "Unit 2 Last weekend-【单词】\n"
     },
     {
       "order": 6,
       "id": "v1f9l2c7wlx78vfq30g3p773",
       "title": "Unit 2 Last weekend-Part A--【例句】",
-      "file": "L06.json"
+      "file": "L06.json",
+      "stats": {
+        "sentences": 10,
+        "total": 118,
+        "word": 52,
+        "phrase": 26,
+        "sentence": 10,
+        "chunk": 23,
+        "combinedChunks": 7
+      },
+      "subtitle": "Part A（How was your weekend?）"
     },
     {
       "order": 7,
       "id": "jzs87lcuj5vrx99rqnaq7rda",
       "title": "Unit 2 Last weekend-Part B--【例句】",
-      "file": "L07.json"
+      "file": "L07.json",
+      "stats": {
+        "sentences": 10,
+        "total": 127,
+        "word": 51,
+        "phrase": 28,
+        "sentence": 10,
+        "chunk": 29,
+        "combinedChunks": 9
+      },
+      "subtitle": "Part B（What did you do last weekend?）"
     },
     {
       "order": 8,
       "id": "xif5rr21o625dshzk7fnppsy",
       "title": "Unit 2 Last weekend-Part C--【例句】",
-      "file": "L08.json"
+      "file": "L08.json",
+      "stats": {
+        "sentences": 6,
+        "total": 63,
+        "word": 25,
+        "phrase": 14,
+        "sentence": 6,
+        "chunk": 14,
+        "combinedChunks": 4
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 9,
       "id": "krhq7cve1xf7rdnox53kx7kh",
       "title": "Unit 3 Where did you go?-【单词】",
-      "file": "L09.json"
+      "file": "L09.json",
+      "stats": {
+        "sentences": 24,
+        "total": 24,
+        "word": 20,
+        "sentence": 4
+      },
+      "subtitle": "Unit 3 Where did you go?-【单词】\n"
     },
     {
       "order": 10,
       "id": "ubmkuspfcnskwtf5ca31042u",
       "title": "Unit 3 Where did you go?-Part A--【例句】",
-      "file": "L10.json"
+      "file": "L10.json",
+      "stats": {
+        "sentences": 10,
+        "total": 109,
+        "word": 51,
+        "phrase": 22,
+        "sentence": 10,
+        "chunk": 23,
+        "combinedChunks": 3
+      },
+      "subtitle": "Part A（What happened? Where did you go?）"
     },
     {
       "order": 11,
       "id": "draq479e6zdvcd2c5xsxr6rh",
       "title": "Unit 3 Where did you go?-Part B--【例句】",
-      "file": "L11.json"
+      "file": "L11.json",
+      "stats": {
+        "sentences": 10,
+        "total": 103,
+        "word": 46,
+        "phrase": 21,
+        "sentence": 10,
+        "chunk": 23,
+        "combinedChunks": 3
+      },
+      "subtitle": "Part B（How did you go there? What did you do?）"
     },
     {
       "order": 12,
       "id": "t8pu6zoo302ma77qitws46gy",
       "title": "Unit 3 Where did you go?-Part C--【例句】",
-      "file": "L12.json"
+      "file": "L12.json",
+      "stats": {
+        "sentences": 7,
+        "total": 77,
+        "word": 32,
+        "phrase": 18,
+        "sentence": 7,
+        "chunk": 16,
+        "combinedChunks": 4
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 13,
       "id": "kqz7e4oc0hj7v50kaxkv13o5",
       "title": "Unit 4 Then and now-【单词】",
-      "file": "L13.json"
+      "file": "L13.json",
+      "stats": {
+        "sentences": 22,
+        "total": 22,
+        "word": 19,
+        "sentence": 3
+      },
+      "subtitle": "Unit 4 Then and now-【单词】\n"
     },
     {
       "order": 14,
       "id": "k3vww0a4c00fu8z5q5do8mdg",
       "title": "Unit 4 Then and now-Part A--【例句】",
-      "file": "L14.json"
+      "file": "L14.json",
+      "stats": {
+        "sentences": 10,
+        "total": 111,
+        "word": 49,
+        "phrase": 26,
+        "sentence": 10,
+        "chunk": 21,
+        "combinedChunks": 5
+      },
+      "subtitle": "Part A（Changes in schools）"
     },
     {
       "order": 15,
       "id": "wi8dkdv669wf6apmu4mmbouv",
       "title": "Unit 4 Then and now-Part B--【例句】",
-      "file": "L15.json"
+      "file": "L15.json",
+      "stats": {
+        "sentences": 10,
+        "total": 101,
+        "word": 57,
+        "phrase": 16,
+        "sentence": 10,
+        "chunk": 17,
+        "combinedChunks": 1
+      },
+      "subtitle": "Part B（Changes in people）"
     },
     {
       "order": 16,
       "id": "m77liqkdqghya8tbnz0mtxov",
       "title": "Unit 4 Then and now-Part C--【例句】",
-      "file": "L16.json"
+      "file": "L16.json",
+      "stats": {
+        "sentences": 8,
+        "total": 90,
+        "word": 42,
+        "phrase": 20,
+        "sentence": 8,
+        "chunk": 18,
+        "combinedChunks": 2
+      },
+      "subtitle": "Part C（optional）"
     },
     {
       "order": 17,
       "id": "sgwhkfrmbl9k1x7413co61cb",
       "title": "Review Units 1-4--【单词】",
-      "file": "L17.json"
+      "file": "L17.json",
+      "stats": {
+        "sentences": 40,
+        "total": 40,
+        "word": 32,
+        "sentence": 8
+      },
+      "subtitle": "Recycle Mike’s happy days"
     },
     {
       "order": 18,
       "id": "laanta83vdsv0o9bbyzz5amk",
       "title": "Recycle Mike’s happy days--【例句】",
-      "file": "L18.json"
+      "file": "L18.json",
+      "stats": {
+        "sentences": 10,
+        "total": 96,
+        "word": 28,
+        "phrase": 30,
+        "sentence": 10,
+        "chunk": 24,
+        "combinedChunks": 4
+      },
+      "subtitle": "Recycle Mike’s happy days"
     }
   ]
 }
