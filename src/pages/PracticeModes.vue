@@ -307,9 +307,8 @@
               <template v-if="packBrowseLevel === 'courses' && activePack">
                 <div class="packBrowser">
                   <div class="packTitle">
-                    <button class="btn storyBackBtn" @click="backToPacks" data-nav>
-                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-                      返回课包
+                    <button class="storyBackBtn" @click="backToPacks" data-nav title="返回课包">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5l9-7 9 7V20a1.5 1.5 0 0 1-1.5 1.5h-5V15h-5v6.5H4.5A1.5 1.5 0 0 1 3 20z"/></svg>
                     </button>
                     <span class="packTitleText">{{ activePack.title }}</span>
                     <span v-if="activePack.courses?.length" class="packChip" title="课包内课程数">{{ activePack.courses.length }} 课</span>
@@ -3487,6 +3486,13 @@ function onKeyDown(e) {
   // 按压高亮：任何字母键按下即显示（纯视觉，与输入逻辑无关）
   if (keyByCode.has(e.code)) keyPressed.add(e.code)
 
+  // 自定义短文编辑弹窗：Esc 关闭（浮层是最高优先，先于练习态处理）
+  if (customEditorOpen.value && e.key === 'Escape') {
+    e.preventDefault()
+    customEditorOpen.value = false
+    return
+  }
+
   // 句子跳转输入框打开：放行所有按键（数字/退格/箭头等由输入框原生处理），避免被练习输入逻辑拦截
   if (enSentenceJumpOpen.value) {
     const tag = document.activeElement?.tagName
@@ -3520,6 +3526,12 @@ function onKeyDown(e) {
     if (activeTag === 'TEXTAREA' || activeTag === 'INPUT') return
     // 方向键：键盘导航专用，不开始练习
     if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return
+    // 课包课程列表浏览态：Esc 回到上级（课包列表首页）
+    if (mode.value === 'stories' && packBrowseLevel.value === 'courses' && e.key === 'Escape') {
+      e.preventDefault()
+      backToPacks()
+      return
+    }
     // 短文浏览模式 / 错词本模式：不在此处按任意键开始，需点击具体按钮
     if (mode.value === 'stories') return
     if (mode.value === 'mistake-book') return
@@ -4092,15 +4104,15 @@ onBeforeUnmount(() => {
   color: var(--theme-text-color);
   opacity: 1;
 }
+/* 返回课包：纯图标小按钮（home 回到课包首页），不再是宽按钮 */
 .storyBackBtn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  height: 28px;
-  padding: 0 11px 0 8px;
-  font-size: 12.5px;
-  font-weight: 500;
-  border-radius: 9px;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 8px;
   border: 1px solid var(--theme-border-color);
   background: var(--theme-background-light-color);
   color: var(--theme-menu-text-color);
@@ -4113,9 +4125,8 @@ onBeforeUnmount(() => {
   border-color: var(--theme-menu-hover-color);
   background: color-mix(in srgb, var(--theme-menu-hover-color) 8%, var(--theme-background-light-color));
   color: var(--theme-main-text-color);
-  transform: translateX(-1px);
 }
-.storyBackBtn:active { transform: translateX(0) scale(.97); }
+.storyBackBtn:active { transform: scale(.94); }
 .storyBackBtn:focus-visible {
   outline: 2px solid var(--theme-menu-hover-color);
   outline-offset: 2px;
@@ -4471,7 +4482,8 @@ onBeforeUnmount(() => {
   .packCard:active {
     transform: none;
   }
-  .storyBackBtn:hover {
+  .storyBackBtn:hover,
+  .storyBackBtn:active {
     transform: none;
   }
 }
@@ -4747,84 +4759,69 @@ onBeforeUnmount(() => {
 /* 默写模式：未输入的字母隐藏为横线（透明度与普通未输入字母一致） */
 .word-box .letter.hidden {
   color: transparent;
-  opacity: 0.17;
-  border-bottom-color: var(--theme-text-color);
 }
 /* 字母槽线常驻：未输入/已输入/标点等都保留同一条底部线（输入前后样式一致）。
    仅在正在输入的那一格(current/dict-current)短暂用主题色强调，打完后回归常线 */
-.word-box .letter { color: var(--theme-text-color); opacity: 0.17; border-bottom: 5px solid color-mix(in srgb, var(--theme-text-color) 30%, transparent); transition: color .12s ease, opacity .12s ease, border-color .12s ease; }
-/* 默写隐藏态禁止颜色/透明度过渡：槽内文本常驻（宽度/底线稳定），退格把错误字符换回目标字母时
+.word-box .letter { color: color-mix(in srgb, var(--theme-text-color) 17%, transparent); border-bottom: 5px solid color-mix(in srgb, var(--theme-text-color) 30%, transparent); transition: color .12s ease, border-color .12s ease; }
+/* 默写隐藏态禁止颜色过渡：槽内文本常驻（宽度/底线稳定），退格把错误字符换回目标字母时
    class 翻转若带 0.12s 过渡，会经半透明中间态把目标字母闪现出来 → 进出隐藏态必须瞬时切换 */
 .word-box .letter.hidden,
 .word-box .letter.dict-current {
   transition: none;
 }
 /* 标点字符（并入单词）：灰色显示，不参与着色/默写隐藏 */
-.word-box .letter.punct { color: var(--text-muted, #999); opacity: 0.55; }
+.word-box .letter.punct { color: color-mix(in srgb, #999 55%, transparent); }
 /* 标点字符：已输入（正确）→ 深灰实色 */
-.word-box .letter.punct-done { color: var(--text-muted, #777); opacity: 0.95; }
+.word-box .letter.punct-done { color: color-mix(in srgb, #777 95%, transparent); }
 /* 标点字符：当前位置（等待输入）→ 主题色高亮 */
-.word-box .letter.punct-current { color: var(--theme-accent, #4a90d9); opacity: 1; }
+.word-box .letter.punct-current { color: var(--theme-accent, #4a90d9); }
 /* 词根分段：未输入字母按 前缀/词根/后缀 渲染不同深浅灰色 */
 /* 词根分段：不同色相的灰色区分（冷灰=前缀，中性=第一个词根，青绿灰=后续词根，暖灰=后缀） */
-.word-box .letter.seg-pre { color: #8fa8c9; opacity: 0.55; }
-.word-box .letter.seg-root { color: #c2c2c2; opacity: 0.8; }
-.word-box .letter.seg-root2 { color: #8fb8ab; opacity: 0.75; }
-.word-box .letter.seg-suf { color: #c9a88a; opacity: 0.55; }
+.word-box .letter.seg-pre { color: color-mix(in srgb, #8fa8c9 55%, transparent); }
+.word-box .letter.seg-root { color: color-mix(in srgb, #c2c2c2 80%, transparent); }
+.word-box .letter.seg-root2 { color: color-mix(in srgb, #8fb8ab 75%, transparent); }
+.word-box .letter.seg-suf { color: color-mix(in srgb, #c9a88a 55%, transparent); }
 /* 音节着色：不同色相区分发音块（syl-0~syl-4 循环），未输入字母半透明 */
-.word-box .letter.syl-0 { color: #5b9bd5; }
-.word-box .letter.syl-1 { color: #70ad47; }
-.word-box .letter.syl-2 { color: #ed7d31; }
-.word-box .letter.syl-3 { color: #9b59b6; }
-.word-box .letter.syl-4 { color: #e74c3c; }
-.word-box .letter.syl-0,
-.word-box .letter.syl-1,
-.word-box .letter.syl-2,
-.word-box .letter.syl-3,
-.word-box .letter.syl-4 {
-  opacity: 0.55;
-}
+.word-box .letter.syl-0 { color: color-mix(in srgb, #5b9bd5 55%, transparent); }
+.word-box .letter.syl-1 { color: color-mix(in srgb, #70ad47 55%, transparent); }
+.word-box .letter.syl-2 { color: color-mix(in srgb, #ed7d31 55%, transparent); }
+.word-box .letter.syl-3 { color: color-mix(in srgb, #9b59b6 55%, transparent); }
+.word-box .letter.syl-4 { color: color-mix(in srgb, #e74c3c 55%, transparent); }
 /* 已完成词在音节模式下：保留音节色，不降为深灰 */
-.word-col.completed .word-box .letter.syl-0,
-.word-col.completed .word-box .letter.syl-1,
-.word-col.completed .word-box .letter.syl-2,
-.word-col.completed .word-box .letter.syl-3,
-.word-col.completed .word-box .letter.syl-4 {
-  opacity: 0.75;
-}
-.word-box .letter.correct { color: var(--theme-main-text-color); opacity: 1; }
+.word-col.completed .word-box .letter.syl-0 { color: color-mix(in srgb, #5b9bd5 75%, transparent); }
+.word-col.completed .word-box .letter.syl-1 { color: color-mix(in srgb, #70ad47 75%, transparent); }
+.word-col.completed .word-box .letter.syl-2 { color: color-mix(in srgb, #ed7d31 75%, transparent); }
+.word-col.completed .word-box .letter.syl-3 { color: color-mix(in srgb, #9b59b6 75%, transparent); }
+.word-col.completed .word-box .letter.syl-4 { color: color-mix(in srgb, #e74c3c 75%, transparent); }
+.word-box .letter.correct { color: var(--theme-main-text-color); }
 /* 重练词（出错后自动补练）：完成后的字母用暖橙色区分，与正常完成词颜色不同 */
 .word-col.redo .word-box .letter.correct {
-  color: #e6a23c;
-  opacity: 0.95;
+  color: color-mix(in srgb, #e6a23c 95%, transparent);
 }
 .word-box .letter.current {
-  /* 当前位置：半透文字 + 淡背景 + 中性线 */
+  /* 当前位置：半透文字 + 主题色淡背景 + 主题色线（与 dict-current 统一） */
   color: color-mix(in srgb, var(--theme-main-text-color) 20%, transparent);
-  opacity: 1;
-  border-bottom: 5px solid var(--theme-border-color);
-  background: color-mix(in srgb, var(--theme-border-color) 12%, transparent);
+  border-bottom: 5px solid var(--theme-menu-hover-color);
+  background: color-mix(in srgb, var(--theme-menu-hover-color) 12%, transparent);
   border-radius: 3px;
 }
 .word-box .letter.dict-current {
   /* 默写·关闭当前字母提示：字母隐藏（仅下划线 + 淡背景定位输入位置） */
   color: transparent;
-  opacity: 1;
   border-bottom: 5px solid var(--theme-menu-hover-color);
   background: color-mix(in srgb, var(--theme-menu-hover-color) 12%, transparent);
   border-radius: 3px;
 }
 /* 答案揭示后（revealed）：仅文字可见，保留原状态的背景和下划线不变 */
-.word-box .letter.hidden.revealed { color: var(--theme-text-color); opacity: 0.17; }
+.word-box .letter.hidden.revealed { color: color-mix(in srgb, var(--theme-text-color) 17%, transparent); }
 .word-box .letter.dict-current.revealed { color: color-mix(in srgb, var(--theme-main-text-color) 20%, transparent); }
 .word-box .letter.incorrect {
   color: #f56c6c;
-  opacity: 1;
   border-bottom: 5px solid #f56c6c;
 }
 /* 当前位打错：保留 current 的淡背景和圆角，仅文字和下划线变红（背景不闪没） */
 .word-box .letter.current.incorrect {
-  background: color-mix(in srgb, var(--theme-border-color) 12%, transparent);
+  background: color-mix(in srgb, var(--theme-menu-hover-color) 12%, transparent);
   border-radius: 3px;
 }
 .enProgress { font-size: 14px; color: var(--theme-text-color); display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: auto; }
