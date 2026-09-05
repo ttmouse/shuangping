@@ -10,33 +10,8 @@
 
     <div class="pageCenter">
       <div class="tipsTextContent">
-        <!-- 英文进行中：顶部显示进度/提示（替换无意义描述文案） -->
-        <template v-if="isEnPractice && started">
-          <div class="enProgHeader">
-            <h1 class="enProgTitle">
-              第
-              <template v-if="enSentenceJumpOpen">
-                <input
-                  ref="enJumpInput"
-                  class="enJumpInput"
-                  type="number"
-                  v-model.number="enSentenceJumpTarget"
-                  min="1"
-                  :max="enQueue.length"
-                  @keydown.enter="jumpToSentence"
-                  @blur="jumpToSentence"
-                  @keydown.escape="enSentenceJumpOpen = false"
-                />
-              </template>
-              <span v-else class="enJumpSentence" @click="openEnJumpInput">{{ sentenceIdx + 1 }}</span>
-              / {{ enQueue.length }} 句
-              <span v-if="wordIdx < enSentence.length">· 第 {{ wordIdx + 1 }} / {{ enSentence.length }} 词</span>
-              <span v-else>· 本句完成</span>
-            </h1>
-            <h2 class="enProgHint">{{ enSentenceDone ? '（本句完成，按 空格/回车 进入下一句）' : (((dictWords.has(currentWord) || settings.enDisplayMode === 'dictation') && settings.enDisplayMode !== 'guide') && !enHadError ? '（默写：看中文打英文，打错会显示单词）' : '（空格/回车 进入下一词）') }}</h2>
-          </div>
-        </template>
-        <template v-else>
+        <!-- 英文进行中：句进度已并入底部指标条（句 3/18），顶部不再单独展示 -->
+        <template v-if="!(isEnPractice && started)">
           <h1>{{ activeModeLabel }}</h1>
           <h2>{{ activeModeDesc }}</h2>
         </template>
@@ -65,33 +40,6 @@
           data-nav
           title="切换练习模式"
         ><svg class="enModeDicIcon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 14-2 2-2-2"/><path d="M18 8v8"/></svg><span>{{ enDictationMode ? '听写' : '中译英' }}</span></button>
-        <span class="enModeSep">|</span>
-        <div class="enModeDispBox">
-          <button
-            class="enModeDispChip"
-            :class="{ open: enDispPanelOpen }"
-            @click="enDispPanelOpen = !enDispPanelOpen"
-            data-nav
-            title="显示模式"
-          >
-            <svg class="enModeDispIcon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/></svg>
-            <span>{{ enDispLabel }}</span>
-            <svg class="enModeDispCaret" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
-          </button>
-          <div v-if="enDispPanelOpen" class="enModeDispPanel">
-            <button
-              v-for="opt in EN_DISPLAY_OPTIONS"
-              :key="opt.key"
-              class="enModeDispOpt"
-              :class="{ active: settings.enDisplayMode === opt.key }"
-              @click="settings.setEnDisplayMode(opt.key); enDispPanelOpen = false"
-              data-nav
-            >
-              <span class="enModeDispOptLabel">{{ opt.label }}</span>
-              <span class="enModeDispOptDesc">{{ opt.desc }}</span>
-            </button>
-          </div>
-        </div>
         <span class="enModeSep">|</span>
         <span class="enModeOptChips">
           <span class="enModeOptChipWrap">
@@ -828,6 +776,27 @@
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
       </button>
+      <!-- 句进度指标：点击数字可跳转句子（与顶栏切句箭头互补） -->
+      <div class="bsItem bsSentence" title="点击跳转句子" @click="openEnJumpInput">
+        <span class="bsValue">
+          <template v-if="enSentenceJumpOpen">
+            <input
+              ref="enJumpInput"
+              class="enJumpInput"
+              type="number"
+              v-model.number="enSentenceJumpTarget"
+              min="1"
+              :max="enQueue.length"
+              @keydown.enter="jumpToSentence"
+              @blur="jumpToSentence"
+              @keydown.escape="enSentenceJumpOpen = false"
+              @click.stop
+            />
+          </template>
+          <template v-else>{{ sentenceIdx + 1 }}/{{ enQueue.length }}</template>
+        </span>
+        <span class="bsLabel">句</span>
+      </div>
       <div class="bsItem">
         <span class="bsValue">{{ accuracy }}%</span>
         <span class="bsLabel">正确率</span>
@@ -5105,17 +5074,6 @@ onBeforeUnmount(() => {
 }
 .enProgress { font-size: 14px; color: var(--theme-text-color); display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: auto; }
 .enHint { font-size: 13px; color: var(--theme-rich-text-color); }
-/* 顶部进度标题（英文进行中）左栏 + 右上角模式 chip */
-.enProgHeader {
-  flex: 1;
-  min-width: 0;
-}
-.enProgTitle {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--theme-main-text-color);
-}
-.enProgTitle span { font-weight: normal; color: var(--theme-text-secondary, #6b7280); }
 /* 右上角模式切换（句乐部样式：紫色半透明 chip，点击弹面板）
    定位父级 .app（全屏 flex 列容器）：练习进行中时固定右上角 */
 .enModeBox {
@@ -5350,22 +5308,12 @@ onBeforeUnmount(() => {
   gap: 6px;
 }
 
-/* 句子跳转：当前句号可点击进入直接输入模式 */
-.enJumpSentence {
-  display: inline-block;
-  padding: 0 2px;
-  border-bottom: 1px dashed var(--theme-border-color);
-  cursor: text;
-  font-weight: 600;
-  color: var(--theme-main-text-color);
-  min-width: 1.2em;
-  text-align: center;
-}
+/* 句子跳转输入框（底部指标「句」内联输入目标句号） */
 .enJumpInput {
-  width: 3.2em;
+  width: 3em;
   padding: 1px 4px;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
   text-align: center;
   border-radius: 6px;
   border: 1px solid var(--theme-menu-hover-color);
@@ -5373,7 +5321,6 @@ onBeforeUnmount(() => {
   color: var(--theme-main-text-color);
   outline: none;
 }
-.enProgHint { font-size: 13px; color: var(--theme-rich-text-color); }
 .enActionBtn {
   font-size: 12px;
   padding: 3px 8px;
@@ -6100,6 +6047,9 @@ onBeforeUnmount(() => {
 .bsValue { display: block; font-size: 18px; font-weight: 700; color: var(--theme-main-text-color); font-variant-numeric: tabular-nums; }
 .bsValue small { font-size: 12px; color: var(--theme-text-color); }
 .bsLabel { font-size: 11px; color: var(--theme-text-color); }
+/* 底部「句」指标：可点击跳转句子 */
+.bsSentence { cursor: pointer; }
+.bsSentence:hover .bsValue { color: var(--theme-menu-hover-color); }
 /* 底部指标条两侧的切句箭头（上一句/下一句） */
 .bsArrow {
   display: inline-flex;

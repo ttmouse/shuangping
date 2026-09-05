@@ -727,7 +727,7 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 160px;
+  /* 标题尽量完整展示：不设固定宽度上限；空间不足时由 .left 横向滚动兜底，而非裁剪标题 */
 }
 .courseCrumbSep { color: var(--theme-rich-text-color); flex-shrink: 0; font-size: 16px; }
 .courseCrumbCourse {
@@ -736,7 +736,6 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 220px;
 }
 .courseNav {
   display: flex;
