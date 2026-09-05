@@ -20,25 +20,60 @@
       <!-- 英文练习（单词/短文/错词本）：右上角模式切换 chip（句乐部样式：🔒 初级）—— 定位在页面右上角；难度档位为课包专属 -->
       <div v-if="isEnPractice && started" class="enModeBox" @click.stop>
         <template v-if="mode === 'stories' && julebuFullQueue.length">
-          <button
-            class="enModeChip"
-            :class="{ open: enModePanelOpen }"
-            @click="enModePanelOpen = !enModePanelOpen"
-            data-nav
-            title="练习模式"
-          >
-            <svg class="enModeLock" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-            <span>{{ enDifficultyLabel }}</span>
-            <svg class="enModeCaret" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
-          </button>
+          <div class="enModeDiffBox">
+            <button
+              class="enModeChip"
+              :class="{ open: enModePanelOpen }"
+              @click="enModePanelOpen = !enModePanelOpen"
+              v-qtip
+              data-tip="练习模式"
+              data-nav
+            >
+              <svg class="enModeLock" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+              <span>{{ enDifficultyLabel }}</span>
+              <svg class="enModeCaret" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <!-- 下拉面板：档位 + 自定义类型勾选（课包专属），对齐「初级」按钮 -->
+            <div v-if="enModePanelOpen" class="enModePanel">
+              <button
+                v-for="opt in DIFFICULTY_OPTIONS_WITH_COUNT"
+                :key="opt.key"
+                class="enModeDispOpt"
+                :class="{ active: enDifficulty === opt.key }"
+                :disabled="!opt.count"
+                @click="switchEnDifficulty(opt.key)"
+                data-nav
+              >
+                <span class="enModeDispOptRow">
+                  <span class="enModeDispOptLabel">{{ opt.label }}</span>
+                  <span class="enModeDispOptMeta">{{ opt.count }}</span>
+                </span>
+                <span class="enModeDispOptDesc">{{ opt.desc }}</span>
+              </button>
+              <div class="enModeDictateDivider"></div>
+              <button
+                v-for="opt in CUSTOM_TYPE_OPTIONS_FILTERED"
+                :key="opt.key"
+                class="enModeDispOpt"
+                @click="selectCustomType(opt.key)"
+                data-nav
+              >
+                <span class="enModeDispOptRow">
+                  <span class="enModeDispOptLabel">{{ opt.label }}</span>
+                  <span class="enModeDispOptMeta">{{ opt.count }}</span>
+                </span>
+              </button>
+            </div>
+          </div>
           <span class="enModeSep">|</span>
         </template>
         <button
           class="enModeDicChip"
           :class="{ dictation: enDictationMode }"
           @click="toggleEnDictationMode()"
+          v-qtip
+          data-tip="切换练习模式"
           data-nav
-          title="切换练习模式"
         ><svg class="enModeDicIcon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 14-2 2-2-2"/><path d="M18 8v8"/></svg><span>{{ enDictationMode ? '听写' : '中译英' }}</span></button>
         <span class="enModeSep">|</span>
         <span class="enModeOptChips">
@@ -47,8 +82,9 @@
               class="enModeDicChip"
               :class="{ dictation: settings.enShowWordCn }"
               @click="settings.toggleEnShowWordCn()"
+              v-qtip
+              data-tip="单词上方显示中文释义"
               data-nav
-              title="单词上方显示中文释义"
             ><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/></svg><span>{{ settings.enShowWordCn ? '释义' : '隐藏' }}</span></button>
           </span>
           <span class="enModeSep">|</span>
@@ -57,8 +93,9 @@
               class="enModeDicChip"
               :class="{ dictation: settings.enRedoPractice }"
               @click="settings.toggleEnRedoPractice()"
+              v-qtip
+              data-tip="打错的单词重新入队重练"
               data-nav
-              title="打错的单词重新入队重练"
             ><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg><span>{{ settings.enRedoPractice ? '重练' : '跳过' }}</span></button>
           </span>
           <span class="enModeSep">|</span>
@@ -67,44 +104,12 @@
               class="enModeDicChip"
               :class="{ dictation: settings.enGentleMode }"
               @click="settings.toggleEnGentleMode()"
+              v-qtip
+              data-tip="输入过程中不判错，整词完成后统一判断"
               data-nav
-              title="输入过程中不判错，整词完成后统一判断"
             ><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg><span>{{ settings.enGentleMode ? '宽松' : '严格' }}</span></button>
           </span>
         </span>
-        <template v-if="mode === 'stories' && julebuFullQueue.length">
-        <!-- 下拉面板：档位 + 自定义类型勾选（课包专属） -->
-        <div v-if="enModePanelOpen" class="enModePanel">
-          <button
-            v-for="opt in DIFFICULTY_OPTIONS_WITH_COUNT"
-            :key="opt.key"
-            class="enModeDispOpt"
-            :class="{ active: enDifficulty === opt.key }"
-            :disabled="!opt.count"
-            @click="switchEnDifficulty(opt.key)"
-            data-nav
-          >
-            <span class="enModeDispOptRow">
-              <span class="enModeDispOptLabel">{{ opt.label }}</span>
-              <span class="enModeDispOptMeta">{{ opt.count }}</span>
-            </span>
-            <span class="enModeDispOptDesc">{{ opt.desc }}</span>
-          </button>
-          <div class="enModeDictateDivider"></div>
-          <button
-            v-for="opt in CUSTOM_TYPE_OPTIONS_FILTERED"
-            :key="opt.key"
-            class="enModeDispOpt"
-            @click="selectCustomType(opt.key)"
-            data-nav
-          >
-            <span class="enModeDispOptRow">
-              <span class="enModeDispOptLabel">{{ opt.label }}</span>
-              <span class="enModeDispOptMeta">{{ opt.count }}</span>
-            </span>
-          </button>
-        </div>
-        </template>
       </div>
 
       <!-- 未开始且无配置区的模式：轻提示（不拦截输入，直接打字即开始） -->
@@ -146,7 +151,7 @@
                 <div v-for="(wd, wi) in g.words" :key="wi" class="spUnit">
                   <span class="spPh">{{ wd.ph }}</span>
                   <span class="spCell">
-                    <span class="spWord" title="点击查看单词详情" @click.stop="openWordCard($event, wd)">{{ wd.word }}<span class="spUl" :style="{ backgroundColor: wd.posColor }"></span></span><span v-if="wd.punct" class="spPunct">{{ wd.punct }}</span>
+                    <span class="spWord" v-qtip data-tip="点击查看单词详情" @click.stop="openWordCard($event, wd)">{{ wd.word }}<span class="spUl" :style="{ backgroundColor: wd.posColor }"></span></span><span v-if="wd.punct" class="spPunct">{{ wd.punct }}</span>
                   </span>
                   <span class="spDef">{{ wd.def }}</span>
                   <span class="spPos">{{ wd.posCn }}</span>
@@ -242,7 +247,7 @@
         <template v-else-if="mode === 'words'">
           <div class="enStage">
             <div class="enGradeRow">
-              <select class="enGradeSelect" :value="settings.enGrade" @change="onEnGradeChange" title="英文词库年级">
+              <select class="enGradeSelect" :value="settings.enGrade" @change="onEnGradeChange" v-qtip data-tip="英文词库年级">
                 <option value="all">全部词库</option>
                 <option value="g4">四年级</option>
                 <option value="g5">五年级</option>
@@ -261,7 +266,7 @@
               <template v-if="packBrowseLevel === 'courses' && activePack">
                 <div class="packBrowser">
                   <div class="packTitle">
-                    <button class="storyBackBtn" @click="backToPacks" data-nav title="返回课包">
+                    <button class="storyBackBtn" @click="backToPacks" v-qtip data-tip="返回课包" data-nav>
                       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5l9-7 9 7V20a1.5 1.5 0 0 1-1.5 1.5h-5V15h-5v6.5H4.5A1.5 1.5 0 0 1 3 20z"/></svg>
                       <span>返回</span>
                     </button>
@@ -358,7 +363,7 @@
                   <div class="customModal">
                     <div class="customModalHead">
                       <span>{{ editingCustomId ? '编辑自定义' : '新增自定义' }}</span>
-                      <span class="customModalClose" title="关闭" @click="customEditorOpen = false">×</span>
+                      <span class="customModalClose" v-qtip data-tip="关闭" @click="customEditorOpen = false">×</span>
                     </div>
                     <input v-model="newCustomTitle" placeholder="给这组内容起个名字（可留空）" class="customTitleInput" />
                     <textarea v-model="newCustomText" placeholder="粘贴英文内容（可中英对照，每句一行，中文行自动配为翻译）" rows="5"></textarea>
@@ -374,8 +379,8 @@
                       <span class="storyTitle">{{ s.title }}</span>
                       <span class="storyMeta">{{ s.sentences.length }} 句 · 自定义{{ s.firstLine ? ' · ' + s.firstLine.slice(0, 28) + (s.firstLine.length > 28 ? '…' : '') : '' }}</span>
                     </button>
-                    <button class="storyEdit" title="编辑" @click="editCustomStory(s.id)">✎</button>
-                    <button class="storyDel" title="删除" @click="removeEnCustomStory(s.id)">×</button>
+                    <button class="storyEdit" v-qtip data-tip="编辑" @click="editCustomStory(s.id)">✎</button>
+                    <button class="storyDel" v-qtip data-tip="删除" @click="removeEnCustomStory(s.id)">×</button>
                   </div>
                 </div>
                 <!-- 主题课包（julebu 课程）浏览：课包列表 -->
@@ -770,14 +775,15 @@
         v-if="enHasSentenceNav"
         class="bsArrow"
         :disabled="sentenceIdx < 1"
-        title="上一个句子"
+        v-qtip
+        data-tip="上一个句子"
         aria-label="上一个句子"
         @click="arrowJumpSentence(-1)"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
       </button>
       <!-- 句进度指标：点击数字可跳转句子（与顶栏切句箭头互补） -->
-      <div class="bsItem bsSentence" title="点击跳转句子" @click="openEnJumpInput">
+      <div class="bsItem bsSentence" v-qtip data-tip="点击跳转句子" @click="openEnJumpInput">
         <span class="bsValue">
           <template v-if="enSentenceJumpOpen">
             <input
@@ -817,7 +823,8 @@
         v-if="enHasSentenceNav"
         class="bsArrow"
         :disabled="sentenceIdx >= enQueue.length - 1"
-        title="下一个句子"
+        v-qtip
+        data-tip="下一个句子"
         aria-label="下一个句子"
         @click="arrowJumpSentence(1)"
       >
@@ -831,8 +838,8 @@
     <div v-if="wordCard" class="pm-wordcard" :style="{ left: wordCard.x + 'px', top: wordCard.y + 'px' }" @click.stop>
       <div class="pm-wc-head">
         <span class="pm-wc-word">{{ wordCard.wd.word }}</span>
-        <button class="pm-wc-btn" title="美式发音" @click="playWord('us')">美</button>
-        <button class="pm-wc-btn" title="英式发音" @click="playWord('uk')">英</button>
+        <button class="pm-wc-btn" v-qtip data-tip="美式发音" @click="playWord('us')">美</button>
+        <button class="pm-wc-btn" v-qtip data-tip="英式发音" @click="playWord('uk')">英</button>
       </div>
       <div class="pm-wc-phs">
         <span v-if="wordCard.wd.phUs" class="pm-wc-ph"><b>美</b>{{ wordCard.wd.phUs }}</span>
@@ -845,7 +852,8 @@
         <button
           class="pm-wc-add"
           :class="{ on: inVocabBook(wordCard.wd) }"
-          :title="inVocabBook(wordCard.wd) ? '点击从生词本移除' : '收藏到生词本，长期保留'"
+          v-qtip
+          :data-tip="inVocabBook(wordCard.wd) ? '点击从生词本移除' : '收藏到生词本，长期保留'"
           @click="toggleVocabWord(wordCard.wd)"
         >
           <svg v-if="inVocabBook(wordCard.wd)" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg>
@@ -5291,6 +5299,11 @@ onBeforeUnmount(() => {
   opacity: .4;
   cursor: not-allowed;
   pointer-events: none;
+}
+/* 难度档位按钮 + 下拉面板：面板以按钮为定位基准，与「初级」按钮对齐 */
+.enModeDiffBox {
+  position: relative;
+  display: inline-flex;
 }
 /* 下拉面板 */
 .enModePanel {
