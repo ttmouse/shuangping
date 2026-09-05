@@ -337,16 +337,6 @@
                           </span>
                         </span>
                       </button>
-                      <button
-                        class="courseReadBtn"
-                        :disabled="courseLoading"
-                        title="阅读本课：整课例句文章流（可逐句朗读/查词）"
-                        @click="openCourseReading(c)"
-                        data-nav
-                      >
-                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                        阅读
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -4172,10 +4162,10 @@ onBeforeUnmount(() => {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
-/* 课程卡片网格（参考 julebu 官网课程卡片形态：多列简洁卡片，序号角标 + 标题/描述 + 状态行，去列表化装饰） */
+/* 课程卡片网格（设计重审：流式序号徽章 + 标题/描述/状态分层；无阅读按钮；hover 仅上浮不叠边框+阴影） */
 .courseGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 12px;
 }
 .courseCardWrap {
@@ -4186,73 +4176,41 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
 }
-/* 阅读按钮：卡角右上小胶囊 */
-.courseReadBtn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  height: 24px;
-  padding: 0 9px;
-  font-size: 11.5px;
-  font-weight: 500;
-  line-height: 1;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  background: color-mix(in srgb, var(--theme-text-secondary) 7%, transparent);
-  color: var(--theme-text-secondary);
-  cursor: pointer;
-  transition: border-color .15s ease, color .15s ease, background .15s ease;
-  z-index: 1;
-}
-.courseReadBtn svg { flex-shrink: 0; }
-.courseReadBtn:hover {
-  background: color-mix(in srgb, var(--theme-text-secondary) 14%, transparent);
-  color: var(--theme-text-color);
-}
-.courseReadBtn:focus-visible {
-  outline: 2px solid var(--theme-menu-hover-color);
-  outline-offset: 1px;
-}
-.courseReadBtn:disabled { opacity: .35; cursor: default; }
-/* 卡片主体：纵向内容，序号/阅读在角标位，正文与状态分层 */
+/* 卡片主体：纵向内容，序号徽章流式在顶部，标题/描述/状态分层 */
 .courseGrid .courseCard {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 30px 16px 13px; /* 顶部给序号/阅读角标留位 */
-  min-height: 112px;
+  gap: 8px;
+  padding: 14px 16px 13px;
+  min-height: 116px;
   border-radius: 12px;
   border: 1px solid var(--theme-border-color);
   background: var(--theme-background-color);
-  justify-content: center;
   cursor: pointer;
-  transition: border-color .15s ease, background .15s ease, transform .15s ease, box-shadow .15s ease;
+  transition: border-color .15s ease, background .15s ease, transform .15s ease;
 }
 .courseGrid .courseCard:hover {
   border-color: color-mix(in srgb, var(--theme-text-secondary) 38%, var(--theme-border-color));
   background: color-mix(in srgb, var(--theme-text-secondary) 4%, var(--theme-background-light-color));
   transform: translateY(-1.5px);
-  box-shadow: 0 4px 14px -11px color-mix(in srgb, var(--theme-text-secondary) 50%, transparent);
+}
+.courseGrid .courseCard:active {
+  transform: translateY(0) scale(.985);
 }
 .courseGrid .courseCard:focus-visible {
   outline: 2px solid var(--theme-menu-hover-color);
   outline-offset: 2px;
 }
 .courseCard.recent .courseStatus { color: var(--theme-text-color); }
-/* 序号角标：左上角小徽章 */
+/* 序号徽章：流式顶部小徽章（承载"第几课"的真实顺序信息，非装饰角标） */
 .courseOrder {
-  position: absolute;
-  top: 12px;
-  left: 12px;
+  align-self: flex-start;
   display: inline-flex;
   align-items: center;
   height: 20px;
   padding: 0 8px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 650;
   letter-spacing: .3px;
   color: var(--theme-text-secondary);
   background: color-mix(in srgb, var(--theme-text-secondary) 10%, transparent);
@@ -4317,7 +4275,7 @@ onBeforeUnmount(() => {
   background: var(--theme-text-secondary);
   flex-shrink: 0;
 }
-/* 卡脚部：统计一行 + 状态一行（右下贴底，宽卡内不挤） */
+/* 卡脚部：统计一行 + 状态一行（贴底，宽卡内不挤） */
 .courseCard .courseCardFoot {
   margin-top: auto;
   display: flex;
@@ -4337,6 +4295,7 @@ onBeforeUnmount(() => {
   white-space: nowrap;
   min-width: 0;
 }
+.courseCard .courseStatsRow:empty { display: none; }
 .courseCard .courseStatus {
   font-size: 11.5px;
   line-height: 1.5;
@@ -4347,14 +4306,14 @@ onBeforeUnmount(() => {
   flex: none;
 }
 .courseCard .courseStatus:empty { display: none; }
-/* 无障碍：偏好减少动效时，过渡一律关闭（阅读按钮的定位保留，返回按钮位移禁用） */
+/* 无障碍：偏好减少动效时，过渡一律关闭（返回按钮位移禁用） */
 @media (prefers-reduced-motion: reduce) {
   .courseGrid .courseCard,
-  .courseReadBtn,
   .storyBackBtn {
     transition: none;
   }
-  .courseGrid .courseCard:hover {
+  .courseGrid .courseCard:hover,
+  .courseGrid .courseCard:active {
     transform: none;
   }
   .storyBackBtn:hover {
