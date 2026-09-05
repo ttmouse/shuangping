@@ -134,11 +134,17 @@
             >
               <div class="card-layer layer-1"></div>
               <div class="card-layer layer-2"></div>
-              <div class="achievement-icon">{{ achievement.icon }}</div>
+              <div class="achievement-icon" :class="{ multi: isMultiIcon(achievement.icon) }">{{ achievement.icon }}</div>
               <div class="achievement-name">{{ achievement.name }}</div>
               <div class="achievement-desc">{{ achievement.description }}</div>
+              <div class="achievement-progress" v-if="!isAchievementUnlocked(achievement.id) && progressMap[achievement.id]">
+                <div class="achievement-progress-track">
+                  <div class="achievement-progress-fill" :style="{ width: progressMap[achievement.id].pct + '%' }"></div>
+                </div>
+                <div class="achievement-progress-text">{{ progressMap[achievement.id].current }}/{{ progressMap[achievement.id].target }}{{ progressMap[achievement.id].unit }}</div>
+              </div>
               <div class="achievement-status" v-if="isAchievementUnlocked(achievement.id)">
-                <span class="unlocked-date">{{ formatUnlockDate(achievement.id) }}</span>
+                <span class="unlocked-stamp"><span class="stamp-check">✓</span>{{ formatUnlockDate(achievement.id) }}</span>
               </div>
               <div class="achievement-lock" v-else>
                 <span class="lock-icon"><Lock :size="16" /></span>
@@ -323,6 +329,15 @@ function isAchievementUnlocked(achievementId) {
   return progress.unlockedAchievements.includes(achievementId)
 }
 
+// 多个相同 emoji（如 🔥🔥）改为横向一排并缩小，避免大图标下纵向堆叠撑破卡片
+function isMultiIcon(icon) {
+  const chars = [...icon]
+  return chars.length > 1 && chars.every(c => c === chars[0])
+}
+
+// 锁定成就进度条映射：{ id: { pct, current, target, unit } }
+const progressMap = computed(() => progress.achievementProgress)
+
 function isRare(achievementId) {
   return RARE_ACHIEVEMENTS.includes(achievementId)
 }
@@ -471,14 +486,14 @@ watch(() => route.query.filter, (filter) => {
   background: var(--theme-background-light-color);
   border: 3px solid var(--theme-border-color);
   border-radius: 16px;
-  padding: 28px 20px 24px;
+  padding: 28px 20px 20px;
   text-align: center;
   position: relative;
   width: 100%;
   transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, border-color 0.2s ease, opacity 0.2s ease;
   opacity: 0.55;
   box-shadow: var(--shadow-x, 0px) var(--shadow-y, 6px) 16px rgba(0, 0, 0, 0.08);
-  height: 230px;
+  height: 260px;
   display: flex;
   flex-direction: column;
   will-change: transform;
@@ -553,13 +568,23 @@ watch(() => route.query.filter, (filter) => {
 }
 
 .achievement-icon {
-  font-size: 52px;
-  margin-bottom: 14px;
+  font-size: 94px;
+  line-height: 1.1;
+  margin-bottom: 12px;
   filter: grayscale(100%);
   opacity: 0.5;
   transition: all 0.3s;
   position: relative;
   z-index: 2;
+}
+
+/* 多个相同 emoji（如 🔥🔥🔥）：横向一排并缩小，避免纵向堆叠 */
+.achievement-icon.multi {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-size: 46px;
 }
 
 .achievement-card.unlocked .achievement-icon {
@@ -575,8 +600,9 @@ watch(() => route.query.filter, (filter) => {
 }
 
 .achievement-name {
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.3;
   color: var(--theme-text-color);
   margin-bottom: 6px;
   position: relative;
@@ -595,18 +621,61 @@ watch(() => route.query.filter, (filter) => {
   z-index: 2;
 }
 
-.achievement-status {
+/* 锁定成就进度条：显示距离解锁还差多少 */
+.achievement-progress {
   margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid var(--theme-border-color);
+  padding-top: 8px;
   position: relative;
   z-index: 2;
 }
 
-.unlocked-date {
-  font-size: 11px;
+.achievement-progress-track {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--theme-border-color);
+  overflow: hidden;
+}
+
+.achievement-progress-fill {
+  height: 100%;
+  background: #8aa8a2;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.achievement-progress-text {
+  margin-top: 4px;
+  font-size: 10px;
   color: var(--theme-text-color);
   opacity: 0.55;
+  font-variant-numeric: tabular-nums;
+}
+
+.achievement-status {
+  position: absolute;
+  top: 14px;
+  right: 12px;
+  z-index: 3;
+}
+
+/* 解锁日期：盖章/钢印效果，叠加覆盖在卡片内容上 */
+.unlocked-stamp {
+  display: inline-block;
+  padding: 4px 14px 3px;
+  border: 1.5px solid #b0564d;
+  border-radius: 6px;
+  color: #b0564d;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  transform: rotate(-12deg);
+  opacity: 0.85;
+  box-shadow: inset 0 0 0 1px rgba(176, 86, 77, 0.3), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.stamp-check {
+  margin-right: 4px;
+  font-weight: 900;
 }
 
 .achievement-lock {
