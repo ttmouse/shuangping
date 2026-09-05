@@ -44,8 +44,8 @@ const RARITY = {
 }
 
 const RARE_ACHIEVEMENTS = ['ten-thousand', 'streak-30', 'combo-50', 'accuracy-95']
-const EPIC_ACHIEVEMENTS = ['fifty-thousand', 'accuracy-100', 'speed-150', 'streak-100', 'combo-100', 'advanced-complete']
-const LEGENDARY_ACHIEVEMENTS = ['all-complete']
+const EPIC_ACHIEVEMENTS = ['fifty-thousand', 'accuracy-100', 'speed-150', 'streak-100', 'combo-100']
+const LEGENDARY_ACHIEVEMENTS = []
 
 function getRarity(achievement) {
   if (achievement.rarity) return achievement.rarity

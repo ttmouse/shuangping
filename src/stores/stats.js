@@ -22,8 +22,6 @@ export const useStatsStore = defineStore('stats', {
     history: [],
     // 详细练习记录（用于趋势分析，最近500条）
     detailedHistory: [],
-    // 按键错误热力图数据 { 'key': count }
-    errorHeatmapData: {},
     // 时段统计 { 'morning': { chars, correct, time }, 'afternoon': {}, 'evening': {}, 'night': {} }
     timeSlotStats: {
       morning: { chars: 0, correct: 0, time: 0, sessions: 0 },   // 6-12点
@@ -96,6 +94,7 @@ export const useStatsStore = defineStore('stats', {
           date: key.slice(5), // MM-DD
           fullDate: key,
           chars: dayData.chars || 0,
+          time: Math.round((dayData.time || 0) / 6) / 10, // 分钟，保留1位小数
           accuracy: dayData.chars > 0 ? Math.round((dayData.correct / dayData.chars) * 100) : 100,
           speed: avgSpeed,
         })
@@ -142,14 +141,6 @@ export const useStatsStore = defineStore('stats', {
         }
       }
       return data
-    },
-
-    // 易错键统计（用于热力图）
-    errorHeatmap() {
-      const sorted = Object.entries(this.errorHeatmapData)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 20)
-      return sorted
     },
 
     // 时段分析
@@ -305,7 +296,6 @@ export const useStatsStore = defineStore('stats', {
     migrateFromV1(data) {
       data._version = STORAGE_VERSION
       data.detailedHistory = []
-      data.errorHeatmapData = {}
       data.timeSlotStats = {
         morning: { chars: 0, correct: 0, time: 0, sessions: 0 },
         afternoon: { chars: 0, correct: 0, time: 0, sessions: 0 },
@@ -391,13 +381,14 @@ export const useStatsStore = defineStore('stats', {
       })
 
       // 清理旧历史：优先保留当天的会话记录（保证「历史当天次数」与目标/统计一致），
-      // 当天不足 100 条时再挤出最早的非当天记录（日期按本地时间判断）
+      // 保持时间顺序（旧→新），今天的记录放在末尾；slice(-100) 取最新 100 条（含今天）
       if (this.history.length > 100) {
         const todayStr = formatDateKey(new Date()) // YYYY-MM-DD（本地）
-        const sessions = this.history.filter(h => h.type === 'session')
-        const todaySessions = sessions.filter(s => formatDateKey(new Date(s.date)) === todayStr)
+        const todaySessions = this.history.filter(h => h.type === 'session' && formatDateKey(new Date(h.date)) === todayStr)
         const others = this.history.filter(h => !(h.type === 'session' && formatDateKey(new Date(h.date)) === todayStr))
-        this.history = [...todaySessions, ...others].slice(-100)
+        const merged = [...others, ...todaySessions]
+        merged.sort((a, b) => new Date(a.date) - new Date(b.date))
+        this.history = merged.slice(-100)
       }
       if (this.detailedHistory.length > 500) {
         this.detailedHistory = this.detailedHistory.slice(-500)
@@ -430,10 +421,6 @@ export const useStatsStore = defineStore('stats', {
         this.sessionCorrect++
       } else {
         this.sessionErrors++
-        // 记录错误热力图
-        if (expected) {
-          this.errorHeatmapData[expected] = (this.errorHeatmapData[expected] || 0) + 1
-        }
       }
       // 按键级明细不再写入 history：
       // 该数组保留会话记录（type='session'，统计页/导出只用它），
@@ -450,12 +437,6 @@ export const useStatsStore = defineStore('stats', {
       this.recordKeystroke(char, null, correct, 'char')
     },
 
-    // 记录易错键（统一按键位代码记录，如 'KeyJ'；显示时去掉前缀）
-    recordErrorKey(keyCode) {
-      if (!keyCode) return
-      this.errorHeatmapData[keyCode] = (this.errorHeatmapData[keyCode] || 0) + 1
-    },
-
     // 清除所有统计数据
     clearAllStats() {
       if (typeof confirm !== 'undefined' && !confirm('确定要清除所有练习统计数据吗？此操作不可恢复。')) return
@@ -467,7 +448,6 @@ export const useStatsStore = defineStore('stats', {
       this.dailyStats = {}
       this.history = []
       this.detailedHistory = []
-      this.errorHeatmapData = {}
       this.timeSlotStats = {
         morning: { chars: 0, correct: 0, time: 0, sessions: 0 },
         afternoon: { chars: 0, correct: 0, time: 0, sessions: 0 },
@@ -502,7 +482,6 @@ export const useStatsStore = defineStore('stats', {
         dailyStats: this.dailyStats,
         timeSlotStats: this.timeSlotStats,
         practiceTypeStats: this.practiceTypeStats,
-        errorHeatmap: this.errorHeatmapData,
         history: this.history,
         detailedHistory: this.detailedHistory,
       }

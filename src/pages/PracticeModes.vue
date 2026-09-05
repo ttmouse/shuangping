@@ -941,7 +941,7 @@ const MODES = [
   {
     id: 'letters',
     label: '字母键位',
-    desc: '字母分区与易错键专项练习',
+    desc: '字母分区练习',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="9" width="8" height="8" rx="1.5"/><rect x="13" y="9" width="8" height="8" rx="1.5"/></svg>',
   },
   {
@@ -984,7 +984,6 @@ const LETTER_LEVELS = [
   { id: 'top', name: '上排', rows: [0] },
   { id: 'bottom', name: '下排', rows: [2] },
   { id: 'full', name: '全键盘', rows: [0, 1, 2] },
-  { id: 'error', name: '易错键', rows: [] },
 ]
 
 // 短句卡片的拼句语料（可读性优先）
@@ -3130,17 +3129,7 @@ function buildNumberQueue() {
 
 function buildLetterQueue() {
   let level = LETTER_LEVELS.find(l => l.id === letterLevel.value) || LETTER_LEVELS[0]
-  let pool
-  if (letterLevel.value === 'error') {
-    // 易错键专项：从统计页写入的易错键列表取字母池；无数据时回退全键盘
-    try { pool = JSON.parse(localStorage.getItem('sp-error-keys') || '[]') } catch { pool = [] }
-    if (!pool.length) {
-      pool = 'abcdefghijklmnopqrstuvwxyz'.split('')
-      level = LETTER_LEVELS.find(l => l.id === 'full') || LETTER_LEVELS[0]
-    }
-  } else {
-    pool = level.rows.flatMap(ri => keyRows[ri]).map(code => code.replace('Key', '').toLowerCase())
-  }
+  const pool = level.rows.flatMap(ri => keyRows[ri]).map(code => code.replace('Key', '').toLowerCase())
   const groups = []
   for (let g = 0; g < 12; g++) {
     let s = ''
@@ -4125,7 +4114,7 @@ function onKeyUp(e) {
   if (keyByCode.has(e.code)) keyPressed.delete(e.code)
 }
 
-// 从路由 query 应用模式（顶部导航切换到某模式时入口）；error=1 易错键专项优先
+// 从路由 query 应用模式（顶部导航切换到某模式时入口）
 function applyModeFromQuery() {
   // 同步"最近课程"（阅读页内部切课等也会写入 localStorage）
   const recRaw = localStorage.getItem('sp-last-course')
@@ -4138,11 +4127,6 @@ function applyModeFromQuery() {
       for (const k of Object.keys(courseProgress)) if (!(k in fresh)) delete courseProgress[k]
       Object.assign(courseProgress, fresh)
     } catch { /* ignore */ }
-  }
-  if (route.query.error === '1') {
-    mode.value = 'letters'
-    letterLevel.value = 'error'
-    return
   }
   const q = route.query.mode
   // mode=reading：阅读视图自身加载课程并整页渲染，练习页不做任何 stories 恢复/重定向
@@ -4204,19 +4188,12 @@ onMounted(() => {
   // 页面离开/关闭/切后台时：自动结束进行中的练习并记录（避免练完直接关页面丢记录）
   window.addEventListener('pagehide', onPageHide)
   window.addEventListener('visibilitychange', onVisibilityChange)
-  // 易错键专项练习入口（统计页跳转：/practice-modes?error=1）
-  if (route.query.error === '1') {
-    applyModeFromQuery()
-    start()
-  } else {
-    // 顶部导航切换到某模式：进入页面时按 query 选中对应模式
-    applyModeFromQuery()
-  }
+  // 顶部导航切换到某模式：进入页面时按 query 选中对应模式
+  applyModeFromQuery()
 })
 // 顶部导航切换模式时（query.mode 变化）重新应用，无需刷新页面
 watch(() => route.query.mode, () => {
   if (route.name !== 'practice-modes') return
-  if (route.query.error === '1') return // error 专项已由 onMounted 处理
   applyModeFromQuery()
 })
 // 英文子 tab 切换（浏览器前进/后退时恢复 section 状态）已随模式拆分移除

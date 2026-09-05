@@ -11,22 +11,22 @@
       <!-- 概览卡片 -->
       <div class="overview-cards">
         <div class="stat-card">
-          <div class="stat-icon"><svg viewBox="0 0 16 16" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><circle cx="8" cy="8" r="1.8"/></svg></div>
+          <div class="stat-icon"><Target :size="28" /></div>
           <div class="stat-value">{{ stats.overallAccuracy }}%</div>
           <div class="stat-label">总体准确率</div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon"><svg viewBox="0 0 16 16" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8.5 1.5 3 9h4l-1 6L12 7H8l.5-5.5z"/></svg></div>
+          <div class="stat-icon"><Zap :size="28" /></div>
           <div class="stat-value">{{ stats.averageSpeed }}</div>
           <div class="stat-label">平均速度 (字/分)</div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon"><svg viewBox="0 0 16 16" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2c.6 2.2-1.6 3.2-1.6 5.2a2.6 2.6 0 0 0 5.2 0c0-1.4-.5-2.4-1-3.4C9.8 5 8.8 4 8 2z"/><path d="M6.5 10.5a2.5 2.5 0 0 0 3 0"/></svg></div>
+          <div class="stat-icon"><Flame :size="28" /></div>
           <div class="stat-value">{{ stats.streakDays }}</div>
           <div class="stat-label">连续练习天数</div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon"><svg viewBox="0 0 16 16" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg></div>
+          <div class="stat-icon"><Clock :size="28" /></div>
           <div class="stat-value">{{ formatTime(stats.totalPracticeTime) }}</div>
           <div class="stat-label">总练习时长</div>
         </div>
@@ -97,7 +97,7 @@
       <!-- 图表区域 -->
       <div class="charts-section">
         <div class="chart-card">
-          <h3>近7天练习量</h3>
+          <h3>近7天练习时长（分钟）</h3>
           <div class="chart-container">
             <canvas ref="volumeChart" width="600" height="200"></canvas>
           </div>
@@ -119,49 +119,28 @@
         </div>
       </div>
 
-      <!-- 易错键热力图 -->
-      <div class="heatmap-section" v-if="errorHeatmap.length > 0">
-        <h2>易错键分析</h2>
-        <div class="heatmap-list">
-          <div v-for="[key, count] in errorHeatmap.slice(0, 10)" :key="key" class="heatmap-item">
-            <span class="heatmap-key">{{ displayKey(key) }}</span>
-            <div class="heatmap-bar-wrap">
-              <div class="heatmap-bar" :style="{ width: (count / errorHeatmap[0][1] * 100) + '%' }"></div>
-            </div>
-            <span class="heatmap-count">{{ count }}次</span>
-          </div>
-        </div>
-        <div class="heatmap-actions">
-          <button class="action-btn practice-btn" @click="startErrorKeysPractice">
-            <span class="btn-icon">⌨</span>
-            易错键专项练习
-          </button>
-          <p class="heatmap-tip">将前 10 个易错键生成专项练习，在打字练习的字母键位模式下反复练</p>
-        </div>
-      </div>
-
       <!-- 操作按钮 -->
       <div class="actions-section">
         <h3>数据管理</h3>
         <div class="action-buttons">
           <button class="action-btn share-btn" @click="showShareCard = true">
-            <span class="btn-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 11 11 5m0 0H6.5M11 5v4.5"/></svg></span>
+            <span class="btn-icon"><Share2 :size="16" /></span>
             分享成绩
           </button>
           <button class="action-btn export-json" @click="exportJSON">
-            <span class="btn-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 11V3m0 0L5 6m3-3 3 3"/><path d="M2.5 12v1h11v-1"/></svg></span>
+            <span class="btn-icon"><Download :size="16" /></span>
             导出 JSON
           </button>
           <button class="action-btn export-csv" @click="exportCSV">
-            <span class="btn-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 11V3m0 0L5 6m3-3 3 3"/><path d="M2.5 12v1h11v-1"/></svg></span>
+            <span class="btn-icon"><FileSpreadsheet :size="16" /></span>
             导出 CSV
           </button>
           <button class="action-btn export-detailed" @click="exportDetailedCSV">
-            <span class="btn-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 11V3m0 0L5 6m3-3 3 3"/><path d="M2.5 12v1h11v-1"/></svg></span>
+            <span class="btn-icon"><FileText :size="16" /></span>
             导出详细
           </button>
           <button class="action-btn clear-data" @click="clearStats">
-            <span class="btn-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 4.5h11M6.5 6.5v5m3-5v5M4 4.5 4.5 13h7l.5-8.5M6.8 2.5h2.4l.8 2H6z"/></svg></span>
+            <span class="btn-icon"><Trash2 :size="16" /></span>
             清除数据
           </button>
         </div>
@@ -203,7 +182,8 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, nextTick } from 'vue'
+import { computed, onMounted, onUnmounted, ref, nextTick, inject } from 'vue'
+import { Target, Zap, Flame, Clock, Share2, Download, FileSpreadsheet, FileText, Trash2 } from 'lucide-vue-next'
 import { useStatsStore } from '../stores/stats.js'
 import TopStatusBar from '../components/TopStatusBar.vue'
 import ShareCard from '../components/ShareCard.vue'
@@ -214,6 +194,10 @@ const speedChart = ref(null)
 const accuracyChart = ref(null)
 const showShareCard = ref(false)
 
+// 统计页不是练习场景，关闭全局暂停浮层，避免切 Tab 时弹出「游戏暂停」
+const pauseActive = inject('pauseActive', null)
+if (pauseActive) pauseActive.value = false
+
 const todayStats = computed(() => stats.todayStats)
 const todayAccuracy = computed(() => {
   const t = todayStats.value
@@ -222,20 +206,6 @@ const todayAccuracy = computed(() => {
 
 const weeklyProgress = computed(() => stats.getWeeklyProgress())
 const timeSlotAnalysis = computed(() => stats.timeSlotAnalysis)
-const errorHeatmap = computed(() => stats.errorHeatmap)
-
-// 易错键显示归一：'KeyJ' → 'J'（历史数据可能混有汉字/韵母，原样显示）
-function displayKey(k) {
-  return String(k || '').replace(/^Key/, '')
-}
-
-// 一键生成易错键专项练习：前 10 个易错键存入 localStorage，跳转打字练习字母模式
-function startErrorKeysPractice() {
-  const keys = errorHeatmap.value.slice(0, 10).map(([k]) => k.replace(/^Key/, '').toLowerCase())
-  if (!keys.length) return
-  try { localStorage.setItem('sp-error-keys', JSON.stringify(keys)) } catch {}
-  location.href = '/practice-modes?error=1'
-}
 
 const recentHistory = computed(() => {
   return stats.history
@@ -253,7 +223,11 @@ function toLocalDay(iso) {
 }
 const historyByDay = computed(() => {
   const todayStr = toLocalDay(new Date().toISOString())
-  const sessions = stats.history.filter(h => h.type === 'session').reverse()
+  // 按时间倒序展示（最新在前），不受存储顺序影响
+  const sessions = stats.history
+    .filter(h => h.type === 'session')
+    .slice()
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
   const groups = []
   for (const s of sessions) {
     const day = toLocalDay(s.date)
@@ -289,7 +263,12 @@ onMounted(() => {
   })
 })
 
-// 绘制练习量柱状图
+onUnmounted(() => {
+  // 离开统计页时恢复默认，避免影响后续练习页的暂停功能
+  if (pauseActive) pauseActive.value = true
+})
+
+// 绘制练习时长柱状图
 function drawVolumeChart() {
   const canvas = volumeChart.value
   if (!canvas) return
@@ -311,8 +290,8 @@ function drawVolumeChart() {
   // 清空画布
   ctx.clearRect(0, 0, rect.width, rect.height)
 
-  // 找出最大值
-  const maxChars = Math.max(...data.map(d => d.chars), 1)
+  // 找出最大值（分钟）
+  const maxTime = Math.max(...data.map(d => d.time), 1)
 
   // 绘制网格线
   ctx.strokeStyle = 'var(--theme-border-color)'
@@ -331,23 +310,23 @@ function drawVolumeChart() {
 
   data.forEach((d, i) => {
     const x = padding.left + (width / data.length) * i + barGap / 2
-    const barHeight = (d.chars / maxChars) * height
+    const barHeight = (d.time / maxTime) * height
     const y = padding.top + height - barHeight
 
-    // 渐变填充
+    // 渐变填充（低饱和灰绿）
     const gradient = ctx.createLinearGradient(0, y, 0, y + barHeight)
-    gradient.addColorStop(0, '#35e2b7')
-    gradient.addColorStop(1, '#2aa88a')
+    gradient.addColorStop(0, '#8aa8a2')
+    gradient.addColorStop(1, '#6a8f88')
 
     ctx.fillStyle = gradient
     ctx.fillRect(x, y, barWidth, barHeight)
 
-    // 数值标签
-    if (d.chars > 0) {
-      ctx.fillStyle = 'var(--theme-main-text-color)'
+    // 数值标签（分钟）
+    if (d.time > 0) {
+      ctx.fillStyle = 'var(--theme-text-color)'
       ctx.font = '12px sans-serif'
       ctx.textAlign = 'center'
-      ctx.fillText(d.chars, x + barWidth / 2, y - 5)
+      ctx.fillText(d.time, x + barWidth / 2, y - 5)
     }
 
     // 日期标签
@@ -357,12 +336,12 @@ function drawVolumeChart() {
     ctx.fillText(d.date, x + barWidth / 2, padding.top + height + 15)
   })
 
-  // Y轴标签
+  // Y轴标签（分钟）
   ctx.fillStyle = 'var(--theme-text-color)'
   ctx.font = '10px sans-serif'
   ctx.textAlign = 'right'
   for (let i = 0; i <= 4; i++) {
-    const value = Math.round(maxChars * (1 - i / 4))
+    const value = Math.round(maxTime * (1 - i / 4))
     const y = padding.top + (height / 4) * i + 3
     ctx.fillText(value, padding.left - 5, y)
   }
@@ -386,7 +365,7 @@ function drawSpeedChart() {
     return
   }
 
-  drawLineChart(ctx, data, rect.width, rect.height, 'speed', '#67c23a')
+  drawLineChart(ctx, data, rect.width, rect.height, 'speed', '#6a8ab0')
 }
 
 // 绘制准确率趋势折线图
@@ -407,7 +386,7 @@ function drawAccuracyChart() {
     return
   }
 
-  drawLineChart(ctx, data, rect.width, rect.height, 'accuracy', '#35e2b7')
+  drawLineChart(ctx, data, rect.width, rect.height, 'accuracy', '#6a9e7a')
 }
 
 function drawLineChart(ctx, data, width, height, key, color) {
@@ -587,7 +566,7 @@ function clearStats() {
 .header h1 {
   font-size: 28px;
   font-weight: 700;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-color);
   margin-bottom: 8px;
 }
 
@@ -621,12 +600,13 @@ function clearStats() {
 .stat-icon {
   font-size: 28px;
   margin-bottom: 8px;
+  opacity: 0.75;
 }
 
 .stat-value {
   font-size: 32px;
   font-weight: 700;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-color);
   margin-bottom: 4px;
 }
 
@@ -647,7 +627,7 @@ function clearStats() {
 .today-section h2 {
   font-size: 16px;
   font-weight: 600;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-color);
   margin-bottom: 16px;
 }
 
@@ -668,16 +648,16 @@ function clearStats() {
   display: block;
   font-size: 24px;
   font-weight: 700;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-color);
   margin-bottom: 4px;
 }
 
 .today-value.good {
-  color: #67c23a;
+  color: #5c7a74;
 }
 
 .today-value.warning {
-  color: #f56c6c;
+  color: #b0766f;
 }
 
 .today-label {
@@ -701,7 +681,7 @@ function clearStats() {
 .chart-card h3 {
   font-size: 14px;
   font-weight: 600;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-color);
   margin-bottom: 16px;
 }
 
@@ -741,7 +721,7 @@ function clearStats() {
 .actions-section h3 {
   font-size: 14px;
   font-weight: 600;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-color);
   margin-bottom: 16px;
 }
 
@@ -766,24 +746,24 @@ function clearStats() {
 }
 
 .action-btn:hover {
-  background: var(--theme-menu-hover-color);
+  background: #8aa8a2;
   color: #0b1a14;
 }
 
 .action-btn.clear-data:hover {
-  background: #f56c6c;
+  background: #b0766f;
   color: white;
 }
 
 .action-btn.share-btn {
-  background: linear-gradient(135deg, #35e2b7, #2aa88a);
+  background: linear-gradient(135deg, #8aa8a2, #6a8f88);
   border-color: transparent;
   color: #0b1a14;
   font-weight: 500;
 }
 
 .action-btn.share-btn:hover {
-  background: linear-gradient(135deg, #2aa88a, #35e2b7);
+  background: linear-gradient(135deg, #6a8f88, #8aa8a2);
 }
 
 .btn-icon {
@@ -801,7 +781,7 @@ function clearStats() {
 .history-section h3 {
   font-size: 14px;
   font-weight: 600;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-color);
   margin-bottom: 16px;
 }
 
@@ -814,16 +794,16 @@ function clearStats() {
   gap: 10px;
   margin-bottom: 8px;
 }
-.history-day-date { font-size: 13px; font-weight: 700; color: var(--theme-main-text-color); }
+.history-day-date { font-size: 13px; font-weight: 700; color: var(--theme-text-color); }
 .history-day-count {
   font-size: 12px;
-  color: var(--theme-menu-text-color);
+  color: var(--theme-text-secondary);
   padding: 2px 10px;
   border-radius: 12px;
   background: var(--theme-background-color);
   border: 1px solid var(--theme-border-color);
 }
-.history-day-count.today { color: #3db389; border-color: #3db389; }
+.history-day-count.today { color: #5c7a74; border-color: #8aa8a2; }
 
 .history-list {
   display: flex;
@@ -875,7 +855,7 @@ function clearStats() {
 }
 
 .history-accuracy.good {
-  color: #67c23a;
+  color: #5c7a74;
 }
 
 .footer-space {
@@ -894,7 +874,7 @@ function clearStats() {
 .weekly-progress-section h2 {
   font-size: 16px;
   font-weight: 600;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-color);
   margin-bottom: 16px;
 }
 
@@ -925,11 +905,11 @@ function clearStats() {
 }
 
 .progress-value.up {
-  color: #67c23a;
+  color: #5c7a74;
 }
 
 .progress-value.down {
-  color: #f56c6c;
+  color: #b0766f;
 }
 
 /* 时段分析 */
@@ -944,7 +924,7 @@ function clearStats() {
 .time-slot-section h2 {
   font-size: 16px;
   font-weight: 600;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-color);
   margin-bottom: 16px;
 }
 
@@ -964,7 +944,7 @@ function clearStats() {
 
 .time-slot-item.active {
   opacity: 1;
-  border: 1px solid var(--theme-menu-hover-color);
+  border: 1px solid #8aa8a2;
 }
 
 .slot-name {
@@ -978,83 +958,25 @@ function clearStats() {
   display: block;
   font-size: 18px;
   font-weight: 600;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-color);
   margin-bottom: 4px;
 }
 
 .slot-accuracy {
   display: block;
   font-size: 14px;
-  color: #67c23a;
-}
-
-/* 热力图 */
-.heatmap-section {
-  background: var(--theme-background-light-color);
-  border: 1px solid var(--theme-border-color);
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 24px;
-}
-
-.heatmap-section h2 {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--theme-main-text-color);
-  margin-bottom: 16px;
-}
-
-.heatmap-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.heatmap-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.heatmap-key {
-  width: 50px;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--theme-main-text-color);
-  text-align: center;
-}
-
-.heatmap-bar-wrap {
-  flex: 1;
-  height: 16px;
-  background: var(--theme-background-color);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.heatmap-bar {
-  height: 100%;
-  background: linear-gradient(90deg, #f56c6c, #ff9f7f);
-  border-radius: 8px;
-  transition: width 0.3s;
-}
-
-.heatmap-count {
-  width: 60px;
-  text-align: right;
-  font-size: 13px;
-  color: var(--theme-text-color);
+  color: #5c7a74;
 }
 
 /* 导出详细按钮 */
 .action-btn.export-detailed {
-  background: #e6f7ff;
-  border-color: #91d5ff;
-  color: #1890ff;
+  background: #eef2f6;
+  border-color: #a9b8c8;
+  color: #5a7494;
 }
 
 .action-btn.export-detailed:hover {
-  background: #bae7ff;
+  background: #e2e9f1;
 }
 
 /* 练习类型标签 */
@@ -1067,13 +989,13 @@ function clearStats() {
 }
 
 .history-practice-type.yunmu {
-  background: #e6f7ff;
-  color: #1890ff;
+  background: #eef2f6;
+  color: #5a7494;
 }
 
 .history-practice-type.writer {
-  background: #f6ffed;
-  color: #52c41a;
+  background: #edf2ef;
+  color: #5c7a74;
 }
 
 /* 响应式 */

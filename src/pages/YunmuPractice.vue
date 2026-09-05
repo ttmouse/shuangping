@@ -443,23 +443,6 @@ function endPractice() {
   // 检查每日目标
   progress.checkDailyGoal(charsTyped, duration)
   
-  // 检查学习阶段完成
-  const accuracy = progress.sessionStats.accuracy
-  if (session.rangeId && accuracy > 0 && charsTyped > 0) {
-    const result = progress.checkStageCompletion(session.rangeId, accuracy, charsTyped)
-    if (result.completed) {
-      // 阶段完成，可以显示提示
-      console.log(`阶段完成: ${result.stage.name}`)
-    }
-    
-    // 记录阶段尝试
-    progress.recordStageAttempt(
-      session.rangeId, 
-      accuracy, 
-      stats.averageSpeed
-    )
-  }
-  
   // 更新技能掌握度
   if (session.rangeId) {
     progress.updateSkillMastery(session.rangeId, charsTyped, accuracy)

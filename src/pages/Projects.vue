@@ -114,7 +114,11 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, inject } from 'vue'
+
+// 项目页不是练习场景，关闭全局暂停浮层
+const pauseActive = inject('pauseActive', null)
+if (pauseActive) pauseActive.value = false
 
 // 项目数据
   const projects = ref([
@@ -132,13 +136,13 @@ import { ref, computed, onMounted } from 'vue'
   {
     id: 'progress',
     title: '学习进度',
-    description: '追踪双拼学习进度，查看成就和学习路径',
+    description: '追踪双拼学习进度，查看成就和统计',
     category: 'learning',
     status: 'active',
     icon: '',
     tech: ['Vue 3', 'Pinia', 'LocalStorage'],
     route: '/progress',
-    highlights: ['进度追踪', '成就系统', '学习路径']
+    highlights: ['进度追踪', '成就系统', '学习统计']
   },
   {
     id: 'chat-list',
@@ -373,6 +377,10 @@ async function showMoreProjects() {
 
 onMounted(() => {
   loadGithubRepos()
+})
+
+onUnmounted(() => {
+  if (pauseActive) pauseActive.value = true
 })
 
 // 获取状态文本

@@ -17,44 +17,16 @@ const migrateData = (data) => {
     data.lastPracticeDate = data.lastPracticeDate || null
     data.totalPracticeSessions = data.totalPracticeSessions || 0
     data.learningTimeTotal = data.learningTimeTotal || 0
-    data.stageAttempts = data.stageAttempts || {}
     data.skillMastery = data.skillMastery || {}
   }
-  
+
+  // 每日目标时长从 15 分钟调整为 30 分钟
+  if (data.dailyGoals && data.dailyGoals.timeTarget === 15) {
+    data.dailyGoals.timeTarget = 30
+  }
+
   return data
 }
-
-// 学习路径定义
-const LEARNING_PATH = [
-  {
-    id: 'basics',
-    name: '基础入门',
-    description: '掌握双拼基础按键',
-    stages: [
-      { id: 'row1', name: '第一排韵母', rangeId: 'row1', minAccuracy: 80, minChars: 100 },
-      { id: 'row2', name: '第二排韵母', rangeId: 'row2', minAccuracy: 80, minChars: 100 },
-      { id: 'row3', name: '第三排韵母', rangeId: 'row3', minAccuracy: 80, minChars: 100 },
-    ]
-  },
-  {
-    id: 'intermediate',
-    name: '进阶练习',
-    description: '提升速度与准确率',
-    stages: [
-      { id: 'all-keys', name: '全部韵母', rangeId: 'all', minAccuracy: 85, minChars: 200 },
-      { id: 'nasal', name: '前后鼻音', rangeId: 'nasal', minAccuracy: 85, minChars: 150 },
-    ]
-  },
-  {
-    id: 'advanced',
-    name: '高级挑战',
-    description: '文字输入实战',
-    stages: [
-      { id: 'short-text', name: '短文练习', corpusId: 'builtin-all', minAccuracy: 90, minChars: 100 },
-      { id: 'long-text', name: '长文练习', corpusId: 'builtin-row1', minAccuracy: 90, minChars: 200 },
-    ]
-  }
-]
 
 // 成就定义
 const ACHIEVEMENTS = [
@@ -357,54 +329,12 @@ const ACHIEVEMENTS = [
     rarity: 'uncommon',
     condition: (stats) => stats.dailyGoalStreak >= 7
   },
-  
-  // 学习路径成就
-  {
-    id: 'basics-complete',
-    name: '基础毕业',
-    description: '完成基础入门阶段',
-    icon: '🎓',
-    category: 'progress',
-    rarity: 'uncommon',
-    condition: (stats) => stats.completedPaths?.includes('basics')
-  },
-  {
-    id: 'intermediate-complete',
-    name: '进阶高手',
-    description: '完成进阶练习阶段',
-    icon: '🥈',
-    category: 'progress',
-    rarity: 'rare',
-    condition: (stats) => stats.completedPaths?.includes('intermediate')
-  },
-  {
-    id: 'advanced-complete',
-    name: '双拼大师',
-    description: '完成高级挑战阶段',
-    icon: '🥇',
-    category: 'progress',
-    rarity: 'epic',
-    condition: (stats) => stats.completedPaths?.includes('advanced')
-  },
-  {
-    id: 'all-complete',
-    name: '全阶段通关',
-    description: '完成所有学习阶段',
-    icon: '🏆',
-    category: 'progress',
-    rarity: 'legendary',
-    condition: (stats) => stats.overallProgress >= 100
-  }
 ]
 
 export const useProgressStore = defineStore('progress', {
   state: () => ({
     // 存储版本
     _version: STORAGE_VERSION,
-    // 学习路径进度
-    pathProgress: {},
-    // 已完成的学习阶段
-    completedStages: [],
     // 已解锁的成就
     unlockedAchievements: [],
     // 成就解锁时间记录
@@ -426,10 +356,9 @@ export const useProgressStore = defineStore('progress', {
     lastPracticeDate: null,        // 上次练习日期
     totalPracticeSessions: 0,      // 总练习次数
     learningTimeTotal: 0,          // 总学习时长（分钟）
-    stageAttempts: {},             // 各阶段尝试次数 { stageId: { attempts, bestAccuracy, bestSpeed } }
     skillMastery: {},              // 技能掌握度 { skillId: { level, progress, lastPracticed } }
     dailyGoals: {                  // 每日目标（四达标：时长 + 正确率 + 错词清零 + 练习次数）
-      timeTarget: 15,            // 练习时长目标（分钟）
+      timeTarget: 30,            // 练习时长目标（分钟）
       accuracyTarget: 95,        // 正确率目标（%）
       sessionTarget: 10,         // 练习次数目标（完成的练习会话数）
       mistakeClear: true,        // 是否要求错词清零
@@ -442,36 +371,8 @@ export const useProgressStore = defineStore('progress', {
   }),
 
   getters: {
-    // 获取学习路径
-    learningPath: () => LEARNING_PATH,
-
     // 获取所有成就定义
     allAchievements: () => ACHIEVEMENTS,
-
-    // 获取当前阶段
-    currentStage(state) {
-      for (const path of LEARNING_PATH) {
-        for (const stage of path.stages) {
-          if (!state.completedStages.includes(stage.id)) {
-            return { ...stage, pathName: path.name, pathId: path.id }
-          }
-        }
-      }
-      return null
-    },
-
-    // 获取已完成的路径
-    completedPaths(state) {
-      return LEARNING_PATH.filter(path =>
-        path.stages.every(stage => state.completedStages.includes(stage.id))
-      ).map(p => p.id)
-    },
-
-    // 获取进度百分比
-    overallProgress(state) {
-      const totalStages = LEARNING_PATH.reduce((sum, p) => sum + p.stages.length, 0)
-      return Math.round((state.completedStages.length / totalStages) * 100)
-    },
 
     // 获取已解锁成就列表
     unlockedList(state) {
@@ -512,7 +413,7 @@ export const useProgressStore = defineStore('progress', {
       const accuracy = ds.chars > 0 ? Math.round((ds.correct / ds.chars) * 100) : 100
       // 错词数：今日错词清单（打错进、练对出；手动清空不影响）
       const mistakes = (state.dailyWrongWords[today] || []).length
-      const timeTarget = state.dailyGoals.timeTarget || 15
+      const timeTarget = state.dailyGoals.timeTarget || 30
       const accuracyTarget = state.dailyGoals.accuracyTarget || 95
       const sessionTarget = state.dailyGoals.sessionTarget || 10
       const needMistakeClear = state.dailyGoals.mistakeClear !== false
@@ -551,11 +452,6 @@ export const useProgressStore = defineStore('progress', {
       }
     },
 
-    // 新增：获取阶段统计
-    getStageStats: (state) => (stageId) => {
-      return state.stageAttempts[stageId] || { attempts: 0, bestAccuracy: 0, bestSpeed: 0 }
-    },
-
     // 新增：获取技能掌握度
     getSkillMastery: (state) => (skillId) => {
       return state.skillMastery[skillId] || { level: 0, progress: 0, lastPracticed: null }
@@ -592,19 +488,6 @@ export const useProgressStore = defineStore('progress', {
       this.totalPracticeSessions++
       this.learningTimeTotal += durationMinutes
       this.lastPracticeDate = getTodayKey()
-      this.save()
-    },
-
-    // 新增：记录阶段尝试
-    recordStageAttempt(stageId, accuracy, speed) {
-      if (!this.stageAttempts[stageId]) {
-        this.stageAttempts[stageId] = { attempts: 0, bestAccuracy: 0, bestSpeed: 0 }
-      }
-      const attempt = this.stageAttempts[stageId]
-      attempt.attempts++
-      attempt.bestAccuracy = Math.max(attempt.bestAccuracy, accuracy)
-      attempt.bestSpeed = Math.max(attempt.bestSpeed, speed)
-      attempt.lastAttempted = Date.now()
       this.save()
     },
 
@@ -716,8 +599,6 @@ export const useProgressStore = defineStore('progress', {
           averageSpeed: statsStore.averageSpeed,
           streakDays: this.streakDays,
           weakModePractices: this.weakModePractices,
-          completedPaths: this.completedPaths,
-          overallProgress: this.overallProgress,
           dailyGoalsCompleted: this.dailyGoals.completedDates.length,
           dailyGoalStreak: this.calculateDailyGoalStreak(),
           stats: statsStore.$state
@@ -770,44 +651,10 @@ export const useProgressStore = defineStore('progress', {
       return streak
     },
 
-    // 检查学习阶段完成
-    checkStageCompletion(rangeId, accuracy, chars) {
-      for (const path of LEARNING_PATH) {
-        for (const stage of path.stages) {
-          if (this.completedStages.includes(stage.id)) continue
-
-          const matchesRange = stage.rangeId === rangeId
-          const matchesCorpus = stage.corpusId && rangeId?.startsWith('builtin-')
-
-          if ((matchesRange || matchesCorpus) && accuracy >= stage.minAccuracy && chars >= stage.minChars) {
-            this.completedStages.push(stage.id)
-            this.save()
-            return { completed: true, stage, path }
-          }
-        }
-      }
-      return { completed: false }
-    },
-
-    // 获取特定路径的进度
-    getPathProgress(pathId) {
-      const path = LEARNING_PATH.find(p => p.id === pathId)
-      if (!path) return { completed: 0, total: 0, percentage: 0 }
-
-      const completed = path.stages.filter(s => this.completedStages.includes(s.id)).length
-      return {
-        completed,
-        total: path.stages.length,
-        percentage: Math.round((completed / path.stages.length) * 100)
-      }
-    },
-
     // 重置进度
     resetProgress() {
       if (typeof confirm !== 'undefined' && !confirm('确定要重置所有学习进度和成就吗？此操作不可恢复。')) return
 
-      this.pathProgress = {}
-      this.completedStages = []
       this.unlockedAchievements = []
       this.achievementUnlockTimes = {}
       this.weakModePractices = 0
@@ -816,7 +663,6 @@ export const useProgressStore = defineStore('progress', {
       this.lastPracticeDate = null
       this.totalPracticeSessions = 0
       this.learningTimeTotal = 0
-      this.stageAttempts = {}
       this.skillMastery = {}
       this.dailyGoals.completedDates = []
       this.save()
@@ -828,16 +674,13 @@ export const useProgressStore = defineStore('progress', {
         exportDate: new Date().toISOString(),
         version: STORAGE_VERSION,
         progress: {
-          completedStages: this.completedStages,
           unlockedAchievements: this.unlockedAchievements,
-          overallProgress: this.overallProgress,
           weakModePractices: this.weakModePractices,
           maxCombo: this.maxCombo,
           totalPracticeSessions: this.totalPracticeSessions,
           learningTimeTotal: this.learningTimeTotal,
           streakDays: this.streakDays
         },
-        stageAttempts: this.stageAttempts,
         skillMastery: this.skillMastery,
         dailyGoals: this.dailyGoals,
         achievementDetails: this.unlockedList.map(a => ({
@@ -851,14 +694,12 @@ export const useProgressStore = defineStore('progress', {
     // 新增：导入进度数据
     importData(data) {
       try {
-        if (data.completedStages) this.completedStages = data.completedStages
         if (data.unlockedAchievements) this.unlockedAchievements = data.unlockedAchievements
         if (data.achievementUnlockTimes) this.achievementUnlockTimes = data.achievementUnlockTimes
         if (data.weakModePractices) this.weakModePractices = data.weakModePractices
         if (data.maxCombo) this.maxCombo = data.maxCombo
         if (data.totalPracticeSessions) this.totalPracticeSessions = data.totalPracticeSessions
         if (data.learningTimeTotal) this.learningTimeTotal = data.learningTimeTotal
-        if (data.stageAttempts) this.stageAttempts = data.stageAttempts
         if (data.skillMastery) this.skillMastery = data.skillMastery
         if (data.dailyGoals) this.dailyGoals = { ...this.dailyGoals, ...data.dailyGoals }
         this.save()

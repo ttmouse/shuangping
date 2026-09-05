@@ -372,10 +372,6 @@ function onPress(code) {
   const currentItem = writer.currentItem
   if (currentItem) {
     stats.recordCharPractice(currentItem.ch, res.correct)
-    // 记录易错键（期望键位）
-    if (!res.correct) {
-      stats.recordErrorKey(currentItem.seq[writer.codeIdx])
-    }
   }
   // 记录进度
   progress.recordKeystroke(res.correct)
@@ -498,22 +494,9 @@ function endPractice() {
   // 检查每日目标
   progress.checkDailyGoal(charsTyped, duration)
   
-  // 检查学习阶段完成（文字练习使用 corpusId）
+  // 更新技能掌握度
   const accuracy = progress.sessionStats.accuracy
   if (writer.currentCorpusId && accuracy > 0 && charsTyped > 0) {
-    const result = progress.checkStageCompletion(writer.currentCorpusId, accuracy, charsTyped)
-    if (result.completed) {
-      console.log(`阶段完成: ${result.stage.name}`)
-    }
-    
-    // 记录阶段尝试
-    progress.recordStageAttempt(
-      writer.currentCorpusId, 
-      accuracy, 
-      stats.averageSpeed
-    )
-    
-    // 更新技能掌握度
     progress.updateSkillMastery(writer.currentCorpusId, charsTyped, accuracy)
   }
   
@@ -606,10 +589,6 @@ function onKeyDown(e) {
     const currentItem = writer.currentItem
     if (currentItem) {
       stats.recordCharPractice(currentItem.ch, res.correct)
-      // 记录易错键（期望键位）
-      if (!res.correct) {
-        stats.recordErrorKey(currentItem.seq[writer.codeIdx])
-      }
     }
     // 记录进度
     progress.recordKeystroke(res.correct)

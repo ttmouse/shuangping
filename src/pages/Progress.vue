@@ -8,63 +8,69 @@
         <p class="subtitle">追踪你的双拼学习之旅</p>
       </div>
 
-      <!-- 总体进度 -->
-      <div class="overall-progress">
-        <div class="progress-ring">
-          <svg viewBox="0 0 120 120">
-            <circle class="progress-bg" cx="60" cy="60" r="54"/>
-            <circle
-              class="progress-fill"
-              cx="60"
-              cy="60"
-              r="54"
-              :style="{ strokeDashoffset: 339.292 - (339.292 * progress.overallProgress / 100) }"
-            />
-          </svg>
-          <div class="progress-text">
-            <span class="progress-percent">{{ progress.overallProgress }}</span>
-            <span class="progress-label">%</span>
-          </div>
-        </div>
-        <div class="progress-info">
-          <div class="info-item">
-            <span class="info-value">{{ progress.completedStages.length }}</span>
-            <span class="info-label">已完成阶段</span>
-          </div>
-          <div class="info-item">
-            <span class="info-value">{{ progress.unlockedAchievements.length }}</span>
-            <span class="info-label">已解锁成就</span>
-          </div>
-          <div class="info-item">
-            <span class="info-value">{{ progress.maxCombo }}</span>
-            <span class="info-label">最高连击</span>
-          </div>
-        </div>
-      </div>
-
       <!-- 学习统计概览 -->
       <div class="stats-overview">
         <h2>学习统计</h2>
         <div class="stats-grid">
-          <div class="stat-card">
-            <span class="stat-icon"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2c.6 2.2-1.6 3.2-1.6 5.2a2.6 2.6 0 0 0 5.2 0c0-1.4-.5-2.4-1-3.4C9.8 5 8.8 4 8 2z"/><path d="M6.5 10.5a2.5 2.5 0 0 0 3 0"/></svg></span>
-            <span class="stat-value">{{ streakDays }}</span>
-            <span class="stat-label">连续练习天数</span>
+          <div class="card-hit" @mousemove="handleCardTilt" @mouseleave="handleCardLeave">
+            <div class="stat-card">
+              <div class="card-layer layer-1"></div>
+              <div class="card-layer layer-2"></div>
+              <span class="stat-icon"><Trophy :size="28" /></span>
+              <span class="stat-value">{{ progress.unlockedAchievements.length }}</span>
+              <span class="stat-label">已解锁成就</span>
+              <div class="stat-progress"><div class="stat-progress-fill" :style="{ width: statProgress.achievements + '%' }"></div></div>
+            </div>
           </div>
-          <div class="stat-card">
-            <span class="stat-icon"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 4.5h12v7H2z"/><path d="M2 7h12M10.5 7V9"/></svg></span>
-            <span class="stat-value">{{ progress.totalPracticeSessions }}</span>
-            <span class="stat-label">总练习次数</span>
+          <div class="card-hit" @mousemove="handleCardTilt" @mouseleave="handleCardLeave">
+            <div class="stat-card">
+              <div class="card-layer layer-1"></div>
+              <div class="card-layer layer-2"></div>
+              <span class="stat-icon"><Zap :size="28" /></span>
+              <span class="stat-value">{{ progress.maxCombo }}</span>
+              <span class="stat-label">最高连击</span>
+              <div class="stat-progress"><div class="stat-progress-fill" :style="{ width: statProgress.maxCombo + '%' }"></div></div>
+            </div>
           </div>
-          <div class="stat-card">
-            <span class="stat-icon"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg></span>
-            <span class="stat-value">{{ Math.round(progress.learningTimeTotal) }}</span>
-            <span class="stat-label">学习时长(分钟)</span>
+          <div class="card-hit" @mousemove="handleCardTilt" @mouseleave="handleCardLeave">
+            <div class="stat-card">
+              <div class="card-layer layer-1"></div>
+              <div class="card-layer layer-2"></div>
+              <span class="stat-icon"><Flame :size="28" /></span>
+              <span class="stat-value">{{ streakDays }}</span>
+              <span class="stat-label">连续练习天数</span>
+              <div class="stat-progress"><div class="stat-progress-fill" :style="{ width: statProgress.streakDays + '%' }"></div></div>
+            </div>
           </div>
-          <div class="stat-card">
-            <span class="stat-icon"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 4.5h12v7H2z"/><path d="M2 7h12M5 4.5 8 7l3-2.5"/></svg></span>
-            <span class="stat-value">{{ progress.dailyGoals.completedDates.length }}</span>
-            <span class="stat-label">完成目标天数</span>
+          <div class="card-hit" @mousemove="handleCardTilt" @mouseleave="handleCardLeave">
+            <div class="stat-card">
+              <div class="card-layer layer-1"></div>
+              <div class="card-layer layer-2"></div>
+              <span class="stat-icon"><Repeat :size="28" /></span>
+              <span class="stat-value">{{ progress.totalPracticeSessions }}</span>
+              <span class="stat-label">总练习次数</span>
+              <div class="stat-progress"><div class="stat-progress-fill" :style="{ width: statProgress.totalSessions + '%' }"></div></div>
+            </div>
+          </div>
+          <div class="card-hit" @mousemove="handleCardTilt" @mouseleave="handleCardLeave">
+            <div class="stat-card">
+              <div class="card-layer layer-1"></div>
+              <div class="card-layer layer-2"></div>
+              <span class="stat-icon"><Clock :size="28" /></span>
+              <span class="stat-value">{{ Math.round(progress.learningTimeTotal) }}</span>
+              <span class="stat-label">学习时长(分钟)</span>
+              <div class="stat-progress"><div class="stat-progress-fill" :style="{ width: statProgress.learningTime + '%' }"></div></div>
+            </div>
+          </div>
+          <div class="card-hit" @mousemove="handleCardTilt" @mouseleave="handleCardLeave">
+            <div class="stat-card">
+              <div class="card-layer layer-1"></div>
+              <div class="card-layer layer-2"></div>
+              <span class="stat-icon"><CalendarCheck :size="28" /></span>
+              <span class="stat-value">{{ progress.dailyGoals.completedDates.length }}</span>
+              <span class="stat-label">完成目标天数</span>
+              <div class="stat-progress"><div class="stat-progress-fill" :style="{ width: statProgress.goalDays + '%' }"></div></div>
+            </div>
           </div>
         </div>
       </div>
@@ -74,70 +80,21 @@
         <h2>今日目标 <small class="goal-status" :class="{ done: goal.allDone }">{{ goal.allDone ? '已达成' : '进行中' }}</small></h2>
         <div class="goal-grid">
           <div class="goal-line" :class="{ done: goal.timeDoneFlag }">
-            <span class="goal-name"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg> 练习时长</span>
+            <span class="goal-name"><Clock :size="16" /> 练习时长</span>
             <span class="goal-bar"><span class="goal-fill" :style="{ width: goal.timePercent + '%' }"></span></span>
             <span class="goal-num">{{ goal.timeDone }} / {{ goal.timeTarget }} 分钟</span>
           </div>
           <div class="goal-line" :class="{ done: goal.accuracyDone }">
-            <span class="goal-name"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><circle cx="8" cy="8" r="1.8"/></svg> 正确率</span>
+            <span class="goal-name"><Target :size="16" /> 正确率</span>
             <span class="goal-num">{{ goal.accuracy }}% <small>（目标 ≥{{ goal.accuracyTarget }}%）</small></span>
           </div>
           <div class="goal-line" :class="{ done: goal.sessionDoneFlag }">
-            <span class="goal-name"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 2.5V6H10"/></svg> 练习次数</span>
+            <span class="goal-name"><Repeat :size="16" /> 练习次数</span>
             <span class="goal-num">{{ goal.sessionDone }} / {{ goal.sessionTarget }} 次</span>
           </div>
           <div class="goal-line" :class="{ done: goal.mistakesDone }">
-            <span class="goal-name"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 11 4 9l-2 3h12"/><path d="M5 9h6"/></svg> 错词清零</span>
+            <span class="goal-name"><CheckCircle2 :size="16" /> 错词清零</span>
             <span class="goal-num">{{ goal.mistakesDone ? '已清完' : '还有 ' + goal.mistakes + ' 个错词待练' }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 学习路径 -->
-      <div class="learning-path">
-        <h2>学习路径</h2>
-        <div class="path-list">
-          <div
-            v-for="path in progress.learningPath"
-            :key="path.id"
-            class="path-card"
-            :class="{ 'completed': isPathCompleted(path.id) }"
-          >
-            <div class="path-header">
-              <div class="path-icon">{{ getPathIcon(path.id) }}</div>
-              <div class="path-title">
-                <h3>{{ path.name }}</h3>
-                <p>{{ path.description }}</p>
-              </div>
-              <div class="path-badge" v-if="isPathCompleted(path.id)">
-                <span class="badge-icon">✓</span>
-              </div>
-            </div>
-            <div class="stages">
-              <div
-                v-for="(stage, index) in path.stages"
-                :key="stage.id"
-                class="stage-item"
-                :class="{
-                  'completed': isStageCompleted(stage.id),
-                  'current': isCurrentStage(stage.id),
-                  'locked': isStageLocked(path.id, index)
-                }"
-              >
-                <div class="stage-connector" v-if="index > 0"/>
-                <div class="stage-dot">
-                  <span v-if="isStageCompleted(stage.id)">✓</span>
-                  <span v-else-if="isCurrentStage(stage.id)">●</span>
-                  <span v-else>○</span>
-                </div>
-                <div class="stage-info">
-                  <span class="stage-name">{{ stage.name }}</span>
-                  <span class="stage-requirement" v-if="!isStageCompleted(stage.id)">
-                    目标: {{ stage.minAccuracy }}% 准确率, {{ stage.minChars }} 字符
-                  </span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -162,23 +119,30 @@
           <div
             v-for="achievement in filteredAchievements"
             :key="achievement.id"
-            class="achievement-card"
-            :class="{ 
-              'unlocked': isAchievementUnlocked(achievement.id), 
-              'rare': isRare(achievement.id),
-              'epic': isEpic(achievement.id),
-              'legendary': isLegendary(achievement.id)
-            }"
+            class="card-hit"
+            @mousemove="handleCardTilt"
+            @mouseleave="handleCardLeave"
           >
-            <div class="achievement-rarity" :class="achievement.rarity || 'common'"></div>
-            <div class="achievement-icon">{{ achievement.icon }}</div>
-            <div class="achievement-name">{{ achievement.name }}</div>
-            <div class="achievement-desc">{{ achievement.description }}</div>
-            <div class="achievement-status" v-if="isAchievementUnlocked(achievement.id)">
-              <span class="unlocked-date">{{ formatUnlockDate(achievement.id) }}</span>
-            </div>
-            <div class="achievement-lock" v-else>
-              <span class="lock-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="7" width="9" height="6" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg></span>
+            <div
+              class="achievement-card"
+              :class="{ 
+                'unlocked': isAchievementUnlocked(achievement.id), 
+                'rare': isRare(achievement.id),
+                'epic': isEpic(achievement.id),
+                'legendary': isLegendary(achievement.id)
+              }"
+            >
+              <div class="card-layer layer-1"></div>
+              <div class="card-layer layer-2"></div>
+              <div class="achievement-icon">{{ achievement.icon }}</div>
+              <div class="achievement-name">{{ achievement.name }}</div>
+              <div class="achievement-desc">{{ achievement.description }}</div>
+              <div class="achievement-status" v-if="isAchievementUnlocked(achievement.id)">
+                <span class="unlocked-date">{{ formatUnlockDate(achievement.id) }}</span>
+              </div>
+              <div class="achievement-lock" v-else>
+                <span class="lock-icon"><Lock :size="16" /></span>
+              </div>
             </div>
           </div>
         </div>
@@ -203,15 +167,15 @@
       <!-- 操作按钮 -->
       <div class="actions-section">
         <button class="action-btn export" @click="exportProgress">
-          <span class="btn-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 11V3m0 0L5 6m3-3 3 3"/><path d="M2.5 12v1h11v-1"/></svg></span>
+          <span class="btn-icon"><Download :size="16" /></span>
           导出进度
         </button>
         <button class="action-btn import" @click="triggerImport">
-          <span class="btn-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 3v8m0 0 3-3m-3 3L5 8"/><path d="M2.5 12v1h11v-1"/></svg></span>
+          <span class="btn-icon"><Upload :size="16" /></span>
           导入进度
         </button>
         <button class="action-btn reset" @click="resetProgress">
-          <span class="btn-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 2.5V6H10"/></svg></span>
+          <span class="btn-icon"><RotateCcw :size="16" /></span>
           重置进度
         </button>
       </div>
@@ -230,8 +194,9 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, inject } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { Flame, Repeat, Clock, CalendarCheck, Target, CheckCircle2, Download, Upload, RotateCcw, Lock, Trophy, Zap } from 'lucide-vue-next'
 import { useProgressStore } from '../stores/progress.js'
 import { useStatsStore } from '../stores/stats.js'
 import TopStatusBar from '../components/TopStatusBar.vue'
@@ -242,12 +207,16 @@ const progress = useProgressStore()
 const goal = computed(() => progress.todayGoal)
 const stats = useStatsStore()
 const importInput = ref(null)
+
+// 进度页不是练习场景，关闭全局暂停浮层
+const pauseActive = inject('pauseActive', null)
+if (pauseActive) pauseActive.value = false
 // 从 URL 恢复成就筛选，默认「全部」
 const currentFilter = ref(route.query.filter || 'all')
 
 const RARE_ACHIEVEMENTS = ['ten-thousand', 'streak-30', 'combo-50', 'accuracy-95']
-const EPIC_ACHIEVEMENTS = ['fifty-thousand', 'accuracy-100', 'speed-150', 'streak-100', 'combo-100', 'advanced-complete']
-const LEGENDARY_ACHIEVEMENTS = ['all-complete']
+const EPIC_ACHIEVEMENTS = ['fifty-thousand', 'accuracy-100', 'speed-150', 'streak-100', 'combo-100']
+const LEGENDARY_ACHIEVEMENTS = []
 
 const achievementFilters = [
   { key: 'all', label: '全部' },
@@ -287,33 +256,67 @@ const filteredAchievements = computed(() => {
 
 const streakDays = computed(() => progress.streakDays)
 
-const PATH_ICONS = {
-  basics: '基',
-  intermediate: '中',
-  advanced: '高'
+// 统计卡片进度条：各指标对应的目标值与完成百分比
+const STAT_TARGETS = {
+  achievements: null,           // 已解锁成就：目标为成就总数（动态）
+  maxCombo: 100,                // 最高连击：100
+  streakDays: 30,               // 连续练习天数：30天
+  totalSessions: 100,           // 总练习次数：100次
+  learningTime: 600,            // 学习时长：600分钟（10小时）
+  goalDays: 30,                 // 完成目标天数：30天
 }
 
-function getPathIcon(pathId) {
-  return PATH_ICONS[pathId] || '基'
+const statProgress = computed(() => {
+  const total = progress.allAchievements.length || 1
+  return {
+    achievements: Math.min(100, Math.round(progress.unlockedAchievements.length / total * 100)),
+    maxCombo: Math.min(100, Math.round(progress.maxCombo / STAT_TARGETS.maxCombo * 100)),
+    streakDays: Math.min(100, Math.round(streakDays.value / STAT_TARGETS.streakDays * 100)),
+    totalSessions: Math.min(100, Math.round(progress.totalPracticeSessions / STAT_TARGETS.totalSessions * 100)),
+    learningTime: Math.min(100, Math.round(progress.learningTimeTotal / STAT_TARGETS.learningTime * 100)),
+    goalDays: Math.min(100, Math.round(progress.dailyGoals.completedDates.length / STAT_TARGETS.goalDays * 100)),
+  }
+})
+
+// 3D 卡片倾斜效果：斥力模式 —— 光标靠近的一侧向后仰
+// 事件绑定在不变换的 .card-hit 命中区上，内层卡片只做视觉变换，彻底避免边缘抖动
+function handleCardTilt(e) {
+  const hit = e.currentTarget
+  const el = hit.querySelector('.achievement-card, .stat-card')
+  if (!el) return
+  // 用命中区的稳定矩形计算鼠标位置（不受卡片 3D 变换影响）
+  const rect = hit.getBoundingClientRect()
+  const px = (e.clientX - rect.left) / rect.width
+  const py = (e.clientY - rect.top) / rect.height
+  // 角落平滑：将 [0,1] 映射到 [0.15, 0.85]
+  const sx = px * 0.7 + 0.15
+  const sy = py * 0.7 + 0.15
+  const maxDeg = 28
+  const rotateX = (0.5 - sy) * maxDeg * 2
+  const rotateY = (sx - 0.5) * maxDeg * 2
+  el.style.setProperty('--tilt-x', rotateX.toFixed(2) + 'deg')
+  el.style.setProperty('--tilt-y', rotateY.toFixed(2) + 'deg')
+  el.style.setProperty('--glare-x', (px * 100).toFixed(1) + '%')
+  el.style.setProperty('--glare-y', (py * 100).toFixed(1) + '%')
+  // 动态阴影
+  const shadowX = (-rotateY * 0.5).toFixed(1)
+  const shadowY = (rotateX * 0.5 + 6).toFixed(1)
+  el.style.setProperty('--shadow-x', shadowX + 'px')
+  el.style.setProperty('--shadow-y', shadowY + 'px')
+  // 跟手模式
+  el.style.transitionDuration = '0.08s'
 }
 
-function isPathCompleted(pathId) {
-  return progress.completedPaths.includes(pathId)
-}
-
-function isStageCompleted(stageId) {
-  return progress.completedStages.includes(stageId)
-}
-
-function isCurrentStage(stageId) {
-  return progress.currentStage?.id === stageId
-}
-
-function isStageLocked(pathId, stageIndex) {
-  const path = progress.learningPath.find(p => p.id === pathId)
-  if (!path || stageIndex === 0) return false
-  // 前一阶段未完成则锁定
-  return !progress.completedStages.includes(path.stages[stageIndex - 1].id)
+function handleCardLeave(e) {
+  const hit = e.currentTarget
+  const el = hit.querySelector('.achievement-card, .stat-card')
+  if (!el) return
+  el.style.setProperty('--tilt-x', '0deg')
+  el.style.setProperty('--tilt-y', '0deg')
+  el.style.setProperty('--shadow-x', '0px')
+  el.style.setProperty('--shadow-y', '6px')
+  // 复位模式：平滑回到原位
+  el.style.transitionDuration = '0.4s'
 }
 
 function isAchievementUnlocked(achievementId) {
@@ -392,6 +395,10 @@ onMounted(() => {
   stats.load()
 })
 
+onUnmounted(() => {
+  if (pauseActive) pauseActive.value = true
+})
+
 // 成就筛选切换时同步到 URL
 function switchFilter(key) {
   currentFilter.value = key
@@ -427,7 +434,7 @@ watch(() => route.query.filter, (filter) => {
 .header h1 {
   font-size: 28px;
   font-weight: 700;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-color);
   margin-bottom: 8px;
 }
 
@@ -436,299 +443,123 @@ watch(() => route.query.filter, (filter) => {
   font-size: 14px;
 }
 
-/* 总体进度 */
-.overall-progress {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-  background: var(--theme-background-light-color);
-  border: 1px solid var(--theme-border-color);
-  border-radius: 16px;
-  padding: 32px;
-  margin-bottom: 32px;
-}
-
-.progress-ring {
-  position: relative;
-  width: 140px;
-  height: 140px;
-  flex-shrink: 0;
-}
-
-.progress-ring svg {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-}
-
-.progress-bg {
-  fill: none;
-  stroke: var(--theme-border-color);
-  stroke-width: 8;
-}
-
-.progress-fill {
-  fill: none;
-  stroke: #35e2b7;
-  stroke-width: 8;
-  stroke-linecap: round;
-  stroke-dasharray: 339.292;
-  transition: stroke-dashoffset 0.8s ease;
-}
-
-.progress-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
-
-.progress-percent {
-  font-size: 42px;
-  font-weight: 800;
-  color: var(--theme-main-text-color);
-  line-height: 1;
-}
-
-.progress-label {
-  font-size: 18px;
-  color: var(--theme-text-color);
-}
-
-.progress-info {
-  flex: 1;
-  display: flex;
-  justify-content: space-around;
-}
-
-.info-item {
-  text-align: center;
-}
-
-.info-value {
-  display: block;
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--theme-main-text-color);
-  margin-bottom: 4px;
-}
-
-.info-label {
-  font-size: 12px;
-  color: var(--theme-text-color);
-}
-
-/* 学习路径 */
-.learning-path {
-  margin-bottom: 32px;
-}
-
-.learning-path h2 {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--theme-main-text-color);
-  margin-bottom: 20px;
-}
-
-.path-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.path-card {
-  background: var(--theme-background-light-color);
-  border: 1px solid var(--theme-border-color);
-  border-radius: 12px;
-  padding: 24px;
-  transition: all 0.3s;
-}
-
-.path-card.completed {
-  border-color: #35e2b7;
-  background: linear-gradient(135deg, var(--theme-background-light-color) 0%, rgba(53, 226, 183, 0.05) 100%);
-}
-
-.path-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.path-icon {
-  font-size: 32px;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--theme-background-color);
-  border-radius: 12px;
-}
-
-.path-title {
-  flex: 1;
-}
-
-.path-title h3 {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--theme-main-text-color);
-  margin-bottom: 4px;
-}
-
-.path-title p {
-  font-size: 13px;
-  color: var(--theme-text-color);
-}
-
-.path-badge {
-  width: 32px;
-  height: 32px;
-  background: #35e2b7;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.badge-icon {
-  color: #fff;
-  font-weight: 700;
-  font-size: 16px;
-}
-
-/* 阶段列表 */
-.stages {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding-left: 8px;
-}
-
-.stage-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  position: relative;
-}
-
-.stage-connector {
-  position: absolute;
-  left: 11px;
-  top: -12px;
-  width: 2px;
-  height: 12px;
-  background: var(--theme-border-color);
-}
-
-.stage-item.completed .stage-connector {
-  background: #35e2b7;
-}
-
-.stage-dot {
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  color: var(--theme-text-color);
-  background: var(--theme-background-color);
-  border: 2px solid var(--theme-border-color);
-  border-radius: 50%;
-  z-index: 1;
-}
-
-.stage-item.completed .stage-dot {
-  background: #35e2b7;
-  border-color: #35e2b7;
-  color: #fff;
-}
-
-.stage-item.current .stage-dot {
-  border-color: #35e2b7;
-  color: #35e2b7;
-  animation: pulse 2s infinite;
-}
-
-.stage-item.locked .stage-dot {
-  opacity: 0.5;
-}
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
-
-.stage-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.stage-name {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--theme-main-text-color);
-}
-
-.stage-item.locked .stage-name {
-  opacity: 0.5;
-}
-
-.stage-requirement {
-  font-size: 11px;
-  color: var(--theme-text-color);
-  margin-top: 2px;
-}
-
 /* 成就系统 */
 .achievements-section {
+  margin-top: 32px;
   margin-bottom: 32px;
 }
 
 .achievements-section h2 {
   font-size: 20px;
   font-weight: 600;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-color);
   margin-bottom: 20px;
 }
 
 .achievements-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 20px;
+}
+
+/* 命中区：不做任何 3D 变换，保证鼠标事件区域稳定，避免边缘抖动 */
+.card-hit {
+  position: relative;
 }
 
 .achievement-card {
   background: var(--theme-background-light-color);
-  border: 1px solid var(--theme-border-color);
-  border-radius: 12px;
-  padding: 20px 16px;
+  border: 3px solid var(--theme-border-color);
+  border-radius: 16px;
+  padding: 28px 20px 24px;
   text-align: center;
   position: relative;
-  transition: all 0.2s;
-  opacity: 0.6;
+  width: 100%;
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, border-color 0.2s ease, opacity 0.2s ease;
+  opacity: 0.55;
+  box-shadow: var(--shadow-x, 0px) var(--shadow-y, 6px) 16px rgba(0, 0, 0, 0.08);
+  height: 230px;
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+  transform-style: preserve-3d;
+  transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) scale(var(--card-scale, 1));
+  overflow: hidden;
+}
+
+/* 装饰背景层：微妙的径向渐变，随鼠标做视差位移 */
+.card-layer {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  transition: transform 0.25s ease-out;
+  z-index: 0;
+}
+.card-layer.layer-1 {
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(138, 168, 162, 0.1), transparent 70%);
+  top: -40px;
+  right: -40px;
+}
+.card-layer.layer-2 {
+  width: 140px;
+  height: 140px;
+  background: radial-gradient(circle, rgba(138, 168, 162, 0.06), transparent 70%);
+  bottom: -30px;
+  left: -30px;
+}
+
+/* 柔和高光：跟随鼠标的微妙光泽 */
+.achievement-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.1), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.achievement-card:hover::after {
+  opacity: 1;
+}
+
+.achievement-card:hover {
+  --card-scale: 1.02;
+  box-shadow: var(--shadow-x, 0px) var(--shadow-y, 8px) 24px rgba(0, 0, 0, 0.1);
 }
 
 .achievement-card.unlocked {
   opacity: 1;
-  border-color: #35e2b7;
+  border-color: #8aa8a2;
+  box-shadow: var(--shadow-x, 0px) var(--shadow-y, 6px) 16px rgba(0, 0, 0, 0.08), 0 0 12px rgba(138, 168, 162, 0.12);
+}
+
+.achievement-card.unlocked:hover {
+  box-shadow: var(--shadow-x, 0px) var(--shadow-y, 8px) 24px rgba(0, 0, 0, 0.1), 0 0 16px rgba(138, 168, 162, 0.18);
 }
 
 .achievement-card.rare.unlocked {
-  border-color: #ffd700;
-  background: linear-gradient(135deg, var(--theme-background-light-color) 0%, rgba(255, 215, 0, 0.05) 100%);
+  border-color: #b0a278;
+  background: linear-gradient(135deg, var(--theme-background-light-color) 0%, rgba(176, 162, 120, 0.06) 100%);
+  box-shadow: var(--shadow-x, 0px) var(--shadow-y, 6px) 16px rgba(0, 0, 0, 0.08), 0 0 12px rgba(176, 162, 120, 0.12);
+}
+
+.achievement-card.rare.unlocked:hover {
+  box-shadow: var(--shadow-x, 0px) var(--shadow-y, 8px) 24px rgba(0, 0, 0, 0.1), 0 0 16px rgba(176, 162, 120, 0.18);
 }
 
 .achievement-icon {
-  font-size: 40px;
-  margin-bottom: 12px;
+  font-size: 52px;
+  margin-bottom: 14px;
   filter: grayscale(100%);
   opacity: 0.5;
   transition: all 0.3s;
+  position: relative;
+  z-index: 2;
 }
 
 .achievement-card.unlocked .achievement-icon {
@@ -738,39 +569,51 @@ watch(() => route.query.filter, (filter) => {
 }
 
 @keyframes iconPop {
-  0% { transform: scale(0); }
-  70% { transform: scale(1.2); }
-  100% { transform: scale(1); }
+  0% { transform: translateZ(18px) scale(0); }
+  70% { transform: translateZ(18px) scale(1.15); }
+  100% { transform: translateZ(18px) scale(1); }
 }
 
 .achievement-name {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
-  color: var(--theme-main-text-color);
-  margin-bottom: 4px;
+  color: var(--theme-text-color);
+  margin-bottom: 6px;
+  position: relative;
+  z-index: 2;
 }
 
 .achievement-desc {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--theme-text-color);
-  line-height: 1.4;
+  line-height: 1.5;
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
 }
 
 .achievement-status {
-  margin-top: 12px;
+  margin-top: auto;
   padding-top: 12px;
   border-top: 1px solid var(--theme-border-color);
+  position: relative;
+  z-index: 2;
 }
 
 .unlocked-date {
   font-size: 11px;
-  color: #35e2b7;
+  color: var(--theme-text-color);
+  opacity: 0.55;
 }
 
 .achievement-lock {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
 }
 
 .lock-icon {
@@ -790,7 +633,7 @@ watch(() => route.query.filter, (filter) => {
 .recent-achievements h3 {
   font-size: 14px;
   font-weight: 600;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-color);
   margin-bottom: 16px;
 }
 
@@ -816,7 +659,7 @@ watch(() => route.query.filter, (filter) => {
 .recent-name {
   flex: 1;
   font-size: 14px;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-color);
 }
 
 .recent-date {
@@ -846,7 +689,7 @@ watch(() => route.query.filter, (filter) => {
 }
 
 .action-btn:hover {
-  background: var(--theme-menu-hover-color);
+  background: #8aa8a2;
   color: #0b1a14;
 }
 
@@ -871,7 +714,7 @@ watch(() => route.query.filter, (filter) => {
 .stats-overview h2 {
   font-size: 20px;
   font-weight: 600;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-color);
   margin-bottom: 20px;
 }
 
@@ -887,12 +730,38 @@ watch(() => route.query.filter, (filter) => {
   border-radius: 12px;
   padding: 20px;
   text-align: center;
-  transition: all 0.2s;
+  width: 100%;
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  will-change: transform;
+  transform-style: preserve-3d;
+  transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) scale(var(--card-scale, 1));
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-x, 0px) var(--shadow-y, 4px) 12px rgba(0, 0, 0, 0.06);
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.08), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.stat-card:hover::after {
+  opacity: 1;
 }
 
 .stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --card-scale: 1.02;
+  box-shadow: var(--shadow-x, 0px) var(--shadow-y, 6px) 18px rgba(0, 0, 0, 0.08);
 }
 
 /* 今日目标卡片：实时进度指引 */
@@ -913,14 +782,14 @@ watch(() => route.query.filter, (filter) => {
 .goal-status {
   font-size: 12px;
   font-weight: 400;
-  color: var(--theme-menu-text-color);
+  color: var(--theme-text-color);
   padding: 2px 10px;
   border-radius: 20px;
   border: 1px solid var(--theme-border-color);
 }
 .goal-status.done {
-  color: #2c8f6a;
-  border-color: #3db389;
+  color: #5c7a74;
+  border-color: #8aa8a2;
 }
 .goal-grid {
   display: flex;
@@ -949,7 +818,7 @@ watch(() => route.query.filter, (filter) => {
 .goal-fill {
   display: block;
   height: 100%;
-  background: var(--theme-menu-hover-color);
+  background: #8aa8a2;
   border-radius: 5px;
   transition: width .3s ease;
 }
@@ -959,29 +828,54 @@ watch(() => route.query.filter, (filter) => {
   font-variant-numeric: tabular-nums;
 }
 .goal-line.done .goal-name, .goal-line.done .goal-num {
-  color: #3db389;
+  color: #5c7a74;
 }
 .goal-line.done .goal-fill {
-  background: #3db389;
+  background: #8aa8a2;
 }
 
 .stat-icon {
   font-size: 28px;
   margin-bottom: 8px;
   display: block;
+  opacity: 0.75;
+  position: relative;
+  z-index: 2;
 }
 
 .stat-value {
   font-size: 28px;
   font-weight: 700;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-color);
   display: block;
   margin-bottom: 4px;
+  position: relative;
+  z-index: 2;
 }
 
 .stat-label {
   font-size: 12px;
   color: var(--theme-text-color);
+  position: relative;
+  z-index: 2;
+}
+
+.stat-progress {
+  width: 100%;
+  height: 4px;
+  background: var(--theme-border-color);
+  border-radius: 2px;
+  margin-top: 12px;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+
+.stat-progress-fill {
+  height: 100%;
+  background: #8aa8a2;
+  border-radius: 2px;
+  transition: width 0.3s ease;
 }
 
 /* 成就筛选 */
@@ -997,7 +891,7 @@ watch(() => route.query.filter, (filter) => {
 .achievements-header h2 {
   font-size: 20px;
   font-weight: 600;
-  color: var(--theme-main-text-color);
+  color: var(--theme-text-color);
   margin: 0;
 }
 
@@ -1019,111 +913,63 @@ watch(() => route.query.filter, (filter) => {
 }
 
 .filter-btn:hover {
-  background: var(--theme-menu-hover-color);
+  border-color: #8aa8a2;
+  color: #5c7a74;
 }
 
 .filter-btn.active {
-  background: #35e2b7;
-  color: #0b1a14;
-  border-color: #35e2b7;
+  background: rgba(138, 168, 162, 0.15);
+  color: #5c7a74;
+  border-color: #8aa8a2;
+  font-weight: 600;
 }
 
 /* 成就稀有度 */
-.achievement-rarity {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  border-radius: 12px 12px 0 0;
-}
-
-.achievement-rarity.common {
-  background: linear-gradient(90deg, #9e9e9e, #bdbdbd);
-}
-
-.achievement-rarity.uncommon {
-  background: linear-gradient(90deg, #4caf50, #81c784);
-}
-
-.achievement-rarity.rare {
-  background: linear-gradient(90deg, #2196f3, #64b5f6);
-}
-
-.achievement-rarity.epic {
-  background: linear-gradient(90deg, #9c27b0, #ce93d8);
-}
-
-.achievement-rarity.legendary {
-  background: linear-gradient(90deg, #ff9800, #ffd54f, #ff9800);
-  background-size: 200% 100%;
-  animation: legendaryGlow 2s linear infinite;
-}
-
-@keyframes legendaryGlow {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
-}
-
 .achievement-card.epic.unlocked {
-  border-color: #9c27b0;
-  box-shadow: 0 0 20px rgba(156, 39, 176, 0.2);
+  border-color: #887c9e;
+  box-shadow: var(--shadow-x, 0px) var(--shadow-y, 6px) 16px rgba(0, 0, 0, 0.08), 0 0 12px rgba(136, 124, 158, 0.12);
+}
+
+.achievement-card.epic.unlocked:hover {
+  box-shadow: var(--shadow-x, 0px) var(--shadow-y, 8px) 24px rgba(0, 0, 0, 0.1), 0 0 16px rgba(136, 124, 158, 0.18);
 }
 
 .achievement-card.legendary.unlocked {
-  border-color: #ff9800;
-  box-shadow: 0 0 30px rgba(255, 152, 0, 0.3);
+  border-color: #b59872;
+  box-shadow: var(--shadow-x, 0px) var(--shadow-y, 6px) 16px rgba(0, 0, 0, 0.08), 0 0 12px rgba(181, 152, 114, 0.12);
   animation: legendaryPulse 3s ease-in-out infinite;
 }
 
+.achievement-card.legendary.unlocked:hover {
+  box-shadow: var(--shadow-x, 0px) var(--shadow-y, 8px) 24px rgba(0, 0, 0, 0.1), 0 0 16px rgba(181, 152, 114, 0.18);
+}
+
 @keyframes legendaryPulse {
-  0%, 100% { box-shadow: 0 0 30px rgba(255, 152, 0, 0.3); }
-  50% { box-shadow: 0 0 50px rgba(255, 152, 0, 0.5); }
+  0%, 100% { box-shadow: var(--shadow-x, 0px) var(--shadow-y, 6px) 16px rgba(0, 0, 0, 0.08), 0 0 12px rgba(181, 152, 114, 0.12); }
+  50% { box-shadow: var(--shadow-x, 0px) var(--shadow-y, 8px) 20px rgba(0, 0, 0, 0.09), 0 0 20px rgba(181, 152, 114, 0.2); }
 }
 
 /* 操作按钮样式 */
 .action-btn.export:hover {
-  background: #4caf50;
+  background: #6a9e7a;
   color: white;
 }
 
 .action-btn.import:hover {
-  background: #2196f3;
+  background: #6a8ab0;
   color: white;
 }
 
 /* 响应式 */
 @media (max-width: 768px) {
-  .overall-progress {
-    flex-direction: column;
-    gap: 24px;
-    text-align: center;
-  }
-
-  .progress-info {
-    width: 100%;
-  }
-
   .achievements-grid {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .path-header {
-    flex-wrap: wrap;
   }
 }
 
 @media (max-width: 480px) {
   .achievements-grid {
     grid-template-columns: 1fr;
-  }
-
-  .info-value {
-    font-size: 24px;
-  }
-
-  .progress-percent {
-    font-size: 36px;
   }
 }
 </style>
