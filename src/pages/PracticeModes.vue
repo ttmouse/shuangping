@@ -333,6 +333,7 @@
                             <span class="courseOrder">#{{ c.order }}</span>
                           </span>
                           <span v-if="c.subtitle" class="storySubtitle">{{ c.subtitle }}</span>
+                          <span class="courseStatus"><span v-if="isRecentCourse(c)" class="courseRecentBadge" title="最近学习的课程">最近学习</span><span v-if="courseRec(c)?.completed" class="courseDone" title="已练习完成">已完成<span v-if="courseRec(c)?.lastPracticed"> · {{ relTime(courseRec(c).lastPracticed) }}</span></span><span v-else-if="courseRec(c)?.lastPracticed" class="courseLast" title="上次练习时间">上次 {{ relTime(courseRec(c).lastPracticed) }}</span></span>
                           <span class="courseCardFoot">
                             <span class="courseStatsRow">
                               <span v-for="s in statParts(c)" :key="s.k" class="statItem" :title="s.title">
@@ -340,7 +341,6 @@
                                 {{ s.label }}
                               </span>
                             </span>
-                            <span class="courseStatus"><span v-if="isRecentCourse(c)" class="courseRecentBadge" title="最近学习的课程">最近学习</span><span v-if="courseRec(c)?.completed" class="courseDone" title="已练习完成">已完成<span v-if="courseRec(c)?.lastPracticed"> · {{ relTime(courseRec(c).lastPracticed) }}</span></span><span v-else-if="courseRec(c)?.lastPracticed" class="courseLast" title="上次练习时间">上次 {{ relTime(courseRec(c).lastPracticed) }}</span></span>
                           </span>
                         </span>
                       </button>
@@ -4270,6 +4270,7 @@ onBeforeUnmount(() => {
   flex-direction: column;
   gap: 3px;
   min-width: 0;
+  flex: 1; /* 撑满卡片，下方统计图标行据此贴底，中部自然留白 */
 }
 .courseCard .courseTitle {
   flex: 1;
