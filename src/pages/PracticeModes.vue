@@ -4067,9 +4067,23 @@ onBeforeUnmount(() => {
 .storyPanelWide {
   width: min(1240px, 96vw);
 }
+/* “＋ 新增自定义”弱化为幽灵文字入口：低调次要按钮（透明底/无边框/灰色小字），仅悬停时轻微浮现 */
 .storyAddBtn {
+  flex: none;
   font-size: 12px;
-  padding: 4px 10px;
+  line-height: 1;
+  padding: 4px 7px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--theme-text-secondary);
+  border-radius: 6px;
+  opacity: .8;
+  transition: color .12s ease, background .12s ease, opacity .12s ease;
+}
+.storyAddBtn:hover {
+  color: var(--theme-text-color);
+  background: color-mix(in srgb, var(--theme-text-secondary) 8%, transparent);
+  opacity: 1;
 }
 .storyBackBtn {
   display: inline-flex;
