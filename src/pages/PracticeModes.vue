@@ -4670,6 +4670,9 @@ onBeforeUnmount(() => {
   animation-delay: calc(var(--gi, 0) * 20ms + 280ms);
 }
 .spGroup:hover { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10); }
+/* 悬停词卡的讲解浮层宽可达 340px，会横向伸到相邻组上方：把悬停词所在整组抬升（z-index 建立独立层叠层），
+   配合 .spTip 组内 z999——即使未来某层叠上下文把浮层锁在组内，整组也高于下一组，浮层永不被相邻组框盖住 */
+.spGroup:has(.spUnit:hover) { z-index: 60; }
 /* 无成分结构的整句（如 friends 对话版无拆解）：词卡平铺，不套组框 */
 .spGroup.plain {
   border: none;
