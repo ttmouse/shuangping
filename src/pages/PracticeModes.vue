@@ -6,7 +6,13 @@
       :course="courseBar"
       :started="started"
       :course-read-action="showCourseReadTop ? { visible: true, onClick: jumpToCourseReading } : null"
+      :back-action="showModeBack ? { visible: true, onClick: backToModeSelect, tip: '返回', title: activeModeLabel } : null"
     />
+
+    <!-- 练习进度细条：导航下方 2px 绿线，随当前队列完成度增长（保持低调） -->
+    <div v-if="started && !completed" class="practiceProgressBar">
+      <div class="practiceProgressFill" :style="{ width: practiceProgress + '%' }"></div>
+    </div>
 
     <div class="pageCenter">
       <div class="tipsTextContent">
@@ -1399,6 +1405,11 @@ const courseBar = computed(() => {
     onBack: backToCourseList,
   }
 })
+// 错词本/生词本专项练习进行中：顶部左侧显示「返回」（参考课包练习布局），其余图标右侧对齐
+const showModeBack = computed(() =>
+  started.value && !completed.value && !courseBar.value &&
+  (mode.value === 'mistake-book' || mode.value === 'vocab-book')
+)
 // 课包课程导航：上一课/下一课/回到课程列表
 function goToPrevCourse() {
   const idx = currentCourseIndex.value
@@ -2733,6 +2744,31 @@ const currentGroup = computed(() => numQueue.value[groupIdx.value] || '')
 const currentLetterGroup = computed(() => letterQueue.value[letterGroupIdx.value] || '')
 const currentSyllable = computed(() => sylQueue.value[sylIdx.value] || null)
 const currentCard = computed(() => cardQueue.value[cardIdx.value] || null)
+// 练习进度百分比（顶部 2px 细条）：按模式取对应队列的已完成单元数 / 总数
+const practiceProgress = computed(() => {
+  // 最后一项完成后的缓冲期：直接走满，让进度条动画播完
+  if (finishPending.value) return 100
+  let done = 0
+  let total = 0
+  if (isEnPractice.value) {
+    done = sentenceIdx.value
+    total = enQueue.value.length
+  } else if (mode.value === 'numbers') {
+    done = groupIdx.value
+    total = numQueue.value.length
+  } else if (mode.value === 'letters') {
+    done = letterGroupIdx.value
+    total = letterQueue.value.length
+  } else if (mode.value === 'syllables') {
+    done = sylIdx.value
+    total = sylQueue.value.length
+  } else if (mode.value === 'cards') {
+    done = cardIdx.value
+    total = cardQueue.value.length
+  }
+  if (!total) return 0
+  return Math.min(100, Math.round((done * 100) / total))
+})
 // 卡片模式：隐藏拼音字母提示，只显示横线位置；正确输入后展示字母，错误用警告色标出（由设置 cardHideLetters 控制）
 const hideLetters = computed(() => settings.cardHideLetters)
 
@@ -3308,16 +3344,20 @@ function nextCard() {
   }
   clearCardWrongMap()
   cardIdx.value++
+  if (cardIdx.value >= cardQueue.value.length) {
+    // 最后一张：索引停回末卡、保留已完成展示（不重置音节/字母位置），进度条动画走完再结算
+    cardIdx.value = cardQueue.value.length - 1
+    finishWithBar()
+    return
+  }
   cardSylIdx.value = 0
   cardCharIdx.value = 0
   currentCardHadError.value = false
-  if (cardIdx.value >= cardQueue.value.length) {
-    finish()
-  }
 }
 
 function start() {
   if (started.value) return
+  cancelFinishPending() // 清掉可能残留的结算缓冲计时器
   enCombo.value = 0 // 新会话从零连击
   enMaxCombo.value = 0
   resetSentenceScoring()
@@ -3553,10 +3593,12 @@ function submitCode(code, shiftKey = false) {
             numQueue.value.push(group)
             numHadError.value = false
           }
-          groupIdx.value++
-          digitIdx.value = 0
-          if (groupIdx.value >= numQueue.value.length) {
-            finish()
+          if (groupIdx.value + 1 >= numQueue.value.length) {
+            // 最后一组：索引停回末组保持展示，进度条动画走完再结算
+            finishWithBar()
+          } else {
+            groupIdx.value++
+            digitIdx.value = 0
           }
         }
       }
@@ -3576,10 +3618,12 @@ function submitCode(code, shiftKey = false) {
             letterQueue.value.push(group)
             letterHadError.value = false
           }
-          letterGroupIdx.value++
-          letterCharIdx.value = 0
-          if (letterGroupIdx.value >= letterQueue.value.length) {
-            finish()
+          if (letterGroupIdx.value + 1 >= letterQueue.value.length) {
+            // 最后一组：索引停回末组保持展示，进度条动画走完再结算
+            finishWithBar()
+          } else {
+            letterGroupIdx.value++
+            letterCharIdx.value = 0
           }
         }
       }
@@ -3593,16 +3637,18 @@ function submitCode(code, shiftKey = false) {
       if (correct) {
         sylCharIdx.value++
         if (sylCharIdx.value >= syl.letters.length) {
-          sylIdx.value++
           completedUnits.value++ // 完成一个音节
           if (sylHadError.value) {
             // 错音节重练：插回队尾再打一遍
             sylQueue.value.push({ ...syl, redo: true })
             sylHadError.value = false
           }
-          sylCharIdx.value = 0
-          if (sylIdx.value >= sylQueue.value.length) {
-            finish()
+          if (sylIdx.value + 1 >= sylQueue.value.length) {
+            // 最后一音节：索引停回末音节保持展示，进度条动画走完再结算
+            finishWithBar()
+          } else {
+            sylIdx.value++
+            sylCharIdx.value = 0
           }
         }
       }
@@ -3650,6 +3696,28 @@ function handleInput(code, shiftKey) {
   const res = submitCode(code, shiftKey)
   flashKey(code, res.correct ? 'ok' : 'bad')
   return res
+}
+
+// 练习完成缓冲：最后一项完成后先把顶部进度条动画走到 100%，再弹结算层
+// （否则完成瞬间进度条被卸载、未播放动画就直接出现结算浮层）
+const finishPending = ref(false)
+let finishTimer = null
+function cancelFinishPending() {
+  finishPending.value = false
+  if (finishTimer) {
+    clearTimeout(finishTimer)
+    finishTimer = null
+  }
+}
+function finishWithBar() {
+  if (finishPending.value) return
+  finishPending.value = true
+  finishTimer = setTimeout(() => {
+    finishPending.value = false
+    finishTimer = null
+    // 缓冲期间若已退出/已结算（Esc、重启、切页），不再弹结算层
+    if (started.value && !completed.value) finish()
+  }, 420)
 }
 
 function finish() {
@@ -3862,6 +3930,11 @@ function onKeyDown(e) {
       e.preventDefault()
       // 整句完成：再一次空格/回车进入下一句
       if (enSentenceDone.value) {
+        if (sentenceIdx.value + 1 >= enQueue.value.length) {
+          // 最后一句：不推进索引、保持完成态展示，进度条动画走完再结算
+          finishWithBar()
+          return
+        }
         enSentenceDone.value = false
         resetSentenceScoring() // 新句子重置评分过程状态（句首 startEnWord 不误结算）
         enSentenceSpoken.value = false // 新句子重置整句语音播放标记
@@ -3870,19 +3943,15 @@ function onKeyDown(e) {
         enWordAvgs.value = {} // 新句子清空耗时记录
         enGentleInputs.value = [] // 宽松模式：新句子重置输入记录
         enGentleErrors.value = {} // 宽松模式：新句子重置错误标记
-        if (sentenceIdx.value >= enQueue.value.length) {
-          finish()
-        } else {
-          // 课包课程：进入新句子时记住续练位置（刷新/退出后仍从此句继续）
-          setCourseResume(sentenceIdx.value)
-          // 换句首词：等渲染 + 150ms 视觉缓冲后再计时（换句后的定位时间不计入首词耗时）
-          // 开启整句朗读 → 同时朗读整句，首词不再单独朗读
-          if (settings.enSpeakSentence) {
-            enSkipWordSpeak.value = true
-            nextTick(() => setTimeout(() => speakWholeSentence(), 150))
-          }
-          nextTick(() => setTimeout(() => startEnWord(), 150))
+        // 课包课程：进入新句子时记住续练位置（刷新/退出后仍从此句继续）
+        setCourseResume(sentenceIdx.value)
+        // 换句首词：等渲染 + 150ms 视觉缓冲后再计时（换句后的定位时间不计入首词耗时）
+        // 开启整句朗读 → 同时朗读整句，首词不再单独朗读
+        if (settings.enSpeakSentence) {
+          enSkipWordSpeak.value = true
+          nextTick(() => setTimeout(() => speakWholeSentence(), 150))
         }
+        nextTick(() => setTimeout(() => startEnWord(), 150))
         return
       }
       const unit = currentWord.value
@@ -4183,6 +4252,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('visibilitychange', onVisibilityChange)
   for (const t of flashTimers.values()) clearTimeout(t)
   flashTimers.clear()
+  cancelFinishPending() // 卸载时清掉结算缓冲计时器
   endSession()
 })
 </script>
@@ -4205,6 +4275,23 @@ onBeforeUnmount(() => {
 .startHint p { text-align: center; color: var(--theme-text-color); font-size: 18px; line-height: 1.7; opacity: 0.75; }
 
 .practiceArea { flex: 1; width: 100%; max-width: 1400px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 18px; }
+
+/* 练习进度细条：贴合在顶部导航下方，2px 高，绿色随进度增长 */
+.practiceProgressBar {
+  position: fixed;
+  top: 52px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 29;
+  pointer-events: none;
+}
+.practiceProgressFill {
+  height: 100%;
+  background: #3db389;
+  border-radius: 0 1px 1px 0;
+  transition: width .3s ease;
+}
 
 /* 今日目标已移至顶部工具栏（TopStatusBar），此处仅保留完成弹窗提示样式 */
 /* 完成弹窗：本次错词展示 + 刻意练习 */

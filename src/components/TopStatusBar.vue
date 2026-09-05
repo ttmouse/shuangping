@@ -68,6 +68,19 @@
         >更多 <span class="moreArrow" :class="{ open: showMoreMenu }">▾</span></button>
       </div>
     </div>
+    <!-- 专项练习进行中（错词本/生词本）：左侧返回 + 本名标题，其余图标右侧对齐（与课包练习顶部布局一致） -->
+    <div v-if="!course && started && backAction && backAction.visible" class="left">
+      <button
+        class="courseBackBtn" v-qtip
+        :data-tip="backAction.tip || '返回'"
+        @click="backAction.onClick"
+        data-nav
+        aria-label="返回"
+      >
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span v-if="backAction.title" class="modeBackTitle" :title="backAction.title">{{ backAction.title }}</span>
+    </div>
     <!-- 「更多」下拉菜单（Teleport 到 body，避免被 .left overflow-x:auto 联动裁剪） -->
     <Teleport to="body">
       <div v-if="showMoreMenu" class="moreMenuMask" @click="showMoreMenu = false"></div>
@@ -285,6 +298,8 @@ const props = defineProps({
   started: { type: Boolean, default: false },
   // 课程练习进行中切「阅读」的入口动作：{ visible, onClick }
   courseReadAction: { type: Object, default: null },
+  // 专项练习进行中（错词本/生词本）的左侧返回动作：{ visible, onClick, tip }
+  backAction: { type: Object, default: null },
 })
 
 const route = useRoute()
@@ -727,6 +742,15 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
   color: var(--theme-text-color);
 }
 .courseBackBtn:active { transform: scale(.94); }
+/* 专项练习（错词本/生词本）返回旁的本名标题：与课包面包屑课程标题同款 */
+.modeBackTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--theme-text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .courseBreadcrumb {
   display: flex;
   align-items: center;
