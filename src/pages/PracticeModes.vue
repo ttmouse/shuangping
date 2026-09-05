@@ -1229,10 +1229,10 @@ function statParts(c) {
   const items = []
   if (s.word) items.push({ k: 'word', label: `词${s.word}`, path: STAT_ICONS.word, title: `词 ${s.word}` })
   if (s.phrase) items.push({ k: 'phrase', label: `短语${s.phrase}`, path: STAT_ICONS.phrase, title: `短语 ${s.phrase}` })
-  if (s.sentence) items.push({ k: 'sentence', label: `句${s.sentence}`, path: STAT_ICONS.sentence, title: `句 ${s.sentence}` })
-  // 块与组合块合并计算，统一显示为"块"
+  // 块与组合块合并计算，统一显示为"块"（放在句型之前：词→短语→块→句，颗粒度从小到大）
   const chunkCount = (s.chunk || 0) + (s.combinedChunks || 0)
   if (chunkCount) items.push({ k: 'chunk', label: `块${chunkCount}`, path: STAT_ICONS.chunk, title: `块 ${chunkCount}` })
+  if (s.sentence) items.push({ k: 'sentence', label: `句${s.sentence}`, path: STAT_ICONS.sentence, title: `句 ${s.sentence}` })
   if (!items.length && s.sentences) return [{ k: 'sentence', label: `共 ${s.sentences} 句`, path: STAT_ICONS.sentence, title: `共 ${s.sentences} 句` }]
   return items
 }
