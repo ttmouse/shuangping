@@ -383,9 +383,6 @@
                   <div v-if="!packList.length && !packLoading" class="packEmpty">点击"加载课包"获取主题课程（850 基础词等）</div>
                   <div v-if="packList.length" class="packGrid">
                     <button v-for="p in sortedPackList" :key="p.slug" class="packCard" @click="openCoursePack(p)" data-nav>
-                      <span class="packCardCover" :style="packCoverStyle(p)">
-                        <span class="packCardCoverGlyph">{{ packGlyph(p) }}</span>
-                      </span>
                       <span class="packCardBody">
                         <span class="packCardTitle" :title="p.title">{{ p.title }}</span>
                         <span v-if="p.description" class="packCardDesc">{{ p.description }}</span>
@@ -1377,31 +1374,6 @@ function packMetaText(p) {
   const rel = ts ? relTime(ts) : ''
   if (rel) parts.push(`上次 ${rel}`)
   return parts.join(' · ')
-}
-// —— 课包卡片辅助（参考 julebu 我的课包卡片墙）——
-// 封面占位渐变：按包 slug 哈希取一组柔和渐变色（无真实封面图，用渐变+首字）
-const PACK_COVER_GRADS = [
-  ['#34d399', '#0ea5e9'], // seafoam → sky
-  ['#fbbf24', '#f97316'], // amber → orange
-  ['#a78bfa', '#6366f1'], // violet → indigo
-  ['#fb7185', '#f43f5e'], // rose
-  ['#2dd4bf', '#14b8a6'], // teal
-  ['#38bdf8', '#3b82f6'], // sky → blue
-]
-function packCoverStyle(p) {
-  let h = 0
-  for (const ch of (p.slug || '')) h = (h * 31 + ch.charCodeAt(0)) >>> 0
-  const g = PACK_COVER_GRADS[h % PACK_COVER_GRADS.length]
-  return { background: `linear-gradient(135deg, ${g[0]}, ${g[1]})` }
-}
-// 封面首字：取包名第一个汉字/字母
-function packGlyph(p) {
-  let t = (p.title || '').trim()
-  // 跳过如【人教版】这类前缀括号，取后面的核心字（"【人教版】五年级..." → "五"）
-  const pre = t.match(/^【[^】]*】/)
-  if (pre) t = t.slice(pre[0].length)
-  const m = t.match(/[\u4e00-\u9fa5A-Za-z]/)
-  return m ? m[0].toUpperCase() : 'A'
 }
 // 课包进度：已练/已完成课程数 → 进度条百分比
 function packProgress(p) {
@@ -4476,55 +4448,39 @@ onBeforeUnmount(() => {
   background: var(--theme-background-light-color);
   white-space: nowrap;
 }
-/* —— 课包列表卡片墙（参考 julebu 我的课包：封面+标题+描述+进度条）—— */
+/* —— 课包列表卡片墙（与课程卡片同一套简洁设计语言：标题+描述+底部进度，无封面色块）—— */
 .packGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px;
 }
 .packCard {
   display: flex;
   flex-direction: column;
+  gap: 8px;
   min-width: 0;
   text-align: left;
-  padding: 0;
-  border-radius: 14px;
+  padding: 14px 16px 13px;
+  height: 150px; /* 固定等高：标题/描述在上，foot 贴底 */
+  border-radius: 12px;
   border: 1px solid var(--theme-border-color);
   background: var(--theme-background-color);
-  overflow: hidden;
   cursor: pointer;
-  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
+  transition: transform .15s ease, background .15s ease, border-color .15s ease;
 }
 .packCard:hover {
-  transform: translateY(-3px);
-  border-color: color-mix(in srgb, var(--theme-text-secondary) 32%, var(--theme-border-color));
-  box-shadow: 0 8px 26px -12px color-mix(in srgb, var(--theme-text-secondary) 28%, transparent);
+  transform: translateY(-1.5px);
+  border-color: color-mix(in srgb, var(--theme-text-secondary) 38%, var(--theme-border-color));
+  background: color-mix(in srgb, var(--theme-text-secondary) 4%, var(--theme-background-light-color));
 }
 .packCard:active { transform: translateY(0) scale(.985); }
 .packCard:focus-visible { outline: 2px solid var(--theme-menu-hover-color); outline-offset: 2px; }
-.packCardCover {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  aspect-ratio: 16 / 9;
-  width: 100%;
-  color: #fff;
-}
-.packCardCoverGlyph {
-  font-size: 34px;
-  font-weight: 750;
-  letter-spacing: .5px;
-  text-shadow: 0 2px 10px rgba(0,0,0,.18);
-  opacity: .92;
-}
 .packCardBody {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  padding: 13px 14px;
-  flex: 1;
+  gap: 6px;
   min-width: 0;
+  flex: 1;
 }
 .packCardTitle {
   font-size: 15px;
