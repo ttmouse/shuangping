@@ -1,1295 +1,1120 @@
 {
-  "id": "ik1mnr6kbzjjtpcjvcijgc3y",
-  "slug": "friends-s5",
-  "title": "老友记第五季（对话版无拆解）- 适合有基础学员",
-  "description": "老友记第五季全季对话练习：整集一课、无单词拆解。根据自己需要进行练习。",
-  "courseCount": 101,
-  "courses": [
-    {
-      "order": 1,
-      "id": "xrurt6svs8gshgn8kfhlf6xg",
-      "title": "Friends S05E01 - 1",
-      "file": "L01.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 3,
-        "sentence": 97
-      }
-    },
-    {
-      "order": 2,
-      "id": "hoynejtir48h1g0e1gm3m8zx",
-      "title": "Friends S05E01 - 2",
-      "file": "L02.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 3,
-        "sentence": 97
-      }
-    },
-    {
-      "order": 3,
-      "id": "i8bj2lksf6u6br8nu97mwvy9",
-      "title": "Friends S05E01 - 3",
-      "file": "L03.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 6,
-        "sentence": 94
-      }
-    },
-    {
-      "order": 4,
-      "id": "xj64t7jkqp23q1c9kq8qjno0",
-      "title": "Friends S05E01 - 4",
-      "file": "L04.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 79,
-        "total": 79,
-        "word": 6,
-        "sentence": 73
-      }
-    },
-    {
-      "order": 5,
-      "id": "l9agql5vyav7kfd8fovsdv6p",
-      "title": "Friends S05E02 - 5",
-      "file": "L05.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 6,
-      "id": "xefodnwcgc29iddq7bbf560m",
-      "title": "Friends S05E02 - 6",
-      "file": "L06.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 5,
-        "sentence": 95
-      }
-    },
-    {
-      "order": 7,
-      "id": "lww5ez3u2tdnq697i6jlkmb7",
-      "title": "Friends S05E02 - 7",
-      "file": "L07.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 3,
-        "sentence": 97
-      }
-    },
-    {
-      "order": 8,
-      "id": "xyxfz88iqoo3sj6r3piq5s5w",
-      "title": "Friends S05E02 - 8",
-      "file": "L08.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 77,
-        "total": 77,
-        "word": 4,
-        "sentence": 73
-      }
-    },
-    {
-      "order": 9,
-      "id": "n0kbl5ddjm5lilmmezigkfv7",
-      "title": "Friends S05E03 - 9",
-      "file": "L09.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 10,
-      "id": "i82jv6wng0b01730xpd722ul",
-      "title": "Friends S05E03 - 10",
-      "file": "L10.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 11,
-      "id": "zm8usj50a3ol9qj6bpdvw7qs",
-      "title": "Friends S05E03 - 11",
-      "file": "L11.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 12,
-      "id": "x05ij83jl5gdikot4w63ra81",
-      "title": "Friends S05E03 - 12",
-      "file": "L12.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 62,
-        "total": 62,
-        "word": 2,
-        "sentence": 60
-      }
-    },
-    {
-      "order": 13,
-      "id": "iqqm367n5gne0rnomog8hoic",
-      "title": "Friends S05E04 - 13",
-      "file": "L13.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 14,
-      "id": "ep6wb2ho3fodwnlfgqdeqff3",
-      "title": "Friends S05E04 - 14",
-      "file": "L14.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 15,
-      "id": "glbglow6g728q6knaeak788y",
-      "title": "Friends S05E04 - 15",
-      "file": "L15.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 16,
-      "id": "mlycg6pkvv229dch9k2ecgu9",
-      "title": "Friends S05E04 - 16",
-      "file": "L16.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 90,
-        "total": 90,
-        "word": 2,
-        "sentence": 88
-      }
-    },
-    {
-      "order": 17,
-      "id": "omaagg6jdl1ecgw8ofcebf5f",
-      "title": "Friends S05E05 - 17",
-      "file": "L17.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 18,
-      "id": "fl1cz4cybrbja78nlii2hdki",
-      "title": "Friends S05E05 - 18",
-      "file": "L18.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 4,
-        "sentence": 96
-      }
-    },
-    {
-      "order": 19,
-      "id": "tjxyltlqjr522rqj1bbfy5ba",
-      "title": "Friends S05E05 - 19",
-      "file": "L19.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 20,
-      "id": "bsebd7w5478x05h93cem8qn0",
-      "title": "Friends S05E05 - 20",
-      "file": "L20.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 63,
-        "total": 63,
-        "word": 3,
-        "sentence": 60
-      }
-    },
-    {
-      "order": 21,
-      "id": "c2dw0dlbskv363u9cgtxz9wc",
-      "title": "Friends S05E06 - 21",
-      "file": "L21.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 22,
-      "id": "gswztsqg1i8dhwru8d7uzqpa",
-      "title": "Friends S05E06 - 22",
-      "file": "L22.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 3,
-        "sentence": 97
-      }
-    },
-    {
-      "order": 23,
-      "id": "pygogoio6i9z9sm9dbqx2nby",
-      "title": "Friends S05E06 - 23",
-      "file": "L23.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 6,
-        "sentence": 94
-      }
-    },
-    {
-      "order": 24,
-      "id": "msj0doun83d2xyccz8bikwje",
-      "title": "Friends S05E06 - 24",
-      "file": "L24.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 79,
-        "total": 79,
-        "word": 8,
-        "sentence": 71
-      }
-    },
-    {
-      "order": 25,
-      "id": "kxsdxfizy716jgr54cv671o4",
-      "title": "Friends S05E07 - 25",
-      "file": "L25.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 26,
-      "id": "www291vicc41ams4nlz3bekp",
-      "title": "Friends S05E07 - 26",
-      "file": "L26.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 5,
-        "sentence": 95
-      }
-    },
-    {
-      "order": 27,
-      "id": "qgruwnjvfdi8478cv34gl61x",
-      "title": "Friends S05E07 - 27",
-      "file": "L27.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 28,
-      "id": "rk7zsvj17wno0um11p01to6a",
-      "title": "Friends S05E07 - 28",
-      "file": "L28.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 77,
-        "total": 77,
-        "word": 1,
-        "sentence": 76
-      }
-    },
-    {
-      "order": 29,
-      "id": "br18l4m9g8lmek5qh8a0yizw",
-      "title": "Friends S05E08 - 29",
-      "file": "L29.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 30,
-      "id": "a8uj56o958ydv0szj114ogfk",
-      "title": "Friends S05E08 - 30",
-      "file": "L30.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 3,
-        "sentence": 97
-      }
-    },
-    {
-      "order": 31,
-      "id": "x9lslvgpqr7bbmwkbl2z8qti",
-      "title": "Friends S05E08 - 31",
-      "file": "L31.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 32,
-      "id": "tpmitbb4pjwpp2se7nbxll37",
-      "title": "Friends S05E08 - 32",
-      "file": "L32.json",
-      "subtitle": "2025.04.22",
-      "stats": {
-        "sentences": 68,
-        "total": 68,
-        "word": 1,
-        "sentence": 67
-      }
-    },
-    {
-      "order": 33,
-      "id": "bzp1di8kg1nrployn0vvmyrn",
-      "title": "Friends S05E09 - 33",
-      "file": "L33.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 34,
-      "id": "tm795q506id85insuh9kni6m",
-      "title": "Friends S05E09 - 34",
-      "file": "L34.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 35,
-      "id": "k96irndhq49a44y1tprmi66i",
-      "title": "Friends S05E09 - 35",
-      "file": "L35.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 5,
-        "sentence": 95
-      }
-    },
-    {
-      "order": 36,
-      "id": "caf4rbug7wqwewmlchcgfcc8",
-      "title": "Friends S05E09 - 36",
-      "file": "L36.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 68,
-        "total": 68,
-        "sentence": 68
-      }
-    },
-    {
-      "order": 37,
-      "id": "nslxh8azw9qcva5w5wct4px4",
-      "title": "Friends S05E10 - 37",
-      "file": "L37.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 38,
-      "id": "hf0xgdypnwu0dp48i6922ngy",
-      "title": "Friends S05E10 - 38",
-      "file": "L38.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 39,
-      "id": "hm4bkoqm89wqtos60gc7xrcc",
-      "title": "Friends S05E10 - 39",
-      "file": "L39.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 40,
-      "id": "liuapbvsuiwj1od4hhx7bwcp",
-      "title": "Friends S05E10 - 40",
-      "file": "L40.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 96,
-        "total": 96,
-        "word": 1,
-        "sentence": 95
-      }
-    },
-    {
-      "order": 41,
-      "id": "lbmucaxm3bdggmpcxm49bno9",
-      "title": "Friends S05E11 - 41",
-      "file": "L41.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 42,
-      "id": "yjpb5r1okva3b921sacnqry1",
-      "title": "Friends S05E11 - 42",
-      "file": "L42.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 4,
-        "sentence": 96
-      }
-    },
-    {
-      "order": 43,
-      "id": "r4o6cqvf38yr6grey5ilucft",
-      "title": "Friends S05E11 - 43",
-      "file": "L43.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 44,
-      "id": "xff4wgkmbafobit4qjqu7c3p",
-      "title": "Friends S05E11 - 44",
-      "file": "L44.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 51,
-        "total": 51,
-        "sentence": 51
-      }
-    },
-    {
-      "order": 45,
-      "id": "gktn1emo43vi5qbzgy4w88l3",
-      "title": "Friends S05E12 - 45",
-      "file": "L45.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 46,
-      "id": "x6enj4yytw9mv9jer3z1o2qz",
-      "title": "Friends S05E12 - 46",
-      "file": "L46.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 47,
-      "id": "r3z0n0lisw7m78dzfv9b5ho6",
-      "title": "Friends S05E12 - 47",
-      "file": "L47.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 48,
-      "id": "mpy3go79inocd33qcb33r6ev",
-      "title": "Friends S05E12 - 48",
-      "file": "L48.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 93,
-        "total": 93,
-        "word": 4,
-        "sentence": 89
-      }
-    },
-    {
-      "order": 49,
-      "id": "ce8rhkqxnml1k53zsn2dq5n7",
-      "title": "Friends S05E13 - 49",
-      "file": "L49.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 50,
-      "id": "lxp98mn99pvu977ssxrt4vas",
-      "title": "Friends S05E13 - 50",
-      "file": "L50.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 51,
-      "id": "pkm8ztzsgiokrpmmzz0tvbok",
-      "title": "Friends S05E13 - 51",
-      "file": "L51.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 52,
-      "id": "qd1qs3tspfk8pgll1q9hj956",
-      "title": "Friends S05E13 - 52",
-      "file": "L52.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 92,
-        "total": 92,
-        "sentence": 92
-      }
-    },
-    {
-      "order": 53,
-      "id": "bi92cup60r9u6y6n001z05qd",
-      "title": "Friends S05E14 - 53",
-      "file": "L53.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 54,
-      "id": "rel7ypgzq4rxzoxytrazlz6r",
-      "title": "Friends S05E14 - 54",
-      "file": "L54.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 4,
-        "sentence": 96
-      }
-    },
-    {
-      "order": 55,
-      "id": "zr5e57a82hyg2ar7yymclhe6",
-      "title": "Friends S05E14 - 55",
-      "file": "L55.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 6,
-        "sentence": 94
-      }
-    },
-    {
-      "order": 56,
-      "id": "tg090cx9sro710ijlvhds1cc",
-      "title": "Friends S05E14 - 56",
-      "file": "L56.json",
-      "subtitle": "2025.04.26",
-      "stats": {
-        "sentences": 65,
-        "total": 65,
-        "sentence": 65
-      }
-    },
-    {
-      "order": 57,
-      "id": "q4gvjl56acc4ac93tuijtixx",
-      "title": "Friends S05E15 - 57",
-      "file": "L57.json",
-      "subtitle": "2025.04.27",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 58,
-      "id": "ugwthk6tto4ad7sk6irdni3g",
-      "title": "Friends S05E15 - 58",
-      "file": "L58.json",
-      "subtitle": "2025.04.27",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 59,
-      "id": "rjos53yk7ffu3n7trt3or3z8",
-      "title": "Friends S05E15 - 59",
-      "file": "L59.json",
-      "subtitle": "2025.04.27",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 3,
-        "sentence": 97
-      }
-    },
-    {
-      "order": 60,
-      "id": "l0q82rm8e1drpmek3pss7h3t",
-      "title": "Friends S05E15 - 60",
-      "file": "L60.json",
-      "subtitle": "2025.04.27",
-      "stats": {
-        "sentences": 72,
-        "total": 72,
-        "word": 1,
-        "sentence": 71
-      }
-    },
-    {
-      "order": 61,
-      "id": "eckuhkp75tytjtrluiimr3mf",
-      "title": "Friends S05E16 - 61",
-      "file": "L61.json",
-      "subtitle": "2025.04.27",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 62,
-      "id": "kg6z3dvtdrf6ppluxejkd8v6",
-      "title": "Friends S05E16 - 62",
-      "file": "L62.json",
-      "subtitle": "2025.04.27",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 63,
-      "id": "xdwi5j0t4wsbmhrhplmr84yz",
-      "title": "Friends S05E16 - 63",
-      "file": "L63.json",
-      "subtitle": "2025.04.27",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 3,
-        "sentence": 97
-      }
-    },
-    {
-      "order": 64,
-      "id": "x3jgyhi0ruhu0udb4x8hzbys",
-      "title": "Friends S05E16 - 64",
-      "file": "L64.json",
-      "subtitle": "2025.04.27",
-      "stats": {
-        "sentences": 90,
-        "total": 90,
-        "word": 2,
-        "sentence": 88
-      }
-    },
-    {
-      "order": 65,
-      "id": "c0pjfa1hdtq7x7okwzz30kzo",
-      "title": "Friends S05E17 - 65",
-      "file": "L65.json",
-      "subtitle": "2025.04.27",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 66,
-      "id": "fjqx4zjt1xv80l1skzctrxtt",
-      "title": "Friends S05E17 - 66",
-      "file": "L66.json",
-      "subtitle": "2025.04.27",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 67,
-      "id": "rgj68prl8cauzgaebh98jui0",
-      "title": "Friends S05E17 - 67",
-      "file": "L67.json",
-      "subtitle": "2025.04.27",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 4,
-        "sentence": 96
-      }
-    },
-    {
-      "order": 68,
-      "id": "dqw7s7hgvmfviymek6d6zy4f",
-      "title": "Friends S05E17 - 68",
-      "file": "L68.json",
-      "subtitle": "2025.04.27",
-      "stats": {
-        "sentences": 75,
-        "total": 75,
-        "word": 1,
-        "sentence": 74
-      }
-    },
-    {
-      "order": 69,
-      "id": "dsvg1e5utkyrvmqwr0juan42",
-      "title": "Friends S05E18 - 69",
-      "file": "L69.json",
-      "subtitle": "2025.05.12",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 5,
-        "sentence": 95
-      }
-    },
-    {
-      "order": 70,
-      "id": "fc647bl6plakvaqvcbbupr7m",
-      "title": "Friends S05E18 - 70",
-      "file": "L70.json",
-      "subtitle": "2025.05.12",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 71,
-      "id": "opwou6f8lhrnjnvt6qq0bdyj",
-      "title": "Friends S05E18 - 71",
-      "file": "L71.json",
-      "subtitle": "2025.05.12",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 72,
-      "id": "qxwdlnwafkrch2ef2xavshgd",
-      "title": "Friends S05E18 - 72",
-      "file": "L72.json",
-      "subtitle": "2025.05.12",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 73,
-      "id": "p73t6u2a4wndh4k5uiwwq6po",
-      "title": "Friends S05E18 - 73",
-      "file": "L73.json",
-      "subtitle": "2025.05.12",
-      "stats": {
-        "sentences": 40,
-        "total": 40,
-        "sentence": 40
-      }
-    },
-    {
-      "order": 74,
-      "id": "s58wvh2o90dw4qdorpyhzslg",
-      "title": "Friends S05E19 - 74",
-      "file": "L74.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 75,
-      "id": "qnucop1n5tqldjo00p93qwi4",
-      "title": "Friends S05E19 - 75",
-      "file": "L75.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 76,
-      "id": "oq3hzc1lpw0iwirtamysjcz8",
-      "title": "Friends S05E19 - 76",
-      "file": "L76.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 77,
-      "id": "qm4cwbs7zn8nq8vjb620r0w8",
-      "title": "Friends S05E19 - 77",
-      "file": "L77.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 78,
-      "id": "gpsqfn3b9657g0ny9j3n72uh",
-      "title": "Friends S05E19 - 78",
-      "file": "L78.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 9,
-        "total": 9,
-        "sentence": 9
-      }
-    },
-    {
-      "order": 79,
-      "id": "sslxzwmt0ds1wmjvpr4xru7z",
-      "title": "Friends S05E19 - 79",
-      "file": "L79.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 4,
-        "sentence": 96
-      }
-    },
-    {
-      "order": 80,
-      "id": "p05xz9z573711fxgkhncevbf",
-      "title": "Friends S05E19 - 80",
-      "file": "L80.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 81,
-      "id": "cel9h97ve0bj0vvqvnjdabl9",
-      "title": "Friends S05E20 - 81",
-      "file": "L81.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 82,
-      "id": "tyihndevnxpbyd4e4b49wn8y",
-      "title": "Friends S05E20 - 82",
-      "file": "L82.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 83,
-      "id": "a9qpsro2rg8cc2gn9cb2xf6u",
-      "title": "Friends S05E20 - 83",
-      "file": "L83.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 6,
-        "total": 6,
-        "sentence": 6
-      }
-    },
-    {
-      "order": 84,
-      "id": "eg5xxlc3w7kfp6chjkr99tif",
-      "title": "Friends S05E20 - 84",
-      "file": "L84.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 85,
-      "id": "awbczlbwvo39ohvkbibg6gl1",
-      "title": "Friends S05E20 - 85",
-      "file": "L85.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 86,
-      "id": "sncsp4iwygf1khaus7araga1",
-      "title": "Friends S05E20 - 86",
-      "file": "L86.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 87,
-      "id": "l2sn2g1esasm4b79r1zarzlo",
-      "title": "Friends S05E20 - 87",
-      "file": "L87.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 88,
-      "id": "fgdi1e0c4vzk8dcf4tdi9gd5",
-      "title": "Friends S05E20 - 88",
-      "file": "L88.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 58,
-        "total": 58,
-        "word": 2,
-        "sentence": 56
-      }
-    },
-    {
-      "order": 89,
-      "id": "sw1m7elinb41ju9vcnagup08",
-      "title": "Friends S05E20 - 89",
-      "file": "L89.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 90,
-      "id": "rur6az6by2j39d0pol7soqxv",
-      "title": "Friends S05E20 - 90",
-      "file": "L90.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 4,
-        "sentence": 96
-      }
-    },
-    {
-      "order": 91,
-      "id": "j32iv0lnwymt2fhtqzpajzvy",
-      "title": "Friends S05E22 - 91",
-      "file": "L91.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 92,
-      "id": "uhjzgkw77k41zbjemytwkr2y",
-      "title": "Friends S05E22 - 92",
-      "file": "L92.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 3,
-        "sentence": 97
-      }
-    },
-    {
-      "order": 93,
-      "id": "d3z8gauawudes6m9yc2plxem",
-      "title": "Friends S05E22 - 93",
-      "file": "L93.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 70,
-        "total": 70,
-        "word": 5,
-        "sentence": 65
-      }
-    },
-    {
-      "order": 94,
-      "id": "sxemkkcg53bfydp16bbqubvg",
-      "title": "Friends S05E22 - 94",
-      "file": "L94.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 95,
-      "id": "z2iri4btzpus0adkb6ssmieo",
-      "title": "Friends S05E22 - 95",
-      "file": "L95.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 96,
-      "id": "ys4lumxhu1b6ua2fs37svxwm",
-      "title": "Friends S05E22 - 96",
-      "file": "L96.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 97,
-      "id": "aey22hh1ts7nd4qxkwg484yz",
-      "title": "Friends S05E22 - 97",
-      "file": "L97.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 78,
-        "total": 78,
-        "word": 3,
-        "sentence": 75
-      }
-    },
-    {
-      "order": 98,
-      "id": "glkzlao8cxpy4dusejipjpxm",
-      "title": "Friends S05E22 - 98",
-      "file": "L98.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 99,
-      "id": "plietnafudia1db20npp06yy",
-      "title": "Friends S05E22 - 99",
-      "file": "L99.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 100,
-      "id": "qbtokdkdqvav013kakq69r4k",
-      "title": "Friends S05E22 - 100",
-      "file": "L100.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 101,
-      "id": "oy91fzx67eilisyu7osh54pm",
-      "title": "Friends S05E22 - 101",
-      "file": "L101.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 43,
-        "total": 43,
-        "word": 1,
-        "sentence": 42
-      }
-    }
-  ]
+ "id": "ik1mnr6kbzjjtpcjvcijgc3y",
+ "slug": "friends-s5",
+ "title": "老友记 第五季",
+ "description": "老友记 Friends 美剧经典对话",
+ "courseCount": 101,
+ "courses": [
+  {
+   "order": 1,
+   "id": "xrurt6svs8gshgn8kfhlf6xg",
+   "title": "Friends S05E01 - 1",
+   "file": "L01.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 2,
+   "id": "hoynejtir48h1g0e1gm3m8zx",
+   "title": "Friends S05E01 - 2",
+   "file": "L02.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 3,
+   "id": "i8bj2lksf6u6br8nu97mwvy9",
+   "title": "Friends S05E01 - 3",
+   "file": "L03.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 4,
+   "id": "xj64t7jkqp23q1c9kq8qjno0",
+   "title": "Friends S05E01 - 4",
+   "file": "L04.json",
+   "stats": {
+    "sentences": 79,
+    "total": 79,
+    "word": 79
+   }
+  },
+  {
+   "order": 5,
+   "id": "l9agql5vyav7kfd8fovsdv6p",
+   "title": "Friends S05E02 - 5",
+   "file": "L05.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 6,
+   "id": "xefodnwcgc29iddq7bbf560m",
+   "title": "Friends S05E02 - 6",
+   "file": "L06.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 7,
+   "id": "lww5ez3u2tdnq697i6jlkmb7",
+   "title": "Friends S05E02 - 7",
+   "file": "L07.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 8,
+   "id": "xyxfz88iqoo3sj6r3piq5s5w",
+   "title": "Friends S05E02 - 8",
+   "file": "L08.json",
+   "stats": {
+    "sentences": 77,
+    "total": 77,
+    "word": 77
+   }
+  },
+  {
+   "order": 9,
+   "id": "n0kbl5ddjm5lilmmezigkfv7",
+   "title": "Friends S05E03 - 9",
+   "file": "L09.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 10,
+   "id": "i82jv6wng0b01730xpd722ul",
+   "title": "Friends S05E03 - 10",
+   "file": "L10.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 11,
+   "id": "zm8usj50a3ol9qj6bpdvw7qs",
+   "title": "Friends S05E03 - 11",
+   "file": "L11.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 12,
+   "id": "x05ij83jl5gdikot4w63ra81",
+   "title": "Friends S05E03 - 12",
+   "file": "L12.json",
+   "stats": {
+    "sentences": 62,
+    "total": 62,
+    "word": 62
+   }
+  },
+  {
+   "order": 13,
+   "id": "iqqm367n5gne0rnomog8hoic",
+   "title": "Friends S05E04 - 13",
+   "file": "L13.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 14,
+   "id": "ep6wb2ho3fodwnlfgqdeqff3",
+   "title": "Friends S05E04 - 14",
+   "file": "L14.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 15,
+   "id": "glbglow6g728q6knaeak788y",
+   "title": "Friends S05E04 - 15",
+   "file": "L15.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 16,
+   "id": "mlycg6pkvv229dch9k2ecgu9",
+   "title": "Friends S05E04 - 16",
+   "file": "L16.json",
+   "stats": {
+    "sentences": 90,
+    "total": 90,
+    "word": 90
+   }
+  },
+  {
+   "order": 17,
+   "id": "omaagg6jdl1ecgw8ofcebf5f",
+   "title": "Friends S05E05 - 17",
+   "file": "L17.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 18,
+   "id": "fl1cz4cybrbja78nlii2hdki",
+   "title": "Friends S05E05 - 18",
+   "file": "L18.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 19,
+   "id": "tjxyltlqjr522rqj1bbfy5ba",
+   "title": "Friends S05E05 - 19",
+   "file": "L19.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 20,
+   "id": "bsebd7w5478x05h93cem8qn0",
+   "title": "Friends S05E05 - 20",
+   "file": "L20.json",
+   "stats": {
+    "sentences": 63,
+    "total": 63,
+    "word": 63
+   }
+  },
+  {
+   "order": 21,
+   "id": "c2dw0dlbskv363u9cgtxz9wc",
+   "title": "Friends S05E06 - 21",
+   "file": "L21.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 22,
+   "id": "gswztsqg1i8dhwru8d7uzqpa",
+   "title": "Friends S05E06 - 22",
+   "file": "L22.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 23,
+   "id": "pygogoio6i9z9sm9dbqx2nby",
+   "title": "Friends S05E06 - 23",
+   "file": "L23.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 24,
+   "id": "msj0doun83d2xyccz8bikwje",
+   "title": "Friends S05E06 - 24",
+   "file": "L24.json",
+   "stats": {
+    "sentences": 79,
+    "total": 79,
+    "word": 79
+   }
+  },
+  {
+   "order": 25,
+   "id": "kxsdxfizy716jgr54cv671o4",
+   "title": "Friends S05E07 - 25",
+   "file": "L25.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 26,
+   "id": "www291vicc41ams4nlz3bekp",
+   "title": "Friends S05E07 - 26",
+   "file": "L26.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 27,
+   "id": "qgruwnjvfdi8478cv34gl61x",
+   "title": "Friends S05E07 - 27",
+   "file": "L27.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 28,
+   "id": "rk7zsvj17wno0um11p01to6a",
+   "title": "Friends S05E07 - 28",
+   "file": "L28.json",
+   "stats": {
+    "sentences": 77,
+    "total": 77,
+    "word": 77
+   }
+  },
+  {
+   "order": 29,
+   "id": "br18l4m9g8lmek5qh8a0yizw",
+   "title": "Friends S05E08 - 29",
+   "file": "L29.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 30,
+   "id": "a8uj56o958ydv0szj114ogfk",
+   "title": "Friends S05E08 - 30",
+   "file": "L30.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 31,
+   "id": "x9lslvgpqr7bbmwkbl2z8qti",
+   "title": "Friends S05E08 - 31",
+   "file": "L31.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 32,
+   "id": "tpmitbb4pjwpp2se7nbxll37",
+   "title": "Friends S05E08 - 32",
+   "file": "L32.json",
+   "stats": {
+    "sentences": 68,
+    "total": 68,
+    "word": 68
+   }
+  },
+  {
+   "order": 33,
+   "id": "bzp1di8kg1nrployn0vvmyrn",
+   "title": "Friends S05E09 - 33",
+   "file": "L33.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 34,
+   "id": "tm795q506id85insuh9kni6m",
+   "title": "Friends S05E09 - 34",
+   "file": "L34.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 35,
+   "id": "k96irndhq49a44y1tprmi66i",
+   "title": "Friends S05E09 - 35",
+   "file": "L35.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 36,
+   "id": "caf4rbug7wqwewmlchcgfcc8",
+   "title": "Friends S05E09 - 36",
+   "file": "L36.json",
+   "stats": {
+    "sentences": 68,
+    "total": 68,
+    "word": 68
+   }
+  },
+  {
+   "order": 37,
+   "id": "nslxh8azw9qcva5w5wct4px4",
+   "title": "Friends S05E10 - 37",
+   "file": "L37.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 38,
+   "id": "hf0xgdypnwu0dp48i6922ngy",
+   "title": "Friends S05E10 - 38",
+   "file": "L38.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 39,
+   "id": "hm4bkoqm89wqtos60gc7xrcc",
+   "title": "Friends S05E10 - 39",
+   "file": "L39.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 40,
+   "id": "liuapbvsuiwj1od4hhx7bwcp",
+   "title": "Friends S05E10 - 40",
+   "file": "L40.json",
+   "stats": {
+    "sentences": 96,
+    "total": 96,
+    "word": 96
+   }
+  },
+  {
+   "order": 41,
+   "id": "lbmucaxm3bdggmpcxm49bno9",
+   "title": "Friends S05E11 - 41",
+   "file": "L41.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 42,
+   "id": "yjpb5r1okva3b921sacnqry1",
+   "title": "Friends S05E11 - 42",
+   "file": "L42.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 43,
+   "id": "r4o6cqvf38yr6grey5ilucft",
+   "title": "Friends S05E11 - 43",
+   "file": "L43.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 44,
+   "id": "xff4wgkmbafobit4qjqu7c3p",
+   "title": "Friends S05E11 - 44",
+   "file": "L44.json",
+   "stats": {
+    "sentences": 51,
+    "total": 51,
+    "word": 51
+   }
+  },
+  {
+   "order": 45,
+   "id": "gktn1emo43vi5qbzgy4w88l3",
+   "title": "Friends S05E12 - 45",
+   "file": "L45.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 46,
+   "id": "x6enj4yytw9mv9jer3z1o2qz",
+   "title": "Friends S05E12 - 46",
+   "file": "L46.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 47,
+   "id": "r3z0n0lisw7m78dzfv9b5ho6",
+   "title": "Friends S05E12 - 47",
+   "file": "L47.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 48,
+   "id": "mpy3go79inocd33qcb33r6ev",
+   "title": "Friends S05E12 - 48",
+   "file": "L48.json",
+   "stats": {
+    "sentences": 93,
+    "total": 93,
+    "word": 93
+   }
+  },
+  {
+   "order": 49,
+   "id": "ce8rhkqxnml1k53zsn2dq5n7",
+   "title": "Friends S05E13 - 49",
+   "file": "L49.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 50,
+   "id": "lxp98mn99pvu977ssxrt4vas",
+   "title": "Friends S05E13 - 50",
+   "file": "L50.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 51,
+   "id": "pkm8ztzsgiokrpmmzz0tvbok",
+   "title": "Friends S05E13 - 51",
+   "file": "L51.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 52,
+   "id": "qd1qs3tspfk8pgll1q9hj956",
+   "title": "Friends S05E13 - 52",
+   "file": "L52.json",
+   "stats": {
+    "sentences": 92,
+    "total": 92,
+    "word": 92
+   }
+  },
+  {
+   "order": 53,
+   "id": "bi92cup60r9u6y6n001z05qd",
+   "title": "Friends S05E14 - 53",
+   "file": "L53.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 54,
+   "id": "rel7ypgzq4rxzoxytrazlz6r",
+   "title": "Friends S05E14 - 54",
+   "file": "L54.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 55,
+   "id": "zr5e57a82hyg2ar7yymclhe6",
+   "title": "Friends S05E14 - 55",
+   "file": "L55.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 56,
+   "id": "tg090cx9sro710ijlvhds1cc",
+   "title": "Friends S05E14 - 56",
+   "file": "L56.json",
+   "stats": {
+    "sentences": 65,
+    "total": 65,
+    "word": 65
+   }
+  },
+  {
+   "order": 57,
+   "id": "q4gvjl56acc4ac93tuijtixx",
+   "title": "Friends S05E15 - 57",
+   "file": "L57.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 58,
+   "id": "ugwthk6tto4ad7sk6irdni3g",
+   "title": "Friends S05E15 - 58",
+   "file": "L58.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 59,
+   "id": "rjos53yk7ffu3n7trt3or3z8",
+   "title": "Friends S05E15 - 59",
+   "file": "L59.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 60,
+   "id": "l0q82rm8e1drpmek3pss7h3t",
+   "title": "Friends S05E15 - 60",
+   "file": "L60.json",
+   "stats": {
+    "sentences": 72,
+    "total": 72,
+    "word": 72
+   }
+  },
+  {
+   "order": 61,
+   "id": "eckuhkp75tytjtrluiimr3mf",
+   "title": "Friends S05E16 - 61",
+   "file": "L61.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 62,
+   "id": "kg6z3dvtdrf6ppluxejkd8v6",
+   "title": "Friends S05E16 - 62",
+   "file": "L62.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 63,
+   "id": "xdwi5j0t4wsbmhrhplmr84yz",
+   "title": "Friends S05E16 - 63",
+   "file": "L63.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 64,
+   "id": "x3jgyhi0ruhu0udb4x8hzbys",
+   "title": "Friends S05E16 - 64",
+   "file": "L64.json",
+   "stats": {
+    "sentences": 90,
+    "total": 90,
+    "word": 90
+   }
+  },
+  {
+   "order": 65,
+   "id": "c0pjfa1hdtq7x7okwzz30kzo",
+   "title": "Friends S05E17 - 65",
+   "file": "L65.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 66,
+   "id": "fjqx4zjt1xv80l1skzctrxtt",
+   "title": "Friends S05E17 - 66",
+   "file": "L66.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 67,
+   "id": "rgj68prl8cauzgaebh98jui0",
+   "title": "Friends S05E17 - 67",
+   "file": "L67.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 68,
+   "id": "dqw7s7hgvmfviymek6d6zy4f",
+   "title": "Friends S05E17 - 68",
+   "file": "L68.json",
+   "stats": {
+    "sentences": 75,
+    "total": 75,
+    "word": 75
+   }
+  },
+  {
+   "order": 69,
+   "id": "dsvg1e5utkyrvmqwr0juan42",
+   "title": "Friends S05E18 - 69",
+   "file": "L69.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 70,
+   "id": "fc647bl6plakvaqvcbbupr7m",
+   "title": "Friends S05E18 - 70",
+   "file": "L70.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 71,
+   "id": "opwou6f8lhrnjnvt6qq0bdyj",
+   "title": "Friends S05E18 - 71",
+   "file": "L71.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 72,
+   "id": "qxwdlnwafkrch2ef2xavshgd",
+   "title": "Friends S05E18 - 72",
+   "file": "L72.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 73,
+   "id": "p73t6u2a4wndh4k5uiwwq6po",
+   "title": "Friends S05E18 - 73",
+   "file": "L73.json",
+   "stats": {
+    "sentences": 40,
+    "total": 40,
+    "word": 40
+   }
+  },
+  {
+   "order": 74,
+   "id": "s58wvh2o90dw4qdorpyhzslg",
+   "title": "Friends S05E19 - 74",
+   "file": "L74.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 75,
+   "id": "qnucop1n5tqldjo00p93qwi4",
+   "title": "Friends S05E19 - 75",
+   "file": "L75.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 76,
+   "id": "oq3hzc1lpw0iwirtamysjcz8",
+   "title": "Friends S05E19 - 76",
+   "file": "L76.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 77,
+   "id": "qm4cwbs7zn8nq8vjb620r0w8",
+   "title": "Friends S05E19 - 77",
+   "file": "L77.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 78,
+   "id": "gpsqfn3b9657g0ny9j3n72uh",
+   "title": "Friends S05E19 - 78",
+   "file": "L78.json",
+   "stats": {
+    "sentences": 9,
+    "total": 9,
+    "word": 9
+   }
+  },
+  {
+   "order": 79,
+   "id": "sslxzwmt0ds1wmjvpr4xru7z",
+   "title": "Friends S05E19 - 79",
+   "file": "L79.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 80,
+   "id": "p05xz9z573711fxgkhncevbf",
+   "title": "Friends S05E19 - 80",
+   "file": "L80.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 81,
+   "id": "cel9h97ve0bj0vvqvnjdabl9",
+   "title": "Friends S05E20 - 81",
+   "file": "L81.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 82,
+   "id": "tyihndevnxpbyd4e4b49wn8y",
+   "title": "Friends S05E20 - 82",
+   "file": "L82.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 83,
+   "id": "a9qpsro2rg8cc2gn9cb2xf6u",
+   "title": "Friends S05E20 - 83",
+   "file": "L83.json",
+   "stats": {
+    "sentences": 6,
+    "total": 6,
+    "word": 6
+   }
+  },
+  {
+   "order": 84,
+   "id": "eg5xxlc3w7kfp6chjkr99tif",
+   "title": "Friends S05E20 - 84",
+   "file": "L84.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 85,
+   "id": "awbczlbwvo39ohvkbibg6gl1",
+   "title": "Friends S05E20 - 85",
+   "file": "L85.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 86,
+   "id": "sncsp4iwygf1khaus7araga1",
+   "title": "Friends S05E20 - 86",
+   "file": "L86.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 87,
+   "id": "l2sn2g1esasm4b79r1zarzlo",
+   "title": "Friends S05E20 - 87",
+   "file": "L87.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 88,
+   "id": "fgdi1e0c4vzk8dcf4tdi9gd5",
+   "title": "Friends S05E20 - 88",
+   "file": "L88.json",
+   "stats": {
+    "sentences": 58,
+    "total": 58,
+    "word": 58
+   }
+  },
+  {
+   "order": 89,
+   "id": "sw1m7elinb41ju9vcnagup08",
+   "title": "Friends S05E20 - 89",
+   "file": "L89.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 90,
+   "id": "rur6az6by2j39d0pol7soqxv",
+   "title": "Friends S05E20 - 90",
+   "file": "L90.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 91,
+   "id": "j32iv0lnwymt2fhtqzpajzvy",
+   "title": "Friends S05E22 - 91",
+   "file": "L91.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 92,
+   "id": "uhjzgkw77k41zbjemytwkr2y",
+   "title": "Friends S05E22 - 92",
+   "file": "L92.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 93,
+   "id": "d3z8gauawudes6m9yc2plxem",
+   "title": "Friends S05E22 - 93",
+   "file": "L93.json",
+   "stats": {
+    "sentences": 70,
+    "total": 70,
+    "word": 70
+   }
+  },
+  {
+   "order": 94,
+   "id": "sxemkkcg53bfydp16bbqubvg",
+   "title": "Friends S05E22 - 94",
+   "file": "L94.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 95,
+   "id": "z2iri4btzpus0adkb6ssmieo",
+   "title": "Friends S05E22 - 95",
+   "file": "L95.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 96,
+   "id": "ys4lumxhu1b6ua2fs37svxwm",
+   "title": "Friends S05E22 - 96",
+   "file": "L96.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 97,
+   "id": "aey22hh1ts7nd4qxkwg484yz",
+   "title": "Friends S05E22 - 97",
+   "file": "L97.json",
+   "stats": {
+    "sentences": 78,
+    "total": 78,
+    "word": 78
+   }
+  },
+  {
+   "order": 98,
+   "id": "glkzlao8cxpy4dusejipjpxm",
+   "title": "Friends S05E22 - 98",
+   "file": "L98.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 99,
+   "id": "plietnafudia1db20npp06yy",
+   "title": "Friends S05E22 - 99",
+   "file": "L99.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 100,
+   "id": "qbtokdkdqvav013kakq69r4k",
+   "title": "Friends S05E22 - 100",
+   "file": "L100.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 101,
+   "id": "oy91fzx67eilisyu7osh54pm",
+   "title": "Friends S05E22 - 101",
+   "file": "L101.json",
+   "stats": {
+    "sentences": 43,
+    "total": 43,
+    "word": 43
+   }
+  }
+ ]
 }

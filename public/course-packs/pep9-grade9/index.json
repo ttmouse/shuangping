@@ -1,0 +1,421 @@
+{
+ "id": "rdi2zkonadwxomesmxvxc63t",
+ "slug": "pep9-grade9",
+ "title": "【人教版】九年级全一册 课本同步",
+ "description": "与人教版教材完全同步",
+ "courseCount": 28,
+ "courses": [
+  {
+   "order": 1,
+   "id": "r5pxy0mmcf781seb6tt5wyy0",
+   "title": "Unit 1 How can we become good learners?【单词】",
+   "file": "L01.json",
+   "subtitle": "Unit 1 How can we become good learners?【单词】",
+   "stats": {
+    "sentences": 44,
+    "total": 44,
+    "word": 40,
+    "sentence": 4
+   }
+  },
+  {
+   "order": 2,
+   "id": "fqvch3d1asgti0k9m7zfv1fr",
+   "title": "Unit 1 How can we become good learners?【例句】",
+   "file": "L02.json",
+   "subtitle": "Unit 1 How can we become good learners?【例句】",
+   "stats": {
+    "sentences": 145,
+    "total": 145,
+    "word": 54,
+    "phrase": 46,
+    "chunk": 21,
+    "combinedChunks": 1,
+    "sentence": 23
+   }
+  },
+  {
+   "order": 3,
+   "id": "aygjxn4joizcv3jc0dvfmus1",
+   "title": "Unit 2 I think that mooncakes are delicious!【单词】",
+   "file": "L03.json",
+   "subtitle": "Unit 2 I think that mooncakes are delicious!【单词】",
+   "stats": {
+    "sentences": 56,
+    "total": 56,
+    "word": 41,
+    "sentence": 15
+   }
+  },
+  {
+   "order": 4,
+   "id": "smwamyy9kams75jvb1qrf4i6",
+   "title": "Unit 2 I think that mooncakes are delicious!【例句】",
+   "file": "L04.json",
+   "subtitle": "Unit 2 I think that mooncakes are delicious!【例句】",
+   "stats": {
+    "sentences": 163,
+    "total": 163,
+    "word": 66,
+    "phrase": 39,
+    "chunk": 31,
+    "combinedChunks": 7,
+    "sentence": 20
+   }
+  },
+  {
+   "order": 5,
+   "id": "rnifene1xhmdx9c2fk6cs5o3",
+   "title": "Unit 3 Could you please tell me where the restrooms are?【单词】",
+   "file": "L05.json",
+   "subtitle": "Unit 3 Could you please tell me where the restrooms are?【单词】",
+   "stats": {
+    "sentences": 68,
+    "total": 68,
+    "word": 60,
+    "sentence": 8
+   }
+  },
+  {
+   "order": 6,
+   "id": "gnvicrberhf11fu1kpuyy0do",
+   "title": "Unit 3 Could you please tell me where the restrooms are?【例句】",
+   "file": "L06.json",
+   "subtitle": "Unit 3 Could you please tell me where the restrooms are?【例句】",
+   "stats": {
+    "sentences": 173,
+    "total": 173,
+    "word": 67,
+    "phrase": 47,
+    "chunk": 28,
+    "combinedChunks": 6,
+    "sentence": 25
+   }
+  },
+  {
+   "order": 7,
+   "id": "qi056utfqu02k1zg04rtrar9",
+   "title": "Unit 4 I used to be afraid of the dark.【单词】",
+   "file": "L07.json",
+   "subtitle": "Unit 4 I used to be afraid of the dark.【单词】",
+   "stats": {
+    "sentences": 34,
+    "total": 34,
+    "word": 27,
+    "sentence": 7
+   }
+  },
+  {
+   "order": 8,
+   "id": "iydqigbzgs0nwat3hsibropu",
+   "title": "Unit 4 I used to be afraid of the dark.【例句】",
+   "file": "L08.json",
+   "subtitle": "Unit 4 I used to be afraid of the dark.【例句】",
+   "stats": {
+    "sentences": 137,
+    "total": 137,
+    "word": 61,
+    "phrase": 38,
+    "chunk": 13,
+    "combinedChunks": 1,
+    "sentence": 24
+   }
+  },
+  {
+   "order": 9,
+   "id": "iournmed7ro197kvd7hvilya",
+   "title": "Unit 5 What are the shirts made of?【单词】",
+   "file": "L09.json",
+   "subtitle": "Unit 5 What are the shirts made of?【单词】",
+   "stats": {
+    "sentences": 55,
+    "total": 55,
+    "word": 49,
+    "sentence": 6
+   }
+  },
+  {
+   "order": 10,
+   "id": "hfyiq3wpl4vdhumjxmflyv2z",
+   "title": "Unit 5 What are the shirts made of?【例句】",
+   "file": "L10.json",
+   "subtitle": "Unit 5 What are the shirts made of?【例句】",
+   "stats": {
+    "sentences": 166,
+    "total": 166,
+    "word": 63,
+    "phrase": 49,
+    "chunk": 24,
+    "combinedChunks": 8,
+    "sentence": 22
+   }
+  },
+  {
+   "order": 11,
+   "id": "qvhw447opeaj8qe8215qdfr7",
+   "title": "Unit 6 When was it invented?【单词】",
+   "file": "L11.json",
+   "subtitle": "Unit 6 When was it invented?【单词】",
+   "stats": {
+    "sentences": 73,
+    "total": 73,
+    "word": 62,
+    "chunk": 2,
+    "sentence": 9
+   }
+  },
+  {
+   "order": 12,
+   "id": "mxxmfz2amoaw4p3g3ki0yo0l",
+   "title": "Unit 6 When was it invented?【例句】",
+   "file": "L12.json",
+   "subtitle": "Unit 6 When was it invented?【例句】",
+   "stats": {
+    "sentences": 151,
+    "total": 151,
+    "word": 60,
+    "phrase": 40,
+    "chunk": 21,
+    "combinedChunks": 5,
+    "sentence": 25
+   }
+  },
+  {
+   "order": 13,
+   "id": "mlyacwqxa9pasd59g7j2bv6w",
+   "title": "Unit 7 Teenagers should be allowed to choose their own clothes.【单词】",
+   "file": "L13.json",
+   "subtitle": "Unit 7 Teenagers should be allowed to choose their own clothes.【单词】",
+   "stats": {
+    "sentences": 22,
+    "total": 22,
+    "word": 16,
+    "phrase": 1,
+    "sentence": 5
+   }
+  },
+  {
+   "order": 14,
+   "id": "uao44ls7iis3mee6l7zp1i50",
+   "title": "Unit 7 Teenagers should be allowed to choose their own clothes.【例句】",
+   "file": "L14.json",
+   "subtitle": "Unit 7 Teenagers should be allowed to choose their own clothes.【例句】",
+   "stats": {
+    "sentences": 239,
+    "total": 239,
+    "word": 108,
+    "phrase": 61,
+    "chunk": 36,
+    "combinedChunks": 6,
+    "sentence": 28
+   }
+  },
+  {
+   "order": 15,
+   "id": "zethatmlxubx8qsu0raftmfn",
+   "title": "Unit 8 It must belong to Carla.【单词】",
+   "file": "L15.json",
+   "subtitle": "Unit 8 It must belong to Carla.【单词】",
+   "stats": {
+    "sentences": 65,
+    "total": 65,
+    "word": 56,
+    "sentence": 9
+   }
+  },
+  {
+   "order": 16,
+   "id": "pfs9ow0w2lavj0zryf55mdq7",
+   "title": "Unit 8 It must belong to Carla.【例句】",
+   "file": "L16.json",
+   "subtitle": "Unit 8 It must belong to Carla.【例句】",
+   "stats": {
+    "sentences": 170,
+    "total": 170,
+    "word": 84,
+    "phrase": 37,
+    "chunk": 19,
+    "combinedChunks": 3,
+    "sentence": 27
+   }
+  },
+  {
+   "order": 17,
+   "id": "o2kzaxy74o5ea75sk4gsoa7c",
+   "title": "Unit 9 I like music that I can dance to.【单词】",
+   "file": "L17.json",
+   "subtitle": "Unit 9 I like music that I can dance to.【单词】",
+   "stats": {
+    "sentences": 50,
+    "total": 50,
+    "word": 39,
+    "sentence": 11
+   }
+  },
+  {
+   "order": 18,
+   "id": "h22bfvbzjqi24acihepg8bfu",
+   "title": "Unit 9 I like music that I can dance to.【例句】",
+   "file": "L18.json",
+   "subtitle": "Unit 9 I like music that I can dance to.【例句】",
+   "stats": {
+    "sentences": 177,
+    "total": 177,
+    "word": 79,
+    "phrase": 42,
+    "chunk": 26,
+    "combinedChunks": 4,
+    "sentence": 26
+   }
+  },
+  {
+   "order": 19,
+   "id": "sobguna6kk7swcm9149xzl5z",
+   "title": "Unit 10 You’re supposed to shake hands.【单词】",
+   "file": "L19.json",
+   "subtitle": "Unit 10 You’re supposed to shake hands.【单词】",
+   "stats": {
+    "sentences": 45,
+    "total": 45,
+    "word": 35,
+    "phrase": 1,
+    "sentence": 9
+   }
+  },
+  {
+   "order": 20,
+   "id": "mac9z5z777g455h9jg5cnz55",
+   "title": "Unit 10 You’re supposed to shake hands.【例句】",
+   "file": "L20.json",
+   "subtitle": "Unit 10 You’re supposed to shake hands.【例句】",
+   "stats": {
+    "sentences": 175,
+    "total": 175,
+    "word": 78,
+    "phrase": 44,
+    "chunk": 24,
+    "combinedChunks": 6,
+    "sentence": 23
+   }
+  },
+  {
+   "order": 21,
+   "id": "t86cn9bc1bx7vga6mh9xt20k",
+   "title": "Unit 11 Sad movies make me cry.【单词】",
+   "file": "L21.json",
+   "subtitle": "Unit 11 Sad movies make me cry.【单词】",
+   "stats": {
+    "sentences": 54,
+    "total": 54,
+    "word": 40,
+    "phrase": 3,
+    "sentence": 11
+   }
+  },
+  {
+   "order": 22,
+   "id": "od2d3hbesgmvnisajempo25d",
+   "title": "Unit 11 Sad movies make me cry.【例句】",
+   "file": "L22.json",
+   "subtitle": "Unit 11 Sad movies make me cry.【例句】",
+   "stats": {
+    "sentences": 133,
+    "total": 133,
+    "word": 68,
+    "phrase": 24,
+    "chunk": 19,
+    "combinedChunks": 5,
+    "sentence": 17
+   }
+  },
+  {
+   "order": 23,
+   "id": "dtwfjdoa4l5v2u405vf57fkc",
+   "title": "Unit 12 Life is full of the unexpected.【单词】",
+   "file": "L23.json",
+   "subtitle": "Unit 12 Life is full of the unexpected.【单词】",
+   "stats": {
+    "sentences": 45,
+    "total": 45,
+    "word": 39,
+    "sentence": 6
+   }
+  },
+  {
+   "order": 24,
+   "id": "q7qzfmbskliu281v9cq9ydim",
+   "title": "Unit 12 Life is full of the unexpected.【例句】",
+   "file": "L24.json",
+   "subtitle": "Unit 12 Life is full of the unexpected.【例句】",
+   "stats": {
+    "sentences": 155,
+    "total": 155,
+    "word": 58,
+    "phrase": 49,
+    "chunk": 27,
+    "combinedChunks": 5,
+    "sentence": 16
+   }
+  },
+  {
+   "order": 25,
+   "id": "di4zo0kfv850lz6gq4xsd034",
+   "title": "Unit 13 We’re trying to save the earth!【单词】",
+   "file": "L25.json",
+   "subtitle": "Unit 13 We’re trying to save the earth!【单词】",
+   "stats": {
+    "sentences": 106,
+    "total": 106,
+    "word": 78,
+    "phrase": 2,
+    "sentence": 26
+   }
+  },
+  {
+   "order": 26,
+   "id": "ohue964dgrmt6ls89a5hcdot",
+   "title": "Unit 13 We’re trying to save the earth!【例句】",
+   "file": "L26.json",
+   "subtitle": "Unit 13 We’re trying to save the earth!【例句】",
+   "stats": {
+    "sentences": 56,
+    "total": 56,
+    "word": 19,
+    "phrase": 21,
+    "chunk": 7,
+    "combinedChunks": 1,
+    "sentence": 8
+   }
+  },
+  {
+   "order": 27,
+   "id": "n99olvcewtzz3ivbprg8u9as",
+   "title": "Unit 14 I remember meeting all of you in Grade 7.【单词】",
+   "file": "L27.json",
+   "subtitle": "Unit 14 I remember meeting all of you in Grade 7.【单词】",
+   "stats": {
+    "sentences": 51,
+    "total": 51,
+    "word": 35,
+    "phrase": 1,
+    "sentence": 15
+   }
+  },
+  {
+   "order": 28,
+   "id": "rzu8jsujmri2z5pya3an3xo2",
+   "title": "Unit 14 I remember meeting all of you in Grade 7.【例句】",
+   "file": "L28.json",
+   "subtitle": "Unit 14 I remember meeting all of you in Grade 7.【例句】",
+   "stats": {
+    "sentences": 225,
+    "total": 225,
+    "word": 92,
+    "phrase": 57,
+    "chunk": 42,
+    "combinedChunks": 6,
+    "sentence": 28
+   }
+  }
+ ]
+}

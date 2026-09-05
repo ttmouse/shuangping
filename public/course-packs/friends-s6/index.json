@@ -1,356 +1,306 @@
 {
-  "id": "tukeqxsk2b9x6wqpq1n9l7lo",
-  "slug": "friends-s6",
-  "title": "老友记第六季（对话版无拆解）- 适合有基础学员",
-  "description": "老友记第六季全季对话练习：整集一课、无单词拆解。根据自己需要进行练习。",
-  "courseCount": 27,
-  "courses": [
-    {
-      "order": 1,
-      "id": "ao83cl9gue3523gru3j4xona",
-      "title": "Friends S06E01 - 1",
-      "file": "L01.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 2,
-      "id": "uugvrv3d9a5mld2x7tnhdq17",
-      "title": "Friends S06E01 - 2",
-      "file": "L02.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 3,
-      "id": "wluk6p8mx2e2o8bemp3wm2mz",
-      "title": "Friends S06E01 - 3",
-      "file": "L03.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 4,
-      "id": "d1xm9zvscokbjj625r5z958o",
-      "title": "Friends S06E01 - 4",
-      "file": "L04.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 75,
-        "total": 75,
-        "word": 6,
-        "sentence": 69
-      }
-    },
-    {
-      "order": 5,
-      "id": "goqtzhsy8dktq7yipp825vki",
-      "title": "Friends S06E02 - 5",
-      "file": "L05.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 6,
-      "id": "pk6vtzehcawh6pq76794yzkf",
-      "title": "Friends S06E01 - 6",
-      "file": "L06.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 3,
-        "sentence": 97
-      }
-    },
-    {
-      "order": 7,
-      "id": "mciupjs8hq7hmua070j0di3i",
-      "title": "Friends S06E01 - 7",
-      "file": "L07.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 6,
-        "sentence": 94
-      }
-    },
-    {
-      "order": 8,
-      "id": "h54qs496piawrrj4fun3fhaf",
-      "title": "Friends S06E01 - 8",
-      "file": "L08.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 4,
-        "sentence": 96
-      }
-    },
-    {
-      "order": 9,
-      "id": "qdxoq6fm8p8dtnyezu5nc3l1",
-      "title": "Friends S06E01 - 9",
-      "file": "L09.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 22,
-        "total": 22,
-        "word": 2,
-        "sentence": 20
-      }
-    },
-    {
-      "order": 10,
-      "id": "hjxi7feeodaw1i5vxvxukv3g",
-      "title": "Friends S06E01 - 10",
-      "file": "L10.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 11,
-      "id": "hdg89466ev6g4fjttri7ej49",
-      "title": "Friends S06E03 - 11",
-      "file": "L11.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 12,
-      "id": "mv65ym6gvyce74lqai612zde",
-      "title": "Friends S06E03 - 12",
-      "file": "L12.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 13,
-      "id": "xtzmxoujwnoq26doxak2ataf",
-      "title": "Friends S06E03 - 13",
-      "file": "L13.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 14,
-      "id": "r0fiqqkg2xwt0laya9trak65",
-      "title": "Friends S06E03 - 14",
-      "file": "L14.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 29,
-        "total": 29,
-        "word": 1,
-        "sentence": 28
-      }
-    },
-    {
-      "order": 15,
-      "id": "y4w44t8f0pkcinm9ma6xunzf",
-      "title": "Friends S06E03 - 15",
-      "file": "L15.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 16,
-      "id": "vopmzn23p4gq6rzb31domu7z",
-      "title": "Friends S06E03 - 16",
-      "file": "L16.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 3,
-        "sentence": 97
-      }
-    },
-    {
-      "order": 17,
-      "id": "vtucrks33zkxetz1yioz5otx",
-      "title": "Friends S06E03 - 17",
-      "file": "L17.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 18,
-      "id": "sm9b403vmvrk58gv35ve3uzi",
-      "title": "Friends S06E03 - 18",
-      "file": "L18.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 19,
-      "id": "flinmmaglpamtlhvjlvezkr0",
-      "title": "Friends S06E03 - 19",
-      "file": "L19.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 12,
-        "total": 12,
-        "sentence": 12
-      }
-    },
-    {
-      "order": 20,
-      "id": "hlr29995eqycvclbbpt08wvo",
-      "title": "Friends S06E03 - 20",
-      "file": "L20.json",
-      "subtitle": "2025.05.18",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 21,
-      "id": "nldr3o2z9cya5geu4rykr7u3",
-      "title": "Friends S06E05 - 21",
-      "file": "L21.json",
-      "subtitle": "2025.06.01",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 22,
-      "id": "p2qix7hxov6dtv5rab8rny56",
-      "title": "Friends S06E05 - 22",
-      "file": "L22.json",
-      "subtitle": "2025.06.01",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "sentence": 100
-      }
-    },
-    {
-      "order": 23,
-      "id": "rp1j3ab1mvd2ukvgfc3chwf8",
-      "title": "Friends S06E05 - 23",
-      "file": "L23.json",
-      "subtitle": "2025.06.01",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 3,
-        "sentence": 97
-      }
-    },
-    {
-      "order": 24,
-      "id": "rax6ek84q3u9c4t0zt6anq4l",
-      "title": "Friends S06E05 - 24",
-      "file": "L24.json",
-      "subtitle": "2025.06.01",
-      "stats": {
-        "sentences": 10,
-        "total": 10,
-        "sentence": 10
-      }
-    },
-    {
-      "order": 25,
-      "id": "t6ev90ujfr44uk2rcu0iyxyj",
-      "title": "Friends S06E06 - 25",
-      "file": "L25.json",
-      "subtitle": "2025.06.01",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 1,
-        "sentence": 99
-      }
-    },
-    {
-      "order": 26,
-      "id": "au7gt5wepn4mnfunhordejxe",
-      "title": "Friends S06E06 - 26",
-      "file": "L26.json",
-      "subtitle": "2025.06.01",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    },
-    {
-      "order": 27,
-      "id": "b5lrmdbyksnf00qx9bj4v8zv",
-      "title": "Friends S06E06 - 27",
-      "file": "L27.json",
-      "subtitle": "2025.06.01",
-      "stats": {
-        "sentences": 100,
-        "total": 100,
-        "word": 2,
-        "sentence": 98
-      }
-    }
-  ]
+ "id": "tukeqxsk2b9x6wqpq1n9l7lo",
+ "slug": "friends-s6",
+ "title": "老友记 第六季",
+ "description": "老友记 Friends 美剧经典对话",
+ "courseCount": 27,
+ "courses": [
+  {
+   "order": 1,
+   "id": "ao83cl9gue3523gru3j4xona",
+   "title": "Friends S06E01 - 1",
+   "file": "L01.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 2,
+   "id": "uugvrv3d9a5mld2x7tnhdq17",
+   "title": "Friends S06E01 - 2",
+   "file": "L02.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 3,
+   "id": "wluk6p8mx2e2o8bemp3wm2mz",
+   "title": "Friends S06E01 - 3",
+   "file": "L03.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 4,
+   "id": "d1xm9zvscokbjj625r5z958o",
+   "title": "Friends S06E01 - 4",
+   "file": "L04.json",
+   "stats": {
+    "sentences": 75,
+    "total": 75,
+    "word": 75
+   }
+  },
+  {
+   "order": 5,
+   "id": "goqtzhsy8dktq7yipp825vki",
+   "title": "Friends S06E02 - 5",
+   "file": "L05.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 6,
+   "id": "pk6vtzehcawh6pq76794yzkf",
+   "title": "Friends S06E01 - 6",
+   "file": "L06.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 7,
+   "id": "mciupjs8hq7hmua070j0di3i",
+   "title": "Friends S06E01 - 7",
+   "file": "L07.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 8,
+   "id": "h54qs496piawrrj4fun3fhaf",
+   "title": "Friends S06E01 - 8",
+   "file": "L08.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 9,
+   "id": "qdxoq6fm8p8dtnyezu5nc3l1",
+   "title": "Friends S06E01 - 9",
+   "file": "L09.json",
+   "stats": {
+    "sentences": 22,
+    "total": 22,
+    "word": 22
+   }
+  },
+  {
+   "order": 10,
+   "id": "hjxi7feeodaw1i5vxvxukv3g",
+   "title": "Friends S06E01 - 10",
+   "file": "L10.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 11,
+   "id": "hdg89466ev6g4fjttri7ej49",
+   "title": "Friends S06E03 - 11",
+   "file": "L11.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 12,
+   "id": "mv65ym6gvyce74lqai612zde",
+   "title": "Friends S06E03 - 12",
+   "file": "L12.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 13,
+   "id": "xtzmxoujwnoq26doxak2ataf",
+   "title": "Friends S06E03 - 13",
+   "file": "L13.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 14,
+   "id": "r0fiqqkg2xwt0laya9trak65",
+   "title": "Friends S06E03 - 14",
+   "file": "L14.json",
+   "stats": {
+    "sentences": 29,
+    "total": 29,
+    "word": 29
+   }
+  },
+  {
+   "order": 15,
+   "id": "y4w44t8f0pkcinm9ma6xunzf",
+   "title": "Friends S06E03 - 15",
+   "file": "L15.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 16,
+   "id": "vopmzn23p4gq6rzb31domu7z",
+   "title": "Friends S06E03 - 16",
+   "file": "L16.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 17,
+   "id": "vtucrks33zkxetz1yioz5otx",
+   "title": "Friends S06E03 - 17",
+   "file": "L17.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 18,
+   "id": "sm9b403vmvrk58gv35ve3uzi",
+   "title": "Friends S06E03 - 18",
+   "file": "L18.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 19,
+   "id": "flinmmaglpamtlhvjlvezkr0",
+   "title": "Friends S06E03 - 19",
+   "file": "L19.json",
+   "stats": {
+    "sentences": 12,
+    "total": 12,
+    "word": 12
+   }
+  },
+  {
+   "order": 20,
+   "id": "hlr29995eqycvclbbpt08wvo",
+   "title": "Friends S06E03 - 20",
+   "file": "L20.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 21,
+   "id": "nldr3o2z9cya5geu4rykr7u3",
+   "title": "Friends S06E05 - 21",
+   "file": "L21.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 22,
+   "id": "p2qix7hxov6dtv5rab8rny56",
+   "title": "Friends S06E05 - 22",
+   "file": "L22.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 23,
+   "id": "rp1j3ab1mvd2ukvgfc3chwf8",
+   "title": "Friends S06E05 - 23",
+   "file": "L23.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 24,
+   "id": "rax6ek84q3u9c4t0zt6anq4l",
+   "title": "Friends S06E05 - 24",
+   "file": "L24.json",
+   "stats": {
+    "sentences": 10,
+    "total": 10,
+    "word": 10
+   }
+  },
+  {
+   "order": 25,
+   "id": "t6ev90ujfr44uk2rcu0iyxyj",
+   "title": "Friends S06E06 - 25",
+   "file": "L25.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 26,
+   "id": "au7gt5wepn4mnfunhordejxe",
+   "title": "Friends S06E06 - 26",
+   "file": "L26.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  },
+  {
+   "order": 27,
+   "id": "b5lrmdbyksnf00qx9bj4v8zv",
+   "title": "Friends S06E06 - 27",
+   "file": "L27.json",
+   "stats": {
+    "sentences": 100,
+    "total": 100,
+    "word": 100
+   }
+  }
+ ]
 }

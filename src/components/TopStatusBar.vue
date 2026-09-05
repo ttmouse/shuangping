@@ -99,7 +99,7 @@
         <span class="acc-value">{{ session.accuracy }}%</span>
         <span class="acc-label">正确率</span>
       </div>
-      <button v-if="togglePause" class="iconBtn" :title="paused ? '继续' : '暂停'" @click="togglePause()">
+      <button v-if="togglePause && pauseActive" class="iconBtn" :title="paused ? '继续' : '暂停'" @click="togglePause()">
         <svg v-if="!paused" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
         <svg v-else viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>
       </button>
@@ -320,6 +320,7 @@ const soundOptions = ref([])
 // 暂停状态（由练习页提供）
 const paused = inject('paused', null)
 const togglePause = inject('togglePause', null)
+const pauseActive = inject('pauseActive', null)
 
 function toggleTheme() { settings.toggleTheme() }
 function setMasteryMs(e) { settings.setEnMasteryMs(e.target.value) }

@@ -1,124 +1,166 @@
 {
-  "version": 1,
-  "packs": [
-    {
-      "slug": "850-basic-words",
-      "id": "tornfg3hhvzw8ynjqpt9hvl4",
-      "title": "句乐部的简单英语表达课：从 850 个词开始说英语",
-      "description": "850 个基础词，1746 个练习句",
-      "courseCount": 85
-    },
-    {
-      "slug": "pep5-grade5",
-      "id": "xh3j92d30er3ac36tw21gvnk",
-      "title": "【人教版】五年级上册 PEP 课本同步",
-      "description": "与人教版（PEP）五年级上册教材完全同步",
-      "courseCount": 26
-    },
-    {
-      "slug": "friends-s1",
-      "id": "h6strcfzggztz1gg5gbfhudh",
-      "title": "老友记第一季（对话版无拆解）",
-      "description": "前15课拆100句，后24课整集一课。9889 句对话练习",
-      "courseCount": 39
-    },
-    {
-      "slug": "pep5b-grade5",
-      "id": "g4en3qgqu1nl4m4gn81vhsiy",
-      "title": "【人教版】五年级下册 PEP 课本同步",
-      "description": "与人教版（PEP）五年级下册教材完全同步",
-      "courseCount": 28
-    },
-    {
-      "slug": "pep4b-grade4",
-      "id": "tcpq69cts6p1mkjockylva35",
-      "title": "【人教版】四年级下册 PEP 课本同步",
-      "description": "与人教版（PEP）四年级下册教材完全同步",
-      "courseCount": 28
-    },
-    {
-      "slug": "pep4a-grade4",
-      "id": "d0pzeckyv6xyko87av3aenwa",
-      "title": "【人教版】四年级上册 PEP 课本同步",
-      "description": "与人教版教材完全同步",
-      "courseCount": 26
-    },
-    {
-      "slug": "pep7a-grade7",
-      "id": "tw58l7ftrxkta5kc252ypxol",
-      "title": "【人教版】七年级上册 课本同步",
-      "description": "与人教版教材完全同步",
-      "courseCount": 30
-    },
-    {
-      "slug": "pep6a-grade6",
-      "id": "mfta8rk9wr12kp50nwdaddp4",
-      "title": "【人教版】六年级上册 PEP 课本同步",
-      "description": "与人教版教材完全同步",
-      "courseCount": 28
-    },
-    {
-      "slug": "pep6b-grade6",
-      "id": "vhkwcngvfsi2enh8i4mmihzs",
-      "title": "【人教版】六年级下册 PEP 课本同步",
-      "description": "与人教版教材完全同步",
-      "courseCount": 18
-    },
-    {
-      "slug": "pep7b-grade7",
-      "id": "nzpxidc8lphzvuu6n5c8sqju",
-      "title": "【人教版】七年级下册 课本同步",
-      "description": "与人教版教材完全同步",
-      "courseCount": 24
-    },
-    {
-      "slug": "pep8a-grade8",
-      "id": "bxc8flud9b755dh82njteu5l",
-      "title": "【人教版】八年级上册 课本同步",
-      "description": "与人教版教材完全同步",
-      "courseCount": 24
-    },
-    {
-      "slug": "pep8b-grade8",
-      "id": "b4g9rg8wsp5sbzd8tret2cj2",
-      "title": "【人教版】八年级下册 课本同步",
-      "description": "与人教版教材完全同步",
-      "courseCount": 30
-    },
-    {
-      "slug": "everyday-dialogues-100",
-      "id": "z627gosu18ct79hr98a4qhyn",
-      "title": "日常英语对话100句",
-      "description": "100 句日常对话按场景分 17 课：购物、餐饮、旅行、问候、医疗、银行、住宿、工作、天气、生活",
-      "courseCount": 17
-    },
-    {
-      "slug": "gaokao-3500-essays",
-      "id": "awq8aedtv9zz1y30cy6ofv6u",
-      "title": "40篇短文搞定高考3500单词",
-      "description": "40 篇短文搞定高考 3500 词（来自英语兔）：Fall in Love with English、A Hard Trip… 每篇短文情境记词",
-      "courseCount": 40
-    },
-    {
-      "slug": "16-english-tenses",
-      "id": "s8f38xsh7y6bkh5tovqw9vk5",
-      "title": "16个英语时态，一网打尽！",
-      "description": "系统讲解英语全部 16 个时态（8 基础 + 8 进阶）：时态结构、时间轴逻辑、真实语境应用",
-      "courseCount": 16
-    },
-    {
-      "slug": "super-simple-songs",
-      "id": "kj8s04ewyd9lmiwvlhjycuz2",
-      "title": "【音乐】Super Simple Song",
-      "description": "全球公认幼儿英语启蒙神器 SSS：简单清晰慢速，任何年龄零基础都有效",
-      "courseCount": 50
-    },
-    {
-      "slug": "xingrong-beginner",
-      "id": "rwtocajplud9ld732ep5u8ec",
-      "title": "星荣零基础学英语（new）",
-      "description": "最适合零基础入门的课程（拥有句子成分解析&讲解&词性的最新版本）",
-      "courseCount": 61
-    }
-  ]
+ "version": 1,
+ "packs": [
+  {
+   "slug": "850-basic-words",
+   "id": "tornfg3hhvzw8ynjqpt9hvl4",
+   "title": "句乐部的简单英语表达课：从 850 个词开始说英语",
+   "description": "850 个基础词，1746 个练习句",
+   "courseCount": 85
+  },
+  {
+   "slug": "pep5-grade5",
+   "id": "xh3j92d30er3ac36tw21gvnk",
+   "title": "【人教版】五年级上册 PEP 课本同步",
+   "description": "与人教版（PEP）五年级上册教材完全同步",
+   "courseCount": 26
+  },
+  {
+   "slug": "friends-s1",
+   "id": "h6strcfzggztz1gg5gbfhudh",
+   "title": "老友记第一季（对话版无拆解）",
+   "description": "前15课拆100句，后24课整集一课。9889 句对话练习",
+   "courseCount": 39
+  },
+  {
+   "slug": "pep5b-grade5",
+   "id": "g4en3qgqu1nl4m4gn81vhsiy",
+   "title": "【人教版】五年级下册 PEP 课本同步",
+   "description": "与人教版（PEP）五年级下册教材完全同步",
+   "courseCount": 28
+  },
+  {
+   "slug": "pep4b-grade4",
+   "id": "tcpq69cts6p1mkjockylva35",
+   "title": "【人教版】四年级下册 PEP 课本同步",
+   "description": "与人教版（PEP）四年级下册教材完全同步",
+   "courseCount": 28
+  },
+  {
+   "slug": "pep4a-grade4",
+   "id": "d0pzeckyv6xyko87av3aenwa",
+   "title": "【人教版】四年级上册 PEP 课本同步",
+   "description": "与人教版教材完全同步",
+   "courseCount": 26
+  },
+  {
+   "slug": "pep7a-grade7",
+   "id": "tw58l7ftrxkta5kc252ypxol",
+   "title": "【人教版】七年级上册 课本同步",
+   "description": "与人教版教材完全同步",
+   "courseCount": 30
+  },
+  {
+   "slug": "pep6a-grade6",
+   "id": "mfta8rk9wr12kp50nwdaddp4",
+   "title": "【人教版】六年级上册 PEP 课本同步",
+   "description": "与人教版教材完全同步",
+   "courseCount": 28
+  },
+  {
+   "slug": "pep6b-grade6",
+   "id": "vhkwcngvfsi2enh8i4mmihzs",
+   "title": "【人教版】六年级下册 PEP 课本同步",
+   "description": "与人教版教材完全同步",
+   "courseCount": 18
+  },
+  {
+   "slug": "pep7b-grade7",
+   "id": "nzpxidc8lphzvuu6n5c8sqju",
+   "title": "【人教版】七年级下册 课本同步",
+   "description": "与人教版教材完全同步",
+   "courseCount": 24
+  },
+  {
+   "slug": "pep8a-grade8",
+   "id": "bxc8flud9b755dh82njteu5l",
+   "title": "【人教版】八年级上册 课本同步",
+   "description": "与人教版教材完全同步",
+   "courseCount": 24
+  },
+  {
+   "slug": "pep8b-grade8",
+   "id": "b4g9rg8wsp5sbzd8tret2cj2",
+   "title": "【人教版】八年级下册 课本同步",
+   "description": "与人教版教材完全同步",
+   "courseCount": 30
+  },
+  {
+   "slug": "everyday-dialogues-100",
+   "id": "z627gosu18ct79hr98a4qhyn",
+   "title": "日常英语对话100句",
+   "description": "100 句日常对话按场景分 17 课：购物、餐饮、旅行、问候、医疗、银行、住宿、工作、天气、生活",
+   "courseCount": 17
+  },
+  {
+   "slug": "gaokao-3500-essays",
+   "id": "awq8aedtv9zz1y30cy6ofv6u",
+   "title": "40篇短文搞定高考3500单词",
+   "description": "40 篇短文搞定高考 3500 词（来自英语兔）：Fall in Love with English、A Hard Trip… 每篇短文情境记词",
+   "courseCount": 40
+  },
+  {
+   "slug": "16-english-tenses",
+   "id": "s8f38xsh7y6bkh5tovqw9vk5",
+   "title": "16个英语时态，一网打尽！",
+   "description": "系统讲解英语全部 16 个时态（8 基础 + 8 进阶）：时态结构、时间轴逻辑、真实语境应用",
+   "courseCount": 16
+  },
+  {
+   "slug": "super-simple-songs",
+   "id": "kj8s04ewyd9lmiwvlhjycuz2",
+   "title": "【音乐】Super Simple Song",
+   "description": "全球公认幼儿英语启蒙神器 SSS：简单清晰慢速，任何年龄零基础都有效",
+   "courseCount": 50
+  },
+  {
+   "slug": "xingrong-beginner",
+   "id": "rwtocajplud9ld732ep5u8ec",
+   "title": "星荣零基础学英语（new）",
+   "description": "最适合零基础入门的课程（拥有句子成分解析&讲解&词性的最新版本）",
+   "courseCount": 61
+  },
+  {
+   "slug": "pep9-grade9",
+   "id": "rdi2zkonadwxomesmxvxc63t",
+   "title": "【人教版】九年级全一册 课本同步",
+   "description": "与人教版教材完全同步",
+   "courseCount": 28
+  },
+  {
+   "slug": "friends-s2",
+   "id": "q2qpx5izc10xc1bk77b1aqf3",
+   "title": "老友记 第二季",
+   "description": "老友记 Friends 美剧经典对话",
+   "courseCount": 36
+  },
+  {
+   "slug": "friends-s3",
+   "id": "b6gcxj3clvqflxmumcyij8qp",
+   "title": "老友记 第三季",
+   "description": "老友记 Friends 美剧经典对话",
+   "courseCount": 25
+  },
+  {
+   "slug": "friends-s4",
+   "id": "v10rbpzdntas8bwrj79yifr0",
+   "title": "老友记 第四季",
+   "description": "老友记 Friends 美剧经典对话",
+   "courseCount": 24
+  },
+  {
+   "slug": "friends-s5",
+   "id": "ik1mnr6kbzjjtpcjvcijgc3y",
+   "title": "老友记 第五季",
+   "description": "老友记 Friends 美剧经典对话",
+   "courseCount": 101
+  },
+  {
+   "slug": "friends-s6",
+   "id": "tukeqxsk2b9x6wqpq1n9l7lo",
+   "title": "老友记 第六季",
+   "description": "老友记 Friends 美剧经典对话",
+   "courseCount": 27
+  }
+ ]
 }
