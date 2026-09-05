@@ -365,7 +365,7 @@
                   <div v-if="packError" class="packError">{{ packError }}</div>
                   <div v-if="!packList.length && !packLoading" class="packEmpty">点击"加载课包"获取主题课程（850 基础词等）</div>
                   <div v-if="packList.length" class="storyList">
-                    <button v-for="p in packList" :key="p.slug" class="storyItem" @click="openCoursePack(p)" data-nav>
+                    <button v-for="p in sortedPackList" :key="p.slug" class="storyItem" @click="openCoursePack(p)" data-nav>
                       <span class="storyTitle">{{ p.title }}</span>
                       <span class="storyMeta">{{ p.courseCount || '' }} 课 · 主题课包 ›</span>
                     </button>
@@ -1228,6 +1228,21 @@ async function loadCoursePackRegistry() {
     packLoading.value = false
   }
 }
+// 主题课包列表展示顺序：最近练过的在前（动态）
+// 课包最近练习时间 = 该包所有课程 lastPracticed 的最大值（startJulebuCourse/openCourseReading 时记录）；
+// 没练过（或记录为空）的课包排后面，彼此保持注册表原顺序
+const sortedPackList = computed(() => {
+  const list = [...packList.value]
+  const lastBySlug = new Map() // slug → 最近一次练习时间戳
+  for (const [slug, recs] of Object.entries(courseProgress)) {
+    let max = 0
+    for (const r of Object.values(recs || {})) {
+      if (r && r.lastPracticed && r.lastPracticed > max) max = r.lastPracticed
+    }
+    if (max) lastBySlug.set(slug, max)
+  }
+  return list.sort((a, b) => (lastBySlug.get(b.slug) || 0) - (lastBySlug.get(a.slug) || 0))
+})
 // 展开课包 → 拉课程清单
 async function openCoursePack(pack) {
   activePack.value = pack
