@@ -358,21 +358,42 @@
                   </div>
                   <div v-if="packError" class="packError">{{ packError }}</div>
                   <div v-if="!packList.length && !packLoading" class="packEmpty">点击"加载课包"获取主题课程（850 基础词等）</div>
-                  <div v-if="packList.length" class="packGrid">
-                    <button v-for="p in sortedPackList" :key="p.slug" class="packCard" @click="openCoursePack(p)" data-nav>
-                      <span class="packCardBody">
-                        <span class="packCardTitle" :title="p.title">{{ p.title }}</span>
-                        <span v-if="p.description" class="packCardDesc">{{ p.description }}</span>
-                        <span class="packCardFoot">
-                          <span class="packProgressTrack"><span class="packProgressFill" :style="{ width: packProgress(p).pct + '%' }"></span></span>
-                          <span class="packCardMeta">
-                            <span class="packMetaMain">{{ packProgress(p).practiced }}/{{ p.courseCount }} 课程 · {{ packProgress(p).pct }}% 完成</span>
-                            <span v-if="packLastPractice.get(p.slug)" class="packMetaLast">上次 {{ relTime(packLastPractice.get(p.slug)) }}</span>
+                  <template v-if="textbookPacks.length">
+                    <div class="packGroupLabel">教材同步</div>
+                    <div class="packGrid">
+                      <button v-for="p in textbookPacks" :key="p.slug" class="packCard" @click="openCoursePack(p)" data-nav>
+                        <span class="packCardBody">
+                          <span class="packCardTitle" :title="p.title">{{ p.title }}</span>
+                          <span v-if="p.description" class="packCardDesc">{{ p.description }}</span>
+                          <span class="packCardFoot">
+                            <span class="packProgressTrack"><span class="packProgressFill" :style="{ width: packProgress(p).pct + '%' }"></span></span>
+                            <span class="packCardMeta">
+                              <span class="packMetaMain">{{ packProgress(p).practiced }}/{{ p.courseCount }} 课程 · {{ packProgress(p).pct }}% 完成</span>
+                              <span v-if="packLastPractice.get(p.slug)" class="packMetaLast">上次 {{ relTime(packLastPractice.get(p.slug)) }}</span>
+                            </span>
                           </span>
                         </span>
-                      </span>
-                    </button>
-                  </div>
+                      </button>
+                    </div>
+                  </template>
+                  <template v-if="interestPacks.length">
+                    <div class="packGroupLabel">兴趣专题</div>
+                    <div class="packGrid">
+                      <button v-for="p in interestPacks" :key="p.slug" class="packCard" @click="openCoursePack(p)" data-nav>
+                        <span class="packCardBody">
+                          <span class="packCardTitle" :title="p.title">{{ p.title }}</span>
+                          <span v-if="p.description" class="packCardDesc">{{ p.description }}</span>
+                          <span class="packCardFoot">
+                            <span class="packProgressTrack"><span class="packProgressFill" :style="{ width: packProgress(p).pct + '%' }"></span></span>
+                            <span class="packCardMeta">
+                              <span class="packMetaMain">{{ packProgress(p).practiced }}/{{ p.courseCount }} 课程 · {{ packProgress(p).pct }}% 完成</span>
+                              <span v-if="packLastPractice.get(p.slug)" class="packMetaLast">上次 {{ relTime(packLastPractice.get(p.slug)) }}</span>
+                            </span>
+                          </span>
+                        </span>
+                      </button>
+                    </div>
+                  </template>
                 </div>
                 <div class="storyPanelTitle">
                   <span>短文</span>
@@ -812,7 +833,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onBeforeUnmount, ref, reactive, watch, nextTick, defineAsyncComponent } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref, reactive, watch, nextTick, inject, defineAsyncComponent } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import TopStatusBar from '../components/TopStatusBar.vue'
 import AchievementNotification from '../components/AchievementNotification.vue'
@@ -944,6 +965,13 @@ const showCourseReadTop = computed(() => mode.value === 'stories' && started.val
 const mode = ref('cards')
 const started = ref(false)
 const completed = ref(false)
+
+// 暂停浮层仅在「练习/阅读进行中」启用：started 为真，或处于 reading 视图才允许暂停；
+// 课包/课程列表等浏览态（started=false 且非 reading）保持关闭，避免弹「游戏暂停」。
+const pauseActive = inject('pauseActive', null)
+watch([() => started.value, readingMode], ([startedVal, readingVal]) => {
+  if (pauseActive) pauseActive.value = startedVal || readingVal
+}, { immediate: true })
 
 // 会话统计
 const totalCount = ref(0)
@@ -1374,6 +1402,12 @@ const sortedPackList = computed(() => {
   const last = packLastPractice.value
   return [...packList.value].sort((a, b) => (last.get(b.slug) || 0) - (last.get(a.slug) || 0))
 })
+// 课包分类：教材同步（人教版课本同步）vs 兴趣专题——借 title【人教版】前缀 / desc“与人教版”现有语义判定，不改数据
+function isTextbookPack(p) {
+  return /【人教版】/.test(p.title || '') || /与人教版/.test(p.description || '')
+}
+const textbookPacks = computed(() => sortedPackList.value.filter(isTextbookPack))
+const interestPacks = computed(() => sortedPackList.value.filter(p => !isTextbookPack(p)))
 // 课包列表项 meta 文案：N 课 +（练过才显示）上次 X前（同课程卡"上次 x 前"口径，无冗余文案）
 function packMetaText(p) {
   const parts = []
@@ -4488,6 +4522,16 @@ onBeforeUnmount(() => {
   .storyBackBtn:active {
     transform: none;
   }
+}
+/* 课包分组小标题（教材同步 / 兴趣专题） */
+.packGroupLabel {
+  margin: 16px 2px 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--theme-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 /* 主题课包浏览器 */
 .packBrowser {
