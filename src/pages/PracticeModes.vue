@@ -302,7 +302,7 @@
         <!-- 短文模式：未开始 → 短文/课包列表 -->
         <template v-else-if="mode === 'stories'">
           <div class="enStage">
-            <div class="storyPanel" :class="{ 'storyPanelWide': packBrowseLevel === 'courses' }">
+            <div class="storyPanel storyPanelWide">
               <!-- 课包课程列表：独立视图，隐藏其他内容 -->
               <template v-if="packBrowseLevel === 'courses' && activePack">
                 <div class="packBrowser">
