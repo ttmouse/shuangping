@@ -511,7 +511,7 @@ function getPracticeTypeLabel(type) {
     chinese: '中文全屏',
     english: '英文单词',
     'en-words': '英文单词',
-    'en-story': '英文短文',
+    'en-story': '英文练习',
     'en-custom': '英文自定义',
     numbers: '键盘数字',
     letters: '字母键位',

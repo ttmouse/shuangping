@@ -123,15 +123,15 @@ if (pauseActive) pauseActive.value = false
 // 项目数据
   const projects = ref([
   {
-    id: 'yunmu-practice',
-    title: '双拼练习工具',
-    description: '专业的双拼输入法练习平台，支持多种方案和语音反馈',
+    id: 'en-practice',
+    title: '英文练习',
+    description: '英文短文与课包整句流式练习，中英对照，支持朗读',
     category: 'learning',
     status: 'active',
-    icon: '⌨',
+    icon: '✏️',
     tech: ['Vue 3', 'Web Audio API', 'Pinia'],
-    route: '/yunmu-practice',
-    highlights: ['8种双拼方案', '自动语音朗读', 'Figma风格界面']
+    route: '/practice-modes?mode=stories',
+    highlights: ['整句流式练习', '中英对照', '自动朗读']
   },
   {
     id: 'progress',

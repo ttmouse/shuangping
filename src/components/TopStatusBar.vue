@@ -3,7 +3,9 @@
     <!-- 课包课程练习：顶部栏替换为课程面包屑导航（模式入口隐藏，但今日目标/正确率仍显示） -->
     <template v-if="course">
       <div class="left courseLeft">
-        <button class="courseBackBtn" v-qtip data-tip="回到课程列表" @click="course.onBack" data-nav>‹ 课程列表</button>
+        <button class="courseBackBtn" v-qtip data-tip="回到课程列表" @click="course.onBack" data-nav aria-label="回到课程列表">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
         <div class="courseBreadcrumb">
           <span class="courseCrumbPack" :title="course.packTitle">{{ course.packTitle }}</span>
           <span class="courseCrumbSep">›</span>
@@ -346,7 +348,7 @@ const PRACTICE_MODES = [
   },
   {
     id: 'stories',
-    label: '英文短文',
+    label: '英文练习',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 9h6"/><path d="M9 13h6"/><path d="M9 7h6"/></svg>',
   },
   {
@@ -376,7 +378,7 @@ const PRACTICE_MODES = [
   },
 ]
 // 核心练习模式：直接显示在导航栏
-const CORE_MODE_IDS = ['words', 'stories', 'mistake-book', 'vocab-book']
+const CORE_MODE_IDS = ['stories', 'mistake-book', 'vocab-book']
 const CORE_MODES = PRACTICE_MODES.filter(m => CORE_MODE_IDS.includes(m.id))
 const MORE_PRACTICE_MODES = PRACTICE_MODES.filter(m => !CORE_MODE_IDS.includes(m.id))
 // 当前是否高亮某个练习模式：位于打字练习页且 query.mode 匹配（无 query 时默认 cards）
@@ -702,17 +704,29 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
 
 /* 课包课程面包屑导航（课程进行中替换左侧导航） */
 .courseMode .left { gap: 4px; }
+/* 返回课程列表：图标按钮，视觉强度与右侧设置/主题图标按钮一致 */
 .courseBackBtn {
-  padding: 5px 10px;
-  border-radius: 6px;
-  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 8px;
   border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-light-color);
   color: var(--theme-text-color);
-  font-size: 13px;
   cursor: pointer;
-  white-space: nowrap;
+  flex: none;
+  transition: border-color .15s, color .15s, transform .2s;
 }
-.courseBackBtn:hover { color: var(--theme-text-color); background: var(--theme-border-color); }
+.courseBackBtn svg { width: 18px; height: 18px; flex: none; }
+.courseBackBtn:hover {
+  border-color: var(--theme-text-secondary);
+  background: var(--theme-border-color);
+  color: var(--theme-text-color);
+}
+.courseBackBtn:active { transform: scale(.94); }
 .courseBreadcrumb {
   display: flex;
   align-items: center;
