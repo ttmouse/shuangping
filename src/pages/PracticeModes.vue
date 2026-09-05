@@ -331,6 +331,7 @@
                           <span class="courseTitleRow">
                             <span class="courseTitle" :title="c.title">{{ c.title }}</span>
                             <span class="courseOrder">#{{ c.order }}</span>
+                            <span v-if="isRecentCourse(c)" class="courseRecentBadge" title="最近学习的课程">最近学习</span>
                           </span>
                           <span v-if="c.subtitle" class="storySubtitle">{{ c.subtitle }}</span>
                           <span class="courseCardFoot">
@@ -4247,6 +4248,20 @@ onBeforeUnmount(() => {
   letter-spacing: .3px;
   color: var(--theme-text-secondary);
   background: color-mix(in srgb, var(--theme-text-secondary) 12%, transparent);
+  border-radius: 6px;
+}
+/* "最近学习"胶囊：只标记最近练习的那一张卡（isRecentCourse 每包唯一命中），主题色淡底作语义强调 */
+.courseRecentBadge {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 7px;
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: .3px;
+  color: var(--theme-menu-hover-color);
+  background: color-mix(in srgb, var(--theme-menu-hover-color) 14%, transparent);
   border-radius: 6px;
 }
 .courseBody {
