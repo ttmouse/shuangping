@@ -331,7 +331,6 @@
                           <span class="courseTitleRow">
                             <span class="courseTitle" :title="c.title">{{ c.title }}</span>
                             <span class="courseOrder">#{{ c.order }}</span>
-                            <span v-if="isRecentCourse(c)" class="courseRecentBadge" title="最近学习的课程">最近学习</span>
                           </span>
                           <span v-if="c.subtitle" class="storySubtitle">{{ c.subtitle }}</span>
                           <span class="courseCardFoot">
@@ -341,7 +340,7 @@
                                 {{ s.label }}
                               </span>
                             </span>
-                            <span class="courseStatus"><span v-if="courseRec(c)?.completed" class="courseDone" title="已练习完成">已完成<span v-if="courseRec(c)?.lastPracticed"> · {{ relTime(courseRec(c).lastPracticed) }}</span></span><span v-else-if="courseRec(c)?.lastPracticed" class="courseLast" title="上次练习时间">上次 {{ relTime(courseRec(c).lastPracticed) }}</span></span>
+                            <span class="courseStatus"><span v-if="isRecentCourse(c)" class="courseRecentBadge" title="最近学习的课程">最近学习</span><span v-if="courseRec(c)?.completed" class="courseDone" title="已练习完成">已完成<span v-if="courseRec(c)?.lastPracticed"> · {{ relTime(courseRec(c).lastPracticed) }}</span></span><span v-else-if="courseRec(c)?.lastPracticed" class="courseLast" title="上次练习时间">上次 {{ relTime(courseRec(c).lastPracticed) }}</span></span>
                           </span>
                         </span>
                       </button>
@@ -4196,6 +4195,7 @@ onBeforeUnmount(() => {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 12px;
+  margin-bottom: 24px; /* 课程列表底部适当留白 */
 }
 .courseCardWrap {
   position: relative;
@@ -4211,7 +4211,7 @@ onBeforeUnmount(() => {
   flex-direction: column;
   gap: 8px;
   padding: 14px 16px 13px;
-  min-height: 116px;
+  height: 156px; /* 所有卡片固定等高：标题/描述在上，footer 贴底，中间留作自然留白 */
   border-radius: 12px;
   border: 1px solid var(--theme-border-color);
   background: var(--theme-background-color);
@@ -4251,19 +4251,19 @@ onBeforeUnmount(() => {
   background: color-mix(in srgb, var(--theme-text-secondary) 12%, transparent);
   border-radius: 6px;
 }
-/* "最近学习"胶囊：只标记最近练习的那一张卡（isRecentCourse 每包唯一命中），主题色淡底作语义强调 */
+/* "最近学习"胶囊：只标记最近练习的那一张卡（isRecentCourse 每包唯一命中），主题色淡底，放底部状态行 */
 .courseRecentBadge {
   flex: none;
   display: inline-flex;
   align-items: center;
-  height: 18px;
-  padding: 0 7px;
-  font-size: 10.5px;
+  height: 16px;
+  padding: 0 6px;
+  font-size: 10px;
   font-weight: 650;
-  letter-spacing: .3px;
+  letter-spacing: .2px;
   color: var(--theme-menu-hover-color);
   background: color-mix(in srgb, var(--theme-menu-hover-color) 14%, transparent);
-  border-radius: 6px;
+  border-radius: 5px;
 }
 .courseBody {
   display: flex;
@@ -4353,6 +4353,10 @@ onBeforeUnmount(() => {
 }
 .courseStatsRow .statItem svg { flex-shrink: 0; }
 .courseCard .courseStatus {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px 8px;
   font-size: 11.5px;
   line-height: 1.5;
   color: var(--theme-text-secondary);
