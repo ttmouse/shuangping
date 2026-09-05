@@ -367,7 +367,7 @@
                   <div v-if="packList.length" class="storyList">
                     <button v-for="p in sortedPackList" :key="p.slug" class="storyItem" @click="openCoursePack(p)" data-nav>
                       <span class="storyTitle">{{ p.title }}</span>
-                      <span class="storyMeta">{{ p.courseCount || '' }} 课 · 主题课包 ›</span>
+                      <span class="storyMeta">{{ packMetaText(p) }}</span>
                     </button>
                   </div>
                 </div>
@@ -1228,12 +1228,9 @@ async function loadCoursePackRegistry() {
     packLoading.value = false
   }
 }
-// 主题课包列表展示顺序：最近练过的在前（动态）
-// 课包最近练习时间 = 该包所有课程 lastPracticed 的最大值（startJulebuCourse/openCourseReading 时记录）；
-// 没练过（或记录为空）的课包排后面，彼此保持注册表原顺序
-const sortedPackList = computed(() => {
-  const list = [...packList.value]
-  const lastBySlug = new Map() // slug → 最近一次练习时间戳
+// packSlug → 该包最近一次练习时间戳（全部课程 lastPracticed 最大值，startJulebuCourse/openCourseReading 时记录）——列表排序与"上次练习"展示共用
+const packLastPractice = computed(() => {
+  const lastBySlug = new Map()
   for (const [slug, recs] of Object.entries(courseProgress)) {
     let max = 0
     for (const r of Object.values(recs || {})) {
@@ -1241,8 +1238,23 @@ const sortedPackList = computed(() => {
     }
     if (max) lastBySlug.set(slug, max)
   }
-  return list.sort((a, b) => (lastBySlug.get(b.slug) || 0) - (lastBySlug.get(a.slug) || 0))
+  return lastBySlug
 })
+// 主题课包列表展示顺序：最近练过的在前（动态）；没练过（或记录为空）的课包排后面，保持注册表原顺序
+const sortedPackList = computed(() => {
+  const last = packLastPractice.value
+  return [...packList.value].sort((a, b) => (last.get(b.slug) || 0) - (last.get(a.slug) || 0))
+})
+// 课包列表项 meta 文案：N 课 +（练过才显示）上次 X前 · 主题课包 ›
+function packMetaText(p) {
+  const parts = []
+  if (p.courseCount) parts.push(`${p.courseCount} 课`)
+  const ts = packLastPractice.value.get(p.slug)
+  const rel = ts ? relTime(ts) : ''
+  if (rel) parts.push(`上次 ${rel}`)
+  parts.push('主题课包 ›')
+  return parts.join(' · ')
+}
 // 展开课包 → 拉课程清单
 async function openCoursePack(pack) {
   activePack.value = pack
