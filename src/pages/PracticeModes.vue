@@ -381,10 +381,22 @@
                   </div>
                   <div v-if="packError" class="packError">{{ packError }}</div>
                   <div v-if="!packList.length && !packLoading" class="packEmpty">点击"加载课包"获取主题课程（850 基础词等）</div>
-                  <div v-if="packList.length" class="storyList">
-                    <button v-for="p in sortedPackList" :key="p.slug" class="storyItem" @click="openCoursePack(p)" data-nav>
-                      <span class="storyTitle">{{ p.title }}</span>
-                      <span class="storyMeta">{{ packMetaText(p) }}</span>
+                  <div v-if="packList.length" class="packGrid">
+                    <button v-for="p in sortedPackList" :key="p.slug" class="packCard" @click="openCoursePack(p)" data-nav>
+                      <span class="packCardCover" :style="packCoverStyle(p)">
+                        <span class="packCardCoverGlyph">{{ packGlyph(p) }}</span>
+                      </span>
+                      <span class="packCardBody">
+                        <span class="packCardTitle" :title="p.title">{{ p.title }}</span>
+                        <span v-if="p.description" class="packCardDesc">{{ p.description }}</span>
+                        <span class="packCardFoot">
+                          <span class="packProgressTrack"><span class="packProgressFill" :style="{ width: packProgress(p).pct + '%' }"></span></span>
+                          <span class="packCardMeta">
+                            <span class="packMetaMain">{{ packProgress(p).practiced }}/{{ p.courseCount }} 课程 · {{ packProgress(p).pct }}% 完成</span>
+                            <span v-if="packLastPractice.get(p.slug)" class="packMetaLast">上次 {{ relTime(packLastPractice.get(p.slug)) }}</span>
+                          </span>
+                        </span>
+                      </span>
                     </button>
                   </div>
                 </div>
@@ -1365,6 +1377,40 @@ function packMetaText(p) {
   const rel = ts ? relTime(ts) : ''
   if (rel) parts.push(`上次 ${rel}`)
   return parts.join(' · ')
+}
+// —— 课包卡片辅助（参考 julebu 我的课包卡片墙）——
+// 封面占位渐变：按包 slug 哈希取一组柔和渐变色（无真实封面图，用渐变+首字）
+const PACK_COVER_GRADS = [
+  ['#34d399', '#0ea5e9'], // seafoam → sky
+  ['#fbbf24', '#f97316'], // amber → orange
+  ['#a78bfa', '#6366f1'], // violet → indigo
+  ['#fb7185', '#f43f5e'], // rose
+  ['#2dd4bf', '#14b8a6'], // teal
+  ['#38bdf8', '#3b82f6'], // sky → blue
+]
+function packCoverStyle(p) {
+  let h = 0
+  for (const ch of (p.slug || '')) h = (h * 31 + ch.charCodeAt(0)) >>> 0
+  const g = PACK_COVER_GRADS[h % PACK_COVER_GRADS.length]
+  return { background: `linear-gradient(135deg, ${g[0]}, ${g[1]})` }
+}
+// 封面首字：取包名第一个汉字/字母
+function packGlyph(p) {
+  let t = (p.title || '').trim()
+  // 跳过如【人教版】这类前缀括号，取后面的核心字（"【人教版】五年级..." → "五"）
+  const pre = t.match(/^【[^】]*】/)
+  if (pre) t = t.slice(pre[0].length)
+  const m = t.match(/[\u4e00-\u9fa5A-Za-z]/)
+  return m ? m[0].toUpperCase() : 'A'
+}
+// 课包进度：已练/已完成课程数 → 进度条百分比
+function packProgress(p) {
+  const recs = courseProgress[p.slug] || {}
+  const vals = Object.values(recs || {})
+  const practiced = vals.filter(r => r && (r.completed || r.lastPracticed)).length
+  const total = p.courseCount || 0
+  const pct = total ? Math.round(practiced * 100 / total) : 0
+  return { practiced, total, pct }
 }
 // 展开课包 → 拉课程清单
 async function openCoursePack(pack) {
@@ -4370,11 +4416,14 @@ onBeforeUnmount(() => {
 /* 无障碍：偏好减少动效时，过渡一律关闭（返回按钮位移禁用） */
 @media (prefers-reduced-motion: reduce) {
   .courseGrid .courseCard,
-  .storyBackBtn {
+  .storyBackBtn,
+  .packCard {
     transition: none;
   }
   .courseGrid .courseCard:hover,
-  .courseGrid .courseCard:active {
+  .courseGrid .courseCard:active,
+  .packCard:hover,
+  .packCard:active {
     transform: none;
   }
   .storyBackBtn:hover {
@@ -4427,6 +4476,113 @@ onBeforeUnmount(() => {
   background: var(--theme-background-light-color);
   white-space: nowrap;
 }
+/* —— 课包列表卡片墙（参考 julebu 我的课包：封面+标题+描述+进度条）—— */
+.packGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 14px;
+}
+.packCard {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  text-align: left;
+  padding: 0;
+  border-radius: 14px;
+  border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-color);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
+}
+.packCard:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--theme-text-secondary) 32%, var(--theme-border-color));
+  box-shadow: 0 8px 26px -12px color-mix(in srgb, var(--theme-text-secondary) 28%, transparent);
+}
+.packCard:active { transform: translateY(0) scale(.985); }
+.packCard:focus-visible { outline: 2px solid var(--theme-menu-hover-color); outline-offset: 2px; }
+.packCardCover {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  color: #fff;
+}
+.packCardCoverGlyph {
+  font-size: 34px;
+  font-weight: 750;
+  letter-spacing: .5px;
+  text-shadow: 0 2px 10px rgba(0,0,0,.18);
+  opacity: .92;
+}
+.packCardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 13px 14px;
+  flex: 1;
+  min-width: 0;
+}
+.packCardTitle {
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.4;
+  color: var(--theme-text-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.packCardDesc {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--theme-text-secondary);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  height: 37.5px; /* 固定两行描述高，保证所有卡片等高 */
+}
+.packCardFoot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-top: 11px;
+  border-top: 1px solid color-mix(in srgb, var(--theme-border-color) 72%, transparent);
+}
+.packProgressTrack {
+  position: relative;
+  height: 6px;
+  width: 100%;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--theme-text-secondary) 14%, transparent);
+  overflow: hidden;
+}
+.packProgressFill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--theme-menu-hover-color);
+  transition: width .3s ease;
+}
+.packCardMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--theme-text-secondary);
+}
+.packMetaMain {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.packMetaLast { flex-shrink: 0; }
 .packLoadingTip {
   flex-shrink: 0;
   font-size: 12px;
