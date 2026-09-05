@@ -6,7 +6,6 @@ const Writer = () => import('../pages/Writer.vue')
 const PracticeModes = () => import('../pages/PracticeModes.vue')
 const Statistics = () => import('../pages/Statistics.vue')
 const Progress = () => import('../pages/Progress.vue')
-const Leaderboard = () => import('../pages/Leaderboard.vue')
 
 const routes = [
   { path: '/', redirect: '/practice-modes' },
@@ -16,7 +15,6 @@ const routes = [
   { path: '/writer', name: 'writer', component: Writer },
   { path: '/statistics', name: 'statistics', component: Statistics },
   { path: '/progress', name: 'progress', component: Progress },
-  { path: '/leaderboard', name: 'leaderboard', component: Leaderboard },
   // 旧阅读路径 → 统一课程 URL（pack/course + mode=reading 后缀）
   {
     path: '/course-reading',

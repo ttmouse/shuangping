@@ -134,7 +134,6 @@
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { useStatsStore } from '../stores/stats.js'
 import { useProgressStore } from '../stores/progress.js'
-import { useLeaderboardStore } from '../stores/leaderboard.js'
 
 const props = defineProps({
   stats: {
@@ -151,7 +150,6 @@ const emit = defineEmits(['close'])
 
 const stats = useStatsStore()
 const progress = useProgressStore()
-const leaderboard = useLeaderboardStore()
 
 const cardPreview = ref(null)
 const qrcodeCanvas = ref(null)

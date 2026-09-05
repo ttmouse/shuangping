@@ -16,7 +16,7 @@
         </div>
       </div>
     </template>
-    <!-- 常规页面：左侧模式导航入口（练习中隐藏） -->
+    <!-- 常规页面：左侧模式导航入口（练习中隐藏；核心模式直接显示，其余收进「更多」下拉） -->
     <div v-show="!started" v-else class="left">
       <button
         class="modeBtn" v-qtip
@@ -26,7 +26,7 @@
         data-nav
       >首页</button>
       <button
-        v-for="m in PRACTICE_MODES"
+        v-for="m in CORE_MODES"
         :key="m.id"
         class="modeBtn" v-qtip
         :class="{ active: isModeActive(m.id) }"
@@ -36,20 +36,6 @@
       >
         <span class="modeBtnIcon" v-html="m.icon"></span>{{ m.label }}
       </button>
-      <button
-        class="modeBtn" v-qtip
-        :class="{ active: route.name === 'yunmu-practice' }"
-        @click="go('/yunmu-practice')"
-        data-tip="声母韵母练习"
-        data-nav
-      >声母韵母练习</button>
-      <button
-        class="modeBtn" v-qtip
-        :class="{ active: route.name === 'writer' }"
-        @click="go('/writer')"
-        data-tip="双拼打字练习"
-        data-nav
-      >双拼打字练习</button>
       <button
         class="modeBtn" v-qtip
         :class="{ active: route.name === 'statistics' }"
@@ -70,17 +56,39 @@
         <svg class="btnIcon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2"/></svg>
         进度
       </button>
-      <button
-        class="modeBtn" v-qtip
-        :class="{ active: route.name === 'leaderboard' }"
-        @click="go('/leaderboard')"
-        data-tip="排行榜"
-        data-nav
-      >
-        <svg class="btnIcon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h6v4a3 3 0 0 1-6 0V3z"/><path d="M5 4H3v1a2.5 2.5 0 0 0 2.5 2.5"/><path d="M11 4h2v1a2.5 2.5 0 0 1-2.5 2.5"/><path d="M8 10v2"/><path d="M6 13h4"/></svg>
-        排行
-      </button>
+      <div class="moreMenuWrap">
+        <button
+          ref="moreBtnRef"
+          class="modeBtn"
+          :class="{ active: showMoreMenu }"
+          @click="toggleMoreMenu"
+          data-nav
+        >更多 <span class="moreArrow" :class="{ open: showMoreMenu }">▾</span></button>
+      </div>
     </div>
+    <!-- 「更多」下拉菜单（Teleport 到 body，避免被 .left overflow-x:auto 联动裁剪） -->
+    <Teleport to="body">
+      <div v-if="showMoreMenu" class="moreMenuMask" @click="showMoreMenu = false"></div>
+      <div v-if="showMoreMenu" class="moreMenu" :style="moreMenuStyle">
+        <div class="moreMenuGroup">
+          <div class="moreMenuGroupTitle">练习模式</div>
+          <button
+            v-for="m in MORE_PRACTICE_MODES"
+            :key="m.id"
+            class="moreMenuItem"
+            :class="{ active: isModeActive(m.id) }"
+            @click="goMode(m.id); showMoreMenu = false"
+          >
+            <span class="modeBtnIcon" v-html="m.icon"></span>{{ m.label }}
+          </button>
+        </div>
+        <div class="moreMenuGroup">
+          <div class="moreMenuGroupTitle">其他工具</div>
+          <button class="moreMenuItem" :class="{ active: route.name === 'yunmu-practice' }" @click="go('/yunmu-practice'); showMoreMenu = false">声母韵母练习</button>
+          <button class="moreMenuItem" :class="{ active: route.name === 'writer' }" @click="go('/writer'); showMoreMenu = false">双拼打字练习</button>
+        </div>
+      </div>
+    </Teleport>
     <!-- 练习中四指标：居中展示 -->
     <!-- 今日目标：顶部栏常驻，随时指引进展（三达标：时长/正确率/错词清零） -->
     <div class="goalTop" :class="{ all: goal.allDone }" title="今日目标：练满时长 + 正确率达到 + 错词清零">
@@ -260,7 +268,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, inject } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, inject, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useSettingsStore } from '../stores/settings.js'
 import { useSessionStore } from '../stores/session.js'
@@ -287,6 +295,28 @@ const goal = computed(() => progress.todayGoal)
 
 const isDark = computed(() => settings.theme === 'dark')
 const showSettings = ref(false)
+const showMoreMenu = ref(false)
+const moreBtnRef = ref(null)
+const moreMenuStyle = ref({})
+
+// 切换「更多」下拉：打开时计算按钮位置，用 fixed 定位（Teleport 到 body 后不再受父容器裁剪）
+function toggleMoreMenu() {
+  if (showMoreMenu.value) {
+    showMoreMenu.value = false
+    return
+  }
+  showMoreMenu.value = true
+  nextTick(() => {
+    const btn = moreBtnRef.value
+    if (btn) {
+      const rect = btn.getBoundingClientRect()
+      moreMenuStyle.value = {
+        top: (rect.bottom + 6) + 'px',
+        left: rect.left + 'px',
+      }
+    }
+  })
+}
 const soundOptions = ref([])
 
 // 暂停状态（由练习页提供）
@@ -345,6 +375,10 @@ const PRACTICE_MODES = [
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.35 4.76 5.25.76-3.8 3.7.9 5.23L12 15.1l-4.7 2.35.9-5.23-3.8-3.7 5.25-.76z"/></svg>',
   },
 ]
+// 核心练习模式：直接显示在导航栏
+const CORE_MODE_IDS = ['words', 'stories', 'mistake-book', 'vocab-book']
+const CORE_MODES = PRACTICE_MODES.filter(m => CORE_MODE_IDS.includes(m.id))
+const MORE_PRACTICE_MODES = PRACTICE_MODES.filter(m => !CORE_MODE_IDS.includes(m.id))
 // 当前是否高亮某个练习模式：位于打字练习页且 query.mode 匹配（无 query 时默认 cards）
 function isModeActive(id) {
   if (route.name !== 'practice-modes') return false
@@ -469,6 +503,48 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
 .btnIcon { width: 15px; height: 15px; flex: 0 0 auto; }
 .modeBtnIcon { display: inline-flex; width: 15px; height: 15px; flex: 0 0 auto; }
 .modeBtnIcon svg { width: 15px; height: 15px; }
+/* 「更多」下拉菜单 */
+.moreMenuWrap { position: relative; }
+.moreArrow { display: inline-block; font-size: 10px; transition: transform 0.15s ease; }
+.moreArrow.open { transform: rotate(180deg); }
+.moreMenu {
+  position: fixed;
+  min-width: 180px;
+  max-height: 70vh;
+  overflow-y: auto;
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  padding: 8px;
+  z-index: 1000;
+}
+.moreMenuGroup { margin-bottom: 6px; }
+.moreMenuGroup:last-child { margin-bottom: 0; }
+.moreMenuGroupTitle {
+  font-size: 11px;
+  color: var(--theme-text-secondary-color, #999);
+  padding: 4px 10px 2px;
+  letter-spacing: 0.5px;
+}
+.moreMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--theme-text-color);
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+}
+.moreMenuItem:hover { background: var(--theme-menu-hover-color); color: var(--theme-menu-text-color); }
+.moreMenuItem.active { background: var(--theme-menu-hover-color); color: var(--theme-menu-text-color); font-weight: 600; }
+.moreMenuMask { position: fixed; inset: 0; z-index: 999; }
 .accuracy { display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: var(--theme-background-color); border-radius: 6px; font-size: 12px; }
 .acc-value { font-weight: 700; color: #67c23a; }
 .acc-label { color: var(--theme-text-color); }
