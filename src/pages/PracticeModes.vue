@@ -309,6 +309,7 @@
                   <div class="packTitle">
                     <button class="storyBackBtn" @click="backToPacks" data-nav title="返回课包">
                       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5l9-7 9 7V20a1.5 1.5 0 0 1-1.5 1.5h-5V15h-5v6.5H4.5A1.5 1.5 0 0 1 3 20z"/></svg>
+                      <span>返回</span>
                     </button>
                     <span class="packTitleText">{{ activePack.title }}</span>
                     <span v-if="activePack.courses?.length" class="packChip" title="课包内课程数">{{ activePack.courses.length }} 课</span>
@@ -4104,14 +4105,15 @@ onBeforeUnmount(() => {
   color: var(--theme-text-color);
   opacity: 1;
 }
-/* 返回课包：纯图标小按钮（home 回到课包首页），不再是宽按钮 */
+/* 返回课包：home 图标 + 短文字'返回'的紧凑小按钮（不占宽，非宽大按钮） */
 .storyBackBtn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  padding: 0;
+  gap: 4px;
+  height: 28px;
+  padding: 0 10px 0 8px;
+  font-size: 12px;
+  font-weight: 500;
   border-radius: 8px;
   border: 1px solid var(--theme-border-color);
   background: var(--theme-background-light-color);
@@ -4762,7 +4764,7 @@ onBeforeUnmount(() => {
 }
 /* 字母槽线常驻：未输入/已输入/标点等都保留同一条底部线（输入前后样式一致）。
    仅在正在输入的那一格(current/dict-current)短暂用主题色强调，打完后回归常线 */
-.word-box .letter { color: color-mix(in srgb, var(--theme-text-color) 17%, transparent); border-bottom: 5px solid color-mix(in srgb, var(--theme-text-color) 30%, transparent); transition: color .12s ease, border-color .12s ease; }
+.word-box .letter { color: color-mix(in srgb, var(--theme-text-color) 17%, transparent); border-bottom: 3px solid color-mix(in srgb, var(--theme-text-color) 30%, transparent); transition: color .12s ease, border-color .12s ease; }
 /* 默写隐藏态禁止颜色过渡：槽内文本常驻（宽度/底线稳定），退格把错误字符换回目标字母时
    class 翻转若带 0.12s 过渡，会经半透明中间态把目标字母闪现出来 → 进出隐藏态必须瞬时切换 */
 .word-box .letter.hidden,
@@ -4799,30 +4801,27 @@ onBeforeUnmount(() => {
   color: color-mix(in srgb, #e6a23c 95%, transparent);
 }
 .word-box .letter.current {
-  /* 当前位置：半透文字 + 主题色淡背景 + 主题色线（与 dict-current 统一） */
-  color: color-mix(in srgb, var(--theme-main-text-color) 20%, transparent);
-  border-bottom: 5px solid var(--theme-menu-hover-color);
+  /* 当前位置：文字与未输入态一致（不调整文字色），仅下划线+背景用主题色定位 */
+  color: color-mix(in srgb, var(--theme-text-color) 17%, transparent);
+  border-bottom: 3px solid var(--theme-menu-hover-color);
   background: color-mix(in srgb, var(--theme-menu-hover-color) 12%, transparent);
-  border-radius: 3px;
 }
 .word-box .letter.dict-current {
   /* 默写·关闭当前字母提示：字母隐藏（仅下划线 + 淡背景定位输入位置） */
   color: transparent;
-  border-bottom: 5px solid var(--theme-menu-hover-color);
+  border-bottom: 3px solid var(--theme-menu-hover-color);
   background: color-mix(in srgb, var(--theme-menu-hover-color) 12%, transparent);
-  border-radius: 3px;
 }
 /* 答案揭示后（revealed）：仅文字可见，保留原状态的背景和下划线不变 */
 .word-box .letter.hidden.revealed { color: color-mix(in srgb, var(--theme-text-color) 17%, transparent); }
 .word-box .letter.dict-current.revealed { color: color-mix(in srgb, var(--theme-main-text-color) 20%, transparent); }
 .word-box .letter.incorrect {
   color: #f56c6c;
-  border-bottom: 5px solid #f56c6c;
+  border-bottom: 3px solid #f56c6c;
 }
 /* 当前位打错：保留 current 的淡背景和圆角，仅文字和下划线变红（背景不闪没） */
 .word-box .letter.current.incorrect {
   background: color-mix(in srgb, var(--theme-menu-hover-color) 12%, transparent);
-  border-radius: 3px;
 }
 .enProgress { font-size: 14px; color: var(--theme-text-color); display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: auto; }
 .enHint { font-size: 13px; color: var(--theme-rich-text-color); }
@@ -5346,8 +5345,8 @@ onBeforeUnmount(() => {
 [data-theme='light'] .spPunct { color: #444444; }
 .spUl {
   position: absolute;
-  left: 2px;
-  right: 2px;
+  left: -6px;
+  right: -6px;
   bottom: 0;
   height: 4px;
   border-radius: 999px;
