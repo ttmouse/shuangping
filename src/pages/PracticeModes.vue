@@ -278,9 +278,11 @@
             </div>
           </div>
           <div class="enProgress">
-            <button class="enActionBtn" :disabled="!enCanViewAnswer" @click="enViewAnswer" title="显示当前单词（计入完成统计）" data-nav><svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>答案</button>
-            <button class="enActionBtn" @click="enRelisten" title="重读当前单词" data-nav><svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>重听</button>
-            <button v-if="settings.enSpeakSentence" class="enActionBtn" @click="speakWholeSentence" title="重听整句 (Ctrl+')" data-nav><svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>重听整句</button>
+            <!-- 短文模式：答案按钮 = 显示答案/隐藏答案 状态切换（看答案 ⇄ 全默写），非逐词揭示 -->
+            <button v-if="mode === 'stories'" class="enActionBtn" @click="toggleEnStoryAnswer" :data-tip="enStoryAnswerShown ? '隐藏全部字母，切换为全默写 (Ctrl+;)' : '显示全部字母，切换为看答案 (Ctrl+;)'" data-nav><svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><template v-if="enStoryAnswerShown"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/><path d="m1 1 22 22"/></template><template v-else><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></template></svg>{{ enStoryAnswerShown ? '隐藏答案' : '显示答案' }}</button>
+            <button v-else class="enActionBtn" :disabled="!enCanViewAnswer" @click="enViewAnswer" data-tip="显示当前单词（计入完成统计）" data-nav><svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>答案</button>
+            <button class="enActionBtn" @click="enRelisten" data-tip="重读当前单词 (Ctrl+,)" data-nav><svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>重听单词</button>
+            <button v-if="settings.enSpeakSentence" class="enActionBtn" @click="speakWholeSentence" data-tip="重听整句 (Ctrl+')" data-nav><svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>重听整句</button>
           </div>
         </template>
 
@@ -1220,6 +1222,61 @@ function touchCourse(course) {
   courseProgress[pk][file] = { ...(courseProgress[pk][file] || {}), lastPracticed: Date.now() }
   saveCourseProgress()
 }
+// 课程续练位置持久化：记录每课练到第几句（packSlug -> { courseFile -> { fullIdx, ts } }）
+// fullIdx 为全量队列中的索引（难度过滤不影响恢复），刷新/退出课程后重进从上次句子继续；
+// 整课完成（finish）时清除该记录，下次从头开始。
+const COURSE_RESUME_KEY = 'sp-course-resume'
+const courseResume = reactive(loadCourseResume())
+function loadCourseResume() {
+  try { return JSON.parse(localStorage.getItem(COURSE_RESUME_KEY) || '{}') } catch { return {} }
+}
+function saveCourseResume() {
+  try { localStorage.setItem(COURSE_RESUME_KEY, JSON.stringify(courseResume)) } catch {}
+}
+function getCourseResume() {
+  if (!activePack.value || !currentCourse.value) return null
+  const rec = courseResume[activePack.value.slug]?.[currentCourse.value.file]
+  return rec && rec.fullIdx != null ? rec : null
+}
+// 记录当前句子在全量队列中的位置（句索引对应 UI 的"第 N 句"，0 起）
+function setCourseResume(idx) {
+  if (!(mode.value === 'stories' && activePack.value && currentCourse.value && enStoryMode.value && started.value)) return
+  const queue = selectedEnStory.value?.sentences || []
+  const item = queue[idx]
+  if (!item) return
+  const fullIdx = julebuFullQueue.value.indexOf(item)
+  if (fullIdx < 0) return
+  const pk = activePack.value.slug
+  const file = currentCourse.value.file
+  if (!courseResume[pk]) courseResume[pk] = {}
+  courseResume[pk][file] = { fullIdx, ts: Date.now() }
+  saveCourseResume()
+}
+function clearCourseResume() {
+  if (!activePack.value || !currentCourse.value) return
+  const pk = activePack.value.slug
+  const file = currentCourse.value.file
+  if (courseResume[pk] && courseResume[pk][file]) {
+    delete courseResume[pk][file]
+    saveCourseResume()
+  }
+}
+// 恢复时把保存的全量队列索引映射到当前（可能按难度过滤过的）队列：
+// 难度过滤保留原顺序，取过滤队列中第一个排在保存位置之后的条目；找不到则从头。
+function mapResumeToQueue(fullIdx) {
+  const full = julebuFullQueue.value
+  const queue = selectedEnStory.value?.sentences || []
+  if (!full.length || !queue.length) return 0
+  const posInFull = new Map()
+  full.forEach((it, i) => { if (!posInFull.has(it)) posInFull.set(it, i) })
+  for (let i = 0; i < queue.length; i++) {
+    const p = posInFull.get(queue[i])
+    if (p !== undefined && p >= fullIdx) return i
+  }
+  return 0
+}
+// start() 内的一次性恢复标记：仅课程加载（startEnStory）时设置，restart/切难度不会被误用
+let pendingCourseResume = null
 // 课程卡辅助：进度记录 / 模块统计文案 / 相对时间
 function courseRec(c) {
   return courseProgress[activePack.value?.slug]?.[c.file || c.id] || null
@@ -1577,8 +1634,15 @@ function startEnStory(story) {
   } else {
     // 课包课程：应用已缓存的难度（刷新后恢复高级/中级等）
     applyDifficultyQueue()
+    // 续练：读取上次练习位置（全量队列索引），start() 内映射到当前队列恢复
+    const resume = getCourseResume()
+    pendingCourseResume = resume ? mapResumeToQueue(resume.fullIdx) : null
   }
   start()
+  // 课包课程：把起始/恢复位置落盘（中途退出课程再进来也从此句继续）
+  if (story.source === 'julebu' && started.value) {
+    setCourseResume(sentenceIdx.value)
+  }
 }
 // 英文自定义模式：粘贴自己的英文内容练习（解析英文句 + 配对中文翻译）
 const enCustomMode = ref(false)
@@ -1861,6 +1925,7 @@ function jumpToSentence() {
   if (!target || target < 1 || target > enQueue.value.length || target === sentenceIdx.value + 1) return
   const idx = target - 1
   sentenceIdx.value = idx
+  setCourseResume(idx) // 课包课程：跳转句后记住续练位置
   wordIdx.value = 0
   letterIdx.value = 0
   currentInput.value = ''
@@ -2144,6 +2209,12 @@ function enViewAnswer() {
   enViewAnswers.value++
   sentUsedHint.value = true // 官网 hintsUsed>0 → rating none
   enHadError.value = true // 复用打错揭示机制：当前词立即显示；完成时判错、不算一次命中
+}
+// 短文模式「答案」按钮：不做逐词揭示，而是整句的显示答案/隐藏答案状态切换。
+// 显示答案 = 看答案（guide，始终显示字母）；隐藏答案 = 全默写（dictation，始终隐藏字母）。
+const enStoryAnswerShown = computed(() => settings.enDisplayMode === 'guide')
+function toggleEnStoryAnswer() {
+  settings.setEnDisplayMode(enStoryAnswerShown.value ? 'dictation' : 'guide')
 }
 function enRelisten() {
   const w = currentWord.value
@@ -3126,6 +3197,11 @@ function start() {
   if (mode.value === 'words' || mode.value === 'stories' || mode.value === 'mistake-book') {
     enQueue.value = buildEnglishQueue()
     sentenceIdx.value = 0
+    // 课包课程：恢复上次练习位置（刷新/重新进入课程时从上次句子续练）
+    if (mode.value === 'stories' && pendingCourseResume != null && enQueue.value.length) {
+      sentenceIdx.value = Math.min(pendingCourseResume, enQueue.value.length - 1)
+      pendingCourseResume = null
+    }
     wordIdx.value = 0
     letterIdx.value = 0
     currentInput.value = ''
@@ -3448,9 +3524,10 @@ function finish() {
   completed.value = true
   // 整课完成庆祝（官网只在完成整门课时放彩带/烟花 + victory 音效，非每句）
   fireCourseCelebration()
-  // 课包课程完成：标记进度
+  // 课包课程完成：标记进度，并清除续练位置（整课已通关，下次从头开始）
   if (mode.value === 'stories' && currentCourse.value && activePack.value) {
     markCourseComplete(activePack.value.slug, currentCourse.value.file)
+    clearCourseResume()
   }
   closeEnModePanel()
   // 错词练习结束：自动退回正常词库模式（避免下次开始仍在错词池）
@@ -3623,6 +3700,20 @@ function onKeyDown(e) {
       speakWholeSentence()
       return
     }
+    // Ctrl+, 重听当前单词
+    if (e.ctrlKey && e.code === 'Comma') {
+      e.preventDefault()
+      enRelisten()
+      return
+    }
+    // 短文模式：Ctrl+; 切换显示答案/隐藏答案（看答案 ⇄ 全默写）
+    if (e.ctrlKey && e.code === 'Semicolon') {
+      if (mode.value === 'stories') {
+        e.preventDefault()
+        toggleEnStoryAnswer()
+      }
+      return
+    }
     if (e.shiftKey && (e.code === 'ArrowLeft' || e.code === 'ArrowRight')) {
       e.preventDefault()
       arrowJumpSentence(e.code === 'ArrowLeft' ? -1 : 1)
@@ -3643,6 +3734,8 @@ function onKeyDown(e) {
         if (sentenceIdx.value >= enQueue.value.length) {
           finish()
         } else {
+          // 课包课程：进入新句子时记住续练位置（刷新/退出后仍从此句继续）
+          setCourseResume(sentenceIdx.value)
           // 换句首词：等渲染 + 150ms 视觉缓冲后再计时（换句后的定位时间不计入首词耗时）
           // 开启整句朗读 → 同时朗读整句，首词不再单独朗读
           if (settings.enSpeakSentence) {
@@ -5139,6 +5232,7 @@ onBeforeUnmount(() => {
 }
 .enProgHint { font-size: 13px; color: var(--theme-rich-text-color); }
 .enActionBtn {
+  position: relative;
   font-size: 12px;
   padding: 3px 8px;
   border-radius: 8px;
@@ -5151,6 +5245,33 @@ onBeforeUnmount(() => {
   gap: 4px;
   transition: all .15s ease;
 }
+/* 自定义悬停提示：深色底白字，快速弹出（替代原生 title 的长延迟） */
+.enActionBtn::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 7px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 9px;
+  border-radius: 6px;
+  background: rgba(22, 22, 28, 0.92);
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.08s ease, visibility 0.08s;
+  z-index: 60;
+}
+.enActionBtn:hover::after,
+.enActionBtn:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+}
+.enActionBtn:disabled::after { display: none; }
 .enActionBtn:hover:not(:disabled) {
   border-color: var(--theme-menu-hover-color);
   background: color-mix(in srgb, var(--theme-menu-hover-color) 6%, var(--theme-background-color));
