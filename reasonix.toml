@@ -1,5 +1,5 @@
 [permissions]
-allow = []
+allow = ["Bash=cd /Users/douba/Projects/shuangping && git checkout main", "Edit", "Bash=cd /Users/douba/Projects/shuangping && npm run build 2>&1 | tail -20"]
 
 [sandbox]
 allow_write = ["/private/tmp"]
