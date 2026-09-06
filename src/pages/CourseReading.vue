@@ -158,6 +158,18 @@
       <div class="cr-wc-defs">
         <div class="cr-wc-def"><i v-if="wordCard.tok.posCn">{{ wordCard.tok.posCn }}</i> {{ wordCard.tok.def || '' }}</div>
       </div>
+      <div class="cr-wc-actions">
+        <button
+          class="cr-wc-add"
+          :class="{ on: inVocabBook(wordCard.tok) }"
+          title="收藏到生词本，长期保留"
+          @click="toggleVocabWord(wordCard.tok)"
+        >
+          <svg v-if="inVocabBook(wordCard.tok)" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg>
+          <svg v-else viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+          {{ inVocabBook(wordCard.tok) ? '已在生词本' : '加入生词本' }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -419,7 +431,7 @@ function openWordCard(e, tok) {
   if (!tok.def && !tok.posCn && !tok.phonetic) return // 无词典词：只朗读不弹卡
   const r = e.currentTarget.getBoundingClientRect()
   const CW = 340 // 卡片外宽（300 + 边框/内边距），窄屏 260 时 css 另有覆盖
-  const CH = 220 // 预估卡片高度，用于视口内摆放
+  const CH = 270 // 预估卡片高度（含生词本按钮行），用于视口内摆放
   let x = r.left
   let y = r.bottom + 8
   if (x + CW > window.innerWidth - 8) x = Math.max(8, window.innerWidth - CW - 8)
@@ -439,6 +451,31 @@ function closeAllFloaters() {
 function playWord(which) {
   if (!wordCard.value) return
   speakWord(wordCard.value.tok.word, which)
+}
+
+// ---------- 生词本：与练习页同 key/同结构，阅读中收藏的词在生词本里复习 ----------
+// 条目 = { def, pos, posCn, phUk, phUs, ts }；key 为小写词形
+const EN_VOCAB_KEY = 'sp-vocab-book'
+function loadEnVocab() {
+  try { return JSON.parse(localStorage.getItem(EN_VOCAB_KEY) || '{}') } catch { return {} }
+}
+const vocabBook = reactive(loadEnVocab())
+function saveEnVocab() {
+  try { localStorage.setItem(EN_VOCAB_KEY, JSON.stringify(vocabBook)) } catch {}
+}
+function inVocabBook(tok) {
+  const key = String(tok?.word || '').trim().toLowerCase()
+  return !!vocabBook[key]
+}
+function toggleVocabWord(tok) {
+  const key = String(tok?.word || '').trim().toLowerCase()
+  if (!key || !/[A-Za-z0-9]/.test(key)) return // 纯标点/符号单元不收藏
+  if (vocabBook[key]) {
+    delete vocabBook[key]
+  } else {
+    vocabBook[key] = { def: tok.def || '', pos: tok.pos || '', posCn: tok.posCn || '', phUk: tok.phonetic || '', phUs: tok.phoneticUs || '', ts: Date.now() }
+  }
+  saveEnVocab()
 }
 
 // ---------- 键盘 ----------
@@ -556,6 +593,10 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', onKey); window.rem
 .cr-wc-defs { margin-top: 10px; }
 .cr-wc-def { font-size: 14px; line-height: 1.6; }
 .cr-wc-def i { font-style: normal; color: var(--theme-main-text-color); margin-right: 4px; }
+.cr-wc-actions { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--theme-border-color); }
+.cr-wc-add { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 8px 10px; font-size: 13px; font-weight: 600; border-radius: 9px; border: 1px solid var(--theme-border-color); background: transparent; color: var(--theme-text-color); cursor: pointer; transition: border-color .15s ease, color .15s ease, background .15s ease; }
+.cr-wc-add:hover { border-color: var(--theme-main-text-color); color: var(--theme-main-text-color); }
+.cr-wc-add.on { border-color: var(--theme-main-text-color); background: color-mix(in srgb, var(--theme-main-text-color) 12%, transparent); color: var(--theme-main-text-color); }
 
 @media (max-width: 720px) {
   /* 窄屏：标题允许折行完整展示，不截断 */
