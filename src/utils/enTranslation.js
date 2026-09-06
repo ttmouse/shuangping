@@ -155,3 +155,154 @@ export function fetchEnTranslation(word) {
 
 // 初始化时加载持久化缓存
 if (typeof localStorage !== 'undefined') loadPersistCache()
+
+// ---- 单词相关词条列表（有道 suggest 接口，支持 JSONP）----
+// 返回多个相关词条的完整释义（含原 entry 名），用于词卡浮层展示更多释义
+const entriesCache = new Map()
+const entriesPending = new Map()
+export function fetchEnWordEntries(word) {
+  const key = String(word || '').trim()
+  if (!key) return Promise.resolve([])
+  const lower = key.toLowerCase()
+  if (entriesCache.has(lower)) return Promise.resolve(entriesCache.get(lower))
+  if (entriesPending.has(lower)) return entriesPending.get(lower)
+  const p = jsonpRequest(key)
+    .then((data) => {
+      const entries = (data && data.data && data.data.entries) || []
+      const list = entries.map(e => ({
+        entry: String(e.entry || ''),
+        explain: String(e.explain || ''),
+      })).filter(e => e.entry)
+      if (list.length) entriesCache.set(lower, list)
+      return list
+    })
+    .catch(() => [])
+    .finally(() => entriesPending.delete(lower))
+  entriesPending.set(lower, p)
+  return p
+}
+
+// ---- 有道词典完整详情（释义 + 双语例句 + 音标）----
+// 通过 Vite dev server 代理 /api/youdao → https://dict.youdao.com，解决跨域
+// 解析页面中嵌入的 window.__NUXT__ 数据（Nuxt SSR）
+const YOUDAO_DETAIL_KEY = 'sp-youdao-detail-v1'
+const MAX_YOUDAO_CACHE = 300
+let youdaoMemCache = new Map()
+function loadYoudaoCache() {
+  try {
+    const raw = localStorage.getItem(YOUDAO_DETAIL_KEY)
+    if (raw) {
+      const obj = JSON.parse(raw)
+      if (obj && typeof obj === 'object') youdaoMemCache = new Map(Object.entries(obj))
+    }
+  } catch {}
+}
+function persistYoudaoCache() {
+  try {
+    const obj = Object.fromEntries(youdaoMemCache)
+    const keys = Object.keys(obj)
+    if (keys.length > MAX_YOUDAO_CACHE) {
+      const drop = keys.length - Math.floor(MAX_YOUDAO_CACHE / 2)
+      for (let i = 0; i < drop; i++) youdaoMemCache.delete(keys[i])
+    }
+    localStorage.setItem(YOUDAO_DETAIL_KEY, JSON.stringify(Object.fromEntries(youdaoMemCache)))
+  } catch {}
+}
+if (typeof localStorage !== 'undefined') loadYoudaoCache()
+
+const youdaoPending = new Map()
+
+// 从 HTML 中提取并执行 window.__NUXT__ 数据
+function parseNuxtData(html) {
+  if (!html) return null
+  // 匹配 window.__NUXT__=(function(...){...})(...) 或 window.__NUXT__={...}
+  const m = html.match(/window\.__NUXT__\s*=\s*([\s\S]+?)<\/script>/)
+  if (!m) return null
+  const code = m[1].trim()
+  try {
+    // 用 new Function 执行，避免 eval 的作用域污染
+    return new Function('return (' + code + ')')()
+  } catch {
+    return null
+  }
+}
+
+// 从 ec.word[0].trs 中提取完整释义列表
+function parseEcExplains(ecWord) {
+  const list = []
+  if (!Array.isArray(ecWord)) return list
+  for (const w of ecWord) {
+    const trs = w?.trs || []
+    for (const tr of trs) {
+      const items = tr?.tr || []
+      for (const item of items) {
+        const iArr = item?.l?.i || []
+        for (const text of iArr) {
+          if (text && !list.includes(text)) list.push(String(text).trim())
+        }
+      }
+    }
+  }
+  return list
+}
+
+// 从 blng_sents_part 中提取双语例句
+function parseBlngSentences(blng) {
+  const list = []
+  const pairs = blng?.['sentence-pair'] || []
+  for (const sp of pairs) {
+    const en = String(sp?.sentence || '').trim()
+    const cn = String(sp?.['sentence-translation'] || '').trim()
+    if (!en) continue
+    // 发音 URL：相对路径拼接有道域名
+    const speechPath = sp?.['sentence-speech'] || ''
+    const speech = speechPath
+      ? 'https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(speechPath) + '&type=2'
+      : ''
+    list.push({ en, cn, speech })
+  }
+  return list
+}
+
+// 查询有道词典完整详情（音标 + 完整释义 + 双语例句）
+// 失败返回 null（调用方降级到 suggest 接口）
+export function fetchYoudaoWordDetail(word) {
+  const key = String(word || '').trim()
+  if (!key) return Promise.resolve(null)
+  const lower = key.toLowerCase()
+  if (youdaoMemCache.has(lower)) return Promise.resolve(youdaoMemCache.get(lower))
+  if (youdaoPending.has(lower)) return youdaoPending.get(lower)
+
+  const p = fetch('/api/youdao/result?word=' + encodeURIComponent(key) + '&lang=en', {
+    headers: { 'Accept': 'text/html' },
+  })
+    .then(res => {
+      if (!res.ok) throw new Error('HTTP ' + res.status)
+      return res.text()
+    })
+    .then(html => {
+      const nuxt = parseNuxtData(html)
+      const wordData = nuxt?.data?.[0]?.wordData
+      if (!wordData) return null
+
+      const ecWord = wordData.ec?.word
+      const phonetic = Array.isArray(ecWord) && ecWord[0]
+        ? { us: ecWord[0].usphone || '', uk: ecWord[0].ukphone || '' }
+        : { us: '', uk: '' }
+      const explains = parseEcExplains(ecWord)
+      const sentences = parseBlngSentences(wordData.blng_sents_part)
+
+      const result = { word: lower, phonetic, explains, sentences }
+      // 至少有释义或例句才缓存
+      if (explains.length || sentences.length) {
+        youdaoMemCache.set(lower, result)
+        persistYoudaoCache()
+      }
+      return result
+    })
+    .catch(() => null)
+    .finally(() => youdaoPending.delete(lower))
+
+  youdaoPending.set(lower, p)
+  return p
+}

@@ -59,6 +59,23 @@ export function buildCourseDict(courseData) {
       put(wd.word, wd.partOfSpeech, wd.definition, wd.phonetic)
     }
   }
+  // 连字符复合词：课程数据 english 为 "hard - working"（连字符两侧带空格），
+  // wordDetails 拆成 hard/working 两个词根，但整句 chinese 是复合词义（勤奋的）。
+  // 归一化后把复合词作为整体加入词典，供错词本/生词本/完成态展示释义。
+  // 仅单词卡（归一化后无空格）且有中文释义时加入，避免整句被误加入词典。
+  const HYPHEN_NORM = /([A-Za-z0-9])\s*-\s*([A-Za-z0-9])/g
+  const putHyphenated = (en, cn) => {
+    const norm = String(en || '').replace(HYPHEN_NORM, '$1-$2').trim()
+    if (norm && !/\s/.test(norm) && cn && !dict[norm.toLowerCase()]) {
+      dict[norm.toLowerCase()] = { pos: '', cn: String(cn), ph: null }
+    }
+  }
+  for (const s of courseData.sentences || []) {
+    putHyphenated(s.english || s.content, s.chinese)
+  }
+  for (const st of courseData.statements || []) {
+    putHyphenated(st.english || st.content, st.chinese)
+  }
   return dict
 }
 
