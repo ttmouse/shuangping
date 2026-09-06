@@ -2559,7 +2559,10 @@ const enSentenceGroups = computed(() => {
     }
   }
   // 兜底：分词数与词典词数不一致时（罕见脏数据），以词典词序为准保索引不歪
-  if (bodies.length !== wds.length && wds.length) {
+  // 仅当存在 sentenceStructure（需要按 start/end 索引对齐）时才触发；
+  // 无成分结构时（如单词课 sentenceStructure=null）不兜底，避免连字符复合词
+  // （hard-working 在 wordDetails 中被拆成 hard/working 两个词根）被错误拆回两词
+  if (comps.length > 0 && bodies.length !== wds.length && wds.length) {
     bodies.splice(0, bodies.length, ...wds.map(w => String(w.word || '')))
     puncts.splice(0, puncts.length, ...bodies.map(() => ''))
   }
@@ -5982,6 +5985,8 @@ onBeforeUnmount(() => {
 .enMistakePanel .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .mistakeBookStage { width: 100%; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
 .mistakeOpts { display: flex; gap: 10px; }
+.mistakeOpts .btn { color: var(--theme-text-color); }
+.mistakeOpts .btn:hover { color: var(--theme-text-color); border-color: var(--theme-text-secondary); }
 .mistakeEmpty { color: var(--theme-text-color); font-size: 14px; text-align: center; padding: 20px 0; }
 /* 生词本：julebu 式卡片网格 */
 .vocabBookStage {
@@ -6008,10 +6013,11 @@ onBeforeUnmount(() => {
 }
 .vocabCard:hover {
   transform: translateY(-1.5px);
-  background: var(--theme-menu-hover-color);
+  background: var(--theme-background-color);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 .vocabCard:active { transform: scale(.985); }
-/* 已掌握按钮：参考 julebu 列表项右上角操作，默认半透明，hover 卡时浮现并亮起 */
+/* 已掌握按钮：参考 julebu 列表项右上角操作，默认半透明，hover 卡时浮现（中性灰描边） */
 .vocabCard { position: relative; }
 .vocabMaster {
   position: absolute;
@@ -6025,8 +6031,8 @@ onBeforeUnmount(() => {
   font-size: 11.5px;
   font-weight: 600;
   line-height: 1;
-  color: var(--theme-menu-text-color);
-  background: var(--theme-background-color);
+  color: var(--theme-text-secondary);
+  background: var(--theme-background-light-color);
   border: 1px solid var(--theme-border-color);
   border-radius: 999px;
   cursor: pointer;
@@ -6039,7 +6045,7 @@ onBeforeUnmount(() => {
 .vocabMaster:hover {
   color: var(--theme-text-color);
   background: var(--theme-background-light-color);
-  border-color: var(--theme-menu-text-color);
+  border-color: var(--theme-text-secondary);
 }
 .vocabCardHead {
   display: flex;
@@ -6057,8 +6063,9 @@ onBeforeUnmount(() => {
   flex: 0 0 auto;
   font-size: 11px;
   font-weight: 600;
-  color: var(--theme-menu-text-color);
-  background: var(--theme-menu-hover-color);
+  color: var(--theme-text-secondary);
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
   border-radius: 999px;
   padding: 2px 8px;
 }
@@ -6070,14 +6077,14 @@ onBeforeUnmount(() => {
 .vocabDef i {
   font-style: normal;
   font-weight: 600;
-  color: var(--theme-menu-text-color);
+  color: var(--theme-text-secondary);
   margin-right: 4px;
 }
 .vocabPh {
   display: flex;
   gap: 10px;
   font-size: 12px;
-  color: var(--theme-menu-text-color);
+  color: var(--theme-text-secondary);
 }
 .vocabPh b { color: var(--theme-text-color); margin-right: 2px; }
 .vocabCardFoot {
@@ -6089,7 +6096,7 @@ onBeforeUnmount(() => {
   padding-top: 8px;
   border-top: 1px solid var(--theme-border-color);
   font-size: 11px;
-  color: var(--theme-menu-text-color);
+  color: var(--theme-text-secondary);
 }
 .vocabSrc {
   overflow: hidden;
