@@ -449,22 +449,33 @@
 
         <!-- 生词本：未开始 → 收藏词列表 -->
         <template v-else-if="mode === 'vocab-book'">
-          <div class="mistakeBookStage">
-            <div class="mistakePanel enMistakePanel">
-              <template v-if="vocabBookWords.length">
-                <div class="mistakeList">
-                  <div v-for="w in vocabBookWords" :key="w" class="mistakeItem">
-                    <span class="mistakeWord">{{ w }}<i class="mistakeCn">{{ vocabBook[w].def }}</i></span>
-                    <span class="mistakeCount" :class="{ err: !vocabBook[w].posCn }">{{ vocabBook[w].posCn || '未标注' }}</span>
+          <div class="vocabBookStage">
+            <template v-if="vocabBookWords.length">
+              <div class="vocabGrid">
+                <div v-for="w in vocabBookWords" :key="w" class="vocabCard">
+                  <div class="vocabCardHead">
+                    <span class="vocabWord">{{ w }}</span>
+                    <span class="vocabCount">{{ vocabBook[w].count || 0 }} 次</span>
+                  </div>
+                  <div class="vocabDef">
+                    <i v-if="vocabBook[w].posCn">{{ vocabBook[w].posCn }}</i>{{ vocabBook[w].def || '' }}
+                  </div>
+                  <div v-if="vocabBook[w].phUs || vocabBook[w].phUk" class="vocabPh">
+                    <span v-if="vocabBook[w].phUs"><b>美</b>{{ vocabBook[w].phUs }}</span>
+                    <span v-if="vocabBook[w].phUk"><b>英</b>{{ vocabBook[w].phUk }}</span>
+                  </div>
+                  <div class="vocabCardFoot">
+                    <span v-if="vocabBook[w].source" class="vocabSrc">{{ vocabBook[w].source }}</span>
+                    <span class="vocabTs">{{ relTime(vocabBook[w].ts) }}</span>
                   </div>
                 </div>
-                <div class="mistakeOpts">
-                  <button class="btn" @click="startEnVocabPractice" data-nav>练习这 {{ vocabBookWords.length }} 个生词</button>
-                  <button class="btn" @click="clearEnVocab" data-nav>清空生词本</button>
-                </div>
-              </template>
-              <div v-else class="mistakeEmpty">生词本是空的——练习或阅读中点击单词卡片上的「加入生词本」即可收藏单词。</div>
-            </div>
+              </div>
+              <div class="mistakeOpts">
+                <button class="btn" @click="startEnVocabPractice" data-nav>练习这 {{ vocabBookWords.length }} 个生词</button>
+                <button class="btn" @click="clearEnVocab" data-nav>清空生词本</button>
+              </div>
+            </template>
+            <div v-else class="mistakeEmpty">生词本是空的——练习或阅读中点击单词卡片上的「加入生词本」即可收藏单词。</div>
             <div class="numHint">从生词本中挑选需要复习的单词</div>
           </div>
         </template>
@@ -1791,8 +1802,9 @@ function removeEnCustomStory(id) {
 // 时间格式 12:00 / 6:30 作为整体保留（冒号是数字间分隔）。
 function parseEnSentence(line) {
   const words = []
-  // 词干（字母/数字/撇号，含时间 12:00）+ 尾部标点；孤立标点（句首等）也作为词
-  const re = /[A-Za-z0-9']+(?::\d+)*[^A-Za-z0-9'\s]*|[^A-Za-z0-9'\s]+/g
+  // 词干（字母/数字/撇号/中间连字符，含时间 12:00）+ 尾部标点；孤立标点（句首等）也作为词
+  // 连字符仅在字母/数字之间时视为词的一部分（hard-working / well-known），词首词尾的孤立连字符归标点
+  const re = /[A-Za-z0-9']+(?:-[A-Za-z0-9']+)*(?::\d+)*[^A-Za-z0-9'\s]*|[^A-Za-z0-9'\s]+/g
   let m
   while ((m = re.exec(line))) {
     if (m[0]) words.push(m[0].toLowerCase())
@@ -1889,13 +1901,29 @@ function inVocabBook(wd) {
   const key = String(wd?.word || '').trim().toLowerCase()
   return !!vocabBook[key]
 }
+// 生词来源标签：收藏时快照当前课包/课程名（如 "short-stories/pep5 人教版五年级上 · U1 PartA"），没有课包上下文则留空
+function vocabSourceLabel() {
+  const pack = activePack.value?.title || ''
+  const course = currentCourse.value?.title || ''
+  if (pack && course) return `${pack} · ${course}`
+  return pack || course || ''
+}
 function toggleVocabWord(wd) {
   const key = String(wd?.word || '').trim().toLowerCase()
   if (!key || !/[A-Za-z0-9]/.test(key)) return // 纯标点/符号单元不收藏
   if (vocabBook[key]) {
     delete vocabBook[key]
   } else {
-    vocabBook[key] = { def: wd.def || '', pos: wd.pos || '', posCn: wd.posCn || '', phUk: wd.phUk || '', phUs: wd.phUs || '', ts: Date.now() }
+    vocabBook[key] = {
+      def: wd.def || '',
+      pos: wd.pos || '',
+      posCn: wd.posCn || '',
+      phUk: wd.phUk || '',
+      phUs: wd.phUs || '',
+      ts: Date.now(),
+      source: vocabSourceLabel(), // 收藏来源（课包·课程）
+      count: 0, // 练习次数（打对一次 +1）
+    }
   }
   saveEnVocab()
 }
@@ -2503,7 +2531,7 @@ const enSentenceGroups = computed(() => {
   const puncts = []   // 紧跟每个词之后的标点串（原句顺序）
   const rawToks = String(meta.sentenceEn || '').split(/\s+/).filter(Boolean)
   for (const tok of rawToks) {
-    const m = /^[A-Za-z0-9']+/.exec(tok)
+    const m = /^[A-Za-z0-9']+(?:-[A-Za-z0-9']+)*/.exec(tok)
     if (m) {
       bodies.push(m[0])
       puncts.push(normPunct(tok.slice(m[0].length)))
@@ -3981,6 +4009,12 @@ function onKeyDown(e) {
             recordSessionMistake(wordKey) // 本次会话错词
           }
           saveEnMastery()
+          // 生词本练习计数：这个词在生词本里，无论对错都算一次练习
+          const vb = vocabBook[wordKey]
+          if (vb) {
+            vb.count = (vb.count || 0) + 1
+            saveEnVocab()
+          }
         }
         // 词已完成，推进到下一词
         wordIdx.value++
@@ -5931,6 +5965,90 @@ onBeforeUnmount(() => {
 .mistakeBookStage { width: 100%; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
 .mistakeOpts { display: flex; gap: 10px; }
 .mistakeEmpty { color: var(--theme-text-color); font-size: 14px; text-align: center; padding: 20px 0; }
+/* 生词本：julebu 式卡片网格 */
+.vocabBookStage {
+  width: min(1240px, 96vw);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.vocabGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+.vocabCard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px 13px;
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 12px;
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.vocabCard:hover {
+  transform: translateY(-1.5px);
+  background: var(--theme-menu-hover-color);
+}
+.vocabCard:active { transform: scale(.985); }
+.vocabCardHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.vocabWord {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--theme-text-color);
+  overflow-wrap: anywhere;
+}
+.vocabCount {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--theme-menu-text-color);
+  background: var(--theme-menu-hover-color);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+.vocabDef {
+  font-size: 13px;
+  color: var(--theme-text-color);
+  line-height: 1.5;
+}
+.vocabDef i {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--theme-menu-text-color);
+  margin-right: 4px;
+}
+.vocabPh {
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--theme-menu-text-color);
+}
+.vocabPh b { color: var(--theme-text-color); margin-right: 2px; }
+.vocabCardFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid var(--theme-border-color);
+  font-size: 11px;
+  color: var(--theme-menu-text-color);
+}
+.vocabSrc {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vocabTs { flex: 0 0 auto; }
 
 /* 会话状态栏（固定在页面底部） */
 /* 完成弹窗 */
