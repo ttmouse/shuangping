@@ -2744,14 +2744,16 @@ const currentGroup = computed(() => numQueue.value[groupIdx.value] || '')
 const currentLetterGroup = computed(() => letterQueue.value[letterGroupIdx.value] || '')
 const currentSyllable = computed(() => sylQueue.value[sylIdx.value] || null)
 const currentCard = computed(() => cardQueue.value[cardIdx.value] || null)
-// 练习进度百分比（顶部 2px 细条）：按模式取对应队列的已完成单元数 / 总数
+// 练习进度百分比（顶部 4px 细条）：完成度语义——「完结界面」出现时该段顺势走满
+// 英文：整句打完（完结界面出现）即计入该句 → 最后一句完结界面一出现即是 100%
+// 卡片：整卡打完（等待空格/回车的完结界面）即计入该卡 → 末卡完结即 100%
+// 数字/字母/音节：完成即自动推进，索引即完成数
+// 由此最后一项提交时进度条已满格，结算层直接弹出，无需任何延迟
 const practiceProgress = computed(() => {
-  // 最后一项完成后的缓冲期：直接走满，让进度条动画播完
-  if (finishPending.value) return 100
   let done = 0
   let total = 0
   if (isEnPractice.value) {
-    done = sentenceIdx.value
+    done = sentenceIdx.value + (enSentenceDone.value ? 1 : 0)
     total = enQueue.value.length
   } else if (mode.value === 'numbers') {
     done = groupIdx.value
@@ -2763,7 +2765,7 @@ const practiceProgress = computed(() => {
     done = sylIdx.value
     total = sylQueue.value.length
   } else if (mode.value === 'cards') {
-    done = cardIdx.value
+    done = cardIdx.value + (cardAdvancePending.value ? 1 : 0)
     total = cardQueue.value.length
   }
   if (!total) return 0
@@ -3311,13 +3313,13 @@ function selectContent(id) {
 
 // 卡片完成：出错过的卡重新插回队尾重练（Anki 式错卡重练）
 // 整卡打完拼音后保持展示，等待空格/回车进入下一张（不再自动跳转）
-let cardAdvancePending = false
+const cardAdvancePending = ref(false)
 function markCardComplete() {
-  cardAdvancePending = true
+  cardAdvancePending.value = true
 }
 function advanceCard() {
-  if (!cardAdvancePending) return
-  cardAdvancePending = false
+  if (!cardAdvancePending.value) return
+  cardAdvancePending.value = false
   nextCard()
 }
 
@@ -3344,20 +3346,16 @@ function nextCard() {
   }
   clearCardWrongMap()
   cardIdx.value++
-  if (cardIdx.value >= cardQueue.value.length) {
-    // 最后一张：索引停回末卡、保留已完成展示（不重置音节/字母位置），进度条动画走完再结算
-    cardIdx.value = cardQueue.value.length - 1
-    finishWithBar()
-    return
-  }
   cardSylIdx.value = 0
   cardCharIdx.value = 0
   currentCardHadError.value = false
+  if (cardIdx.value >= cardQueue.value.length) {
+    finish()
+  }
 }
 
 function start() {
   if (started.value) return
-  cancelFinishPending() // 清掉可能残留的结算缓冲计时器
   enCombo.value = 0 // 新会话从零连击
   enMaxCombo.value = 0
   resetSentenceScoring()
@@ -3593,12 +3591,10 @@ function submitCode(code, shiftKey = false) {
             numQueue.value.push(group)
             numHadError.value = false
           }
-          if (groupIdx.value + 1 >= numQueue.value.length) {
-            // 最后一组：索引停回末组保持展示，进度条动画走完再结算
-            finishWithBar()
-          } else {
-            groupIdx.value++
-            digitIdx.value = 0
+          groupIdx.value++
+          digitIdx.value = 0
+          if (groupIdx.value >= numQueue.value.length) {
+            finish()
           }
         }
       }
@@ -3618,12 +3614,10 @@ function submitCode(code, shiftKey = false) {
             letterQueue.value.push(group)
             letterHadError.value = false
           }
-          if (letterGroupIdx.value + 1 >= letterQueue.value.length) {
-            // 最后一组：索引停回末组保持展示，进度条动画走完再结算
-            finishWithBar()
-          } else {
-            letterGroupIdx.value++
-            letterCharIdx.value = 0
+          letterGroupIdx.value++
+          letterCharIdx.value = 0
+          if (letterGroupIdx.value >= letterQueue.value.length) {
+            finish()
           }
         }
       }
@@ -3637,18 +3631,16 @@ function submitCode(code, shiftKey = false) {
       if (correct) {
         sylCharIdx.value++
         if (sylCharIdx.value >= syl.letters.length) {
+          sylIdx.value++
           completedUnits.value++ // 完成一个音节
           if (sylHadError.value) {
             // 错音节重练：插回队尾再打一遍
             sylQueue.value.push({ ...syl, redo: true })
             sylHadError.value = false
           }
-          if (sylIdx.value + 1 >= sylQueue.value.length) {
-            // 最后一音节：索引停回末音节保持展示，进度条动画走完再结算
-            finishWithBar()
-          } else {
-            sylIdx.value++
-            sylCharIdx.value = 0
+          sylCharIdx.value = 0
+          if (sylIdx.value >= sylQueue.value.length) {
+            finish()
           }
         }
       }
@@ -3692,32 +3684,10 @@ function submitCode(code, shiftKey = false) {
 // 统一输入入口：提交 + 驱动键盘闪光（物理键盘与鼠标点击共用）
 function handleInput(code, shiftKey) {
   // 卡片完成等待空格 / 整句完成等待空格期间忽略输入
-  if (cardAdvancePending || enSentenceDone.value) return { correct: false }
+  if (cardAdvancePending.value || enSentenceDone.value) return { correct: false }
   const res = submitCode(code, shiftKey)
   flashKey(code, res.correct ? 'ok' : 'bad')
   return res
-}
-
-// 练习完成缓冲：最后一项完成后先把顶部进度条动画走到 100%，再弹结算层
-// （否则完成瞬间进度条被卸载、未播放动画就直接出现结算浮层）
-const finishPending = ref(false)
-let finishTimer = null
-function cancelFinishPending() {
-  finishPending.value = false
-  if (finishTimer) {
-    clearTimeout(finishTimer)
-    finishTimer = null
-  }
-}
-function finishWithBar() {
-  if (finishPending.value) return
-  finishPending.value = true
-  finishTimer = setTimeout(() => {
-    finishPending.value = false
-    finishTimer = null
-    // 缓冲期间若已退出/已结算（Esc、重启、切页），不再弹结算层
-    if (started.value && !completed.value) finish()
-  }, 420)
 }
 
 function finish() {
@@ -3756,7 +3726,7 @@ function finish() {
 }
 
 function endSession() {
-  cardAdvancePending = false
+  cardAdvancePending.value = false
   stopElapsedTimer()
   if (!sessionStart.value) return
   const duration = Math.round((Date.now() - sessionStart.value) / 60000)
@@ -3887,7 +3857,7 @@ function onKeyDown(e) {
     return
   }
   // 卡片模式：整卡拼音打完等待空格/回车进入下一张（期间忽略其他按键）
-  if (mode.value === 'cards' && cardAdvancePending) {
+  if (mode.value === 'cards' && cardAdvancePending.value) {
     if (e.code === 'Space' || e.code === 'Enter') {
       e.preventDefault()
       advanceCard()
@@ -3930,11 +3900,6 @@ function onKeyDown(e) {
       e.preventDefault()
       // 整句完成：再一次空格/回车进入下一句
       if (enSentenceDone.value) {
-        if (sentenceIdx.value + 1 >= enQueue.value.length) {
-          // 最后一句：不推进索引、保持完成态展示，进度条动画走完再结算
-          finishWithBar()
-          return
-        }
         enSentenceDone.value = false
         resetSentenceScoring() // 新句子重置评分过程状态（句首 startEnWord 不误结算）
         enSentenceSpoken.value = false // 新句子重置整句语音播放标记
@@ -3943,15 +3908,19 @@ function onKeyDown(e) {
         enWordAvgs.value = {} // 新句子清空耗时记录
         enGentleInputs.value = [] // 宽松模式：新句子重置输入记录
         enGentleErrors.value = {} // 宽松模式：新句子重置错误标记
-        // 课包课程：进入新句子时记住续练位置（刷新/退出后仍从此句继续）
-        setCourseResume(sentenceIdx.value)
-        // 换句首词：等渲染 + 150ms 视觉缓冲后再计时（换句后的定位时间不计入首词耗时）
-        // 开启整句朗读 → 同时朗读整句，首词不再单独朗读
-        if (settings.enSpeakSentence) {
-          enSkipWordSpeak.value = true
-          nextTick(() => setTimeout(() => speakWholeSentence(), 150))
+        if (sentenceIdx.value >= enQueue.value.length) {
+          finish()
+        } else {
+          // 课包课程：进入新句子时记住续练位置（刷新/退出后仍从此句继续）
+          setCourseResume(sentenceIdx.value)
+          // 换句首词：等渲染 + 150ms 视觉缓冲后再计时（换句后的定位时间不计入首词耗时）
+          // 开启整句朗读 → 同时朗读整句，首词不再单独朗读
+          if (settings.enSpeakSentence) {
+            enSkipWordSpeak.value = true
+            nextTick(() => setTimeout(() => speakWholeSentence(), 150))
+          }
+          nextTick(() => setTimeout(() => startEnWord(), 150))
         }
-        nextTick(() => setTimeout(() => startEnWord(), 150))
         return
       }
       const unit = currentWord.value
@@ -4252,7 +4221,6 @@ onBeforeUnmount(() => {
   window.removeEventListener('visibilitychange', onVisibilityChange)
   for (const t of flashTimers.values()) clearTimeout(t)
   flashTimers.clear()
-  cancelFinishPending() // 卸载时清掉结算缓冲计时器
   endSession()
 })
 </script>
@@ -4282,14 +4250,14 @@ onBeforeUnmount(() => {
   top: 52px;
   left: 0;
   right: 0;
-  height: 2px;
+  height: 4px;
   z-index: 29;
   pointer-events: none;
 }
 .practiceProgressFill {
   height: 100%;
   background: #3db389;
-  border-radius: 0 1px 1px 0;
+  border-radius: 0 2px 2px 0;
   transition: width .3s ease;
 }
 
