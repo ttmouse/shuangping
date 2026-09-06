@@ -177,7 +177,7 @@
 <script setup>
 import { ref, computed, reactive, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { fetchCourseData, fetchCoursePack } from '../utils/coursePacks.js'
+import { fetchCourseData, fetchCoursePack, buildCourseDict } from '../utils/coursePacks.js'
 import { speakSentence, speakWord, stopAllSpeech } from '../utils/tts.js'
 
 // ---------- 词性中文 / 颜色（与练习页一致） ----------
@@ -250,6 +250,22 @@ function resetReadSettings() {
 const sentenceCount = computed(() => sentences.value.length)
 const serifFont = computed(() => serif.value ? 'Georgia, \"Times New Roman\", \"Songti SC\", serif' : 'inherit')
 
+// 课包级词典（statements.details + 全部句子 wordDetails 汇总），句子自带词条缺词典字段时兜底
+const courseDict = ref({})
+// 词典查找：整词优先，连字符复合词拆部分兜底（如 "hard-working" 数据拆成 hard/working 两条）
+function lookupCourseDict(lower) {
+  const dict = courseDict.value || {}
+  let de = dict[lower]
+  if (de) return de
+  if (lower.includes('-')) {
+    for (const part of lower.split('-')) {
+      de = dict[part]
+      if (de) return de
+    }
+  }
+  return null
+}
+
 // ---------- 句子 token 化 ----------
 function tokenizeSentence(s) {
   const wds = (s.wordDetails || []).slice()
@@ -271,18 +287,44 @@ function tokenizeSentence(s) {
     const lower = text.toLowerCase()
     let wi = wds.findIndex(d => String(d.word || '').toLowerCase() === lower)
     if (wi < 0) wi = wds.findIndex(d => String(d.word || '').toLowerCase().replace(/'/g, '') === lower.replace(/'/g, ''))
-    if (wi >= 0) {
-      const d = wds.splice(wi, 1)[0]
+    // 连字符复合词：整词匹配不到时按 "-" 拆部分匹配句内词条（hard-working → hard / working）
+    if (wi < 0 && lower.includes('-')) {
+      wi = -1
+      for (const part2 of lower.split('-')) {
+        wi = wds.findIndex(d => String(d.word || '').toLowerCase() === part2 || String(d.word || '').toLowerCase().replace(/'/g, '') === part2.replace(/'/g, ''))
+        if (wi >= 0) break
+      }
+    }
+    let d = wi >= 0 ? wds.splice(wi, 1)[0] : null
+    let tok = null
+    if (d) {
       const phUk = (d.phonetic && d.phonetic.uk) || ''
       const phUs = (d.phonetic && d.phonetic.us) || ''
-      tokens.push({
+      tok = {
         type: 'word', text, word: d.word || text,
         pos: d.pos || d.partOfSpeech || '', posCn: POS_CN[(d.pos || d.partOfSpeech)] || '',
         def: d.definition || '', phonetic: phUk, phoneticUs: phUs,
-      })
-    } else {
-      tokens.push({ type: 'word', text, word: text, pos: '', posCn: '', def: '', phonetic: '' })
+      }
     }
+    // 句内词条缺失或词条本身缺词典字段 → 课包级词典兜底（单词课 wordDetails 常为空，
+    // 兜底后点词也能弹词卡；与练习页 buildCourseDict 同源）
+    if (!tok || (!tok.def && !tok.posCn && !tok.phonetic && !tok.phoneticUs)) {
+      const de = lookupCourseDict(lower)
+      if (de) {
+        const ph = de.phonetic
+        const phUk = ph && typeof ph === 'object' ? (ph.uk || '') : (ph || '')
+        const phUs = ph && typeof ph === 'object' ? (ph.us || '') : ''
+        const pos = de.pos || de.partOfSpeech || ''
+        tok = tok || { type: 'word', text, word: text, pos: '', posCn: '', def: '', phonetic: '', phoneticUs: '' }
+        if (!tok.def) tok.def = de.definition ?? de.cn ?? ''
+        if (!tok.posCn) { tok.pos = pos; tok.posCn = POS_CN[pos] || '' }
+        if (!tok.phonetic && !tok.phoneticUs) { tok.phonetic = phUk; tok.phoneticUs = phUs }
+      }
+    }
+    if (!tok) {
+      tok = { type: 'word', text, word: text, pos: '', posCn: '', def: '', phonetic: '', phoneticUs: '' }
+    }
+    tokens.push(tok)
   }
   // 标点吸附：数据里词与标点以空格分隔（如 "Hi , Peter !"）。把纯标点 token
   // 并入相邻单词文本，避免逗号/问号前后悬空，以及标点被折行甩到行首。
@@ -299,6 +341,11 @@ function tokenizeSentence(s) {
       if (ni >= 0) { tokens[ni].text = t + tokens[ni].text; continue }
     }
     out.push(tok)
+  }
+  // 单词句兜底：全句仅一个词且词典仍无数据时，用本句中译当词义（单词课每句即一个词，"team"→"团队"）
+  if (out.length === 1 && out[0].type === 'word' && !out[0].def && !out[0].posCn && !out[0].phonetic && !out[0].phoneticUs) {
+    const cn = String(s.chinese || '').trim()
+    if (cn) out[0].def = cn
   }
   return out
 }
@@ -329,6 +376,8 @@ async function load() {
       localStorage.setItem('sp-course-progress', JSON.stringify(prog))
     } catch { /* ignore */ }
     title.value = data.course?.title || cf
+    // 课包级词典（statements.details + 全课 wordDetails 汇总），供点词词卡兜底
+    try { courseDict.value = buildCourseDict(data) } catch { courseDict.value = {} }
     const list = [...(data.sentences || [])].sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
     sentences.value = list
     curIdx.value = 0
