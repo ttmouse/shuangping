@@ -475,6 +475,9 @@
                 </div>
               </div>
               <div class="mistakeOpts">
+                <label class="repeatLabel">每词重复
+                  <input type="number" v-model.number="customRepeat" min="1" max="20" /> 遍
+                </label>
                 <button class="btn" @click="startEnVocabPractice" data-nav>练习这 {{ vocabBookWords.length }} 个生词</button>
                 <button class="btn" @click="clearEnVocab" data-nav>清空生词本</button>
               </div>
@@ -1984,7 +1987,7 @@ function recordSlowWord(word, avg) {
     cur.avg = Math.round(avg)
     if (!enHadError.value && avg <= threshold) {
       cur.pass = (cur.pass || 0) + 1
-      const repeat = Math.max(1, Math.min(20, Number(customRepeat.value) || 3))
+      const repeat = Math.max(1, Math.min(20, Number(customRepeat.value) || 5))
       if (cur.pass >= repeat) {
         delete enSlowWords[word]
       }
@@ -2255,7 +2258,7 @@ function loadCustomCache() {
 }
 const customCache = loadCustomCache()
 const customCardsInput = ref(customCache.text || '')
-const customRepeat = ref(Number(customCache.repeat) || 3) // 每词重复遍数
+const customRepeat = ref(Number(customCache.repeat) || 5) // 每词重复遍数（默认 5）
 function saveCustomCache() {
   try {
     localStorage.setItem(CUSTOM_CACHE_KEY, JSON.stringify({ text: customCardsInput.value, repeat: customRepeat.value }))
@@ -2930,7 +2933,7 @@ function buildEnglishQueue() {
   if (enVocabMode.value || mode.value === 'vocab-book') {
     const pool = vocabBookWords.value
     if (!pool.length) return [] // 生词本为空时不落到词库池
-    const repeat = Math.max(1, Math.min(20, Number(customRepeat.value) || 3))
+    const repeat = Math.max(1, Math.min(20, Number(customRepeat.value) || 5))
     return shuffle(pool).map(w => {
       const info = vocabBook[w] || {}
       const phonetic = { uk: info.phUk || '', us: info.phUs || '' }
@@ -2950,7 +2953,7 @@ function buildEnglishQueue() {
   if (enSlowMode.value) {
     const pool = Object.keys(enSlowWords)
     if (pool.length) {
-      const repeat = Math.max(1, Math.min(20, Number(customRepeat.value) || 3))
+      const repeat = Math.max(1, Math.min(20, Number(customRepeat.value) || 5))
       return shuffle(pool).map(w => ({ words: Array(repeat).fill(w), cn: '' }))
     }
   }
@@ -3297,7 +3300,7 @@ function buildCustomCardQueue() {
     const parts = line.toLowerCase().split(/\s+/).filter(Boolean)
     return { display: line, syllables: parts }
   }).filter(c => c.syllables.length > 0)
-  const n = Math.max(1, Math.min(20, Number(customRepeat.value) || 3))
+  const n = Math.max(1, Math.min(20, Number(customRepeat.value) || 5))
   const queue = []
   for (const card of cards) {
     for (let i = 0; i < n; i++) queue.push({ ...card })
@@ -6034,9 +6037,9 @@ onBeforeUnmount(() => {
 .vocabCard:hover .vocabMaster,
 .vocabMaster:focus-visible { opacity: 1; visibility: visible; }
 .vocabMaster:hover {
-  color: #fff;
-  background: #1a9a7a;
-  border-color: transparent;
+  color: var(--theme-text-color);
+  background: var(--theme-background-light-color);
+  border-color: var(--theme-menu-text-color);
 }
 .vocabCardHead {
   display: flex;
