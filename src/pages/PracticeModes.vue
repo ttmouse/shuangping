@@ -911,7 +911,7 @@
           @click.stop="youdaoExpanded = true"
         >展开更多例句（{{ youdaoDetail.sentences.length - 1 }}）</button>
       </div>
-      <div v-else-if="youdaoDetail === null" class="pm-wc-loading">加载词典中…</div>
+      <div v-if="youdaoLoading" class="pm-wc-loading">加载词典中…</div>
       <div class="pm-wc-actions">
         <button
           class="pm-wc-add"
@@ -1974,6 +1974,19 @@ function toggleVocabWord(wd) {
       source: vocabSourceLabel(), // 收藏来源（课包·课程）
       count: 0, // 练习次数（打对一次 +1）
     }
+    // 课程词典未命中时（释义为空），异步从有道 suggest 接口补全释义
+    if (!wd.def) {
+      fetchEnTranslation(key).then((data) => {
+        const entries = data?.data?.entries || []
+        // 优先取完全匹配的词条释义，否则取第一条
+        const match = entries.find(e => String(e.entry || '').toLowerCase() === key)
+        const explain = match?.explain || entries[0]?.explain || ''
+        if (explain && vocabBook[key]) {
+          vocabBook[key].def = explain
+          saveEnVocab()
+        }
+      }).catch(() => {})
+    }
   }
   saveEnVocab()
 }
@@ -2676,6 +2689,7 @@ const enSentenceGroups = computed(() => {
 // ---- 词卡浮层：点击完成态单词弹出（同阅读模式 CourseReading 的 cr-wordcard）----
 const wordCard = ref(null)
 const youdaoDetail = ref(null) // 有道词典完整详情（音标+完整释义+双语例句），异步加载
+const youdaoLoading = ref(false) // 有道详情是否加载中（区分加载中 vs 加载完成无数据）
 const youdaoExpanded = ref(false) // 例句是否展开（默认收起，只显示1条）
 let youdaoSeq = 0 // 防竞态：旧请求返回时不覆盖新单词的详情
 function openWordCard(e, wd) {
@@ -2708,12 +2722,18 @@ function openWordCard(e, wd) {
   // 异步加载有道词典完整详情（音标+完整释义+双语例句），防竞态
   const seq = ++youdaoSeq
   youdaoDetail.value = null
+  youdaoLoading.value = true
   youdaoExpanded.value = false
   fetchYoudaoWordDetail(wd.word).then((detail) => {
-    if (seq === youdaoSeq && wordCard.value) youdaoDetail.value = detail
+    if (seq === youdaoSeq && wordCard.value) {
+      youdaoDetail.value = detail
+      youdaoLoading.value = false
+    }
+  }).catch(() => {
+    if (seq === youdaoSeq) youdaoLoading.value = false
   })
 }
-function closeWordCard() { wordCard.value = null; youdaoDetail.value = null; youdaoExpanded.value = false; youdaoSeq++ }
+function closeWordCard() { wordCard.value = null; youdaoDetail.value = null; youdaoLoading.value = false; youdaoExpanded.value = false; youdaoSeq++ }
 function playWord(which) {
   if (!wordCard.value) return
   if (which === 'sentence') {
