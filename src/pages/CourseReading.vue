@@ -254,7 +254,9 @@ const serifFont = computed(() => serif.value ? 'Georgia, \"Times New Roman\", \"
 function tokenizeSentence(s) {
   const wds = (s.wordDetails || []).slice()
   const tokens = []
-  const en = String(s.english || s.content || '')
+  // 归一化：连字符两侧带空格时（如课程数据 "hard - working"）合并为 "hard-working"，
+  // 与练习模式 parseEnSentence 保持一致；仅两侧都是字母/数字时合并，避免误伤破折号
+  const en = String(s.english || s.content || '').replace(/([A-Za-z0-9])\s*-\s*([A-Za-z0-9])/g, '$1-$2')
   const parts = en.split(/(\s+)/).filter(Boolean)
   for (const part of parts) {
     if (/^\s+$/.test(part)) continue
