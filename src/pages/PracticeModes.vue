@@ -2710,8 +2710,8 @@ function openWordCard(e, wd) {
     y = r.top - CH - 8 // 优先放到单词上方
     if (y < 8) y = Math.max(8, window.innerHeight - CH - 8) // 上下都放不下 → 钳制在视口内
   }
-  // 当前句子（练习完成态）：用于词卡浮层"本课例句"展示
-  const curSentence = enQueue.value[sentenceIdx.value] || null
+  // 只有在练习进行中才显示本课例句（浏览态 enQueue 是上一次练习的残留数据，不应显示）
+  const curSentence = started.value ? (enQueue.value[sentenceIdx.value] || null) : null
   wordCard.value = {
     x: Math.round(x),
     y: Math.round(y),
