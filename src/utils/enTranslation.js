@@ -264,8 +264,43 @@ function parseBlngSentences(blng) {
   return list
 }
 
+// 根据环境返回有道词典页面的候选获取 URL 列表（按优先级排序，依次尝试）
+// 开发环境：Vite dev server 代理（最稳定）
+// 生产环境：公共 CORS 代理（依次降级）
+function getYoudaoPageUrls(word) {
+  const target = 'https://dict.youdao.com/result?word=' + encodeURIComponent(word) + '&lang=en'
+  const isDev = typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  if (isDev) {
+    return ['/api/youdao/result?word=' + encodeURIComponent(word) + '&lang=en']
+  }
+  // 生产环境：公共 CORS 代理（按稳定性排序，依次降级）
+  return [
+    'https://api.allorigins.win/raw?url=' + encodeURIComponent(target),
+    'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(target),
+  ]
+}
+
+// 依次尝试候选 URL，直到成功获取 HTML
+async function fetchYoudaoHtml(word) {
+  const urls = getYoudaoPageUrls(word)
+  let lastError = null
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { headers: { 'Accept': 'text/html' } })
+      if (!res.ok) throw new Error('HTTP ' + res.status)
+      const html = await res.text()
+      if (html && html.length > 1000 && html.includes('__NUXT__')) return html
+      throw new Error('invalid response')
+    } catch (e) {
+      lastError = e
+    }
+  }
+  throw lastError || new Error('all proxies failed')
+}
+
 // 查询有道词典完整详情（音标 + 完整释义 + 双语例句）
-// 失败返回 null（调用方降级到 suggest 接口）
+// 失败返回 null（调用方降级不显示）
 export function fetchYoudaoWordDetail(word) {
   const key = String(word || '').trim()
   if (!key) return Promise.resolve(null)
@@ -273,13 +308,7 @@ export function fetchYoudaoWordDetail(word) {
   if (youdaoMemCache.has(lower)) return Promise.resolve(youdaoMemCache.get(lower))
   if (youdaoPending.has(lower)) return youdaoPending.get(lower)
 
-  const p = fetch('/api/youdao/result?word=' + encodeURIComponent(key) + '&lang=en', {
-    headers: { 'Accept': 'text/html' },
-  })
-    .then(res => {
-      if (!res.ok) throw new Error('HTTP ' + res.status)
-      return res.text()
-    })
+  const p = fetchYoudaoHtml(key)
     .then(html => {
       const nuxt = parseNuxtData(html)
       const wordData = nuxt?.data?.[0]?.wordData
