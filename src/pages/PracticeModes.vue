@@ -888,10 +888,23 @@
           <div class="pm-wc-sent-cn">{{ wordCard.sentenceCn }}</div>
         </div>
       </div>
-      <!-- 有道 suggest 精确匹配释义（稳定，JSONP 不需要代理；只显示当前词本身的释义，不显示模糊匹配的相关词） -->
+      <!-- 有道 suggest 精确匹配释义（稳定，JSONP 不需要代理） -->
       <div v-if="exactWordEntry" class="pm-wc-sents">
         <div class="pm-wc-sents-title">词典释义</div>
         <div class="pm-wc-def pm-wc-def-yd">{{ exactWordEntry.explain }}</div>
+      </div>
+      <!-- 相关词/短语（有道 suggest 模糊匹配，默认2条，可展开） -->
+      <div v-if="relatedWordEntries.length" class="pm-wc-sents">
+        <div class="pm-wc-sents-title">相关词/短语</div>
+        <div v-for="(e, ei) in relatedWordEntries.slice(0, wordEntriesExpanded ? 5 : 2)" :key="ei" class="pm-wc-sent">
+          <div class="pm-wc-sent-en"><b>{{ e.entry }}</b></div>
+          <div class="pm-wc-sent-cn">{{ e.explain }}</div>
+        </div>
+        <button
+          v-if="!wordEntriesExpanded && relatedWordEntries.length > 2"
+          class="pm-wc-expand"
+          @click.stop="wordEntriesExpanded = true"
+        >展开更多（{{ relatedWordEntries.length - 2 }}）</button>
       </div>
       <!-- 有道完整释义（增强功能，仅开发环境可用，需要 Vite 代理） -->
       <div v-if="youdaoDetail?.explains?.length" class="pm-wc-sents">
@@ -2694,13 +2707,18 @@ const enSentenceGroups = computed(() => {
 // ---- 词卡浮层：点击完成态单词弹出（同阅读模式 CourseReading 的 cr-wordcard）----
 const wordCard = ref(null)
 const wordEntries = ref(null) // 有道 suggest 词条（稳定，JSONP 不需要代理）
-const wordEntriesExpanded = ref(false) // 释义展开状态
-// 只取当前词的精确匹配释义（entry 完全等于当前词，忽略大小写）
-// 不显示模糊匹配的相关词（如 on → one/only/once），避免混淆
+const wordEntriesExpanded = ref(false) // 相关词/短语展开状态
+// 当前词的精确匹配释义（entry 完全等于当前词）
 const exactWordEntry = computed(() => {
   if (!wordEntries.value || !wordCard.value) return null
   const current = (wordCard.value.wd.word || '').toLowerCase()
   return wordEntries.value.find(e => String(e.entry || '').toLowerCase() === current) || null
+})
+// 相关词/短语（过滤掉精确匹配的，只显示相关推荐）
+const relatedWordEntries = computed(() => {
+  if (!wordEntries.value || !wordCard.value) return []
+  const current = (wordCard.value.wd.word || '').toLowerCase()
+  return wordEntries.value.filter(e => String(e.entry || '').toLowerCase() !== current)
 })
 const youdaoDetail = ref(null) // 有道词典完整详情（增强，需要代理，可能失败）
 const youdaoLoading = ref(false) // 有道详情是否加载中
