@@ -409,40 +409,46 @@
           </div>
         </template>
 
-        <!-- 错词本：未开始 → 错词/慢词列表 -->
+        <!-- 错词本：未开始 → 错词/慢词卡片墙 -->
         <template v-else-if="mode === 'mistake-book'">
-          <div class="mistakeBookStage">
-            <div class="mistakePanel enMistakePanel">
-              <template v-if="enMistakeWords.length">
-                <div class="mistakeList">
-                  <div v-for="w in enMistakeWords" :key="w" class="mistakeItem">
-                    <span class="mistakeWord">{{ w }}<i class="mistakeCn">{{ wordCn(w) }}</i></span>
-                    <span class="mistakeCount" :class="{ err: enMastery[w] === 'error' }">{{ enMastery[w] === 'error' ? '打错' : '太慢' }}</span>
+          <div class="vocabBookStage">
+            <template v-if="enMistakeWords.length">
+              <div class="vocabGrid">
+                <div v-for="w in enMistakeWords" :key="w" class="vocabCard">
+                  <div class="vocabCardHead">
+                    <span class="vocabWord">{{ w }}</span>
+                    <span class="vocabCount">{{ enMastery[w] === 'error' ? '打错' : '太慢' }}</span>
                   </div>
+                  <div class="vocabDef">{{ wordCn(w) || '—' }}</div>
                 </div>
-                <div class="mistakeOpts">
-                  <button class="btn" @click="startEnMistakePractice" data-nav>练习这 {{ enMistakeWords.length }} 个错词</button>
-                  <button class="btn" @click="clearEnMistakes" data-nav>清空错题</button>
+              </div>
+              <div class="mistakeOpts">
+                <button class="btn" @click="startEnMistakePractice" data-nav>练习这 {{ enMistakeWords.length }} 个错词</button>
+                <button class="btn" @click="clearEnMistakes" data-nav>清空错题</button>
+              </div>
+            </template>
+            <div v-else class="mistakeEmpty">暂无错题——打错的英文单词会自动记到这里，专练到记住为止。</div>
+
+            <template v-if="enSlowList.length">
+              <div class="vocabSectionTitle">慢词刻意练习</div>
+              <div class="vocabGrid">
+                <div v-for="s in enSlowList" :key="s.w" class="vocabCard">
+                  <div class="vocabCardHead">
+                    <span class="vocabWord">{{ s.w }}</span>
+                    <span class="vocabCount">{{ s.avg }}ms</span>
+                  </div>
+                  <div class="vocabDef">{{ wordCn(s.w) || '—' }}</div>
                 </div>
-              </template>
-              <div v-else class="mistakeEmpty">暂无错题——打错的英文单词会自动记到这里，专练到记住为止。</div>
-            </div>
-            <div class="mistakePanel enMistakePanel">
-              <template v-if="enSlowList.length">
-                <div class="slowBar">
-                  <span class="slowBarTitle">慢词刻意练习</span>
-                  <span class="slowBarMeta">{{ enSlowList.length }} 个词待练快（平均耗时 &gt; {{ settings.enPracticeMs || 300 }}ms/字母）</span>
-                </div>
-                <div class="mistakeOpts">
-                  <label class="repeatLabel">每词重复
-                    <input type="number" v-model.number="customRepeat" min="1" max="20" /> 遍
-                  </label>
-                  <button class="btn" @click="startEnSlowPractice" data-nav>练到 {{ settings.enPracticeMs || 300 }}ms 以内</button>
-                  <button class="btn" @click="clearEnSlowWords" data-nav>清空</button>
-                </div>
-              </template>
-              <div v-else class="mistakeEmpty">暂无慢词——平均耗时超过 {{ settings.enPracticeMs || 300 }}ms/字母 的词会自动收录，刻意练到变快。</div>
-            </div>
+              </div>
+              <div class="mistakeOpts">
+                <label class="repeatLabel">每词重复
+                  <input type="number" v-model.number="customRepeat" min="1" max="20" /> 遍
+                </label>
+                <button class="btn" @click="startEnSlowPractice" data-nav>练到 {{ settings.enPracticeMs || 300 }}ms 以内</button>
+                <button class="btn" @click="clearEnSlowWords" data-nav>清空</button>
+              </div>
+            </template>
+            <div v-else class="mistakeEmpty">暂无慢词——平均耗时超过 {{ settings.enPracticeMs || 300 }}ms/字母 的词会自动收录，刻意练到变快。</div>
             <div class="numHint">从错词本中挑选需要专练的单词</div>
           </div>
         </template>
@@ -2721,6 +2727,12 @@ watch(
 watch(completed, (v) => {
   if (v) ensureCnForWords(sessionMistakes.value)
 })
+// 错词本浏览态：对错词/慢词整页批量预查中文（卡片释义）
+watch(mode, (m) => {
+  if (m !== 'mistake-book') return
+  ensureCnForWords(enMistakeWords.value)
+  ensureCnForWords(enSlowList.value.map((s) => s.w))
+}, { immediate: true })
 
 // 单行布局：横向滚动 + 左侧淡出，自动把当前词滚到可视区
 // （放在 enSentence 之后，避免 watch 源在 setup 阶段先于声明求值）
@@ -5988,13 +6000,20 @@ onBeforeUnmount(() => {
 .mistakeOpts .btn { color: var(--theme-text-color); }
 .mistakeOpts .btn:hover { color: var(--theme-text-color); border-color: var(--theme-text-secondary); }
 .mistakeEmpty { color: var(--theme-text-color); font-size: 14px; text-align: center; padding: 20px 0; }
-/* 生词本：julebu 式卡片网格 */
+/* 生词本/错词本：julebu 式卡片网格 */
 .vocabBookStage {
   width: min(1240px, 96vw);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+.vocabSectionTitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--theme-text-secondary);
+  letter-spacing: .02em;
 }
 .vocabGrid {
   display: grid;
