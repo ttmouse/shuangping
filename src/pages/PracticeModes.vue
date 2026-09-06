@@ -453,6 +453,10 @@
             <template v-if="vocabBookWords.length">
               <div class="vocabGrid">
                 <div v-for="w in vocabBookWords" :key="w" class="vocabCard">
+                  <button class="vocabMaster" title="标记为已掌握，从生词本移出" @click="masterVocabWord(w)">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                    已掌握
+                  </button>
                   <div class="vocabCardHead">
                     <span class="vocabWord">{{ w }}</span>
                     <span class="vocabCount">{{ vocabBook[w].count || 0 }} 次</span>
@@ -1802,11 +1806,14 @@ function removeEnCustomStory(id) {
 // 时间格式 12:00 / 6:30 作为整体保留（冒号是数字间分隔）。
 function parseEnSentence(line) {
   const words = []
+  // 归一化：连字符两侧带空格时（如课程数据 "hard - working"）合并为无空格连字符 "hard-working"
+  // 仅当连字符两侧都是字母/数字时才合并，避免误伤 " - " 作为破折号/分隔符的场景
+  const normalized = String(line || '').replace(/([A-Za-z0-9])\s*-\s*([A-Za-z0-9])/g, '$1-$2')
   // 词干（字母/数字/撇号/中间连字符，含时间 12:00）+ 尾部标点；孤立标点（句首等）也作为词
   // 连字符仅在字母/数字之间时视为词的一部分（hard-working / well-known），词首词尾的孤立连字符归标点
   const re = /[A-Za-z0-9']+(?:-[A-Za-z0-9']+)*(?::\d+)*[^A-Za-z0-9'\s]*|[^A-Za-z0-9'\s]+/g
   let m
-  while ((m = re.exec(line))) {
+  while ((m = re.exec(normalized))) {
     if (m[0]) words.push(m[0].toLowerCase())
   }
   return { words }
@@ -1925,6 +1932,12 @@ function toggleVocabWord(wd) {
       count: 0, // 练习次数（打对一次 +1）
     }
   }
+  saveEnVocab()
+}
+// 标记为已掌握：从生词本移出该词（无二次确认，卡片位置即目标）
+function masterVocabWord(key) {
+  if (!key || !vocabBook[key]) return
+  delete vocabBook[key]
   saveEnVocab()
 }
 function clearEnVocab() {
@@ -2529,7 +2542,9 @@ const enSentenceGroups = computed(() => {
     .join('').replace(/[^.,!?;:'"()<>\[\]…—-]+/g, '')
   const bodies = []   // 词正文（保留原大小写，不含标点）
   const puncts = []   // 紧跟每个词之后的标点串（原句顺序）
-  const rawToks = String(meta.sentenceEn || '').split(/\s+/).filter(Boolean)
+  // 归一化：连字符两侧带空格时（如课程数据 "hard - working"）合并为 "hard-working"，与 parseEnSentence 保持一致
+  const metaEnNorm = String(meta.sentenceEn || '').replace(/([A-Za-z0-9])\s*-\s*([A-Za-z0-9])/g, '$1-$2')
+  const rawToks = metaEnNorm.split(/\s+/).filter(Boolean)
   for (const tok of rawToks) {
     const m = /^[A-Za-z0-9']+(?:-[A-Za-z0-9']+)*/.exec(tok)
     if (m) {
@@ -5993,6 +6008,36 @@ onBeforeUnmount(() => {
   background: var(--theme-menu-hover-color);
 }
 .vocabCard:active { transform: scale(.985); }
+/* 已掌握按钮：参考 julebu 列表项右上角操作，默认半透明，hover 卡时浮现并亮起 */
+.vocabCard { position: relative; }
+.vocabMaster {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--theme-menu-text-color);
+  background: var(--theme-background-color);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 999px;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .15s ease, visibility .15s ease, color .15s ease, background .15s ease, border-color .15s ease;
+}
+.vocabCard:hover .vocabMaster,
+.vocabMaster:focus-visible { opacity: 1; visibility: visible; }
+.vocabMaster:hover {
+  color: #fff;
+  background: #1a9a7a;
+  border-color: transparent;
+}
 .vocabCardHead {
   display: flex;
   align-items: baseline;
