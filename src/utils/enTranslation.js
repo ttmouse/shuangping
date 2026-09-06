@@ -300,8 +300,13 @@ async function fetchYoudaoHtml(word) {
 }
 
 // 查询有道词典完整详情（音标 + 完整释义 + 双语例句）
+// 仅在开发环境（localhost）可用（通过 Vite 代理 /api/youdao）
+// 生产环境（GitHub Pages）没有可靠代理，直接返回 null，避免 CORS 错误
 // 失败返回 null（调用方降级不显示）
 export function fetchYoudaoWordDetail(word) {
+  const isDev = typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  if (!isDev) return Promise.resolve(null)
   const key = String(word || '').trim()
   if (!key) return Promise.resolve(null)
   const lower = key.toLowerCase()

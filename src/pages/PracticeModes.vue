@@ -888,22 +888,14 @@
           <div class="pm-wc-sent-cn">{{ wordCard.sentenceCn }}</div>
         </div>
       </div>
-      <!-- 有道 suggest 相关释义（稳定，JSONP 不需要代理；过滤掉单词本身，默认2条，可展开） -->
-      <div v-if="filteredWordEntries.length" class="pm-wc-sents">
-        <div class="pm-wc-sents-title">相关释义</div>
-        <div v-for="(e, ei) in filteredWordEntries.slice(0, wordEntriesExpanded ? 5 : 2)" :key="ei" class="pm-wc-sent">
-          <div class="pm-wc-sent-en"><b>{{ e.entry }}</b></div>
-          <div class="pm-wc-sent-cn">{{ e.explain }}</div>
-        </div>
-        <button
-          v-if="!wordEntriesExpanded && filteredWordEntries.length > 2"
-          class="pm-wc-expand"
-          @click.stop="wordEntriesExpanded = true"
-        >展开更多（{{ filteredWordEntries.length - 2 }}）</button>
-      </div>
-      <!-- 有道完整释义（增强功能，需要代理，可能失败） -->
-      <div v-if="youdaoDetail?.explains?.length" class="pm-wc-sents">
+      <!-- 有道 suggest 精确匹配释义（稳定，JSONP 不需要代理；只显示当前词本身的释义，不显示模糊匹配的相关词） -->
+      <div v-if="exactWordEntry" class="pm-wc-sents">
         <div class="pm-wc-sents-title">词典释义</div>
+        <div class="pm-wc-def pm-wc-def-yd">{{ exactWordEntry.explain }}</div>
+      </div>
+      <!-- 有道完整释义（增强功能，仅开发环境可用，需要 Vite 代理） -->
+      <div v-if="youdaoDetail?.explains?.length" class="pm-wc-sents">
+        <div class="pm-wc-sents-title">完整释义</div>
         <div v-for="(ex, ei) in youdaoDetail.explains" :key="ei" class="pm-wc-def pm-wc-def-yd">{{ ex }}</div>
       </div>
       <!-- 有道双语例句（默认1条，可展开更多） -->
@@ -2701,13 +2693,14 @@ const enSentenceGroups = computed(() => {
 })
 // ---- 词卡浮层：点击完成态单词弹出（同阅读模式 CourseReading 的 cr-wordcard）----
 const wordCard = ref(null)
-const wordEntries = ref(null) // 有道 suggest 相关词条（稳定，JSONP 不需要代理）
-const wordEntriesExpanded = ref(false) // 相关释义展开状态
-// 过滤掉和当前单词完全匹配的条目，只保留相关短语/词组
-const filteredWordEntries = computed(() => {
-  if (!wordEntries.value || !wordCard.value) return []
+const wordEntries = ref(null) // 有道 suggest 词条（稳定，JSONP 不需要代理）
+const wordEntriesExpanded = ref(false) // 释义展开状态
+// 只取当前词的精确匹配释义（entry 完全等于当前词，忽略大小写）
+// 不显示模糊匹配的相关词（如 on → one/only/once），避免混淆
+const exactWordEntry = computed(() => {
+  if (!wordEntries.value || !wordCard.value) return null
   const current = (wordCard.value.wd.word || '').toLowerCase()
-  return wordEntries.value.filter(e => e.entry.toLowerCase() !== current)
+  return wordEntries.value.find(e => String(e.entry || '').toLowerCase() === current) || null
 })
 const youdaoDetail = ref(null) // 有道词典完整详情（增强，需要代理，可能失败）
 const youdaoLoading = ref(false) // 有道详情是否加载中
@@ -2752,9 +2745,9 @@ function openWordCard(e, wd) {
   youdaoLoading.value = true
   youdaoExpanded.value = false
   fetchYoudaoWordDetail(wd.word).then((detail) => {
-    if (seq === youdaoSeq && wordCard.value) {
-      youdaoDetail.value = detail
+    if (seq === youdaoSeq) {
       youdaoLoading.value = false
+      if (wordCard.value) youdaoDetail.value = detail
     }
   }).catch(() => {
     if (seq === youdaoSeq) youdaoLoading.value = false
