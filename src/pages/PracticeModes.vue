@@ -888,7 +888,20 @@
           <div class="pm-wc-sent-cn">{{ wordCard.sentenceCn }}</div>
         </div>
       </div>
-      <!-- 有道完整释义 -->
+      <!-- 有道 suggest 相关释义（稳定，JSONP 不需要代理；过滤掉单词本身，默认2条，可展开） -->
+      <div v-if="filteredWordEntries.length" class="pm-wc-sents">
+        <div class="pm-wc-sents-title">相关释义</div>
+        <div v-for="(e, ei) in filteredWordEntries.slice(0, wordEntriesExpanded ? 5 : 2)" :key="ei" class="pm-wc-sent">
+          <div class="pm-wc-sent-en"><b>{{ e.entry }}</b></div>
+          <div class="pm-wc-sent-cn">{{ e.explain }}</div>
+        </div>
+        <button
+          v-if="!wordEntriesExpanded && filteredWordEntries.length > 2"
+          class="pm-wc-expand"
+          @click.stop="wordEntriesExpanded = true"
+        >展开更多（{{ filteredWordEntries.length - 2 }}）</button>
+      </div>
+      <!-- 有道完整释义（增强功能，需要代理，可能失败） -->
       <div v-if="youdaoDetail?.explains?.length" class="pm-wc-sents">
         <div class="pm-wc-sents-title">词典释义</div>
         <div v-for="(ex, ei) in youdaoDetail.explains" :key="ei" class="pm-wc-def pm-wc-def-yd">{{ ex }}</div>
@@ -938,7 +951,7 @@ import Keyboard from '../components/Keyboard.vue'
 import { WORDS } from '../data/words.js'
 import { EN_WORDS } from '../data/englishWords.js'
 import { GRADE_EN_WORDS } from '../data/schoolEnglish.js'
-import { fetchEnTranslation, fetchYoudaoWordDetail } from '../utils/enTranslation.js'
+import { fetchEnTranslation, fetchEnWordEntries, fetchYoudaoWordDetail } from '../utils/enTranslation.js'
 import { EN_STORIES } from '../data/enStories.js'
 import { fetchCoursePackRegistry, fetchCoursePack, fetchCourseData, getCourseDict, courseToStory, statementsToQueue, filterQueueByDifficulty, filterQueueByCustomTypes, CUSTOM_TYPE_OPTIONS } from '../utils/coursePacks.js'
 import { WORD_SEGMENTS } from '../data/wordSegments.js'
@@ -2688,10 +2701,18 @@ const enSentenceGroups = computed(() => {
 })
 // ---- 词卡浮层：点击完成态单词弹出（同阅读模式 CourseReading 的 cr-wordcard）----
 const wordCard = ref(null)
-const youdaoDetail = ref(null) // 有道词典完整详情（音标+完整释义+双语例句），异步加载
-const youdaoLoading = ref(false) // 有道详情是否加载中（区分加载中 vs 加载完成无数据）
-const youdaoExpanded = ref(false) // 例句是否展开（默认收起，只显示1条）
-let youdaoSeq = 0 // 防竞态：旧请求返回时不覆盖新单词的详情
+const wordEntries = ref(null) // 有道 suggest 相关词条（稳定，JSONP 不需要代理）
+const wordEntriesExpanded = ref(false) // 相关释义展开状态
+// 过滤掉和当前单词完全匹配的条目，只保留相关短语/词组
+const filteredWordEntries = computed(() => {
+  if (!wordEntries.value || !wordCard.value) return []
+  const current = (wordCard.value.wd.word || '').toLowerCase()
+  return wordEntries.value.filter(e => e.entry.toLowerCase() !== current)
+})
+const youdaoDetail = ref(null) // 有道词典完整详情（增强，需要代理，可能失败）
+const youdaoLoading = ref(false) // 有道详情是否加载中
+const youdaoExpanded = ref(false) // 例句展开状态
+let youdaoSeq = 0 // 防竞态
 function openWordCard(e, wd) {
   if (!wd) return
   // 纯标点/符号单元（如逗号词位）：不朗读也不弹卡
@@ -2719,7 +2740,13 @@ function openWordCard(e, wd) {
     sentenceEn: curSentence?.en || '',
     sentenceCn: curSentence?.cn || '',
   }
-  // 异步加载有道词典完整详情（音标+完整释义+双语例句），防竞态
+  // 异步加载有道 suggest 相关词条（稳定，JSONP 不需要代理）
+  wordEntries.value = null
+  wordEntriesExpanded.value = false
+  fetchEnWordEntries(wd.word).then((entries) => {
+    if (wordCard.value) wordEntries.value = entries
+  }).catch(() => {})
+  // 异步加载有道词典完整详情（增强功能，需要代理，可能失败；失败不影响相关释义显示）
   const seq = ++youdaoSeq
   youdaoDetail.value = null
   youdaoLoading.value = true
@@ -2733,7 +2760,7 @@ function openWordCard(e, wd) {
     if (seq === youdaoSeq) youdaoLoading.value = false
   })
 }
-function closeWordCard() { wordCard.value = null; youdaoDetail.value = null; youdaoLoading.value = false; youdaoExpanded.value = false; youdaoSeq++ }
+function closeWordCard() { wordCard.value = null; wordEntries.value = null; wordEntriesExpanded.value = false; youdaoDetail.value = null; youdaoLoading.value = false; youdaoExpanded.value = false; youdaoSeq++ }
 function playWord(which) {
   if (!wordCard.value) return
   if (which === 'sentence') {
