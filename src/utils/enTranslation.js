@@ -266,18 +266,17 @@ function parseBlngSentences(blng) {
 
 // 根据环境返回有道词典页面的候选获取 URL 列表（按优先级排序，依次尝试）
 // 开发环境：Vite dev server 代理（最稳定）
-// 生产环境：公共 CORS 代理（依次降级）
+// 生产环境：Cloudflare Workers 代理（自建，稳定）
+const CF_WORKER_PROXY = 'https://youdao-proxy.ttmouseg.workers.dev'
 function getYoudaoPageUrls(word) {
-  const target = 'https://dict.youdao.com/result?word=' + encodeURIComponent(word) + '&lang=en'
   const isDev = typeof window !== 'undefined' &&
     (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
   if (isDev) {
     return ['/api/youdao/result?word=' + encodeURIComponent(word) + '&lang=en']
   }
-  // 生产环境：公共 CORS 代理（按稳定性排序，依次降级）
+  // 生产环境：Cloudflare Workers 代理
   return [
-    'https://api.allorigins.win/raw?url=' + encodeURIComponent(target),
-    'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(target),
+    CF_WORKER_PROXY + '/api/youdao/result?word=' + encodeURIComponent(word) + '&lang=en',
   ]
 }
 
@@ -300,13 +299,11 @@ async function fetchYoudaoHtml(word) {
 }
 
 // 查询有道词典完整详情（音标 + 完整释义 + 双语例句）
-// 仅在开发环境（localhost）可用（通过 Vite 代理 /api/youdao）
-// 生产环境（GitHub Pages）没有可靠代理，直接返回 null，避免 CORS 错误
+// 查询有道词典完整详情（音标 + 完整释义 + 双语例句）
+// 开发环境：Vite dev server 代理 /api/youdao
+// 生产环境：Cloudflare Workers 代理 https://youdao-proxy.ttmouseg.workers.dev
 // 失败返回 null（调用方降级不显示）
 export function fetchYoudaoWordDetail(word) {
-  const isDev = typeof window !== 'undefined' &&
-    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  if (!isDev) return Promise.resolve(null)
   const key = String(word || '').trim()
   if (!key) return Promise.resolve(null)
   const lower = key.toLowerCase()
