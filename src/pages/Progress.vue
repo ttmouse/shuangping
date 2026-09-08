@@ -8,6 +8,43 @@
         <p class="subtitle">追踪你的双拼学习之旅</p>
       </div>
 
+      <!-- 成就补发提示：老数据已满足条件的成就自动解锁 -->
+      <div v-if="backfillNotice" class="backfill-notice">{{ backfillNotice }}</div>
+
+      <!-- 荣誉总览：等级 / 自定义称号 / 段位 / 收集率 -->
+      <div class="honor-panel">
+        <div class="honor-main">
+          <div class="honor-item">
+            <div class="honor-badge level-badge">Lv.{{ honor.level }}</div>
+            <div class="honor-meta">
+              <div class="honor-title-line">
+                <span class="honor-title" :class="{ 'title-empty': !honor.title }">{{ honor.title || '设置你的称号' }}</span>
+                <button class="title-edit-btn" title="编辑称号" @click="openTitleEditor"><Pencil :size="12" /></button>
+              </div>
+              <div class="honor-bar"><div class="honor-fill" :style="{ width: honor.pct + '%' }"></div></div>
+              <div class="honor-sub">{{ honor.xp }} XP<template v-if="honor.next"> · 距 Lv.{{ honor.level + 1 }} 还差 {{ honor.next - honor.xp }}</template></div>
+            </div>
+          </div>
+          <div class="honor-item">
+            <div class="honor-badge rank-badge">{{ rank.rank }}</div>
+            <div class="honor-meta">
+              <div class="honor-title">段位 · {{ rank.rank }}</div>
+              <div class="honor-bar"><div class="honor-fill rank-fill" :style="{ width: rank.pct + '%' }"></div></div>
+              <div class="honor-sub">段位分 {{ rank.score }}<template v-if="rank.next"> · 距{{ nextRankName(rank.next) }}还差 {{ rank.next - rank.score }}</template></div>
+            </div>
+          </div>
+        </div>
+        <div class="honor-collect">
+          <div class="collect-ring" :style="{ background: collectRingStyle }">
+            <span class="collect-num">{{ progress.unlockedAchievements.length }}</span>
+          </div>
+          <div class="collect-meta">
+            <div class="collect-title">成就收集</div>
+            <div class="collect-sub">共 {{ progress.allAchievements.length }} 张</div>
+          </div>
+        </div>
+      </div>
+
       <!-- 学习统计概览 -->
       <div class="stats-overview">
         <h2>学习统计</h2>
@@ -75,6 +112,20 @@
         </div>
       </div>
 
+      <!-- 能力雷达：六维能力可视化 -->
+      <div class="radar-card">
+        <h2>能力雷达</h2>
+        <svg viewBox="0 0 280 252" class="radar-svg" role="img" aria-label="六维能力雷达图">
+          <polygon v-for="(g, gi) in radarGrid" :key="'g' + gi" :points="g" class="radar-grid" />
+          <line v-for="ax in radarAxes" :key="'a' + ax.key" :x1="ax.x1" :y1="ax.y1" :x2="ax.x2" :y2="ax.y2" class="radar-axis" />
+          <polygon :points="radarPolygon" class="radar-area" />
+          <circle v-for="p in radarPoints" :key="'d' + p.name" :cx="p.x" :cy="p.y" r="4" class="radar-dot" />
+          <text v-for="ax in radarAxes" :key="'t' + ax.key" :x="ax.tx" :y="ax.ty" class="radar-label" text-anchor="middle" dominant-baseline="middle">{{ ax.name }}</text>
+          <text v-for="p in radarPoints" :key="'v' + p.name" :x="p.x" :y="p.y - 9" class="radar-value" text-anchor="middle">{{ p.value }}</text>
+        </svg>
+        <p class="radar-hint">速度上限 150 字/分 · 连击 150 · 连续 100 天 · 时长 100 小时 · 掌握 3 个技能达 3 级</p>
+      </div>
+
       <!-- 今日目标：实时进度指引 -->
       <div class="goal-card">
         <h2>今日目标 <small class="goal-status" :class="{ done: goal.allDone }">{{ goal.allDone ? '已达成' : '进行中' }}</small></h2>
@@ -99,6 +150,30 @@
         </div>
       </div>
 
+      <!-- 每日 / 每周任务：完成后领取经验值 -->
+      <div class="tasks-card">
+        <h2>每日任务 <small class="task-hint">完成后领取经验值</small></h2>
+        <div v-for="t in progress.dailyTaskView" :key="t.id" class="task-row">
+          <div class="task-info">
+            <span class="task-name">{{ t.name }}</span>
+            <span class="task-desc">{{ t.desc }}</span>
+          </div>
+          <div class="task-bar"><div class="task-fill" :style="{ width: (t.current / t.target * 100) + '%' }"></div></div>
+          <span class="task-num">{{ t.current }}/{{ t.target }}{{ t.unit }}</span>
+          <button class="task-claim" :class="{ ready: t.done && !t.claimed, claimed: t.claimed }" :disabled="!t.done || t.claimed" @click="claimTask('daily', t)">{{ t.claimed ? '已领取' : t.done ? '领取 +' + t.xp + 'XP' : '进行中' }}</button>
+        </div>
+        <h2 class="task-week-title">本周任务</h2>
+        <div v-for="t in progress.weeklyTaskView" :key="t.id" class="task-row">
+          <div class="task-info">
+            <span class="task-name">{{ t.name }}</span>
+            <span class="task-desc">{{ t.desc }}</span>
+          </div>
+          <div class="task-bar"><div class="task-fill" :style="{ width: (t.current / t.target * 100) + '%' }"></div></div>
+          <span class="task-num">{{ t.current }}/{{ t.target }}{{ t.unit }}</span>
+          <button class="task-claim" :class="{ ready: t.done && !t.claimed, claimed: t.claimed }" :disabled="!t.done || t.claimed" @click="claimTask('weekly', t)">{{ t.claimed ? '已领取' : t.done ? '领取 +' + t.xp + 'XP' : '进行中' }}</button>
+        </div>
+      </div>
+
       <!-- 成就展示 -->
       <div class="achievements-section">
         <div class="achievements-header">
@@ -113,8 +188,38 @@
             >
               {{ filter.label }}
             </button>
+            <span class="filter-sep"></span>
+            <button
+              v-for="cat in categoryFilters"
+              :key="cat.key"
+              class="filter-btn"
+              :class="{ active: categoryFilter === cat.key }"
+              @click="categoryFilter = cat.key"
+            >
+              {{ cat.label }}
+            </button>
+            <span class="filter-sep"></span>
+            <select v-model="rarityFilter" class="rarity-select" aria-label="按稀有度筛选">
+              <option value="all">全部品质</option>
+              <option value="common">常见</option>
+              <option value="uncommon">稀有</option>
+              <option value="rare">珍稀</option>
+              <option value="epic">史诗</option>
+              <option value="legendary">传说</option>
+            </select>
           </div>
         </div>
+        <!-- 分类收集进度 -->
+        <div class="category-progress">
+          <div v-for="cat in categoryProgress" :key="cat.category" class="cat-chip" :title="CATEGORY_LABELS[cat.category] || cat.category">
+            <div class="cat-ring" :style="{ background: catRingStyle(cat) }">
+              <span class="cat-pct">{{ cat.pct }}%</span>
+            </div>
+            <span class="cat-label">{{ CATEGORY_LABELS[cat.category] || cat.category }}</span>
+            <span class="cat-count">{{ cat.unlocked }}/{{ cat.total }}</span>
+          </div>
+        </div>
+        <!-- 成就墙：平铺展示（收藏的排最前并带 📌 角标；筛选交给顶部状态/分类/品质） -->
         <div class="achievements-grid">
           <div
             v-for="achievement in filteredAchievements"
@@ -122,21 +227,18 @@
             class="card-hit"
             @mousemove="handleCardTilt"
             @mouseleave="handleCardLeave"
+            @click="openDetail(achievement)"
           >
             <div
               class="achievement-card"
-              :class="{ 
-                'unlocked': isAchievementUnlocked(achievement.id), 
-                'rare': isRare(achievement.id),
-                'epic': isEpic(achievement.id),
-                'legendary': isLegendary(achievement.id)
-              }"
+              :class="[achievement.rarity, { unlocked: isAchievementUnlocked(achievement.id) }]"
             >
               <div class="card-layer layer-1"></div>
               <div class="card-layer layer-2"></div>
-              <div class="achievement-icon" :class="{ multi: isMultiIcon(achievement.icon) }">{{ achievement.icon }}</div>
-              <div class="achievement-name">{{ achievement.name }}</div>
-              <div class="achievement-desc">{{ achievement.description }}</div>
+              <span v-if="isPinned(achievement.id)" class="pin-mark">📌</span>
+              <div class="achievement-icon" :class="{ multi: isMultiIcon(achievement.icon) && !isHiddenCard(achievement) }">{{ cardIcon(achievement) }}</div>
+              <div class="achievement-name">{{ cardName(achievement) }}</div>
+              <div class="achievement-desc">{{ cardDesc(achievement) }}</div>
               <div class="achievement-progress" v-if="!isAchievementUnlocked(achievement.id) && progressMap[achievement.id]">
                 <div class="achievement-progress-track">
                   <div class="achievement-progress-fill" :style="{ width: progressMap[achievement.id].pct + '%' }"></div>
@@ -149,6 +251,7 @@
               <div class="achievement-lock" v-else>
                 <span class="lock-icon"><Lock :size="16" /></span>
               </div>
+              <span v-if="isAchievementUnlocked(achievement.id) && achievementTier(achievement.id) > 0" class="tier-badge">{{ tierIcon(achievement.id) }}</span>
             </div>
           </div>
         </div>
@@ -166,6 +269,51 @@
             <span class="recent-icon">{{ achievement.icon }}</span>
             <span class="recent-name">{{ achievement.name }}</span>
             <span class="recent-date">{{ formatDate(achievement.unlockedAt) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 称号编辑器弹层 -->
+      <div v-if="showTitleEditor" class="title-overlay" @click.self="showTitleEditor = false">
+        <div class="title-editor">
+          <h3>设置称号</h3>
+          <p class="title-editor-hint">称号会展示在你的荣誉面板上，可随时修改</p>
+          <div class="title-input-row">
+            <input v-model="titleDraft" maxlength="12" placeholder="输入你的称号（最多 12 字）" @keyup.enter="saveTitle" />
+            <button class="title-save-btn" @click="saveTitle">保存</button>
+          </div>
+          <div class="title-presets" v-if="progress.titlePresets.length">
+            <div class="title-presets-label">成就称号 · 解锁后可用</div>
+            <div class="title-preset-grid">
+              <button
+                v-for="p in progress.titlePresets"
+                :key="p.id"
+                class="title-preset-btn"
+                :class="{ locked: !p.unlocked, current: isCurrentTitle(p.name) }"
+                :disabled="!p.unlocked"
+                @click="titleDraft = p.name"
+              >{{ p.name }}<span v-if="!p.unlocked" class="title-preset-lock">🔒</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 成就详情弹窗 -->
+      <div v-if="detailAchievement" class="detail-overlay" @click.self="detailAchievement = null">
+        <div class="detail-modal" :class="detailAchievement.rarity">
+          <button class="detail-close" @click="detailAchievement = null" aria-label="关闭">✕</button>
+          <div class="detail-icon">{{ detailIcon }}</div>
+          <div class="detail-name">{{ detailName }}</div>
+          <div class="detail-rarity">{{ RARITY_LABELS[detailAchievement.rarity] }}<template v-if="detailAchievement.category"> · {{ CATEGORY_LABELS[detailAchievement.category] }}</template></div>
+          <div class="detail-desc">{{ detailDesc }}</div>
+          <div v-if="detailProgress" class="detail-progress">
+            <div class="detail-progress-track"><div class="detail-progress-fill" :style="{ width: detailProgress.pct + '%' }"></div></div>
+            <div class="detail-progress-text">{{ detailProgress.current }}/{{ detailProgress.target }}{{ detailProgress.unit }}</div>
+          </div>
+          <div v-if="detailUnlocked" class="detail-unlocked-at">解锁于 {{ formatFullDate(detailAchievement.id) }}</div>
+          <div class="detail-actions">
+            <button class="detail-action" @click="togglePinDetail">{{ isPinned(detailAchievement.id) ? '取消置顶' : '⭐ 置顶收藏' }}</button>
+            <button v-if="presetOf(detailAchievement)" class="detail-action" @click="usePresetTitle">{{ isCurrentTitle(presetOf(detailAchievement).name) ? '✓ 使用中' : '🏷️ 设为称号' }}</button>
           </div>
         </div>
       </div>
@@ -202,7 +350,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, inject } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Flame, Repeat, Clock, CalendarCheck, Target, CheckCircle2, Download, Upload, RotateCcw, Lock, Trophy, Zap } from 'lucide-vue-next'
+import { Flame, Repeat, Clock, CalendarCheck, Target, CheckCircle2, Download, Upload, RotateCcw, Lock, Trophy, Zap, Pencil } from 'lucide-vue-next'
 import { useProgressStore } from '../stores/progress.js'
 import { useStatsStore } from '../stores/stats.js'
 import TopStatusBar from '../components/TopStatusBar.vue'
@@ -220,43 +368,193 @@ if (pauseActive) pauseActive.value = false
 // 从 URL 恢复成就筛选，默认「全部」
 const currentFilter = ref(route.query.filter || 'all')
 
-const RARE_ACHIEVEMENTS = ['ten-thousand', 'streak-30', 'combo-50', 'accuracy-95']
-const EPIC_ACHIEVEMENTS = ['fifty-thousand', 'accuracy-100', 'speed-150', 'streak-100', 'combo-100']
-const LEGENDARY_ACHIEVEMENTS = []
+// 稀有度以成就定义（achievement.rarity）为准，不再硬编码列表
+// （修复：streak-100 定义为 legendary 却被旧硬编码列表归为 epic 的问题）
+
+const CATEGORY_LABELS = {
+  milestone: '里程碑',
+  accuracy: '准确率',
+  speed: '速度',
+  streak: '连续',
+  combo: '连击',
+  special: '特殊',
+  growth: '成长'
+}
 
 const achievementFilters = [
   { key: 'all', label: '全部' },
   { key: 'unlocked', label: '已解锁' },
-  { key: 'locked', label: '未解锁' },
-  { key: 'milestone', label: '里程碑' },
-  { key: 'special', label: '特殊' }
+  { key: 'locked', label: '未解锁' }
 ]
+
+const categoryFilters = [
+  { key: 'all', label: '全部分类' },
+  ...Object.entries(CATEGORY_LABELS).map(([key, label]) => ({ key, label }))
+]
+
+const categoryFilter = ref('all')
+const rarityFilter = ref('all')
+
+// ===== 扩充2：详情 / 称号 / 任务 / 补发 =====
+const RARITY_LABELS = { common: '常见', uncommon: '稀有', rare: '珍稀', epic: '史诗', legendary: '传说' }
+const backfillNotice = ref('')
+const detailAchievement = ref(null)
+const showTitleEditor = ref(false)
+const titleDraft = ref('')
+
+// 收藏判断与详情打开
+function isPinned(id) {
+  return progress.pinnedAchievements.includes(id)
+}
+function openDetail(achievement) {
+  detailAchievement.value = achievement
+}
+function togglePinDetail() {
+  if (!detailAchievement.value) return
+  progress.togglePin(detailAchievement.value.id)
+}
+
+// 详情弹窗派生数据
+const detailIcon = computed(() => detailAchievement.value ? cardIcon(detailAchievement.value) : '')
+const detailName = computed(() => detailAchievement.value ? cardName(detailAchievement.value) : '')
+const detailDesc = computed(() => detailAchievement.value ? cardDesc(detailAchievement.value) : '')
+const detailProgress = computed(() => {
+  if (!detailAchievement.value || isAchievementUnlocked(detailAchievement.value.id)) return null
+  return progressMap.value[detailAchievement.value.id] || null
+})
+const detailUnlocked = computed(() => detailAchievement.value && isAchievementUnlocked(detailAchievement.value.id))
+function formatFullDate(achievementId) {
+  const ts = progress.achievementUnlockTimes[achievementId]
+  if (!ts) return ''
+  const d = new Date(ts)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
+// 自定义称号：编辑 / 保存 / 成就称号预设
+function openTitleEditor() {
+  titleDraft.value = progress.customTitle || ''
+  showTitleEditor.value = true
+}
+function saveTitle() {
+  progress.setCustomTitle(titleDraft.value)
+  showTitleEditor.value = false
+}
+function presetOf(achievement) {
+  return progress.titlePresets.find(p => p.achievementId === achievement.id) || null
+}
+function isCurrentTitle(name) {
+  return progress.customTitle === name
+}
+function usePresetTitle() {
+  const p = presetOf(detailAchievement.value)
+  if (!p) return
+  progress.setCustomTitle(p.name)
+  detailAchievement.value = null
+}
+
+// 任务领取
+function claimTask(type, task) {
+  progress.claimTask(type, task.id)
+}
+
+// 能力雷达：六维（速度/准确/连击/连续/时长/掌握）归一化 0-100
+const RADAR_DEFS = [
+  { key: 'speed', name: '速度' },
+  { key: 'accuracy', name: '准确' },
+  { key: 'combo', name: '连击' },
+  { key: 'streak', name: '连续' },
+  { key: 'time', name: '时长' },
+  { key: 'mastery', name: '掌握' }
+]
+const RADAR_CX = 140
+const RADAR_CY = 126
+const RADAR_R = 86
+function radarPoint(value, idx) {
+  const angle = (-90 + idx * 60) * Math.PI / 180
+  const r = RADAR_R * (value / 100)
+  return { x: RADAR_CX + r * Math.cos(angle), y: RADAR_CY + r * Math.sin(angle) }
+}
+const radarValues = computed(() => {
+  const totalChars = stats.totalCharsTyped || 0
+  const acc = totalChars > 0 ? Math.round(stats.totalCorrectChars / totalChars * 100) : 0
+  const mastered = Object.values(progress.skillMastery || {}).filter(m => (m?.level || 0) >= 3).length
+  return {
+    speed: Math.min(100, Math.round((stats.averageSpeed || 0) / 150 * 100)),
+    accuracy: acc,
+    combo: Math.min(100, Math.round((progress.maxCombo || 0) / 150 * 100)),
+    streak: Math.min(100, Math.round((streakDays.value || 0) / 100 * 100)),
+    time: Math.min(100, Math.round((progress.learningTimeTotal || 0) / 6000 * 100)),
+    mastery: Math.min(100, Math.round(mastered / 3 * 100))
+  }
+})
+const radarGrid = computed(() =>
+  [0.25, 0.5, 0.75, 1].map(frac =>
+    RADAR_DEFS.map((_, i) => {
+      const p = radarPoint(frac * 100, i)
+      return `${p.x.toFixed(1)},${p.y.toFixed(1)}`
+    }).join(' ')
+  )
+)
+const radarAxes = computed(() =>
+  RADAR_DEFS.map((d, i) => {
+    const angle = (-90 + i * 60) * Math.PI / 180
+    const end = { x: RADAR_CX + RADAR_R * Math.cos(angle), y: RADAR_CY + RADAR_R * Math.sin(angle) }
+    const labelR = RADAR_R + 20
+    return {
+      key: d.key,
+      name: d.name,
+      x1: RADAR_CX,
+      y1: RADAR_CY,
+      x2: end.x.toFixed(1),
+      y2: end.y.toFixed(1),
+      tx: (RADAR_CX + labelR * Math.cos(angle)).toFixed(1),
+      ty: (RADAR_CY + labelR * Math.sin(angle)).toFixed(1)
+    }
+  })
+)
+const radarPolygon = computed(() =>
+  RADAR_DEFS.map((d, i) => {
+    const p = radarPoint(radarValues.value[d.key], i)
+    return `${p.x.toFixed(1)},${p.y.toFixed(1)}`
+  }).join(' ')
+)
+const radarPoints = computed(() =>
+  RADAR_DEFS.map((d, i) => {
+    const v = radarValues.value[d.key]
+    const p = radarPoint(v, i)
+    return { name: d.name, value: v, x: p.x.toFixed(1), y: p.y.toFixed(1) }
+  })
+)
+
+// 稀有度权重：同解锁状态下，高稀有度排前
+const RARITY_WEIGHT = { legendary: 5, epic: 4, rare: 3, uncommon: 2, common: 1 }
 
 const filteredAchievements = computed(() => {
   let list = progress.allAchievements
-  
-  switch (currentFilter.value) {
-    case 'unlocked':
-      list = list.filter(a => progress.unlockedAchievements.includes(a.id))
-      break
-    case 'locked':
-      list = list.filter(a => !progress.unlockedAchievements.includes(a.id))
-      break
-    case 'milestone':
-      list = list.filter(a => a.category === 'milestone')
-      break
-    case 'special':
-      list = list.filter(a => a.category === 'special')
-      break
+
+  if (currentFilter.value === 'unlocked') {
+    list = list.filter(a => progress.unlockedAchievements.includes(a.id))
+  } else if (currentFilter.value === 'locked') {
+    list = list.filter(a => !progress.unlockedAchievements.includes(a.id))
   }
-  
-  // 已解锁的排在前面
-  return list.sort((a, b) => {
+  if (categoryFilter.value !== 'all') {
+    list = list.filter(a => a.category === categoryFilter.value)
+  }
+  if (rarityFilter.value !== 'all') {
+    list = list.filter(a => a.rarity === rarityFilter.value)
+  }
+
+  // 收藏的排最前，其次已解锁在前，同状态按稀有度从高到低
+  return [...list].sort((a, b) => {
+    const aPinned = progress.pinnedAchievements.includes(a.id)
+    const bPinned = progress.pinnedAchievements.includes(b.id)
+    if (aPinned && !bPinned) return -1
+    if (!aPinned && bPinned) return 1
     const aUnlocked = progress.unlockedAchievements.includes(a.id)
     const bUnlocked = progress.unlockedAchievements.includes(b.id)
     if (aUnlocked && !bUnlocked) return -1
     if (!aUnlocked && bUnlocked) return 1
-    return 0
+    return (RARITY_WEIGHT[b.rarity] || 0) - (RARITY_WEIGHT[a.rarity] || 0)
   })
 })
 
@@ -338,16 +636,50 @@ function isMultiIcon(icon) {
 // 锁定成就进度条映射：{ id: { pct, current, target, unit } }
 const progressMap = computed(() => progress.achievementProgress)
 
-function isRare(achievementId) {
-  return RARE_ACHIEVEMENTS.includes(achievementId)
+// 隐藏成就：未解锁时显示为神秘卡片
+function isHiddenCard(achievement) {
+  return !!achievement.hidden && !isAchievementUnlocked(achievement.id)
+}
+function cardIcon(achievement) {
+  return isHiddenCard(achievement) ? '🎴' : achievement.icon
+}
+function cardName(achievement) {
+  return isHiddenCard(achievement) ? '神秘成就' : achievement.name
+}
+function cardDesc(achievement) {
+  return isHiddenCard(achievement) ? '达成条件未知，等待被发现' : achievement.description
 }
 
-function isEpic(achievementId) {
-  return EPIC_ACHIEVEMENTS.includes(achievementId)
+// 卡牌三档升级：定义里带 tiers（银/金阈值）的累计型成就，超出阈值自动升级徽章
+function achievementTier(achievementId) {
+  const p = progressMap.value[achievementId]
+  if (!p || !p.tiers) return 0
+  let tier = 0
+  if (p.current >= p.tiers[0]) tier = 1
+  if (p.current >= p.tiers[1]) tier = 2
+  return tier
+}
+function tierIcon(achievementId) {
+  return ['', '🥈', '🥇'][achievementTier(achievementId)]
 }
 
-function isLegendary(achievementId) {
-  return LEGENDARY_ACHIEVEMENTS.includes(achievementId)
+// 荣誉总览：等级 / 段位 / 分类收集
+const honor = computed(() => progress.levelInfo)
+const rank = computed(() => progress.rankInfo)
+const categoryProgress = computed(() => progress.categoryProgress)
+const collectPct = computed(() => {
+  const total = progress.allAchievements.length
+  return total ? Math.round(progress.unlockedAchievements.length / total * 100) : 0
+})
+const collectRingStyle = computed(() =>
+  `conic-gradient(#b59872 ${collectPct.value}%, var(--theme-border-color) ${collectPct.value}%)`
+)
+function catRingStyle(cat) {
+  return `conic-gradient(#8aa8a2 ${cat.pct}%, var(--theme-border-color) ${cat.pct}%)`
+}
+function nextRankName(score) {
+  const map = { 40: '白银', 60: '黄金', 80: '铂金', 95: '钻石', 110: '星耀', 125: '王者' }
+  return map[score] || ''
 }
 
 function formatUnlockDate(achievementId) {
@@ -408,6 +740,12 @@ onMounted(() => {
   progress.load()
   // 连续练习天数由 stats.dailyStats 计算，需先加载
   stats.load()
+  // 成就补发：全量检查一次，老数据已满足条件的成就自动解锁（会话类成就除外，须当刻达成）
+  const newlyUnlocked = progress.checkAchievements(stats)
+  if (newlyUnlocked.length) {
+    backfillNotice.value = `🎉 检测到 ${newlyUnlocked.length} 个成就已满足条件，已自动解锁`
+    setTimeout(() => { backfillNotice.value = '' }, 8000)
+  }
 })
 
 onUnmounted(() => {
@@ -456,6 +794,228 @@ watch(() => route.query.filter, (filter) => {
 .subtitle {
   color: var(--theme-text-color);
   font-size: 14px;
+}
+
+/* 荣誉总览面板 */
+.honor-panel {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.honor-main {
+  flex: 1 1 380px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.honor-item {
+  flex: 1 1 220px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 16px;
+  padding: 18px;
+  min-width: 0;
+}
+
+.honor-badge {
+  flex: 0 0 auto;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #fff;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.level-badge {
+  background: linear-gradient(135deg, #8aa8a2, #5c7a74);
+}
+
+.rank-badge {
+  background: linear-gradient(135deg, #b59872, #8a6f45);
+}
+
+.honor-meta {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.honor-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--theme-text-color);
+  margin-bottom: 6px;
+}
+
+.honor-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--theme-border-color);
+  overflow: hidden;
+}
+
+.honor-fill {
+  display: block;
+  height: 100%;
+  background: #8aa8a2;
+  border-radius: 4px;
+  transition: width .3s ease;
+}
+
+.rank-fill {
+  background: linear-gradient(90deg, #b59872, #8a6f45);
+}
+
+.honor-sub {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--theme-text-color);
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+}
+
+.honor-collect {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 16px;
+  padding: 18px 22px;
+}
+
+.collect-ring {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.collect-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--theme-background-light-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--theme-text-color);
+}
+
+.collect-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--theme-text-color);
+}
+
+.collect-sub {
+  font-size: 11px;
+  color: var(--theme-text-color);
+  opacity: 0.6;
+  margin-top: 2px;
+}
+
+/* 分类收集进度 */
+.category-progress {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.cat-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+
+.cat-ring {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.cat-pct {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--theme-background-light-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--theme-text-color);
+}
+
+.cat-label {
+  font-size: 12px;
+  color: var(--theme-text-color);
+}
+
+.cat-count {
+  font-size: 11px;
+  color: var(--theme-text-color);
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 筛选分隔与品质下拉 */
+.filter-sep {
+  width: 1px;
+  align-self: stretch;
+  background: var(--theme-border-color);
+  margin: 2px 2px;
+}
+
+.rarity-select {
+  padding: 6px 10px;
+  border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-light-color);
+  color: var(--theme-text-color);
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+}
+
+/* 卡牌三档升级徽章 */
+.tier-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 18px;
+  z-index: 3;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.25));
+}
+
+/* 隐藏成就（未解锁）灰暗神秘 */
+.achievement-card .achievement-name {
+  letter-spacing: 0.3px;
 }
 
 /* 成就系统 */
@@ -1030,6 +1590,419 @@ watch(() => route.query.filter, (filter) => {
 }
 
 /* 响应式 */
+/* ===== 扩充2：荣誉墙 / 称号 / 任务 / 雷达 / 弹窗 ===== */
+/* 补发提示条 */
+.backfill-notice {
+  margin-bottom: 16px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(139, 200, 234, 0.18), rgba(139, 200, 234, 0.32));
+  border: 1px solid rgba(139, 200, 234, 0.6);
+  color: var(--theme-text-color);
+  font-size: 14px;
+  text-align: center;
+}
+
+/* 荣誉面板称号编辑 */
+.honor-title-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.honor-title.title-empty {
+  color: var(--theme-text-color);
+  opacity: 0.6;
+  cursor: pointer;
+}
+.title-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--theme-background-light-color);
+  color: var(--theme-text-color);
+  cursor: pointer;
+  opacity: 0.65;
+  transition: opacity .2s;
+}
+.title-edit-btn:hover {
+  opacity: 1;
+}
+
+/* 能力雷达 */
+.radar-card {
+  margin-top: 24px;
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 16px;
+  padding: 20px;
+}
+.radar-card h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+.radar-svg {
+  display: block;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+}
+.radar-grid {
+  fill: none;
+  stroke: var(--theme-border-color);
+  stroke-width: 1;
+}
+.radar-axis {
+  stroke: var(--theme-border-color);
+  stroke-width: 1;
+}
+.radar-area {
+  fill: rgba(138, 168, 162, 0.28);
+  stroke: #8aa8a2;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.radar-dot {
+  fill: #8aa8a2;
+}
+.radar-label {
+  font-size: 12px;
+  fill: var(--theme-text-color);
+}
+.radar-value {
+  font-size: 10px;
+  fill: #5c7a74;
+  font-variant-numeric: tabular-nums;
+}
+.radar-hint {
+  margin: 8px 0 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--theme-text-color);
+  opacity: 0.7;
+}
+
+/* 每日 / 每周任务 */
+.tasks-card {
+  margin-top: 24px;
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 16px;
+  padding: 20px;
+}
+.tasks-card h2 {
+  margin: 0 0 14px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.task-hint {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--theme-text-color);
+  opacity: 0.7;
+}
+.task-week-title {
+  margin-top: 18px !important;
+  padding-top: 14px;
+  border-top: 1px dashed var(--theme-border-color);
+}
+.task-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: var(--theme-text-color);
+}
+.task-info {
+  flex: 0 0 auto;
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.task-name {
+  font-weight: 600;
+}
+.task-desc {
+  font-size: 11px;
+  opacity: 0.65;
+}
+.task-bar {
+  flex: 1;
+  height: 10px;
+  border-radius: 5px;
+  background: var(--theme-border-color);
+  overflow: hidden;
+  min-width: 60px;
+}
+.task-fill {
+  display: block;
+  height: 100%;
+  background: #8aa8a2;
+  border-radius: 5px;
+  transition: width .3s ease;
+}
+.task-num {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.task-claim {
+  flex: 0 0 auto;
+  padding: 5px 12px;
+  border: 1px solid var(--theme-border-color);
+  border-radius: 20px;
+  background: var(--theme-background-color);
+  color: var(--theme-text-color);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.task-claim:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.task-claim.ready {
+  background: #8aa8a2;
+  border-color: #8aa8a2;
+  color: #fff;
+  font-weight: 600;
+}
+.task-claim.claimed {
+  background: transparent;
+  border-color: var(--theme-border-color);
+  color: #5c7a74;
+  opacity: 0.85;
+}
+
+/* 荣誉墙分区：已去掉稀有度分区标题，仅保留收藏角标 */
+.pin-mark {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 13px;
+  z-index: 2;
+}
+
+/* 称号编辑器弹层 */
+.title-overlay,
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.title-editor {
+  width: 100%;
+  max-width: 420px;
+  background: var(--theme-background-color);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.18);
+}
+.title-editor h3 {
+  margin: 0 0 4px;
+  font-size: 18px;
+}
+.title-editor-hint {
+  margin: 0 0 16px;
+  font-size: 12px;
+  color: var(--theme-text-color);
+  opacity: 0.7;
+}
+.title-input-row {
+  display: flex;
+  gap: 10px;
+}
+.title-input-row input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--theme-border-color);
+  border-radius: 10px;
+  background: var(--theme-background-light-color);
+  color: var(--theme-text-color);
+  font-size: 14px;
+  outline: none;
+}
+.title-input-row input:focus {
+  border-color: #8aa8a2;
+}
+.title-save-btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 10px;
+  background: #8aa8a2;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.title-presets {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--theme-border-color);
+}
+.title-presets-label {
+  font-size: 12px;
+  color: var(--theme-text-color);
+  opacity: 0.7;
+  margin-bottom: 10px;
+}
+.title-preset-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.title-preset-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--theme-border-color);
+  border-radius: 20px;
+  background: var(--theme-background-light-color);
+  color: var(--theme-text-color);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.title-preset-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.title-preset-btn.locked {
+  border-style: dashed;
+}
+.title-preset-btn.current {
+  border-color: #8aa8a2;
+  background: rgba(138, 168, 162, 0.15);
+  color: #5c7a74;
+  font-weight: 600;
+}
+.title-preset-lock {
+  margin-left: 4px;
+  font-size: 11px;
+}
+
+/* 成就详情弹窗 */
+.detail-modal {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  background: var(--theme-background-color);
+  border-radius: 18px;
+  padding: 28px 24px 22px;
+  text-align: center;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.18);
+  border-top: 4px solid var(--theme-border-color);
+}
+.detail-modal.legendary {
+  border-top-color: #b59872;
+}
+.detail-modal.epic {
+  border-top-color: #9d7bb0;
+}
+.detail-modal.rare {
+  border-top-color: #4f8cc9;
+}
+.detail-modal.uncommon {
+  border-top-color: #7fae6a;
+}
+.detail-modal.common {
+  border-top-color: #a8adb4;
+}
+.detail-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  border: none;
+  background: none;
+  color: var(--theme-text-color);
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0.6;
+  padding: 4px;
+}
+.detail-close:hover {
+  opacity: 1;
+}
+.detail-icon {
+  font-size: 44px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.detail-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--theme-text-color);
+}
+.detail-rarity {
+  font-size: 12px;
+  color: var(--theme-text-color);
+  opacity: 0.7;
+  margin: 4px 0 10px;
+}
+.detail-desc {
+  font-size: 14px;
+  color: var(--theme-text-color);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+.detail-progress {
+  margin-bottom: 10px;
+}
+.detail-progress-track {
+  height: 10px;
+  border-radius: 5px;
+  background: var(--theme-border-color);
+  overflow: hidden;
+}
+.detail-progress-fill {
+  height: 100%;
+  background: #8aa8a2;
+  border-radius: 5px;
+}
+.detail-progress-text {
+  font-size: 12px;
+  color: var(--theme-text-color);
+  opacity: 0.8;
+  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.detail-unlocked-at {
+  font-size: 12px;
+  color: #5c7a74;
+  margin-bottom: 12px;
+}
+.detail-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.detail-action {
+  padding: 8px 16px;
+  border: 1px solid var(--theme-border-color);
+  border-radius: 20px;
+  background: var(--theme-background-light-color);
+  color: var(--theme-text-color);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.detail-action:hover {
+  border-color: #8aa8a2;
+  color: #5c7a74;
+}
+
 @media (max-width: 768px) {
   .achievements-grid {
     grid-template-columns: repeat(2, 1fr);

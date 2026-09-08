@@ -499,7 +499,13 @@ function endPractice() {
   if (writer.currentCorpusId && accuracy > 0 && charsTyped > 0) {
     progress.updateSkillMastery(writer.currentCorpusId, charsTyped, accuracy)
   }
-  
+
+  // 会话结束再查一次成就（等级/段位/纪录类即时解锁）
+  const unlockedEnd = progress.checkAchievements(stats)
+  if (unlockedEnd.length > 0) {
+    newAchievements.value = [...newAchievements.value, ...unlockedEnd]
+  }
+
   stats.endSession()
   progress.endSession()
 }

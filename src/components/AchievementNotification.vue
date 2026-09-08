@@ -22,6 +22,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
+import confetti from 'canvas-confetti'
 
 const props = defineProps({
   newAchievements: {
@@ -43,22 +44,31 @@ const RARITY = {
   LEGENDARY: 'legendary'
 }
 
-const RARE_ACHIEVEMENTS = ['ten-thousand', 'streak-30', 'combo-50', 'accuracy-95']
-const EPIC_ACHIEVEMENTS = ['fifty-thousand', 'accuracy-100', 'speed-150', 'streak-100', 'combo-100']
-const LEGENDARY_ACHIEVEMENTS = []
-
+// 稀有度以成就定义（achievement.rarity）为准，不再维护硬编码列表
 function getRarity(achievement) {
-  if (achievement.rarity) return achievement.rarity
-  if (LEGENDARY_ACHIEVEMENTS.includes(achievement.id)) return RARITY.LEGENDARY
-  if (EPIC_ACHIEVEMENTS.includes(achievement.id)) return RARITY.EPIC
-  if (RARE_ACHIEVEMENTS.includes(achievement.id)) return RARITY.RARE
-  return RARITY.COMMON
+  return achievement.rarity || RARITY.COMMON
 }
 
 function isRare(achievement) {
-  return getRarity(achievement) === RARITY.RARE || 
-         getRarity(achievement) === RARITY.EPIC || 
-         getRarity(achievement) === RARITY.LEGENDARY
+  const r = getRarity(achievement)
+  return r === RARITY.RARE || r === RARITY.EPIC || r === RARITY.LEGENDARY
+}
+
+// 高稀有度解锁：撒花庆祝（epic 中等 / legendary 全屏两波）
+function celebrate(rarity) {
+  try {
+    if (rarity === RARITY.LEGENDARY) {
+      confetti({ particleCount: 160, spread: 90, origin: { y: 0.35 }, zIndex: 2000 })
+      setTimeout(() => {
+        confetti({ particleCount: 120, angle: 60, spread: 70, origin: { x: 0, y: 0.6 }, zIndex: 2000 })
+        confetti({ particleCount: 120, angle: 120, spread: 70, origin: { x: 1, y: 0.6 }, zIndex: 2000 })
+      }, 350)
+    } else if (rarity === RARITY.EPIC) {
+      confetti({ particleCount: 80, spread: 70, origin: { y: 0.3 }, zIndex: 2000 })
+    }
+  } catch (e) {
+    console.warn('confetti failed:', e)
+  }
 }
 
 function shareAchievement(achievement) {
@@ -70,6 +80,7 @@ watch(() => props.newAchievements, (newVals) => {
     newVals.forEach((achievement, index) => {
       setTimeout(() => {
         notifications.value.push(achievement)
+        celebrate(getRarity(achievement))
         setTimeout(() => {
           const idx = notifications.value.findIndex(a => a.id === achievement.id)
           if (idx > -1) notifications.value.splice(idx, 1)
