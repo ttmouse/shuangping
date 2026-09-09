@@ -126,7 +126,7 @@
                   <span v-if="display.phonetic" class="cr-ph-row"><span class="cr-ph">{{ tok.phonetic }}</span></span>
                   <span class="cr-surface">
                     <span class="cr-main">
-                      <span class="cr-text is-clickable" data-nav :title="tok.word" @click.stop="openWordCard($event, tok)">{{ tok.text }}</span>
+                      <span class="cr-text is-clickable" :class="{ 'is-vocab': inVocabBook(tok) }" data-nav :title="tok.word" @click.stop="openWordCard($event, tok)">{{ tok.text }}</span>
                     </span>
                   </span>
                   <span class="cr-below">
@@ -603,6 +603,9 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', onKey); window.rem
 .cr-text { padding: .06em .32em .06em 0; border-radius: 6px; cursor: pointer; }
 /* 悬停：无背景，仅词色变化（默认词色即正文色） */
 .cr-text:hover { background: transparent; color: var(--theme-main-text-color); }
+/* 已在生词本的词：琥珀色 + 点状下划线（浅色 #e6a23c / 深色 #fbbf24 均可读），一眼可辨 */
+.cr-text.is-vocab { color: var(--theme-warning); text-decoration: underline dotted; text-decoration-color: color-mix(in srgb, var(--theme-warning) 65%, transparent); text-underline-offset: 3px; }
+.cr-text.is-vocab:hover { color: var(--theme-warning); opacity: .82; }
 /* 释义/词性：正常参与布局（不溢出、不预留空白）。选项关闭时 .cr-below
    为空、高度为 0，词卡高度自动回到词本体，句子高度随之收缩 */
 .cr-below { display: flex; flex-direction: column; align-items: center; font-size: .55em; line-height: 1.25; }
