@@ -268,7 +268,7 @@
 
         <!-- 短文模式：未开始 → 短文/课包列表 -->
         <template v-else-if="mode === 'stories'">
-          <div class="enStage">
+          <div class="enStage" :class="{ enStageTop: packBrowseLevel === 'courses' && !!activePack }">
             <div class="storyPanel storyPanelWide">
               <!-- 课包课程列表：独立视图，隐藏其他内容 -->
               <template v-if="packBrowseLevel === 'courses' && activePack">
@@ -322,9 +322,52 @@
                     <span>主题课包</span>
                     <button v-if="!packList.length && !packLoading" class="btn storyAddBtn" @click="loadCoursePackRegistry" data-nav>加载课包</button>
                     <button v-else-if="packLoading" class="btn" disabled data-nav>加载中…</button>
+                    <!-- 本地课包可多次添加；＋ 添加课包为粘贴句子生成新课包 —— 两个入口并排靠右 -->
+                    <span class="packLocalActions" v-if="!packLoading">
+                      <button class="packLocalAdd" @click="pickLocalPacks" data-nav>＋ 本地课包</button>
+                      <button class="packLocalAdd" @click="openCustomEditor" data-nav>＋ 添加课包</button>
+                    </span>
+                  </div>
+                  <!-- 添加课包：粘贴英文句子 → 自动查词生成完整课包（词性/释义/音标）→ 写入本地课包目录 -->
+                  <div v-if="customEditorOpen" class="customOverlay">
+                    <div class="customModal">
+                      <div class="customModalHead">
+                        <span>添加课包</span>
+                        <span v-if="!packBuilding" class="customModalClose" v-qtip data-tip="关闭" @click="customEditorOpen = false">×</span>
+                      </div>
+                      <input v-model="newCustomTitle" placeholder="给课包起个名字（可留空，默认『自定义课包』）" class="customTitleInput" />
+                      <textarea v-model="newCustomText" placeholder="粘贴英文句子（每句一行；中文行紧随其后自动配为翻译）。将自动分词、逐词查词性/释义/音标，生成完整课包写入本地。" rows="6"></textarea>
+                      <div class="customOpts">
+                        <button class="btn" :disabled="!newCustomText.trim() || packBuilding" @click="saveCustomAsLocalPack" data-nav>{{ packBuilding ? `生成中 ${packBuildProgress}%` : '生成课包' }}</button>
+                        <button class="btn" :disabled="packBuilding" @click="customEditorOpen = false" data-nav>取消</button>
+                      </div>
+                      <div v-if="packBuilding" class="packDesc">正在查词生成课包… {{ packBuildProgress }}%（词性/释义/音标，约几秒）</div>
+                      <div v-if="packBuildErr" class="packError">{{ packBuildErr }}</div>
+                    </div>
                   </div>
                   <div v-if="packError" class="packError">{{ packError }}</div>
                   <div v-if="!packList.length && !packLoading" class="packEmpty">点击"加载课包"获取主题课程（850 基础词等）</div>
+                  <template v-if="localPacks.length">
+                    <div class="packGroupLabel">本地课包</div>
+                    <div class="packGrid">
+                      <button v-for="p in localPacks" :key="p.slug" class="packCard" @click="openCoursePack(p)" data-nav>
+                        <span class="packCardBody">
+                          <span class="packCardTitleRow">
+                            <span class="packCardTitle" :title="p.title"><span class="localTag">本地</span>{{ p.title }}</span>
+                            <span class="localPackX" :title="'移除本地课包「' + p.title + '」（不删磁盘文件，可重新添加）'" @click.stop.prevent="removeLocalPack(p)">✕</span>
+                          </span>
+                          <span v-if="p.description" class="packCardDesc">{{ p.description }}</span>
+                          <span class="packCardFoot">
+                            <span class="packProgressTrack"><span class="packProgressFill" :style="{ width: packProgress(p).pct + '%' }"></span></span>
+                            <span class="packCardMeta">
+                              <span class="packMetaMain">{{ packProgress(p).practiced }}/{{ p.courseCount }} 课程 · {{ packProgress(p).pct }}% 完成</span>
+                              <span v-if="packLastPractice.get(p.slug)" class="packMetaLast">上次 {{ relTime(packLastPractice.get(p.slug)) }}</span>
+                            </span>
+                          </span>
+                        </span>
+                      </button>
+                    </div>
+                  </template>
                   <template v-if="textbookPacks.length">
                     <div class="packGroupLabel">教材同步</div>
                     <div class="packGrid">
@@ -361,35 +404,6 @@
                       </button>
                     </div>
                   </template>
-                </div>
-                <div class="storyPanelTitle">
-                  <span>短文</span>
-                  <button class="btn storyAddBtn" @click="openCustomEditor" data-nav>＋ 新增自定义</button>
-                </div>
-                <!-- 新增自定义：独立浮层弹窗处理，不在当前页面展开 -->
-                <div v-if="customEditorOpen" class="customOverlay" @click.self="customEditorOpen = false">
-                  <div class="customModal">
-                    <div class="customModalHead">
-                      <span>{{ editingCustomId ? '编辑自定义' : '新增自定义' }}</span>
-                      <span class="customModalClose" v-qtip data-tip="关闭" @click="customEditorOpen = false">×</span>
-                    </div>
-                    <input v-model="newCustomTitle" placeholder="给这组内容起个名字（可留空）" class="customTitleInput" />
-                    <textarea v-model="newCustomText" placeholder="粘贴英文内容（可中英对照，每句一行，中文行自动配为翻译）" rows="5"></textarea>
-                    <div class="customOpts">
-                      <button class="btn" :disabled="!newCustomText.trim()" @click="saveCustomStory" data-nav>{{ editingCustomId ? '保存修改' : '保存并加入' }}</button>
-                      <button class="btn" @click="customEditorOpen = false" data-nav>取消</button>
-                    </div>
-                  </div>
-                </div>
-                <div v-if="enCustomStoryList.length" class="storyList">
-                  <div v-for="s in enCustomStoryList" :key="s.id" class="storyItemWrap">
-                    <button class="storyItem" @click="startEnStory(s)" data-nav>
-                      <span class="storyTitle">{{ s.title }}</span>
-                      <span class="storyMeta">{{ s.sentences.length }} 句 · 自定义{{ s.firstLine ? ' · ' + s.firstLine.slice(0, 28) + (s.firstLine.length > 28 ? '…' : '') : '' }}</span>
-                    </button>
-                    <button class="storyEdit" v-qtip data-tip="编辑" @click="editCustomStory(s.id)">✎</button>
-                    <button class="storyDel" v-qtip data-tip="删除" @click="removeEnCustomStory(s.id)">×</button>
-                  </div>
                 </div>
                 <!-- 主题课包（julebu 课程）浏览：课包列表 -->
 
@@ -958,7 +972,8 @@ import { EN_WORDS } from '../data/englishWords.js'
 import { GRADE_EN_WORDS } from '../data/schoolEnglish.js'
 import { fetchEnTranslation, fetchEnWordEntries, fetchYoudaoWordDetail } from '../utils/enTranslation.js'
 import { EN_STORIES } from '../data/enStories.js'
-import { fetchCoursePackRegistry, fetchCoursePack, fetchCourseData, getCourseDict, courseToStory, statementsToQueue, filterQueueByDifficulty, filterQueueByCustomTypes, CUSTOM_TYPE_OPTIONS } from '../utils/coursePacks.js'
+import { fetchCoursePackRegistry, fetchCoursePack, fetchCourseData, getCourseDict, courseToStory, statementsToQueue, filterQueueByDifficulty, filterQueueByCustomTypes, CUSTOM_TYPE_OPTIONS, hasLocalPackDir, pickLocalCoursePacksFromPicker, restoreLocalPackDir, removeLocalCoursePack, addLocalPackDirSource } from '../utils/coursePacks.js'
+import { buildPackFromText, writePackToDir } from '../utils/coursePackBuilder.js'
 import { WORD_SEGMENTS } from '../data/wordSegments.js'
 import { getSyllableMap } from '../data/enSyllables.js'
 import { GRADE_WORDS } from '../data/schoolWords.js'
@@ -1230,6 +1245,9 @@ const packLoading = ref(false)
 const packError = ref('')
 const activePack = ref(null) // 展开的课包（含课程清单）
 const packCoursesLoading = ref(false)
+const packBuilding = ref(false)        // 生成课包中（自定义短文 → 本地课包）
+const packBuildProgress = ref(0)       // 查词进度 0-100
+const packBuildErr = ref('')
 const courseLoading = ref(false) // 正在加载某课（进入练习前）
 // 当前课的本地词典（释义跟课文走）；兜底仍可走有道
 const currentCourseDict = ref({})
@@ -1551,9 +1569,15 @@ async function restoreJulebuFromUrl() {
     }
   }
 }
-// 打开短文 tab 时懒加载课包注册表
-async function loadCoursePackRegistry() {
-  if (packList.value.length) return
+// 打开短文 tab 时懒加载课包注册表（force=true 时忽略已有列表强制刷新，用于选完本地目录后）
+async function loadCoursePackRegistry(force = false) {
+  if (packList.value.length && !force) return
+  // 自动恢复上次选过的本地课包目录（IndexedDB 存句柄；无记录或权限失效则静默跳过）
+  if (!force && !hasLocalPackDir()) {
+    try {
+      const restored = await restoreLocalPackDir()
+    } catch { /* 恢复失败不影响线上加载 */ }
+  }
   packLoading.value = true
   packError.value = ''
   try {
@@ -1564,6 +1588,30 @@ async function loadCoursePackRegistry() {
   } finally {
     packLoading.value = false
   }
+}
+
+// 选择本地课包目录（File System Access）：可多次点击、每次并入一个新目录（同目录重复选自动去重），
+// 加载后强制刷新列表。移除不做"一键清除"，在本地课包卡上逐个 ✕。
+async function pickLocalPacks() {
+  packError.value = ''
+  const r = await pickLocalCoursePacksFromPicker()
+  if (!r.ok) {
+    if (r.cancelled) return
+    packError.value = r.error || '本地课包加载失败'
+    return
+  }
+  await loadCoursePackRegistry(true) // 强制重载（合并线上 + 全部本地源）
+}
+
+// 移除单个本地课包（只影响本地视图：单包目录整包移出，多包目录只移出该包）→ 其余本地/线上不受影响
+async function removeLocalPack(p) {
+  const r = await removeLocalCoursePack(p.slug)
+  if (!r.ok) {
+    packError.value = '移除失败：该课包未在当前本地源中（可能已被移除）'
+    return
+  }
+  packError.value = ''
+  await loadCoursePackRegistry(true)
 }
 // packSlug → 该包最近一次练习时间戳（全部课程 lastPracticed 最大值，startJulebuCourse/openCourseReading 时记录）——列表排序与"上次练习"展示共用
 const packLastPractice = computed(() => {
@@ -1586,8 +1634,9 @@ const sortedPackList = computed(() => {
 function isTextbookPack(p) {
   return /【人教版】/.test(p.title || '') || /与人教版/.test(p.description || '')
 }
-const textbookPacks = computed(() => sortedPackList.value.filter(isTextbookPack))
-const interestPacks = computed(() => sortedPackList.value.filter(p => !isTextbookPack(p)))
+const localPacks = computed(() => sortedPackList.value.filter(p => p.local))
+const textbookPacks = computed(() => sortedPackList.value.filter(p => !p.local && isTextbookPack(p)))
+const interestPacks = computed(() => sortedPackList.value.filter(p => !p.local && !isTextbookPack(p)))
 // 课包列表项 meta 文案：N 课 +（练过才显示）上次 X前（同课程卡"上次 x 前"口径，无冗余文案）
 function packMetaText(p) {
   const parts = []
@@ -1857,6 +1906,53 @@ function saveCustomStory() {
   editingCustomId.value = null
   customEditorOpen.value = false
 }
+// 生成课包 slug：英文标题 → kebab-case；中文/空 → custom-<时间戳>
+function makePackSlug(title) {
+  const base = String(title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
+  return base || ('custom-' + Date.now().toString(36))
+}
+
+// 自定义短文 → 完整课包（查词性/释义/音标）→ 写入本地课包目录 → 挂载为本地源
+async function saveCustomAsLocalPack() {
+  const text = newCustomText.value.trim()
+  if (!text || packBuilding.value) return
+  // 目录选择必须在用户手势内触发（await 之后浏览器会拒绝 showDirectoryPicker）→ 先选目录
+  if (!window.showDirectoryPicker) {
+    packBuildErr.value = '当前浏览器不支持选择本地目录（需 Chrome/Edge）'
+    return
+  }
+  let dir
+  try {
+    dir = await window.showDirectoryPicker({ mode: 'readwrite' })
+  } catch (e) {
+    if (e && e.name === 'AbortError') return // 用户取消选目录
+    packBuildErr.value = '选择目录失败：' + (e.message || e)
+    return
+  }
+  packBuildErr.value = ''
+  packBuilding.value = true
+  packBuildProgress.value = 0
+  try {
+    const title = newCustomTitle.value.trim() || '自定义课包'
+    const slug = makePackSlug(title)
+    // 查词生成课包数据（进度回调）
+    const pack = await buildPackFromText(text, {
+      title, slug,
+      onProgress: ({ done, total }) => { packBuildProgress.value = Math.round(done * 100 / Math.max(total, 1)) },
+    })
+    // 写盘 + 挂载为本地源（若该目录已在源中会自动跳过）→ 刷新列表
+    await writePackToDir(dir, pack)
+    await addLocalPackDirSource(dir, 'registry')
+    customEditorOpen.value = false
+    await loadCoursePackRegistry(true)
+  } catch (e) {
+    if (e && e.name === 'AbortError') return // 用户取消选目录
+    packBuildErr.value = '生成课包失败：' + (e.message || e)
+  } finally {
+    packBuilding.value = false
+  }
+}
+
 function removeEnCustomStory(id) {
   enCustomStories.value = enCustomStories.value.filter(c => c.id !== id)
   saveEnCustomStories()
@@ -4559,6 +4655,8 @@ onBeforeUnmount(() => {
 
 /* 英文单词（参考 localhost:3002 整句流式练习） */
 .enStage { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; width: 100%; flex: 1; }
+/* 课程浏览态：内容少时贴顶，避免整块面板被垂直居中悬空 */
+.enStage.enStageTop { justify-content: flex-start; }
 /* 自定义模式：当前句中文翻译（显示在句子上方） */
 .enSentenceCn {
   font-size: 24px;
@@ -5033,6 +5131,80 @@ onBeforeUnmount(() => {
     transform: none;
   }
 }
+/* 本地课包标签/移除/提示 */
+.packCardTitleRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+}
+.packCardTitleRow > .packCardTitle {
+  flex: 1;
+  min-width: 0;
+}
+/* 逐包移除（本地课包卡右上角 ✕）：悬停变红，防止误点（stopPropagation 不会打开课包） */
+.localPackX {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--theme-text-secondary);
+  background: color-mix(in srgb, var(--theme-text-secondary) 10%, transparent);
+  border-radius: 50%;
+  cursor: pointer;
+  user-select: none;
+  transition: background .15s ease, color .15s ease;
+}
+.localPackX:hover {
+  background: rgba(214, 69, 69, .16);
+  color: #d64545;
+}
+.localTag {
+  display: inline-block;
+  vertical-align: 1px;
+  margin-right: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--theme-accent-color, #2f8f4e);
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  padding: 0 4px;
+  letter-spacing: .3px;
+}
+/* 「＋ 本地课包」入口：packTitle 内的小文字按钮（不继承 .btn 的 flex:1 全宽），弱化次级动作 */
+.packLocalActions {
+  flex: none;
+  margin-left: auto; /* 整组靠右 */
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.packLocalAdd {
+  flex: none;
+  font-size: 11.5px;
+  line-height: 1;
+  padding: 4px 8px;
+  border: 0;
+  background: transparent;
+  color: var(--theme-text-secondary);
+  border-radius: 5px;
+  opacity: .75;
+  cursor: pointer;
+  transition: color .12s ease, opacity .12s ease, background .12s ease;
+}
+.packLocalAdd:hover {
+  color: var(--theme-accent-color, #2f8f4e);
+  opacity: 1;
+  background: color-mix(in srgb, var(--theme-accent-color, #2f8f4e) 8%, transparent);
+}
+
 /* 课包分组小标题（教材同步 / 兴趣专题） */
 .packGroupLabel {
   margin: 16px 2px 0;

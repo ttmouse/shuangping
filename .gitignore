@@ -11,4 +11,6 @@ dist/
 # === 课程数据（不纳入 git：体积大 + 可从 julebu 重新抓取）===
 # 原始抓取中间产物（App 不读，仅数据源备份）
 /julebu-raw*/
+# 本地课包目录（浏览器 File System Access 选择加载用，纯本地、不进部署）
+/LocalCoursePacks/
 .DS_Store
