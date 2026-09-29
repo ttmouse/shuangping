@@ -14,3 +14,8 @@ dist/
 # 本地课包目录（浏览器 File System Access 选择加载用，纯本地、不进部署）
 /LocalCoursePacks/
 .DS_Store
+
+# === 本地工具状态（不纳入 git：会话/缓存产物）===
+.dsh/
+.codex/
+__pycache__/

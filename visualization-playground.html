@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英文模式 · 句子样式 Playground</title>
+<style>
+  /* ============ 项目主题变量（src/assets/styles.css） ============ */
+  :root{
+    --theme-background-color:#ffffff;
+    --theme-background-light-color:#fff;
+    --theme-box-background-color:#dce8e0;
+    --theme-main-text-color:#1a9a7a;
+    --theme-text-color:#1f2937;
+    --theme-text-secondary:#6b7280;
+    --theme-rich-text-color:#94a3b8;
+    --theme-menu-text-color:#1a9a7a;
+    --theme-menu-hover-color:#2ec4a0;
+    --theme-accent-color:#1a9a7a;
+    --theme-border-color:#e2e5ea;
+    --theme-success:#2e9e5b;
+    --theme-error:#d9534f;
+    --theme-warning:#e6a23c;
+    --text-muted:#999;
+  }
+  html.dark{
+    --theme-background-color:#0f172a;
+    --theme-background-light-color:#1e293b;
+    --theme-box-background-color:#0a2e14;
+    --theme-main-text-color:#2ec4a0;
+    --theme-text-color:#cbd5e1;
+    --theme-text-secondary:#64748b;
+    --theme-rich-text-color:#64748b;
+    --theme-menu-text-color:#2ec4a0;
+    --theme-menu-hover-color:#3ddbbc;
+    --theme-accent-color:#2ec4a0;
+    --theme-border-color:#334155;
+    --theme-success:#34d399;
+    --theme-error:#f87171;
+    --theme-warning:#fbbf24;
+    --text-muted:#94a3b8;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--theme-background-color);color:var(--theme-text-color);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;line-height:1.55;}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 80px;}
+  a{color:var(--theme-menu-text-color);}
+
+  /* ============ 页面骨架 ============ */
+  header.top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    padding:18px 0 20px;border-bottom:1px solid var(--theme-border-color);margin-bottom:28px;}
+  header.top h1{font-size:26px;margin:0 0 8px;color:var(--theme-main-text-color);}
+  header.top p{font-size:13.5px;color:var(--theme-text-secondary);margin:0;max-width:760px;}
+  .theme-toggle{border:1px solid var(--theme-border-color);border-radius:999px;padding:8px 14px;font-size:12.5px;
+    background:var(--theme-background-light-color);color:var(--theme-text-color);cursor:pointer;min-height:44px;}
+  section{margin:44px 0;}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+  .sec-num{font-size:12px;font-weight:700;color:#fff;background:var(--theme-accent-color);border-radius:8px;padding:2px 9px;}
+  .sec-head h2{font-size:19px;margin:0;font-weight:700;}
+  .sec-head .src{font-size:11.5px;color:var(--theme-text-secondary);font-family:ui-monospace,Menlo,monospace;}
+  .demo-card{background:var(--theme-background-light-color);border:1px solid var(--theme-border-color);border-radius:16px;padding:20px;}
+  .demo-title{font-size:15px;font-weight:700;margin:0 0 4px;}
+  .demo-note{font-size:12.5px;color:var(--theme-text-secondary);margin:0 0 14px;}
+
+  /* ============ 控件（模拟器面板） ============ */
+  .panel{display:flex;flex-direction:column;gap:14px;}
+  .ctl-row{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;}
+  .seg-group{display:inline-flex;flex-wrap:wrap;gap:4px;}
+  .seg-label{font-size:12px;color:var(--theme-text-secondary);margin-right:6px;align-self:center;}
+  .seg{background:var(--theme-background-color);border:1px solid var(--theme-border-color);border-radius:999px;
+    padding:5px 13px;font-size:12px;cursor:pointer;color:var(--theme-text-color);min-height:32px;}
+  .seg.active{background:var(--theme-accent-color);border-color:var(--theme-accent-color);color:#fff;font-weight:600;}
+  .switch{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--theme-text-secondary);cursor:pointer;}
+  .switch input{accent-color:var(--theme-accent-color);width:16px;height:16px;}
+  .sliders{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 22px;}
+  .sliders label{display:block;font-size:12px;color:var(--theme-text-secondary);margin-bottom:4px;}
+  .sliders label b{color:var(--theme-accent-color);}
+  .sliders input[type=range]{width:100%;accent-color:var(--theme-accent-color);}
+
+  /* ============ 项目原版样式：英文句子练习（PracticeModes.vue） ============ */
+  .enStage{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;width:100%;}
+  .enSentenceCn{font-size:24px;font-weight:500;color:#444444;text-align:center;max-width:90%;}
+  html.dark .enSentenceCn{color:#e2e8f0;}
+  .enSentence{display:flex;flex-wrap:nowrap;justify-content:center;align-items:center;gap:10px;
+    max-width:100%;flex-shrink:0;padding:20px 16px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+  .enSentence::-webkit-scrollbar{display:none;}
+  .enSentence.left-fade{mask-image:linear-gradient(to right,transparent 0,black 90px,black 100%);-webkit-mask-image:linear-gradient(to right,transparent 0,black 90px,black 100%);}
+  .enSentenceWrap{display:flex;flex-direction:column;gap:6px;width:100%;min-height:210px;justify-content:center;}
+  .enSentenceRedo{padding:8px 16px;gap:8px;flex-shrink:0;}
+  .enSentenceRedo .word-box{padding:5px 10px;}
+  .word-col{display:inline-flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;}
+  .word-col.completed .letter.correct{color:#444444;opacity:1;}
+  html.dark .word-col.completed .letter.correct{color:#e2e8f0;}
+  .word-box{display:inline-flex;gap:2px;padding:6px 10px;border-radius:8px;border:2px solid transparent;
+    transition:border-color .15s ease,opacity .2s ease,background .15s ease;}
+  .word-letters{display:inline-flex;gap:2px;font-size:40px;font-weight:600;line-height:1.3;}
+  .word-cn{font-size:15px;font-weight:500;color:var(--theme-rich-text-color);opacity:.9;line-height:1.2;
+    white-space:nowrap;min-height:18px;display:flex;align-items:center;justify-content:center;width:100%;}
+  .word-col.active .word-cn{opacity:1;color:var(--theme-main-text-color);}
+  .word-time{font-size:11px;line-height:1;min-height:12px;color:var(--theme-rich-text-color);
+    font-variant-numeric:tabular-nums;visibility:hidden;}
+  .word-time.has-value{visibility:visible;opacity:.85;}
+  .word-box .letter{color:color-mix(in srgb,var(--theme-text-color) 17%,transparent);border-bottom: 3px solid color-mix(in srgb,var(--theme-text-color) 30%,transparent);
+    transition:color .12s ease,border-color .12s ease;}
+  .word-box .letter.hidden{color:transparent;}
+  .word-box .letter.punct{color:color-mix(in srgb,#999 55%,transparent);}
+  .word-box .letter.punct-done{color:color-mix(in srgb,#777 95%,transparent);}
+  .word-box .letter.punct-current{color:var(--theme-accent-color);}
+  .word-box .letter.seg-pre{color:color-mix(in srgb,#8fa8c9 55%,transparent);}
+  .word-box .letter.seg-root{color:color-mix(in srgb,#c2c2c2 80%,transparent);}
+  .word-box .letter.seg-root2{color:color-mix(in srgb,#8fb8ab 75%,transparent);}
+  .word-box .letter.seg-suf{color:color-mix(in srgb,#c9a88a 55%,transparent);}
+  .word-box .letter.syl-0{color:color-mix(in srgb,#5b9bd5 55%,transparent);}
+  .word-box .letter.syl-1{color:color-mix(in srgb,#70ad47 55%,transparent);}
+  .word-box .letter.syl-2{color:color-mix(in srgb,#ed7d31 55%,transparent);}
+  .word-box .letter.syl-3{color:color-mix(in srgb,#9b59b6 55%,transparent);}
+  .word-box .letter.syl-4{color:color-mix(in srgb,#e74c3c 55%,transparent);}
+  .word-col.completed .word-box .letter.syl-0{color:color-mix(in srgb,#5b9bd5 75%,transparent);}
+  .word-col.completed .word-box .letter.syl-1{color:color-mix(in srgb,#70ad47 75%,transparent);}
+  .word-col.completed .word-box .letter.syl-2{color:color-mix(in srgb,#ed7d31 75%,transparent);}
+  .word-col.completed .word-box .letter.syl-3{color:color-mix(in srgb,#9b59b6 75%,transparent);}
+  .word-col.completed .word-box .letter.syl-4{color:color-mix(in srgb,#e74c3c 75%,transparent);}
+  .word-box .letter.correct{color:var(--theme-main-text-color);}
+  .word-col.redo .word-box .letter.correct{color:color-mix(in srgb,#e6a23c 95%,transparent);}
+  .word-box .letter.current{color:color-mix(in srgb,var(--theme-text-color) 17%,transparent);
+    border-bottom: 3px solid var(--theme-menu-hover-color);background:color-mix(in srgb,var(--theme-menu-hover-color) 12%,transparent);}
+  .word-box .letter.dict-current{color:transparent;border-bottom: 3px solid var(--theme-menu-hover-color);
+    background:color-mix(in srgb,var(--theme-menu-hover-color) 12%,transparent);}
+  /* 答案揭示后：仅文字可见，保留原状态的背景和下划线不变 */
+  .word-box .letter.hidden.revealed{color:color-mix(in srgb,var(--theme-text-color) 17%,transparent);}
+  .word-box .letter.dict-current.revealed{color:color-mix(in srgb,var(--theme-main-text-color) 20%,transparent);}
+  .word-box .letter.incorrect{color:#f56c6c;border-bottom: 3px solid #f56c6c;}
+  .word-box .letter.current.incorrect{background:color-mix(in srgb,var(--theme-menu-hover-color) 12%,transparent);}
+  .redo-badge{font-size:10px;color:#e6a23c;font-weight:700;letter-spacing:.5px;}
+
+  /* ============ 原版：整句完成态 句子成分解析 spParse（句乐部样式） ============ */
+  @keyframes spGroupIn{from{opacity:.2;}to{opacity:1;}}
+  @keyframes spChipBounce{0%{transform:translate(-50%,-58%) scale(.5);opacity:0;}55%{transform:translate(-50%,-58%) scale(1.12);}100%{transform:translate(-50%,-58%) scale(1);opacity:1;}}
+  .spParse{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;gap:12px 16px;padding:20px 4px 10px;max-width:100%;margin:0 auto;}
+  .spGroup{position:relative;display:inline-flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;gap:8px 14px;
+    border:1.5px solid;border-radius:18px;padding:16px 12px 8px;transition:box-shadow .15s ease;
+    background:color-mix(in srgb,var(--theme-background-light-color) 38%,transparent);animation:spGroupIn .15s ease-out both;}
+  .spGroup:hover{box-shadow:0 4px 14px rgba(0,0,0,.10);}
+  .spChip{position:absolute;left:50%;top:0;transform:translate(-50%,-58%);background:var(--sp-chip,#64748b);color:#fff;
+    font-size:10px;font-weight:600;letter-spacing:1px;line-height:1;padding:4px 9px;border-radius:999px;white-space:nowrap;
+    box-shadow:0 2px 5px rgba(0,0,0,.18);animation:spChipBounce .2s ease-out both;}
+  .spUnit{position:relative;display:inline-grid;grid-template-rows:auto auto auto auto;justify-items:center;gap:0;padding:2px 3px;min-width:0;}
+  .spTip{position:absolute;bottom:calc(100% - 14px);left:50%;transform:translateX(-50%) translateY(-6px);z-index:80;
+    width:max-content;max-width:340px;padding:9px 12px;border-radius:10px;border:1px solid var(--theme-border-color);
+    background:var(--theme-background-color);box-shadow:0 8px 22px rgba(0,0,0,.16);opacity:0;visibility:hidden;
+    transition:opacity .16s ease,transform .16s ease,visibility .16s;pointer-events:none;text-align:left;}
+  .spUnit:hover .spTip{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
+  .spTipTitle{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+  .spTipRole{font-size:13px;font-weight:700;color:var(--theme-main-text-color);}
+  .spTipType{font-size:11px;color:var(--theme-text-color);opacity:.75;font-style:italic;letter-spacing:.3px;}
+  .spTipBody{font-size:12px;line-height:1.6;color:var(--theme-main-text-color);}
+  .spPh{display:block;font-size:11px;line-height:1.3;min-height:15px;color:var(--theme-text-color);opacity:.75;
+    white-space:nowrap;margin-bottom:3px;user-select:none;}
+  .spCell{position:relative;line-height:1;}
+  .spWord{position:relative;display:inline-block;font-size:40px;font-weight:600;line-height:1.15;color:#444444;
+    letter-spacing:.2px;padding:0 2px 5px;cursor:pointer;user-select:none;}
+  html.dark .spWord{color:#e2e8f0;}
+  .spUl{position:absolute;left:-6px;right:-6px;bottom:0;height:4px;border-radius:999px;opacity:.9;pointer-events:none;}
+  .spPunct{display:inline-block;font-size:40px;font-weight:600;line-height:1.15;color:#444444;opacity:.55;user-select:none;pointer-events:none;margin-left:1px;}
+  html.dark .spPunct{color:#e2e8f0;}
+  .spDef{font-size:13px;line-height:1.35;min-height:18px;color:var(--theme-rich-text-color);text-align:center;
+    max-width:360px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+  .spPos{font-size:10px;min-height:14px;line-height:1.4;color:var(--theme-text-color);opacity:.7;letter-spacing:.3px;margin-top:2px;user-select:none;}
+  .spExpl{flex-basis:100%;text-align:center;font-size:12px;line-height:1.55;color:var(--theme-main-text-color);
+    background:color-mix(in srgb,var(--theme-background-light-color) 60%,transparent);border-radius:10px;padding:6px 10px;margin-top:4px;border:1px dashed var(--theme-border-color);}
+
+  /* ============ 原版：评级弹层 comboPopup ============ */
+  .combo-popup{display:inline-flex;align-items:baseline;justify-content:center;gap:12px;white-space:nowrap;}
+  .comboRating{font-size:42px;font-weight:800;font-style:italic;line-height:1;letter-spacing:.8px;
+    background:linear-gradient(180deg,#ffd76a 8%,#f59e0b 55%,#ef7d1f 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 2px 6px rgba(245,158,11,.35)) drop-shadow(0 0 18px rgba(245,158,11,.18));text-transform:capitalize;}
+  .comboCount{font-size:22px;font-weight:600;line-height:1;color:var(--theme-main-text-color);letter-spacing:.3px;}
+
+  /* ============ 原版：右上角模式控制条 enModeBox（句乐部样式：灰色半透明 chip） ============ */
+  .enModeBox{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;
+    background:color-mix(in srgb,var(--theme-accent-color) 6%,transparent);border-radius:999px;padding:4px 8px;}
+  .enModeChip,.enModeDicChip{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:999px;
+    border:1px solid var(--theme-border-color);background:rgba(128,128,128,.06);color:var(--theme-main-text-color);
+    font-size:12px;font-weight:600;cursor:pointer;transition:all .15s ease;backdrop-filter:blur(8px);font-family:inherit;}
+  .enModeChip:hover,.enModeDicChip:hover{background:rgba(128,128,128,.1);}
+  .enModeChip.open,.enModeDicChip.dictation{background:rgba(128,128,128,.12);}
+  .enModeCaret{flex-shrink:0;opacity:.8;transition:transform .15s;}
+  .enModeChip.open .enModeCaret{transform:rotate(180deg);}
+  .enModeSep{color:var(--theme-border-color);font-size:13px;opacity:.5;user-select:none;}
+  .enModeDicChip,.enModeDispChip{height:28px;padding:0 10px;background:transparent;color:var(--theme-text-secondary,#6b7280);font-weight:500;}
+  .enModeDicChip.dictation{background:rgba(128,128,128,.1);color:var(--theme-main-text-color);font-weight:600;}
+  .enModeDispBox{position:relative;display:inline-flex;}
+  .enModeDispChip{display:inline-flex;align-items:center;gap:3px;border-radius:999px;border:1px solid var(--theme-border-color);
+    font-size:12px;cursor:pointer;transition:all .15s ease;backdrop-filter:blur(8px);font-family:inherit;}
+  .enModeDispChip:hover{background:rgba(128,128,128,.08);}
+  .enModeDispChip.open{background:rgba(128,128,128,.1);color:var(--theme-main-text-color);}
+  .enModeDispPanel{position:absolute;top:calc(100% + 6px);left:0;z-index:120;background:var(--theme-background-color);
+    border:1px solid var(--theme-border-color);border-radius:12px;padding:6px;box-shadow:0 8px 22px rgba(0,0,0,.14);min-width:200px;}
+  .enModeDispOpt{display:flex;flex-direction:column;gap:2px;width:100%;text-align:left;border:none;background:transparent;
+    padding:8px 10px;border-radius:8px;cursor:pointer;font-family:inherit;}
+  .enModeDispOpt:hover{background:rgba(128,128,128,.08);}
+  .enModeDispOpt.active{background:rgba(128,128,128,.12);}
+  .enModeDispOptLabel{font-size:13px;font-weight:600;color:var(--theme-text-color);}
+  .enModeDispOptDesc{font-size:11px;color:var(--theme-text-secondary);}
+  .enModeOptChips{display:inline-flex;gap:4px;align-items:center;}
+
+  /* ============ 图鉴 / 色板 / 图例 ============ */
+  .legend-row{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:12px;font-size:12px;color:var(--theme-text-secondary);}
+  .legend-row .li{display:inline-flex;align-items:center;gap:6px;}
+  .sw{width:14px;height:14px;border-radius:4px;display:inline-block;flex-shrink:0;}
+  .sw.line{background:transparent;border-bottom:4px solid currentColor;}
+  .showcase{display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start;}
+  .showcase .word-demo{background:var(--theme-background-color);border:1px solid var(--theme-border-color);border-radius:12px;padding:14px 18px;}
+  .showcase .word-demo .cap{font-size:12px;color:var(--theme-text-secondary);margin-bottom:8px;font-family:ui-monospace,Menlo,monospace;}
+  .showcase .word-demo .word-box{font-size:34px;}
+  .state-dict{display:flex;flex-wrap:wrap;gap:14px;}
+  .state-item{display:flex;flex-direction:column;gap:4px;align-items:center;background:var(--theme-background-color);
+    border:1px solid var(--theme-border-color);border-radius:12px;padding:12px 14px;min-width:96px;}
+  .state-item .letter{font-size:38px;font-weight:600;}
+  .state-item .nm{font-size:11.5px;color:var(--theme-main-text-color);font-weight:600;}
+  .state-item .cls{font-size:10px;color:var(--theme-text-secondary);font-family:ui-monospace,Menlo,monospace;}
+  .state-item .desc{font-size:10.5px;color:var(--theme-text-secondary);text-align:center;max-width:110px;}
+  .state-item .word-box{display:inline-flex;gap:2px;padding:6px 10px;border-radius:8px;border:2px solid transparent;}
+
+  .pos-swatch{display:flex;flex-wrap:wrap;gap:8px;}
+  .pos-swatch span{font-size:11px;padding:4px 10px;border-radius:999px;color:#fff;font-weight:600;}
+  .comp-swatch{display:flex;flex-wrap:wrap;gap:8px;}
+  .comp-swatch span{font-size:11px;padding:4px 10px;border-radius:999px;color:#fff;font-weight:600;}
+
+  /* ============ 原版补充：练习进行中组件 ============ */
+  .enProgHeader{flex:1;min-width:0;}
+  .enProgTitle{font-size:20px;font-weight:600;color:var(--theme-main-text-color);margin:0;}
+  .enProgTitle span{font-weight:normal;color:var(--theme-text-secondary,#6b7280);}
+  .enProgHint{font-size:13px;color:var(--theme-rich-text-color);margin:4px 0 0;}
+  .enProgress{font-size:14px;color:var(--theme-text-color);display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:10px;}
+  .enActionBtn{font-size:12px;padding:6px 10px;border-radius:8px;border:1px solid var(--theme-border-color);
+    background:var(--theme-background-color);color:var(--theme-main-text-color);cursor:pointer;display:inline-flex;
+    align-items:center;gap:4px;transition:all .15s ease;font-family:inherit;min-height:32px;}
+  .enActionBtn:hover:not(:disabled){border-color:var(--theme-menu-hover-color);background:color-mix(in srgb,var(--theme-menu-hover-color) 6%,var(--theme-background-color));}
+  .enActionBtn:disabled{opacity:.35;cursor:not-allowed;}
+  /* 词间标点：独立灰色装饰符，不参与输入 */
+  .enPunct{color:var(--text-muted,#999);font-size:.85em;margin-left:-4px;margin-right:-4px;user-select:none;flex-shrink:0;}
+  /* 跳句输入 */
+  .enJumpSentence{display:inline-block;padding:0 2px;border-bottom:1px dashed var(--theme-border-color);cursor:text;
+    font-weight:600;color:var(--theme-main-text-color);min-width:1.2em;text-align:center;}
+  .enJumpInput{width:3.2em;padding:1px 4px;font-size:15px;font-weight:600;text-align:center;border-radius:6px;
+    border:1px solid var(--theme-menu-hover-color);background:var(--theme-background-color);color:var(--theme-main-text-color);outline:none;}
+
+  /* ============ 原版：错词本 ============ */
+  .mistakePanel{width:min(560px,94vw);display:flex;flex-direction:column;gap:16px;padding:24px;
+    background:var(--theme-background-light-color);border:1px solid var(--theme-border-color);border-radius:12px;}
+  .slowBar{display:flex;flex-direction:column;gap:4px;}
+  .slowBarTitle{font-size:14px;font-weight:700;color:var(--theme-main-text-color);}
+  .slowBarMeta{font-size:12px;color:var(--theme-menu-text-color);}
+  .mistakeList{display:flex;flex-wrap:wrap;gap:8px;max-height:240px;overflow-y:auto;}
+  .mistakeItem{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--theme-background-color);
+    border:1px solid var(--theme-border-color);border-radius:999px;transition:all .15s ease;}
+  .mistakeItem:hover{border-color:transparent;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+  .mistakeWord{font-size:15px;font-weight:600;color:var(--theme-main-text-color);}
+  .mistakeCn{font-style:normal;font-weight:400;font-size:12px;color:var(--theme-menu-text-color);margin-left:4px;}
+  .mistakeCount{font-size:12px;color:#f56c6c;font-weight:700;}
+  .mistakeCount:not(.err){color:#e6a23c;}
+  .mistakeCount.slow{color:#e6a23c;}
+  .mistakeEmpty{color:var(--theme-text-color);font-size:14px;text-align:center;padding:20px 0;width:100%;}
+  .mistakeOpts{display:flex;gap:10px;}
+  .btn{flex:1;padding:10px 12px;border-radius:8px;border:1px solid var(--theme-border-color);
+    background:var(--theme-background-light-color);color:var(--theme-menu-text-color);cursor:pointer;font-family:inherit;}
+  .btn.primary{background:var(--theme-menu-text-color);border-color:var(--theme-menu-text-color);color:#fff;font-weight:600;}
+
+  /* ============ 原版：完成统计 ============ */
+  .enResultStats{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;}
+  .enResultStats .rStat{min-width:108px;flex:1 1 auto;}
+  .rStat{flex:1;padding:12px;background:var(--theme-background-light-color);border-radius:8px;text-align:center;}
+  .rValue{display:block;font-size:26px;font-weight:700;color:var(--theme-main-text-color);}
+  .rLabel{font-size:12px;color:var(--theme-text-color);}
+
+  /* ============ 原版：评级弹层出入场动画 ============ */
+  .combo-pop-enter-active{transition:transform .22s ease-out,opacity .22s ease-out;}
+  .combo-pop-enter-from{opacity:0;transform:translate(-50%,24px);}
+  .combo-pop-leave-active{transition:transform .18s ease-in,opacity .18s ease-in;}
+  .combo-pop-leave-to{opacity:0;transform:translate(-50%,14px);}
+  .combo-stage{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;padding:26px 0 6px;min-height:110px;}
+  .combo-stage .combo-popup{position:static;transform:none;}
+
+  /* ============ 原版：spGroup.plain 无框平铺变体 ============ */
+  .spGroup.plain{border:none;background:transparent;padding:2px 2px 6px;box-shadow:none;}
+  .spParse .spCn{font-size:26px;margin-top:10px;opacity:.92;}
+
+  /* ============ 原版：显示答案交互演示容器 ============ */
+  .answer-demo{border:1px solid var(--theme-border-color);border-radius:12px;padding:20px;background:var(--theme-background-light-color);}
+  .answer-demo .word-stage{display:flex;justify-content:center;align-items:flex-end;gap:14px;min-height:110px;padding:10px 0 14px;flex-wrap:wrap;}
+  .answer-demo .answer-bar{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding-top:12px;border-top:1px dashed var(--theme-border-color);}
+  .answer-demo .answer-hint{text-align:center;font-size:13px;color:var(--theme-text-secondary);margin-bottom:6px;}
+
+  /* ============ 原版：完成弹窗 overlay + resultPageInner ============ */
+  .overlay-demo{background:rgba(0,0,0,.6);border-radius:12px;padding:24px;display:flex;align-items:center;justify-content:center;}
+  .resultPageInner{background:var(--theme-background-color);border-radius:12px;width:min(860px,94vw);max-width:860px;max-height:none;overflow:visible;text-align:left;padding:24px;}
+  .rpTopbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;position:relative;}
+  .rpTopbar-spacer{flex:0 0 auto;width:76px;}
+  .rpBack{display:inline-flex;align-items:center;gap:4px;padding:8px 14px;border-radius:8px;border:1px solid var(--theme-border-color);
+    background:var(--theme-background-light-color);color:var(--theme-menu-text-color);font-size:13px;cursor:pointer;font-family:inherit;}
+  .rpTitleRow{text-align:center;flex:1;}
+  .rpTitle{display:block;font-size:20px;font-weight:700;color:var(--theme-main-text-color);}
+  .rpSubtitle{display:block;font-size:12px;color:var(--theme-text-color);margin-top:2px;}
+  .rpSummary{display:flex;align-items:center;justify-content:space-around;gap:4px;padding:4px 8px 18px;}
+  .rpItem{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;min-width:0;}
+  .rpItem + .rpItem{border-left:1px solid var(--theme-border-color);}
+  .rpItemValue{font-size:28px;font-weight:700;line-height:1;color:var(--theme-main-text-color);font-variant-numeric:tabular-nums;}
+  .rpItemValue.ok{color:#2c8f6a;}
+  .rpItemValue.wrong{color:#e05353;}
+  .rpItemLabel{font-size:12px;color:var(--theme-text-color);}
+  .rpSection{padding:2px 8px 14px;}
+  .rpSectionTitle{font-size:13px;font-weight:700;color:var(--theme-main-text-color);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--theme-border-color);}
+  .rpChart{display:flex;gap:12px;flex-wrap:wrap;}
+  .rpStat{flex:1;min-width:0;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .rpStatValue{font-size:24px;font-weight:700;color:var(--theme-main-text-color);font-variant-numeric:tabular-nums;}
+  .rpStatValue small{font-size:13px;color:var(--theme-text-color);}
+  .rpStatLabel{font-size:12px;color:var(--theme-text-color);}
+  .recordBox{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;padding:8px 12px;border-radius:8px;
+    background:transparent;border:none;}
+  .recordBox.new{border:1px solid #f7ba2a;box-shadow:0 0 0 2px #f7ba2a33 inset;}
+  .recordBadge{font-weight:700;color:#f7ba2a;}
+  .recordText{font-size:13px;color:var(--theme-main-text-color);}
+  .resultPageInner .sessionMistakeBox{background:transparent;border:none;padding:0;margin-top:0;align-items:flex-start;display:block;}
+  .smChips{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-height:96px;overflow-y:auto;}
+  .smChip{font-size:13px;padding:4px 10px;border-radius:16px;background:var(--theme-background-color);border:1px solid #f56c6c55;color:#f56c6c;font-weight:600;}
+  .rpActions{display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;}
+  .rpActions .btn{flex:1;padding:12px;font-size:15px;}
+  .rpActions .btn .shortcut{font-size:12px;opacity:.75;margin-left:4px;}
+  .modalHint{margin:14px 0 0;font-size:12px;color:var(--theme-rich-text-color);}
+  @media(max-width:640px){.wrap{padding:18px 12px 60px;}header.top h1{font-size:21px;}.word-letters,.spWord{font-size:30px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <h1>英文模式 · 句子样式 Playground</h1>
+      <p>从本项目（shuangping-practice-modes）英文练习界面（<code>src/pages/PracticeModes.vue</code> + <code>src/assets/styles.css</code> + <code>src/data/</code>）抽象出的句子渲染样式全集：从「逐字母输入」到「整句成分解析」，所有类名与色值均与源码一致。</p>
+    </div>
+    <button class="theme-toggle" id="themeToggle">🌙 深色 / ☀️ 浅色</button>
+  </header>
+
+  <!-- ============ ① 实时句子演示 ============ -->
+  <section id="demo">
+    <div class="sec-head">
+      <span class="sec-num">1</span>
+      <h2>实时句子演示（可交互）</h2>
+      <span class="src">.enSentence / .word-col / .word-box / .letter / .word-cn / .word-time / .enSentenceRedo</span>
+    </div>
+    <div class="demo-card">
+      <p class="demo-note">例句取自内置短文《My Day at the Farm》同风格句子。用下方控件切换「显示模式 / 着色模式 / 进度」，可实时观察每个单词、每个字母的状态变化。</p>
+
+      <div class="panel">
+        <div class="ctl-row">
+          <span class="seg-group">
+            <span class="seg-label">显示模式</span>
+            <button class="seg active" data-disp="smart">智能</button>
+            <button class="seg" data-disp="guide">看答案</button>
+            <button class="seg" data-disp="dictation">全默写</button>
+          </span>
+          <span class="seg-group">
+            <span class="seg-label">着色模式</span>
+            <button class="seg" data-color="off">关闭</button>
+            <button class="seg active" data-color="word-root">词根</button>
+            <button class="seg" data-color="syllable">音节</button>
+          </span>
+        </div>
+        <div class="ctl-row">
+          <label class="switch"><input type="checkbox" id="showCn" checked> 中文释义 .word-cn</label>
+          <label class="switch"><input type="checkbox" id="showTime"> 词均用时 .word-time</label>
+          <label class="switch"><input type="checkbox" id="redoOn"> 错词重练（第二行）</label>
+          <label class="switch"><input type="checkbox" id="gentleOn"> 宽松模式</label>
+        </div>
+        <div class="sliders">
+          <label>当前词 位置 = <b id="wiLabel">0</b><input type="range" id="wi" min="0" max="9" value="0" step="1"></label>
+          <label>当前词已输入字母 = <b id="tiLabel">0</b><input type="range" id="ti" min="0" max="7" value="0" step="1"></label>
+          <label class="switch" style="grid-column:1/-1;">模拟当前词「打错一字」<input type="checkbox" id="errOn"></label>
+          <label class="switch" style="grid-column:1/-1;">模拟「揭示答案」（默写词被揭示）<input type="checkbox" id="revOn"></label>
+        </div>
+        <div class="ctl-row"><span class="seg-label">提示：拖动「当前词」滑块到最右（第 10 格）→ 句子完成，切换为「句子成分解析」视图（见第 ③ 节样式）。</span></div>
+      </div>
+
+      <div id="liveStage" style="margin-top:8px;">
+        <div class="enStage">
+          <div class="enSentenceCn" id="sentenceCn"></div>
+          <div id="sentenceView"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ② 字母状态图鉴 ============ -->
+  <section id="states">
+    <div class="sec-head">
+      <span class="sec-num">2</span>
+      <h2>字母状态图鉴</h2>
+      <span class="src">字母 9 态 + 词提交/重练 2 态 + 标点 3 态</span>
+    </div>
+    <div class="demo-card">
+      <p class="demo-note">一个单词的字母在练习流程中会经历这些状态。底色/下划线即「字母槽」，未输入时只剩一条淡色槽线。标点（句尾的 . ? ! 等）并入单词末尾一起练习，随输入进度呈现三种状态。</p>
+      <div class="state-dict" id="stateDict"></div>
+    </div>
+  </section>
+
+  <!-- ============ ③ 着色模式 ============ -->
+  <section id="colors">
+    <div class="sec-head">
+      <span class="sec-num">3</span>
+      <h2>着色模式</h2>
+      <span class="src">.seg-pre/root/root2/suf · .syl-0~4（enColorMode）</span>
+    </div>
+    <div class="demo-card" style="margin-bottom:16px;">
+      <h3 class="demo-title">词根着色 · word-root</h3>
+      <p class="demo-note">不同深浅灰色区分 前缀 / 词根 / 后续词根 / 后缀（数据来自 <code>src/data/wordSegments.js</code>）。</p>
+      <div class="showcase" id="segShowcase"></div>
+      <div class="legend-row">
+        <span class="li"><span class="sw line" style="color:#8fa8c9;"></span>前缀 seg-pre</span>
+        <span class="li"><span class="sw line" style="color:#c2c2c2;"></span>词根 seg-root</span>
+        <span class="li"><span class="sw line" style="color:#8fb8ab;"></span>后续词根 seg-root2</span>
+        <span class="li"><span class="sw line" style="color:#c9a88a;"></span>后缀 seg-suf</span>
+      </div>
+    </div>
+    <div class="demo-card">
+      <h3 class="demo-title">音节着色 · syllable</h3>
+      <p class="demo-note">不同色相区分发音块，5 色循环（数据来自 <code>src/data/enSyllables.js</code>）。</p>
+      <div class="showcase" id="sylShowcase"></div>
+      <div class="legend-row">
+        <span class="li"><span class="sw" style="background:#5b9bd5;"></span>syl-0</span>
+        <span class="li"><span class="sw" style="background:#70ad47;"></span>syl-1</span>
+        <span class="li"><span class="sw" style="background:#ed7d31;"></span>syl-2</span>
+        <span class="li"><span class="sw" style="background:#9b59b6;"></span>syl-3</span>
+        <span class="li"><span class="sw" style="background:#e74c3c;"></span>syl-4</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ④ 整句成分解析 ============ -->
+  <section id="parse">
+    <div class="sec-head">
+      <span class="sec-num">4</span>
+      <h2>整句完成 · 句子成分解析（句乐部样式）</h2>
+      <span class="src">.spParse / .spGroup / .spChip / .spUnit / .spPh / .spWord / .spUl / .spDef / .spPos / .spTip</span>
+    </div>
+    <div class="demo-card">
+      <p class="demo-note">整句打完后切换为官网式成分结构图：每组一个圆角组框 + 顶部悬浮彩色胶囊（成分），每个词卡四行 = 音标 / 大字词 + 词性彩色下划线 / 释义 / 词性。悬停单词弹出成分讲解（.spTip）。</p>
+      <div id="parseView"></div>
+      <div class="legend-row" style="margin-top:16px;">
+        <span class="li"><span class="sw" style="background:#b45309;"></span>主语</span>
+        <span class="li"><span class="sw" style="background:#be123c;"></span>谓语</span>
+        <span class="li"><span class="sw" style="background:#0369a1;"></span>状语</span>
+      </div>
+      <h3 class="demo-title" style="margin-top:18px;">组框变体 · spGroup.plain（无成分角色的组不画框、平铺）</h3>
+      <div class="spParse" style="padding:6px 4px;">
+        <div class="spGroup plain">
+          <div class="spUnit"><span class="spPh"></span><span class="spCell"><span class="spWord">very<span class="spUl" style="background:#8b5cf6;"></span></span></span><span class="spDef">很</span><span class="spPos">副词</span></div>
+          <div class="spUnit"><span class="spPh"></span><span class="spCell"><span class="spWord">much<span class="spUl" style="background:#8b5cf6;"></span></span></span><span class="spDef">非常</span><span class="spPos">副词</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="demo-card" style="margin-top:16px;">
+      <h3 class="demo-title">词性下划线色板 · POS_COLORS</h3>
+      <p class="demo-note">词下方 4px 圆角下划线按词性着色（tailwind-500 系）。</p>
+      <div class="pos-swatch" id="posSwatches"></div>
+    </div>
+  </section>
+
+  <!-- ============ ⑤ 评级弹层 ============ -->
+  <section id="combo">
+    <div class="sec-head">
+      <span class="sec-num">5</span>
+      <h2>评级弹层 · comboPopup</h2>
+      <span class="src">.comboRating / .comboCount</span>
+    </div>
+    <div class="demo-card">
+      <p class="demo-note">每句完成后弹出「Perfect / Great」评级 + 连击数。金色渐变字 + 柔和光晕，纯文字无背景块。</p>
+      <div style="display:flex;gap:56px;flex-wrap:wrap;align-items:center;padding:10px 0;">
+        <div class="combo-popup"><span class="comboRating">Perfect</span><span class="comboCount">× 12</span></div>
+        <div class="combo-popup"><span class="comboRating">Great</span><span class="comboCount">× 4</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ⑥ 模式控制条 ============ -->
+  <section id="modebar">
+    <div class="sec-head">
+      <span class="sec-num">6</span>
+      <h2>练习模式控制条</h2>
+      <span class="src">.enModeBox / .enModeChip / .enModeDicChip / .enModeSep / .enModeDispChip / .enModeOptChip</span>
+    </div>
+    <div class="demo-card">
+      <p class="demo-note">短文练习进行中固定在右上角（top:56px / right:16px）的灰色半透明 chip 条。此处展示完整结构：难度 chip（锁形图标 + 下拉箭头）· 听写/中译英切换 · 显示模式下拉 · 释义/重练/宽松开关，下拉面板同时展开。</p>
+      <div class="enModeBox" style="position:static;flex-wrap:wrap;justify-content:center;gap:6px;">
+        <button class="enModeChip open" title="练习模式">
+          <svg class="enModeLock" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          <span>🔒 初级</span>
+          <svg class="enModeCaret" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <span class="enModeSep">|</span>
+        <button class="enModeDicChip dictation" title="切换练习模式">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 14-2 2-2-2"/><path d="M18 8v8"/></svg><span>听写</span>
+        </button>
+        <span class="enModeSep">|</span>
+        <div class="enModeDispBox">
+          <button class="enModeDispChip open" title="显示模式">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/></svg>
+            <span>智能</span>
+            <svg class="enModeCaret" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="enModeDispPanel" style="position:absolute;top:calc(100% + 6px);left:0;z-index:120;display:block;">
+            <button class="enModeDispOpt active"><span class="enModeDispOptLabel">智能</span><span class="enModeDispOptDesc">按掌握度自动切换</span></button>
+            <button class="enModeDispOpt"><span class="enModeDispOptLabel">看答案</span><span class="enModeDispOptDesc">始终显示字母，逐字母指引输入</span></button>
+            <button class="enModeDispOpt"><span class="enModeDispOptLabel">全默写</span><span class="enModeDispOptDesc">始终隐藏字母，凭记忆拼写</span></button>
+          </div>
+        </div>
+        <span class="enModeSep">|</span>
+        <span class="enModeOptChips">
+          <button class="enModeDicChip dictation" title="单词上方显示中文释义">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/></svg><span>释义</span>
+          </button>
+          <span class="enModeSep">|</span>
+          <button class="enModeDicChip" title="打错的单词重新入队重练">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg><span>重练</span>
+          </button>
+          <span class="enModeSep">|</span>
+          <button class="enModeDicChip" title="输入过程中不判错，整词完成后统一判断">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg><span>宽松</span>
+          </button>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ⑦ 练习进行中 · 组件 ============ -->
+  <section id="components">
+    <div class="sec-head">
+      <span class="sec-num">7</span>
+      <h2>练习进行中 · 组件</h2>
+      <span class="src">.enProgHeader / .enProgTitle / .enActionBtn / .enPunct / .enJumpSentence</span>
+    </div>
+    <div class="demo-card">
+      <p class="demo-note">句子练习界面中除字母/词卡外，还有进度头部、操作按钮、词间标点与跳句输入等组件。</p>
+
+      <h3 class="demo-title" style="margin-top:8px;">进度头部 · enProgHeader / enProgTitle / enProgHint</h3>
+      <div class="enProgHeader">
+        <h1 class="enProgTitle">短文 2 <span>· 第 5 句 / 共 15 句</span></h1>
+        <div class="enProgHint">按字母输入，空格进入下一词 · 已用 32 秒 · 连击 ×3</div>
+      </div>
+
+      <h3 class="demo-title">操作按钮 · enActionBtn</h3>
+      <div class="enProgress">
+        <button class="enActionBtn" title="显示当前单词（计入完成统计）">
+          <svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>答案</button>
+        <button class="enActionBtn" title="重读当前单词">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>重听</button>
+        <button class="enActionBtn" title="重听整句 (Ctrl+')">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>重听整句</button>
+        <button class="enActionBtn" disabled title="当前不可用（如：尚未满足查看答案条件）">答案</button>
+      </div>
+
+      <h3 class="demo-title">词间标点 · enPunct（开启“词间标点”后显示）</h3>
+      <p class="demo-note" style="margin-bottom:10px;">标点作为独立灰色装饰符显示在词与词之间，不参与输入，也不影响词间距。</p>
+      <div class="enSentence" style="padding:8px 16px;">
+        <span class="word-col completed"><span class="word-box"><span class="word-letters"><span class="letter correct">b</span><span class="letter correct">r</span><span class="letter correct">e</span><span class="letter correct">a</span><span class="letter correct">k</span><span class="letter correct">f</span><span class="letter correct">a</span><span class="letter correct">s</span><span class="letter correct">t</span></span></span></span>
+        <span class="enPunct">,</span>
+        <span class="word-col completed"><span class="word-box"><span class="word-letters"><span class="letter correct">l</span><span class="letter correct">u</span><span class="letter correct">n</span><span class="letter correct">c</span><span class="letter correct">h</span></span></span></span>
+        <span class="enPunct">,</span>
+        <span class="word-col active"><span class="word-box"><span class="word-letters"><span class="letter current">a</span><span class="letter">n</span><span class="letter">d</span></span></span></span>
+        <span class="enPunct">,</span>
+        <span class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">d</span><span class="letter">i</span><span class="letter">n</span><span class="letter">n</span><span class="letter">e</span><span class="letter">r</span></span></span></span>
+        <span class="enPunct">.</span>
+      </div>
+
+      <h3 class="demo-title">跳句输入 · enJumpSentence / enJumpInput</h3>
+      <p class="demo-note" style="margin:0 0 10px;">进度标题中的句号处可点击展开跳句输入框，直接输入目标句号。</p>
+      <div class="enProgHeader" style="max-width:460px;">
+        <h1 class="enProgTitle">第 <span class="enJumpSentence">5</span> 句 <span>/ 共 15 句</span></h1>
+      </div>
+      <div style="margin-top:10px;display:flex;align-items:center;gap:10px;">
+        <span class="enProgHint">点击展开后：</span>
+        <input class="enJumpInput" type="number" value="12" min="1">
+        <button class="enActionBtn">跳转</button>
+      </div>
+
+      <h3 class="demo-title" style="margin-top:22px;">显示答案 · 点击底部「答案」揭示当前词（可交互）</h3>
+      <p class="demo-note" style="margin:0 0 10px;">默写模式下当前词字母隐藏；点击底部「答案」按钮（enViewAnswer）后仅加 .revealed 修饰符让文字可见，原状态的背景色和下划线保持不变（光标位 .dict-current.revealed，未输入 .hidden.revealed），按钮变为 disabled，且该词计入「查看答案」统计。</p>
+      <div class="answer-demo">
+        <div class="answer-hint" id="answerHint">默写：看中文打英文 · 美丽的</div>
+        <div class="word-stage" id="answerStage">
+          <span class="word-col active" id="answerWord">
+            <span class="word-box">
+              <span class="word-letters">
+                <span class="letter dict-current">b</span><span class="letter hidden">e</span><span class="letter hidden">a</span><span class="letter hidden">u</span><span class="letter hidden">t</span><span class="letter hidden">i</span><span class="letter hidden">f</span><span class="letter hidden">u</span><span class="letter hidden">l</span>
+              </span>
+            </span>
+          </span>
+        </div>
+        <div class="answer-bar">
+          <button class="enActionBtn" id="answerBtn" title="显示当前单词（计入完成统计）">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>答案
+          </button>
+          <button class="enActionBtn" id="answerReset" title="重置演示">↻ 重置</button>
+        </div>
+      </div>
+
+      <h3 class="demo-title" style="margin-top:22px;">答案揭示前后 · 状态交叉对比（已输入 beau · 光标停在 t）</h3>
+      <p class="demo-note" style="margin:0 0 12px;">答案揭示不是孤立状态，而是与已输入、当前位置、未输入等状态交叉组合。揭示的本质是<strong>仅加 .revealed 修饰符让文字可见</strong>，原状态的背景色和下划线<strong>保持不变</strong>。下图以字母下标 4（已输入 b e a u，光标在 t）为例。</p>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;justify-content:center;">
+        <!-- 揭示前 -->
+        <div style="flex:1;min-width:280px;">
+          <div style="text-align:center;font-size:13px;font-weight:600;color:var(--theme-text-secondary);margin-bottom:8px;">揭示前（默写模式）</div>
+          <div class="word-box" style="justify-content:center;">
+            <span class="word-letters">
+              <span class="letter correct">b</span><span class="letter correct">e</span><span class="letter correct">a</span><span class="letter correct">u</span><span class="letter dict-current">t</span><span class="letter hidden">i</span><span class="letter hidden">f</span><span class="letter hidden">u</span><span class="letter hidden">l</span>
+            </span>
+          </div>
+          <div style="display:flex;gap:4px;justify-content:center;margin-top:6px;font-size:11px;color:var(--theme-text-secondary);">
+            <span style="flex:1;text-align:center;">已输入 .correct</span>
+            <span style="flex:0 0 auto;color:var(--theme-accent-color);">▸</span>
+            <span style="flex:1;text-align:center;">光标 .dict-current</span>
+            <span style="flex:0 0 auto;">·</span>
+            <span style="flex:1;text-align:center;">未输入 .hidden</span>
+          </div>
+        </div>
+        <!-- 揭示后 -->
+        <div style="flex:1;min-width:280px;">
+          <div style="text-align:center;font-size:13px;font-weight:600;color:var(--theme-text-secondary);margin-bottom:8px;">揭示后（点击「答案」enHadError=true）</div>
+          <div class="word-box" style="justify-content:center;">
+            <span class="word-letters">
+              <span class="letter correct">b</span><span class="letter correct">e</span><span class="letter correct">a</span><span class="letter correct">u</span><span class="letter dict-current revealed">t</span><span class="letter hidden revealed">i</span><span class="letter hidden revealed">f</span><span class="letter hidden revealed">u</span><span class="letter hidden revealed">l</span>
+            </span>
+          </div>
+          <div style="display:flex;gap:4px;justify-content:center;margin-top:6px;font-size:11px;color:var(--theme-text-secondary);">
+            <span style="flex:1;text-align:center;">已输入 .correct（不变）</span>
+            <span style="flex:0 0 auto;color:var(--theme-accent-color);">▸</span>
+            <span style="flex:1;text-align:center;">光标 .dict-current.revealed</span>
+            <span style="flex:0 0 auto;">·</span>
+            <span style="flex:1;text-align:center;">未输入 .hidden.revealed</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 状态交叉矩阵 -->
+      <div style="margin-top:18px;overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <thead>
+            <tr style="border-bottom:2px solid var(--theme-border-color);">
+              <th style="text-align:left;padding:8px 10px;color:var(--theme-text-secondary);font-weight:600;">字母位置</th>
+              <th style="text-align:center;padding:8px 10px;color:var(--theme-text-secondary);font-weight:600;">揭示前（默写）</th>
+              <th style="text-align:center;padding:8px 10px;color:var(--theme-text-secondary);font-weight:600;">揭示后（enHadError）</th>
+              <th style="text-align:left;padding:8px 10px;color:var(--theme-text-secondary);font-weight:600;">说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--theme-border-color);">
+              <td style="padding:8px 10px;font-weight:600;">光标前（已输入正确）</td>
+              <td style="text-align:center;padding:8px 10px;"><code>.correct</code> 绿色</td>
+              <td style="text-align:center;padding:8px 10px;"><code>.correct</code> 绿色（不变）</td>
+              <td style="padding:8px 10px;color:var(--theme-text-secondary);">已经输对的字母不受揭示影响</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--theme-border-color);">
+              <td style="padding:8px 10px;font-weight:600;">光标位（当前字母）</td>
+              <td style="text-align:center;padding:8px 10px;"><code>.dict-current</code> 隐藏+高亮</td>
+              <td style="text-align:center;padding:8px 10px;"><code>.dict-current.revealed</code> 高亮+文字可见</td>
+              <td style="padding:8px 10px;color:var(--theme-text-secondary);">保留 dict-current 的主题色背景+下划线，仅加 revealed 让文字可见，背景下划线不变</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--theme-border-color);">
+              <td style="padding:8px 10px;font-weight:600;">光标后（未输入）</td>
+              <td style="text-align:center;padding:8px 10px;"><code>.hidden</code> 完全隐藏</td>
+              <td style="text-align:center;padding:8px 10px;"><code>.hidden.revealed</code> 文字可见</td>
+              <td style="padding:8px 10px;color:var(--theme-text-secondary);">保留 hidden 的实色下划线，仅加 revealed 让文字可见，下划线不变</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 10px;font-weight:600;">光标位（有错误输入）</td>
+              <td style="text-align:center;padding:8px 10px;"><code>.incorrect</code> 红色</td>
+              <td style="text-align:center;padding:8px 10px;"><code>.incorrect</code> 红色（不变）</td>
+              <td style="padding:8px 10px;color:var(--theme-text-secondary);">currentInput 有错误时优先返回 incorrect，揭示不覆盖错误态</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+  <section id="mistake">
+    <div class="sec-head">
+      <span class="sec-num">8</span>
+      <h2>错词本 · mistake-book</h2>
+      <span class="src">.mistakePanel / .mistakeList / .mistakeItem / .mistakeWord / .mistakeCn / .mistakeCount</span>
+    </div>
+    <div class="demo-card">
+      <p class="demo-note">错词本把「打错」的词（红色计数）与「太慢没想起来」的慢词（橙色计数）分开标记，可一键开始补练。词条为白底圆角胶囊。</p>
+      <div class="mistakePanel">
+        <div class="slowBar">
+          <div class="slowBarTitle">错词本 · 单词模式</div>
+          <div class="slowBarMeta">共 4 个待巩固词 · 开始练习后逐词默写</div>
+        </div>
+        <div class="mistakeList">
+          <span class="mistakeItem"><span class="mistakeWord">beautiful<span class="mistakeCn">美丽的</span></span><span class="mistakeCount">×2</span></span>
+          <span class="mistakeItem"><span class="mistakeWord">breakfast<span class="mistakeCn">早餐</span></span><span class="mistakeCount">×1</span></span>
+          <span class="mistakeItem"><span class="mistakeWord">afternoon<span class="mistakeCn">下午</span></span><span class="mistakeCount err">×3</span></span>
+          <span class="mistakeItem"><span class="mistakeWord">computer<span class="mistakeCn">电脑</span></span><span class="mistakeCount slow">×1</span></span>
+        </div>
+        <div class="mistakeOpts">
+          <button class="btn primary">开始练习</button>
+          <button class="btn">清空</button>
+        </div>
+      </div>
+      <div style="margin-top:12px;">
+        <div class="mistakeEmpty">暂无错词，继续加油！</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ⑨ 练习完成 · 结果统计 + 评级 ============ -->
+  <section id="result">
+    <div class="sec-head">
+      <span class="sec-num">9</span>
+      <h2>练习完成 · 结果统计 + 评级</h2>
+      <span class="src">.enResultStats / .rStat / .rValue / .rLabel · .combo-pop 入场动画</span>
+    </div>
+    <div class="demo-card">
+      <p class="demo-note">整篇练完后展示统计卡（白底圆角），随后弹出评级浮层：Perfect/Great + 连击数，金色渐变字，带 0.22s 入/0.18s 出动画。</p>
+      <div class="enResultStats">
+        <div class="rStat"><span class="rValue">15</span><span class="rLabel">单词</span></div>
+        <div class="rStat"><span class="rValue">32s</span><span class="rLabel">用时</span></div>
+        <div class="rStat"><span class="rValue">94%</span><span class="rLabel">正确率</span></div>
+        <div class="rStat"><span class="rValue">×8</span><span class="rLabel">最高连击</span></div>
+      </div>
+      <div class="combo-stage">
+        <div id="comboDemo" class="combo-popup">
+          <span class="comboRating">Perfect</span><span class="comboCount">× 8</span>
+        </div>
+      </div>
+      <button class="enActionBtn" id="comboReplay">↻ 重放评级入场动画</button>
+    </div>
+  </section>
+
+  <!-- ============ ⑩ 练习完成 · 评测弹窗 ============ -->
+  <section id="completion">
+    <div class="sec-head">
+      <span class="sec-num">10</span>
+      <h2>练习完成 · 评测弹窗</h2>
+      <span class="src">.overlay / .resultModal.resultPageInner / .rpTopbar / .rpSummary / .rpSection / .recordBox / .sessionMistakeBox / .rpActions</span>
+    </div>
+    <div class="demo-card">
+      <p class="demo-note">整篇练完后弹出半透明遮罩 + 居中评测卡：顶部返回条 · 主统计（答对/又错/时长/答题数，细分隔线）· 数据分析 5 项 · 纪录（新纪录金色描边）· 本次错词红色 chip · 底部操作。</p>
+      <div class="overlay-demo">
+        <div class="resultPageInner">
+          <div class="rpTopbar">
+            <button class="rpBack">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>返回
+            </button>
+            <div class="rpTitleRow">
+              <span class="rpTitle">练习完成</span>
+              <span class="rpSubtitle">英文 · 本次评测</span>
+            </div>
+            <span class="rpTopbar-spacer"></span>
+          </div>
+
+          <div class="rpSummary">
+            <div class="rpItem"><span class="rpItemValue ok">12</span><span class="rpItemLabel">答对</span></div>
+            <div class="rpItem"><span class="rpItemValue wrong">3</span><span class="rpItemLabel">又错</span></div>
+            <div class="rpItem"><span class="rpItemValue">1m 24s</span><span class="rpItemLabel">练习时长</span></div>
+            <div class="rpItem"><span class="rpItemValue">15</span><span class="rpItemLabel">答题数</span></div>
+          </div>
+
+          <div class="rpSection">
+            <div class="rpSectionTitle">数据分析</div>
+            <div class="rpChart">
+              <div class="rpStat"><span class="rpStatValue">80%</span><span class="rpStatLabel">一次命中率</span></div>
+              <div class="rpStat"><span class="rpStatValue">94%</span><span class="rpStatLabel">正确率</span></div>
+              <div class="rpStat"><span class="rpStatValue">2</span><span class="rpStatLabel">查看答案</span></div>
+              <div class="rpStat"><span class="rpStatValue">5</span><span class="rpStatLabel">重听次数</span></div>
+              <div class="rpStat"><span class="rpStatValue">560<small>ms</small></span><span class="rpStatLabel">平均用时/词</span></div>
+            </div>
+          </div>
+
+          <div class="rpSection">
+            <div class="rpSectionTitle">纪录</div>
+            <div class="recordBox new">
+              <span class="recordBadge">新纪录！</span>
+              <span class="recordText">本次用时 1m 24s，打破之前纪录 1m 38s</span>
+            </div>
+          </div>
+
+          <div class="rpSection">
+            <div class="rpSectionTitle">本次错词（3 个）</div>
+            <div class="sessionMistakeBox">
+              <div class="smChips">
+                <span class="smChip">beautiful·美丽的</span>
+                <span class="smChip">breakfast·早餐</span>
+                <span class="smChip">afternoon·下午</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="rpActions">
+            <button class="btn primary">再来一次 <span class="shortcut">(空格)</span></button>
+            <button class="btn">换个模式 <span class="shortcut">(M)</span></button>
+            <button class="btn">刻意练习这 3 个错词</button>
+          </div>
+          <p class="modalHint">ESC 返回开始 · M 切换模式</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer style="border-top:1px solid var(--theme-border-color);margin-top:48px;padding-top:16px;font-size:12px;color:var(--theme-text-secondary);">
+    样式来源：<code>src/pages/PracticeModes.vue</code>（模板 + <code>.en*/.sp*/.combo*</code> 样式）· <code>src/assets/styles.css</code>（主题变量）· <code>src/data/enSyllables.js</code> / <code>src/data/wordSegments.js</code>（着色数据）。例句为示例，样式为忠实还原。
+  </footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id);};
+
+/* ============ 主题切换 ============ */
+$('themeToggle').addEventListener('click',function(){
+  document.documentElement.classList.toggle('dark');
+  this.textContent = document.documentElement.classList.contains('dark') ? '☀️ 浅色' : '🌙 深色';
+});
+
+/* ============ 例句数据（单词 + 真实音节/词根表映射） ============ */
+var SENTENCE=[
+  {text:'My',     cn:'我的', syl:['my'],             seg:null},
+  {text:'family', cn:'家庭', syl:['fam','i','ly'],   seg:null},
+  {text:'and',    cn:'和',   syl:['and'],            seg:null},
+  {text:'I',      cn:'我',   syl:['i'],              seg:null},
+  {text:'go',     cn:'去',   syl:['go'],             seg:null},
+  {text:'to',     cn:'到',   syl:['to'],             seg:null},
+  {text:'school', cn:'学校', syl:['school'],         seg:null},
+  {text:'every',  cn:'每个', syl:null,               seg:null},
+  {text:'morning',cn:'早晨', syl:['morn','ing'],     seg:[['morn','root'],['ing','suffix']]}
+];
+var DICT_SET={'my':1,'i':1,'go':1,'to':1,'and':1,'we':1,'the':1,'a':1,'it':1,'at':1,'in':1,'on':1,'of':1,'for':1,'with':1,'is':1,'are':1,'am':1,'be':1,'you':1,'he':1,'she':1,'they':1,'this':1,'that':1,'do':1,'not':1};
+var OPTIONAL_PUNCT={',':1,'.':1,'?':1,'!':1};
+
+function stripPunct(w){return w.replace(/[.,!?;:'"]+$/,'').toLowerCase();}
+function getSylMap(word){
+  var s=SENTENCE.find(function(x){return stripPunct(x.text)===word;});
+  if(!s||!s.syl) return null;
+  var map={},pos=0;
+  for(var si=0;si<s.syl.length;si++){var syl=s.syl[si];for(var i=0;i<syl.length;i++)map[pos+i]=si;pos+=syl.length;}
+  return map;
+}
+function getSegMap(word){
+  var s=SENTENCE.find(function(x){return stripPunct(x.text)===word;});
+  if(!s||!s.seg) return null;
+  var map={},pos=0,rootCount=0;
+  for(var k=0;k<s.seg.length;k++){
+    var text=s.seg[k][0],type=s.seg[k][1];
+    if(type==='root')rootCount++;
+    var cls=type==='prefix'?'pre':(type==='suffix'?'suf':(rootCount===1?'root':'root2'));
+    for(var i=0;i<text.length;i++)map[pos+i]=cls;
+    pos+=text.length;
+  }
+  return map;
+}
+var sylMaps=SENTENCE.map(function(x){return getSylMap(stripPunct(x.text));});
+var segMaps=SENTENCE.map(function(x){return getSegMap(stripPunct(x.text));});
+
+/* ============ 模拟状态 ============ */
+var state={
+  disp:'smart', color:'word-root',
+  showCn:true, showTime:false, redo:false, gentle:false,
+  wi:0, typed:0, err:false, rev:false,
+  errSet:{}
+};
+
+/* ============ letterClass 移植（对齐源码 2528-2630） ============ */
+function letterClass(wi,li){
+  var word=SENTENCE[wi].text;
+  var ch=word[li];
+  var isPunctCh=!/[A-Za-z0-9']/.test(ch);
+  var isRedo=!!state.errSet[wi];
+  var forceDict=state.gentle&&isRedo;
+  var dict=!isPunctCh && state.disp!=='guide' && (DICT_SET[stripPunct(word)]||state.disp==='dictation'||forceDict) && !(wi===state.wi&&state.rev&&!forceDict);
+  var sylCls={};
+  if(!isPunctCh&&state.color==='syllable'){var sm=sylMaps[wi];if(sm&&sm[li]!==undefined)sylCls['syl-'+(sm[li]%5)]=true;}
+  var seg=(!isPunctCh&&state.color==='word-root'&&!dict)?(segMaps[wi]?segMaps[wi][li]||'':''):'';
+  var segCls={};if(seg)segCls['seg-'+seg]=true;
+  var wordCore=word.replace(/[.,!?;:'"]/g,'');
+
+  if(wi<state.wi){
+    if(isPunctCh)return{'punct-done':true};
+    if(state.color==='syllable')return sylCls;
+    return{correct:true};
+  }
+  if(wi>state.wi){
+    if(isPunctCh)return{punct:true};
+    return dict?{hidden:true}:(state.color==='syllable'?sylCls:segCls);
+  }
+  // 当前词
+  if(isPunctCh&&OPTIONAL_PUNCT[ch]&&li>=wordCore.length)return{'punct-done':true};
+  if(li<state.typed){
+    if(isPunctCh)return{'punct-done':true};
+    return{correct:true};
+  }
+  if(li===state.typed){
+    if(isPunctCh)return{'punct-current':true};
+    if(state.gentle){
+      if(state.rev)return{correct:true};
+      if(dict)return{'dict-current':true};
+      return{current:true};
+    }
+    if(state.err)return{incorrect:true};
+    if(dict)return state.rev?{correct:true}:{'dict-current':true};
+    return{current:true};
+  }
+  if(isPunctCh)return{punct:true};
+  return dict?{hidden:true}:(state.color==='syllable'?sylCls:segCls);
+}
+
+/* ============ 渲染实时句子 ============ */
+function render(){
+  $('sentenceCn').textContent='我的家人和我每天早上上学。';
+  $('sentenceCn').style.display=state.wi<SENTENCE.length?'block':'none';
+  var view=$('sentenceView');
+  if(state.wi>=SENTENCE.length){
+    view.innerHTML=parseHTML();
+    return;
+  }
+  // 主行
+  var main='<div class="enSentence'+(state.wi>0?' left-fade':'')+'">';
+  SENTENCE.forEach(function(w,wi){
+    if(state.errSet[wi])return;
+    main+=wordCol(wi,false);
+  });
+  main+='</div>';
+  // 重练行
+  var redoIdx=Object.keys(state.errSet).map(Number).filter(function(wi){return wi>=0;});
+  var redo='';
+  if(state.redo&&redoIdx.length){
+    redo='<div class="enSentence enSentenceRedo">';
+    redoIdx.forEach(function(wi){redo+=wordCol(wi,true);});
+    redo+='</div>';
+  }
+  view.innerHTML='<div class="enSentenceWrap">'+main+redo+'</div>';
+}
+function wordCol(wi,isRedoRow){
+  var w=SENTENCE[wi];
+  var active=wi===state.wi;
+  var completed=wi<state.wi;
+  var redo=!!state.errSet[wi];
+  var cls='word-col';
+  if(active)cls+=' active';
+  if(completed)cls+=' completed';
+  if(redo)cls+=' redo';
+  if(isRedoRow)cls+=' redo-row';
+  var html='<div class="'+cls+'">';
+  if(state.showCn)html+='<span class="word-cn">'+(w.cn||'')+'</span>';
+  html+='<div class="word-box"><span class="word-letters">';
+  for(var li=0;li<w.text.length;li++){
+    var c=letterClass(wi,li);
+    var clsStr=Object.keys(c).join(' ');
+    var ch=w.text[li];
+    // 宽松模式当前词：显示输入内容；否则显示原字母
+    html+='<span class="letter '+clsStr+'">'+ch+'</span>';
+  }
+  html+='</span></div>';
+  if(state.showTime){
+    var v=(wi===state.wi)?'':(600+wi*137)+'ms';
+    html+='<span class="word-time '+(v?'has-value':'')+'">'+v+'</span>';
+  }
+  if(redo&&isRedoRow)html+='<span class="redo-badge">重练</span>';
+  html+='</div>';
+  return html;
+}
+
+/* ============ 整句成分解析（spParse 结构，词性/成分表对齐源码） ============ */
+var POS_CN={NOUN:'名词',VERB:'动词',AUX:'助动词',ADJ:'形容词',ADV:'副词',PRON:'代词',DET:'限定词',ADP:'介词',CCONJ:'连词',SCONJ:'连词',PART:'小品词',INTJ:'叹词',PROPN:'专有名词',PROPN_PERSON:'人名',NUM:'数词'};
+var POS_COLORS={PRON:'#ef4444',AUX:'#22c55e',PART:'#6b7280',DET:'#14b8a6',NOUN:'#3b82f6',VERB:'#f97316',ADJ:'#ec4899',ADV:'#8b5cf6',ADP:'#a855f7',CCONJ:'#eab308',SCONJ:'#eab308',INTJ:'#f43f5e',PROPN:'#0ea5e9',PROPN_PERSON:'#0ea5e9',NUM:'#84cc16'};
+var COMP_COLORS={subject:'#b45309',predicate:'#be123c',predicative:'#7c3aed',object:'#059669',indirectObject:'#0d9488',adverbial:'#0369a1',attributive:'#db2777',complement:'#ea580c',conjunction:'#64748b',root:'#475569'};
+
+function wd(word,punct,ph,def,pos){
+  return '<div class="spUnit">'+
+    '<span class="spPh">'+(ph?'/'+ph+'/':'')+'</span>'+
+    '<span class="spCell"><span class="spWord">'+word+(pos&&POS_COLORS[pos]?'<span class="spUl" style="background:'+POS_COLORS[pos]+';"></span>':'')+'</span>'+(punct?'<span class="spPunct">'+punct+'</span>':'')+'</span>'+
+    '<span class="spDef">'+def+'</span>'+
+    '<span class="spPos">'+(POS_CN[pos]||pos.toLowerCase())+'</span>'+
+    (pos==='VERB'?'<div class="spTip"><div class="spTipTitle"><span class="spTipRole">谓语</span><span class="spTipType">predicate</span></div><div class="spTipBody">谓语说明主语的动作或状态。本句 go 表示“去”。</div></div>':'')+
+    '</div>';
+}
+function parseHTML(){
+  var g=[];
+  // 主语
+  g.push('<div class="spGroup" style="border-color:'+COMP_COLORS.subject+'80;--sp-chip:'+COMP_COLORS.subject+';">'+
+    '<span class="spChip">主语</span>'+
+    wd('My','', 'maɪ','我的','DET')+
+    wd('family','', 'ˈfæməli','家庭','NOUN')+
+    wd('and','', 'ənd','和','CCONJ')+
+    wd('I','', 'aɪ','我','PRON')+
+    '</div>');
+  // 谓语
+  g.push('<div class="spGroup" style="border-color:'+COMP_COLORS.predicate+'80;--sp-chip:'+COMP_COLORS.predicate+';">'+
+    '<span class="spChip">谓语</span>'+
+    wd('go','', 'ɡəʊ','去','VERB')+
+    '<div class="spExpl">主语（My family and I）+ 谓语（go）+ 状语（to school every morning）。</div>'+
+    '</div>');
+  // 状语
+  g.push('<div class="spGroup" style="border-color:'+COMP_COLORS.adverbial+'80;--sp-chip:'+COMP_COLORS.adverbial+';">'+
+    '<span class="spChip">状语</span>'+
+    wd('to','', 'tuː','到','ADP')+
+    wd('school','', 'skuːl','学校','NOUN')+
+    wd('every','', 'ˈevri','每个','DET')+
+    wd('morning','.', 'ˈmɔːnɪŋ','早晨','NOUN')+
+    '</div>');
+  return '<div class="spParse">'+g.join('')+'</div>'+
+    '<div class="enSentenceCn spCn">我的家人和我每天早上上学。</div>';
+}
+
+/* ============ ② 字母状态图鉴 ============ */
+var STATE_DEMOS=[
+  {nm:'未输入',        cls:'.letter',                                   ch:'p', desc:'字母槽：淡色文字 + 底部槽线'},
+  {nm:'默写隐藏',      cls:'.hidden',                                   ch:'p', desc:'默写模式：字母透明，只剩槽线'},
+  {nm:'当前位置',      cls:'.current',                                  ch:'p', desc:'正在输入这一格：淡背景 + 主题色槽线'},
+  {nm:'默写·当前位置', cls:'.dict-current',                             ch:'p', desc:'默写中定位：字母隐藏 + 高亮槽线'},
+  {nm:'已输正确',      cls:'.correct',                                  ch:'p', desc:'输入正确：绿色实色主文字'},
+  {nm:'答案揭示后·未输入', cls:'.hidden.revealed',                        ch:'p', desc:'点击「答案」后，未输入字母保留 .hidden 的实色下划线，加 .revealed 仅让文字可见（17% 淡色），背景下划线不变；光标位则为 .dict-current.revealed（保留主题色背景+下划线，文字 20% 淡色可见）'},
+  {nm:'打错',          cls:'.incorrect',                                ch:'p', desc:'非当前位打错（如宽松模式历史错误）：红字 + 红色槽线，无背景'},
+  {nm:'当前位打错',     cls:'.current.incorrect',                        ch:'p', desc:'光标位输入错误：保留 current 淡背景+圆角，仅文字和下划线变红（背景不闪没）'},
+  {nm:'单词已提交',    cls:'.word-col.completed .letter.correct',       ch:'p', letter:'correct', wrap:'word-col completed', desc:'整词输入完成并提交：字母转深灰（浅色 #444 / 深色 #e2e8f0）'},
+  {nm:'重练词已提交',  cls:'.word-col.redo .letter.correct',            ch:'p', letter:'correct', wrap:'word-col redo',        desc:'错词重练完成后：字母转暖橙色 #e6a23c'},
+  {nm:'标点·未输入',   cls:'.punct',                                    ch:'.', desc:'词尾标点尚未轮到输入：灰色半透明'},
+  {nm:'标点·已输入',   cls:'.punct-done',                               ch:'.', desc:'该词（含标点）已提交：标点转深灰实色'},
+  {nm:'标点·待输入',   cls:'.punct-current',                            ch:'.', desc:'光标正停在标点处：主题色高亮'}
+];
+function renderStates(){
+  var el=$('stateDict');var html='';
+  STATE_DEMOS.forEach(function(s){
+    var classes=s.letter||s.cls.replace(/\./g,' ').trim();
+    var inner='<div class="word-box"><span class="letter '+classes+'">'+(s.ch||'p')+'</span></div>';
+    if(s.wrap)inner='<div class="'+s.wrap+'">'+inner+'</div>';
+    html+='<div class="state-item">'+
+      '<span class="cls">'+s.cls+'</span>'+
+      inner+
+      '<span class="nm">'+s.nm+'</span>'+
+      '<span class="desc">'+s.desc+'</span>'+
+      '</div>';
+  });
+  el.innerHTML=html;
+}
+
+/* ============ ③ 着色模式展示（数据来自 wordSegments.js / enSyllables.js 实测） ============ */
+var SEG_DATA={
+  beautiful:[['beau','root'],['ti','root'],['ful','suffix']],
+  computer:[['com','prefix'],['put','root'],['er','suffix']],
+  important:[['im','prefix'],['port','root'],['ant','suffix']],
+  breakfast:[['break','root'],['fast','root']],
+  children:[['child','root'],['ren','suffix']]
+};
+var SYL_DATA={
+  butterfly:['but','ter','fly'],
+  animal:['an','i','mal'],
+  banana:['ba','na','na'],
+  elephant:['el','e','phant'],
+  computer:['com','pu','ter'],
+  yesterday:['yes','ter','day']
+};
+function buildSegMap(segs){
+  var map={},pos=0,rootCount=0;
+  for(var k=0;k<segs.length;k++){
+    var text=segs[k][0],type=segs[k][1];
+    if(type==='root')rootCount++;
+    var cls=type==='prefix'?'pre':(type==='suffix'?'suf':(rootCount===1?'root':'root2'));
+    for(var i=0;i<text.length;i++)map[pos+i]=cls;
+    pos+=text.length;
+  }
+  return map;
+}
+function buildSylMap(syls){
+  var map={},pos=0;
+  for(var si=0;si<syls.length;si++){for(var i=0;i<syls[si].length;i++)map[pos+i]=si;pos+=syls[si].length;}
+  return map;
+}
+function coloredWord(word,kind){
+  var html='<span class="word-letters">';
+  var map=kind==='seg'?buildSegMap(SEG_DATA[word]):buildSylMap(SYL_DATA[word]);
+  for(var i=0;i<word.length;i++){
+    var cls=map&&map[i]!==undefined?(kind==='seg'?'seg-'+map[i]:'syl-'+(map[i]%5)):'';
+    html+='<span class="letter '+cls+'">'+word[i]+'</span>';
+  }
+  html+='</span>';
+  return '<div class="word-demo"><div class="cap">'+word+'</div><div class="word-box">'+html+'</div></div>';
+}
+function renderColors(){
+  var segWords=['beautiful','computer','important','breakfast','children'];
+  var sylWords=['butterfly','animal','banana','elephant','computer','yesterday'];
+  $('segShowcase').innerHTML=segWords.map(function(w){return coloredWord(w,'seg');}).join('');
+  $('sylShowcase').innerHTML=sylWords.map(function(w){return coloredWord(w,'syl');}).join('');
+}
+
+/* ============ ④ 词性色板 ============ */
+function renderPos(){
+  var html='';
+  Object.keys(POS_COLORS).forEach(function(k){html+='<span style="background:'+POS_COLORS[k]+';">'+(POS_CN[k]||k)+'</span>';});
+  $('posSwatches').innerHTML=html;
+}
+
+/* ============ 控件绑定 ============ */
+document.querySelectorAll('[data-disp]').forEach(function(b){
+  b.addEventListener('click',function(){
+    state.disp=b.getAttribute('data-disp');
+    document.querySelectorAll('[data-disp]').forEach(function(x){x.classList.toggle('active',x===b);});
+    render();
+  });
+});
+document.querySelectorAll('[data-color]').forEach(function(b){
+  b.addEventListener('click',function(){
+    state.color=b.getAttribute('data-color');
+    document.querySelectorAll('[data-color]').forEach(function(x){x.classList.toggle('active',x===b);});
+    render();
+  });
+});
+$('showCn').addEventListener('change',function(){state.showCn=this.checked;render();});
+$('showTime').addEventListener('change',function(){state.showTime=this.checked;render();});
+$('redoOn').addEventListener('change',function(){state.redo=this.checked;render();});
+$('gentleOn').addEventListener('change',function(){state.gentle=this.checked;render();});
+$('errOn').addEventListener('change',function(){state.err=this.checked;render();});
+$('revOn').addEventListener('change',function(){state.rev=this.checked;render();});
+
+$('wi').addEventListener('input',function(){
+  var n=parseInt(this.value,10);
+  // 推进时：若该词完成时处于 打错/揭示 状态 → 标记为错词（进入重练行）
+  if(n>state.wi){
+    for(var i=state.wi;i<n&&i<SENTENCE.length;i++){
+      if(state.err||state.rev)state.errSet[i]=1;
+    }
+  }
+  state.wi=Math.min(n,SENTENCE.length);
+  state.typed=0;state.err=false;state.rev=false;
+  $('errOn').checked=false;$('revOn').checked=false;
+  var maxT=state.wi<SENTENCE.length?SENTENCE[state.wi].text.length:0;
+  $('ti').max=Math.max(0,maxT);
+  $('ti').value=0;
+  $('wiLabel').textContent=state.wi>=SENTENCE.length?'完成':String(state.wi);
+  $('tiLabel').textContent='0';
+  render();
+});
+$('ti').addEventListener('input',function(){
+  var n=parseInt(this.value,10);
+  if(state.wi<SENTENCE.length){
+    var maxT=SENTENCE[state.wi].text.length;
+    state.typed=Math.min(n,maxT);
+    $('tiLabel').textContent=String(state.typed);
+  }
+  render();
+});
+$('wi').dispatchEvent(new Event('input'));
+
+/* ============ 评级弹层入场动画重放 ============ */
+function replayCombo(){
+  var el=$('comboDemo');
+  if(!el)return;
+  var clone=el.cloneNode(true);
+  clone.id='comboDemo';
+  clone.classList.add('combo-pop-enter-active');
+  clone.style.opacity='0';
+  clone.style.transform='translate(-50%,24px)';
+  el.parentNode.replaceChild(clone,el);
+  void clone.offsetWidth; /* 强制重排以触发过渡 */
+  clone.style.opacity='1';
+  clone.style.transform='translate(-50%,0)';
+}
+
+/* ============ 显示答案交互演示 ============ */
+(function(){
+  var btn=$('answerBtn'), reset=$('answerReset'), hint=$('answerHint');
+  if(!btn)return;
+  btn.addEventListener('click',function(){
+    var letters=document.querySelectorAll('#answerWord .letter');
+    letters.forEach(function(l){l.classList.add('revealed');}); // 仅加 revealed，原 class 不动
+    btn.disabled=true;
+    if(hint)hint.textContent='已显示答案（光标位 .dict-current.revealed，其余 .hidden.revealed；背景下划线不变，仅文字可见）· 美丽的';
+  });
+  reset.addEventListener('click',function(){
+    var letters=document.querySelectorAll('#answerWord .letter');
+    letters.forEach(function(l){l.classList.remove('revealed');}); // 仅移除 revealed
+    btn.disabled=false;
+    if(hint)hint.textContent='默写：看中文打英文 · 美丽的';
+  });
+})();
+
+/* ============ 初始化 ============ */
+renderStates();
+renderColors();
+renderPos();
+$('parseView').innerHTML=parseHTML();
+render();
+$('comboReplay').addEventListener('click',replayCombo);
+})();
+</script>
+</body>
+</html>

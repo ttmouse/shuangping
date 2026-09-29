@@ -1,0 +1,2396 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>英文短文句子样式 Playground</title>
+  <style>
+    :root {
+      --bg: #eef1f5;
+      --surface: #ffffff;
+      --surface-2: #f7f9fb;
+      --surface-3: #e9f2ef;
+      --ink: #18212b;
+      --ink-2: #55616d;
+      --ink-3: #8a96a3;
+      --line: #d8dee6;
+      --line-strong: #b8c3cf;
+      --green: #17805f;
+      --green-soft: #cceadf;
+      --blue: #2f6f9f;
+      --orange: #d9852c;
+      --red: #d6524d;
+      --teal: #177e89;
+      --shadow: 0 14px 34px rgba(28, 40, 53, 0.08);
+      --page-font: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --display-font: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      --mono-font: "SFMono-Regular", "Cascadia Mono", Menlo, Consolas, monospace;
+      color-scheme: light;
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #0c1219;
+      --surface: #141c25;
+      --surface-2: #1a2430;
+      --surface-3: #162c27;
+      --ink: #e7edf4;
+      --ink-2: #aebccb;
+      --ink-3: #7b8999;
+      --line: #2a3644;
+      --line-strong: #445362;
+      --green: #3ddbbc;
+      --green-soft: #123d34;
+      --blue: #64a9df;
+      --orange: #f0b45f;
+      --red: #ff817c;
+      --teal: #48c6d2;
+      --shadow: 0 16px 38px rgba(0, 0, 0, 0.28);
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(90deg, transparent 0 63px, color-mix(in srgb, var(--line) 52%, transparent) 64px, transparent 65px),
+        var(--bg);
+      color: var(--ink);
+      font-family: var(--page-font);
+      line-height: 1.5;
+    }
+
+    button,
+    select,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    select:focus-visible,
+    input:focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: 2px;
+    }
+
+    .lab {
+      max-width: 1680px;
+      margin: 0 auto;
+      padding: 18px clamp(12px, 2.2vw, 34px) 48px;
+    }
+
+    .masthead {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 16px 4px 20px;
+      border-bottom: 1px solid var(--line-strong);
+      position: relative;
+    }
+
+    .masthead::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -3px;
+      height: 5px;
+      background:
+        linear-gradient(90deg,
+          var(--green) 0 24%,
+          var(--blue) 24% 47%,
+          var(--orange) 47% 68%,
+          var(--red) 68% 88%,
+          var(--teal) 88% 100%);
+      opacity: 0.8;
+    }
+
+    .eyebrow {
+      display: block;
+      color: var(--green);
+      font-family: var(--mono-font);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-family: var(--display-font);
+      font-size: clamp(28px, 3vw, 46px);
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      color: var(--ink-2);
+      font-size: 13px;
+      margin-top: 8px;
+      max-width: 760px;
+    }
+
+    .mastActions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .topBtn {
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 7px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: border-color 0.14s ease, background 0.14s ease, transform 0.14s ease;
+    }
+
+    .topBtn:hover {
+      border-color: var(--green);
+      background: var(--surface-3);
+    }
+
+    .topBtn:active {
+      transform: translateY(1px);
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(272px, 330px) minmax(0, 1fr);
+      gap: 18px;
+      margin-top: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .settingsPanel {
+      position: sticky;
+      top: 12px;
+      max-height: calc(100vh - 24px);
+      overflow: auto;
+      scrollbar-width: thin;
+    }
+
+    .panelHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      background: var(--surface);
+      border-radius: 10px 10px 0 0;
+    }
+
+    .panelTitle {
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .panelMeta {
+      color: var(--ink-3);
+      font-family: var(--mono-font);
+      font-size: 10px;
+    }
+
+    .panelBody {
+      padding: 12px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .settingGroup {
+      display: grid;
+      gap: 8px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--line);
+    }
+
+    .settingGroup:first-child {
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .groupTitle {
+      color: var(--ink-2);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .settingLabel {
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .settingValue {
+      color: var(--ink-3);
+      font-family: var(--mono-font);
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .seg {
+      display: inline-flex;
+      gap: 3px;
+      padding: 3px;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .segBtn {
+      min-height: 27px;
+      padding: 0 9px;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--ink-2);
+      font-size: 11px;
+      font-weight: 600;
+      transition: color 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .segBtn:hover {
+      color: var(--ink);
+    }
+
+    .segBtn.on {
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    }
+
+    .switchRow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-height: 24px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .switch {
+      position: relative;
+      flex: none;
+      width: 30px;
+      height: 18px;
+      border-radius: 999px;
+      background: var(--line);
+      transition: background 0.15s ease;
+    }
+
+    .switch::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.24);
+      transition: transform 0.15s ease;
+    }
+
+    .switchRow input:checked + .switch {
+      background: var(--green);
+    }
+
+    .switchRow input:checked + .switch::after {
+      transform: translateX(12px);
+    }
+
+    .switchRow input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .switchRow.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .rowTitle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .rowTitle span {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .selectCtrl {
+      width: 100%;
+      min-height: 30px;
+      padding: 0 9px;
+      border-radius: 7px;
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      color: var(--ink);
+      font-size: 12px;
+    }
+
+    .presetGrid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+    }
+
+    .presetBtn {
+      min-height: 30px;
+      padding: 0 6px;
+      border-radius: 7px;
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      color: var(--ink-2);
+      font-size: 11px;
+      font-weight: 600;
+      transition: border-color 0.12s ease, color 0.12s ease, background 0.12s ease;
+    }
+
+    .presetBtn:hover,
+    .presetBtn.on {
+      border-color: var(--green);
+      background: var(--green-soft);
+      color: var(--green);
+    }
+
+    .presetBtn.wide {
+      grid-column: span 2;
+    }
+
+    .previewPanel {
+      min-width: 0;
+    }
+
+    .previewHead {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .previewTitle {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .previewSub {
+      color: var(--ink-2);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .activeBadge {
+      display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 5px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 22px;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink-2);
+      background: var(--surface-2);
+      font-family: var(--mono-font);
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .badge.green {
+      color: var(--green);
+      border-color: color-mix(in srgb, var(--green) 45%, var(--line));
+      background: var(--green-soft);
+    }
+
+    .badge.blue {
+      color: var(--blue);
+      border-color: color-mix(in srgb, var(--blue) 45%, var(--line));
+    }
+
+    .badge.red {
+      color: var(--red);
+      border-color: color-mix(in srgb, var(--red) 50%, var(--line));
+    }
+
+    .previewBody {
+      padding: 18px 14px 12px;
+    }
+
+    .progressHud {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 0 auto 14px;
+      color: var(--ink-2);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .progressHud strong {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .jumpSentence {
+      display: inline-grid;
+      place-items: center;
+      min-width: 1.8em;
+      height: 25px;
+      padding: 0 5px;
+      border-bottom: 1px dashed var(--line-strong);
+      color: var(--ink);
+      font-weight: 800;
+      cursor: text;
+    }
+
+    .enSentenceCn {
+      max-width: min(92%, 1100px);
+      margin: 0 auto 12px;
+      color: var(--ink);
+      font-size: clamp(18px, 2vw, 24px);
+      font-weight: 500;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .enSentenceWrap {
+      width: 100%;
+      min-height: 170px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow: hidden;
+    }
+
+    .enSentence {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: safe center;
+      gap: 10px;
+      width: 100%;
+      max-width: 100%;
+      min-height: 128px;
+      padding: 14px 12px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .enSentence::-webkit-scrollbar {
+      display: none;
+    }
+
+    .enSentence.story {
+      gap: 6px;
+    }
+
+    .enSentence.story .word-box {
+      padding: 5px 4px;
+    }
+
+    .enSentenceRedo {
+      min-height: 92px;
+      gap: 8px;
+      padding: 6px 12px;
+    }
+
+    .enSentenceRedo .word-box {
+      padding: 4px 8px;
+    }
+
+    .word-col {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex: none;
+    }
+
+    .word-box {
+      display: inline-flex;
+      gap: 2px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      transition: border-color 0.15s ease, opacity 0.2s ease, background 0.15s ease;
+    }
+
+    .word-letters {
+      display: inline-flex;
+      gap: 2px;
+      font-size: clamp(30px, 3vw, 40px);
+      font-weight: 600;
+      line-height: 1.3;
+      white-space: nowrap;
+    }
+
+    .word-cn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 18px;
+      color: var(--ink-3);
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .word-col.active .word-cn {
+      color: var(--ink);
+      opacity: 1;
+    }
+
+    .word-time {
+      min-height: 12px;
+      color: var(--ink-3);
+      font-family: var(--mono-font);
+      font-size: 10px;
+      line-height: 1;
+      visibility: hidden;
+    }
+
+    .word-time.has-value {
+      visibility: visible;
+      opacity: 0.9;
+    }
+
+    .letter {
+      color: var(--ink);
+      opacity: 0.17;
+      border-bottom: 5px solid color-mix(in srgb, var(--ink) 30%, transparent);
+      transition: color 0.12s ease, opacity 0.12s ease, border-color 0.12s ease;
+    }
+
+    .letter.correct {
+      color: var(--ink);
+      opacity: 1;
+    }
+
+    .word-col.completed .letter.correct {
+      color: var(--ink);
+      opacity: 1;
+    }
+
+    .word-col.redo .letter.correct {
+      color: var(--orange);
+      opacity: 0.96;
+    }
+
+    .letter.hidden {
+      color: transparent;
+      opacity: 0.17;
+    }
+
+    .letter.current {
+      color: color-mix(in srgb, var(--ink) 20%, transparent);
+      opacity: 1;
+      border-bottom-color: var(--line-strong);
+      background: color-mix(in srgb, var(--line) 14%, transparent);
+      border-radius: 3px;
+    }
+
+    .letter.dict-current {
+      color: transparent;
+      opacity: 1;
+      border-bottom-color: var(--green);
+      background: color-mix(in srgb, var(--green) 13%, transparent);
+      border-radius: 3px;
+    }
+
+    .letter.incorrect {
+      color: var(--red);
+      opacity: 1;
+      border-bottom-color: var(--red);
+    }
+
+    .letter.punct {
+      color: var(--ink-3);
+      opacity: 0.55;
+    }
+
+    .letter.punct-done {
+      color: var(--ink-2);
+      opacity: 0.95;
+    }
+
+    .letter.punct-current {
+      color: var(--blue);
+      opacity: 1;
+    }
+
+    .letter.seg-pre {
+      color: #718cad;
+      opacity: 0.58;
+    }
+
+    .letter.seg-root {
+      color: var(--ink-2);
+      opacity: 0.78;
+    }
+
+    .letter.seg-root2 {
+      color: #4f9588;
+      opacity: 0.78;
+    }
+
+    .letter.seg-suf {
+      color: #b28a63;
+      opacity: 0.58;
+    }
+
+    .letter.syl-0 {
+      color: #3f8bd8;
+      opacity: 0.62;
+    }
+
+    .letter.syl-1 {
+      color: #4e9a62;
+      opacity: 0.62;
+    }
+
+    .letter.syl-2 {
+      color: #d97c2f;
+      opacity: 0.62;
+    }
+
+    .letter.syl-3 {
+      color: #8b5aa9;
+      opacity: 0.62;
+    }
+
+    .letter.syl-4 {
+      color: #cb4c45;
+      opacity: 0.62;
+    }
+
+    .word-col.completed .letter.syl-0,
+    .word-col.completed .letter.syl-1,
+    .word-col.completed .letter.syl-2,
+    .word-col.completed .letter.syl-3,
+    .word-col.completed .letter.syl-4 {
+      opacity: 0.82;
+    }
+
+    .previewFooter {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 16px 16px;
+      color: var(--ink-3);
+      font-family: var(--mono-font);
+      font-size: 10px;
+    }
+
+    .previewActions {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .previewActionBtn {
+      height: 28px;
+      padding: 0 9px;
+      border-radius: 7px;
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      color: var(--ink-2);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .previewActionBtn:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .matrixSection,
+    .tokensSection,
+    .parseSection {
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .sectionHead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .sectionTitle {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .sectionDesc {
+      color: var(--ink-2);
+      font-size: 12px;
+    }
+
+    .matrixScroller {
+      overflow-x: auto;
+      padding: 14px;
+    }
+
+    .matrix {
+      min-width: 1080px;
+      border-collapse: separate;
+      border-spacing: 6px;
+      width: 100%;
+    }
+
+    .matrix th {
+      padding: 6px 10px;
+      color: var(--ink-2);
+      font-family: var(--mono-font);
+      font-size: 10px;
+      font-weight: 700;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .matrix td {
+      vertical-align: top;
+    }
+
+    .matrixRowLabel {
+      width: 132px;
+      padding: 10px 10px 10px 2px;
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .matrixRowLabel small {
+      display: block;
+      color: var(--ink-3);
+      font-family: var(--mono-font);
+      font-size: 9px;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    .matrixCell {
+      position: relative;
+      min-width: 172px;
+      height: 102px;
+      padding: 6px 8px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--surface-2) 80%, transparent), var(--surface));
+    }
+
+    .matrixCellLabel {
+      position: absolute;
+      right: 7px;
+      top: 5px;
+      z-index: 2;
+      color: var(--ink-3);
+      font-family: var(--mono-font);
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .matrixCell .word-letters {
+      font-size: 19px;
+    }
+
+    .matrixCell .word-cn,
+    .matrixCell .word-time {
+      display: none;
+    }
+
+    .matrixCell .enSentence {
+      min-height: 0;
+      justify-content: flex-start;
+      padding: 10px 2px 2px;
+      gap: 4px;
+      overflow: hidden;
+    }
+
+    .matrixCell .word-box {
+      padding: 3px 4px;
+      border-width: 1.5px;
+    }
+
+    .matrixCaption {
+      padding: 0 18px 16px;
+      color: var(--ink-3);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .tokensBody {
+      padding: 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 10px;
+    }
+
+    .token {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-2);
+    }
+
+    .tokenHead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding: 7px 9px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .tokenName {
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .tokenClass {
+      color: var(--ink-3);
+      font-family: var(--mono-font);
+      font-size: 9px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tokenBody {
+      min-height: 68px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: auto;
+    }
+
+    .token .word-letters {
+      font-size: 30px;
+    }
+
+    .token .word-box {
+      border: 0;
+      padding: 0;
+    }
+
+    .token .word-box.redo {
+      border: 1.5px solid color-mix(in srgb, var(--orange) 55%, transparent);
+      border-radius: 8px;
+      padding: 5px 9px;
+    }
+
+    .parseBody {
+      padding: 14px;
+      overflow-x: auto;
+    }
+
+    .spParse {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 12px 16px;
+      min-width: 720px;
+      padding: 20px 4px 8px;
+      margin: 0 auto;
+    }
+
+    .spGroup {
+      position: relative;
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 8px 14px;
+      padding: 16px 12px 8px;
+      border: 1.5px solid;
+      border-radius: 18px;
+      background: color-mix(in srgb, var(--surface-2) 55%, transparent);
+    }
+
+    .spGroup.plain {
+      border: 0;
+      background: transparent;
+      padding: 2px 2px 6px;
+    }
+
+    .spChip {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translate(-50%, -58%);
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--sp-chip);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 1;
+      white-space: nowrap;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
+    }
+
+    .spUnit {
+      position: relative;
+      display: inline-grid;
+      grid-template-rows: auto auto auto auto;
+      justify-items: center;
+      gap: 0;
+      min-width: 0;
+      padding: 2px 3px;
+    }
+
+    .spPh {
+      display: block;
+      min-height: 15px;
+      margin-bottom: 3px;
+      color: var(--ink-2);
+      font-family: var(--mono-font);
+      font-size: 11px;
+      line-height: 1.3;
+      opacity: 0.8;
+      white-space: nowrap;
+    }
+
+    .spCell {
+      position: relative;
+      line-height: 1;
+    }
+
+    .spWord {
+      position: relative;
+      display: inline-block;
+      padding: 0 2px 5px;
+      color: var(--ink);
+      font-size: clamp(27px, 3vw, 40px);
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: 0;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .spPunct {
+      display: inline-block;
+      margin-left: 1px;
+      color: var(--ink);
+      font-size: clamp(27px, 3vw, 40px);
+      font-weight: 600;
+      line-height: 1.15;
+      opacity: 0.55;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .spUl {
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 0;
+      height: 4px;
+      border-radius: 999px;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .spDef {
+      max-width: 360px;
+      min-height: 18px;
+      margin-top: 2px;
+      overflow: hidden;
+      color: var(--ink-2);
+      font-size: 13px;
+      line-height: 1.35;
+      text-align: center;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .spPos {
+      min-height: 14px;
+      margin-top: 2px;
+      color: var(--ink-2);
+      font-size: 10px;
+      line-height: 1.4;
+      opacity: 0.75;
+      letter-spacing: 0;
+      user-select: none;
+    }
+
+    .spTip {
+      position: absolute;
+      bottom: calc(100% - 14px);
+      left: 50%;
+      z-index: 80;
+      width: max-content;
+      max-width: 320px;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(-50%) translateY(-6px);
+      transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s;
+      pointer-events: none;
+      text-align: left;
+    }
+
+    .spUnit:hover .spTip {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .spTipTitle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .spTipRole {
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .spTipType {
+      color: var(--ink-2);
+      font-size: 11px;
+      font-style: italic;
+    }
+
+    .spTipBody {
+      color: var(--ink);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .footnote {
+      margin-top: 14px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      color: var(--ink-3);
+      font-family: var(--mono-font);
+      font-size: 10px;
+      line-height: 1.7;
+    }
+
+    .footnote code {
+      color: var(--green);
+      font-family: var(--mono-font);
+    }
+
+    @media (max-width: 960px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .settingsPanel {
+        position: static;
+        max-height: none;
+      }
+
+      .masthead {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .mastActions {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .lab {
+        padding: 10px 8px 28px;
+      }
+
+      .presetGrid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .matrixCell .word-letters {
+        font-size: 17px;
+      }
+
+      .previewHead {
+        flex-direction: column;
+      }
+
+      .activeBadge {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .panel,
+      .matrixSection,
+      .tokensSection,
+      .parseSection {
+        animation: riseIn 0.24s ease-out both;
+      }
+
+      .workspace .panel {
+        animation-delay: 0.04s;
+      }
+
+      .matrixSection {
+        animation-delay: 0.09s;
+      }
+
+      .tokensSection {
+        animation-delay: 0.13s;
+      }
+
+      .parseSection {
+        animation-delay: 0.17s;
+      }
+
+      @keyframes riseIn {
+        from {
+          opacity: 0;
+          transform: translateY(5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="lab">
+    <header class="masthead">
+      <div>
+        <span class="eyebrow">EN story sentence lab</span>
+        <h1>英文短文句子样式 Playground</h1>
+        <p class="subtitle">把英文短文模式里的词格、字母态、标点、着色、重练行和整句完成态放在同一页面对照。</p>
+      </div>
+      <div class="mastActions">
+        <button id="randomBtn" class="topBtn" type="button">随机快照</button>
+        <button id="themeBtn" class="topBtn" type="button">暗色</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="panel settingsPanel" aria-label="设置面板">
+        <div class="panelHeader">
+          <span class="panelTitle">设置面板</span>
+          <span class="panelMeta">source mapped</span>
+        </div>
+        <div class="panelBody">
+          <div class="settingGroup">
+            <div class="groupTitle">练习内容</div>
+            <label class="settingLabel">
+              <span>句子样本</span>
+              <select id="sentenceSelect" class="selectCtrl"></select>
+            </label>
+            <div class="rowTitle">
+              <span>输入快照</span>
+              <span id="stageName" class="settingValue"></span>
+            </div>
+            <div class="presetGrid">
+              <button class="presetBtn" data-preset="fresh" type="button">待输</button>
+              <button class="presetBtn" data-preset="typing" type="button">输入中</button>
+              <button class="presetBtn" data-preset="wrong" type="button">错键</button>
+              <button class="presetBtn" data-preset="revealed" type="button">揭示</button>
+              <button class="presetBtn" data-preset="redo" type="button">重练行</button>
+              <button class="presetBtn" data-preset="gentle-error" type="button">宽松标错</button>
+              <button class="presetBtn wide" data-preset="done" type="button">整句完成</button>
+            </div>
+          </div>
+
+          <div class="settingGroup">
+            <div class="groupTitle">英文 · 练习显示</div>
+            <div class="settingLabel">
+              <span>显示模式</span>
+              <span class="settingValue" id="displayValue"></span>
+            </div>
+            <div class="seg" id="displaySeg">
+              <button class="segBtn" data-mode="smart" type="button">智能</button>
+              <button class="segBtn" data-mode="guide" type="button">全指引</button>
+              <button class="segBtn" data-mode="dictation" type="button">全默写</button>
+            </div>
+
+            <div class="settingLabel">
+              <span>着色模式</span>
+              <span class="settingValue" id="colorValue"></span>
+            </div>
+            <div class="seg" id="colorSeg">
+              <button class="segBtn" data-color="word-root" type="button">词根</button>
+              <button class="segBtn" data-color="syllable" type="button">音节</button>
+              <button class="segBtn" data-color="off" type="button">关</button>
+            </div>
+
+            <div class="rowTitle">
+              <span>智能模式掌握度</span>
+              <span class="settingValue" id="masteryValue"></span>
+            </div>
+            <select id="masterySelect" class="selectCtrl">
+              <option value="none">当前词未掌握</option>
+              <option value="current">当前词已掌握</option>
+              <option value="all">全部已掌握</option>
+            </select>
+
+            <label class="switchRow">
+              <span>单词 · 显示中文</span>
+              <input id="showCnInput" type="checkbox" />
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+            <label class="switchRow">
+              <span>单词 · 显示用时</span>
+              <input id="showTimeInput" type="checkbox" />
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+            <label class="switchRow">
+              <span>错题重练</span>
+              <input id="redoInput" type="checkbox" />
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+            <label class="switchRow">
+              <span>宽松模式</span>
+              <input id="gentleInput" type="checkbox" />
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+            <label class="switchRow">
+              <span>句中标点（源码未接入）</span>
+              <input id="punctInput" type="checkbox" disabled />
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+          </div>
+
+          <div class="settingGroup">
+            <div class="groupTitle">短文上下文</div>
+            <label class="switchRow">
+              <span>中译英</span>
+              <input id="cnContextInput" type="checkbox" checked />
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+            <label class="switchRow">
+              <span>重练区已展开</span>
+              <input id="showRedoRowInput" type="checkbox" />
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+          </div>
+        </div>
+      </aside>
+
+      <div>
+        <section class="panel previewPanel">
+          <div class="previewHead">
+            <div>
+              <div class="previewTitle" id="previewTitle"></div>
+              <div class="previewSub" id="previewSub"></div>
+            </div>
+            <div class="activeBadge" id="activeBadges"></div>
+          </div>
+          <div class="previewBody">
+            <div class="progressHud">
+              <span>第 <strong id="sentenceNo">1</strong> / <span id="sentenceTotal">15</span> 句</span>
+              <span>·</span>
+              <span>第 <strong id="wordNo">1</strong> / <span id="wordTotal">9</span> 词</span>
+              <span>·</span>
+              <span class="jumpSentence" title="当前句号">1</span>
+            </div>
+            <div id="sentenceCnLine" class="enSentenceCn"></div>
+            <div class="enSentenceWrap" id="previewSentenceWrap"></div>
+          </div>
+          <div class="previewFooter">
+            <span id="previewStateCode"></span>
+            <div class="previewActions">
+              <button id="copyCodeBtn" class="previewActionBtn" type="button">复制快照码</button>
+              <button id="resetBtn" class="previewActionBtn" type="button">恢复默认</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="matrixSection">
+          <div class="sectionHead">
+            <div>
+              <div class="sectionTitle">显示模式 × 输入状态</div>
+              <div class="sectionDesc" id="matrixDesc"></div>
+            </div>
+            <div class="sectionDesc">着色设置会同步到下方格子</div>
+          </div>
+          <div class="matrixScroller" id="displayMatrix"></div>
+        </section>
+
+        <section class="matrixSection">
+          <div class="sectionHead">
+            <div>
+              <div class="sectionTitle">着色模式 × 词状态</div>
+              <div class="sectionDesc">词根、音节与未输入、已输入、完成后、重练行的交叉。</div>
+            </div>
+          </div>
+          <div class="matrixScroller" id="colorMatrix"></div>
+        </section>
+      </div>
+    </main>
+
+    <section class="tokensSection">
+      <div class="sectionHead">
+        <div>
+          <div class="sectionTitle">字母与词容器状态</div>
+          <div class="sectionDesc">每个 token 对应源码中的 class 输出。</div>
+        </div>
+      </div>
+      <div class="tokensBody" id="tokenGrid"></div>
+    </section>
+
+    <section class="parseSection">
+      <div class="sectionHead">
+        <div>
+          <div class="sectionTitle">整句完成态 · 词卡结构</div>
+          <div class="sectionDesc">句乐部课包风格：成分组框 + 音标 / 词卡 / 词性线 / 释义 / 词性。</div>
+        </div>
+      </div>
+      <div class="parseBody" id="parsePreview"></div>
+    </section>
+
+    <div class="footnote">
+      <div>类名对照：<code>.letter</code> <code>.correct</code> <code>.current</code> <code>.dict-current</code> <code>.hidden</code> <code>.incorrect</code> <code>.punct</code> <code>.punct-current</code> <code>.punct-done</code> <code>.seg-pre</code> <code>.seg-root</code> <code>.seg-root2</code> <code>.seg-suf</code> <code>.syl-0..4</code> <code>.word-col.redo</code> <code>.spGroup</code> <code>.spWord</code></div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const WORD_SEGMENTS = {
+        breakfast: [["break", "root"], ["fast", "root"]],
+        noodles: [["noodle", "root"], ["s", "suffix"]],
+        sunny: [["sun", "root"], ["ny", "suffix"]],
+        today: [["to", "prefix"], ["day", "root"]],
+        afternoon: [["after", "root"], ["noon", "root"]],
+        vegetables: [["vegetable", "root"], ["s", "suffix"]],
+        little: [["litt", "root"], ["le", "suffix"]],
+        family: [["fam", "root"], ["ily", "suffix"]],
+        animals: [["animal", "root"], ["s", "suffix"]],
+        tomatoes: [["tomato", "root"], ["es", "suffix"]],
+        carrots: [["carrot", "root"], ["s", "suffix"]],
+        happy: [["happ", "root"], ["y", "suffix"]]
+      }
+
+      const SYLLABLES = {
+        it: ["it"],
+        sunny: ["sun", "ny"],
+        warm: ["warm"],
+        today: ["to", "day"],
+        we: ["we"],
+        get: ["get"],
+        up: ["up"],
+        at: ["at"],
+        and: ["and"],
+        have: ["have"],
+        breakfast: ["break", "fast"],
+        family: ["fam", "i", "ly"],
+        go: ["go"],
+        to: ["to"],
+        uncle: ["un", "cle"],
+        farm: ["farm"],
+        there: ["there"],
+        are: ["are"],
+        many: ["man", "y"],
+        animals: ["an", "i", "mals"],
+        on: ["on"],
+        the: ["the"],
+        beef: ["beef"],
+        tomatoes: ["to", "ma", "toes"],
+        carrots: ["car", "rots"],
+        noodles: ["noo", "dles"],
+        like: ["like"],
+        little: ["lit", "tle"],
+        lambs: ["lambs"],
+        very: ["ver", "y"],
+        much: ["much"],
+        pick: ["pick"],
+        some: ["some"],
+        happy: ["hap", "py"]
+      }
+
+      const STORY_LINES = [
+        {
+          id: "farm-1",
+          title: "My Day at the Farm · 1",
+          sentence: "It's sunny and warm today.",
+          cn: "今天天气晴朗又暖和。"
+        },
+        {
+          id: "farm-2",
+          title: "My Day at the Farm · 2",
+          sentence: "We get up at 6:30 and have breakfast at 7:00.",
+          cn: "我们 6:30 起床，7:00 吃早餐。"
+        },
+        {
+          id: "farm-3",
+          title: "My Day at the Farm · 3",
+          sentence: "My family and I go to Uncle Tom's farm.",
+          cn: "我和家人一起去汤姆叔叔的农场。"
+        },
+        {
+          id: "farm-4",
+          title: "My Day at the Farm · 4",
+          sentence: "There are many animals on the farm.",
+          cn: "农场里有很多动物。"
+        },
+        {
+          id: "farm-5",
+          title: "My Day at the Farm · 5",
+          sentence: "We have beef, tomatoes, carrots and noodles.",
+          cn: "我们吃了牛肉、西红柿、胡萝卜和面条。"
+        },
+        {
+          id: "farm-6",
+          title: "My Day at the Farm · 6",
+          sentence: "I like the little lambs very much.",
+          cn: "我非常喜欢小羊羔。"
+        },
+        {
+          id: "farm-7",
+          title: "My Day at the Farm · 7",
+          sentence: "We pick some tomatoes and carrots.",
+          cn: "我们摘了一些西红柿和胡萝卜。"
+        },
+        {
+          id: "farm-8",
+          title: "My Day at the Farm · 8",
+          sentence: "What a happy day!",
+          cn: "多么开心的一天啊！"
+        }
+      ]
+
+      const WORD_CN = {
+        "it's": "它是",
+        it: "它",
+        sunny: "晴朗的",
+        and: "和",
+        warm: "暖和的",
+        today: "今天",
+        we: "我们",
+        get: "变得",
+        up: "起来",
+        at: "在",
+        "6:30": "6:30",
+        have: "吃；有",
+        breakfast: "早餐",
+        "7:00": "7:00",
+        my: "我的",
+        family: "家庭",
+        i: "我",
+        go: "去",
+        to: "到",
+        uncle: "叔叔",
+        "tom's": "汤姆的",
+        farm: "农场",
+        there: "那里",
+        are: "是",
+        many: "许多",
+        animals: "动物",
+        on: "在……上",
+        the: "这；那",
+        beef: "牛肉",
+        tomatoes: "西红柿",
+        carrots: "胡萝卜",
+        noodles: "面条",
+        like: "喜欢",
+        little: "小的",
+        lambs: "羊羔",
+        very: "非常",
+        much: "多",
+        pick: "采摘",
+        some: "一些",
+        what: "多么",
+        happy: "开心的",
+        day: "一天",
+        a: "一个"
+      }
+
+      const PARSE_META = {
+        sentenceEn: "I am a student.",
+        wordDetails: [
+          { word: "I", pos: "PRON", phonetic: { uk: "aɪ", us: "aɪ" }, definition: "我" },
+          { word: "am", pos: "AUX", phonetic: { uk: "æm; əm", us: "æm; əm" }, definition: "be（现在式）: 是" },
+          { word: "a", pos: "DET", phonetic: { uk: "ə; eɪ", us: "ə; eɪ" }, definition: "一个" },
+          { word: "student", pos: "NOUN", phonetic: { uk: "ˈstjuːd(ə)nt", us: "ˈstuːd(ə)nt" }, definition: "学生" }
+        ],
+        sentenceStructure: [
+          { start: 0, end: 0, role: "主语", text: "I", type: "subject", explanation: "是这句话描述的动作发出主体，指代说话人自己。" },
+          { start: 1, end: 1, role: "谓语", text: "am", type: "predicate", explanation: "be 动词第一人称单数现在时，连接主语和表语。" },
+          { start: 2, end: 3, role: "表语", text: "a student.", type: "predicative", explanation: "放在系动词之后，补充说明主语的身份是一名学生。" }
+        ]
+      }
+
+      const POS_CN = {
+        NOUN: "名词", VERB: "动词", AUX: "助动词", ADJ: "形容词", ADV: "副词",
+        PRON: "代词", DET: "限定词", ADP: "介词", CCONJ: "连词", SCONJ: "连词",
+        PART: "小品词", INTJ: "叹词", PROPN: "专有名词", PROPN_PERSON: "人名", NUM: "数词",
+        X: "其他", PUNCT: "标点", "": ""
+      }
+
+      const COMP_COLORS = {
+        subject: "#b45309", predicate: "#be123c", predicative: "#7c3aed", object: "#059669",
+        indirectObject: "#0d9488", adverbial: "#0369a1", attributive: "#db2777",
+        complement: "#ea580c", conjunction: "#64748b", root: "#475569"
+      }
+
+      const POS_COLORS = {
+        PRON: "#ef4444", AUX: "#22c55e", PART: "#6b7280", DET: "#14b8a6", NOUN: "#3b82f6",
+        VERB: "#f97316", ADJ: "#ec4899", ADV: "#8b5cf6", ADP: "#a855f7",
+        CCONJ: "#eab308", SCONJ: "#eab308", INTJ: "#f43f5e", PROPN: "#0ea5e9",
+        PROPN_PERSON: "#0ea5e9", NUM: "#84cc16", X: "#9ca3af", PUNCT: "#9ca3af", "": "#9ca3af"
+      }
+
+      const EN_OPTIONAL_PUNCT = new Set([",", ".", "?", "!"])
+      const $ = (id) => document.getElementById(id)
+      const esc = (s) => String(s || "").replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[c]))
+
+      const settings = {
+        displayMode: "smart",
+        colorMode: "word-root",
+        mastery: "none",
+        showCn: true,
+        showTime: false,
+        redo: false,
+        gentle: false,
+        punct: false,
+        cnContext: true,
+        showRedoRow: false,
+        preset: "typing"
+      }
+
+      const sentenceSelect = $("sentenceSelect")
+      STORY_LINES.forEach((line, i) => {
+        const opt = document.createElement("option")
+        opt.value = line.id
+        opt.textContent = `${i + 1}. ${line.sentence}`
+        sentenceSelect.appendChild(opt)
+      })
+
+      let currentSentence = STORY_LINES[1]
+      let sentenceIdx = 1
+
+      function parseWords(line) {
+        const words = []
+        const re = /[A-Za-z0-9']+(?::\d+)*[^A-Za-z0-9'\s]*|[^A-Za-z0-9'\s]+/g
+        let m
+        while ((m = re.exec(line))) words.push(m[0].toLowerCase())
+        return words
+      }
+
+      function stripPunct(word) {
+        return String(word || "").replace(/^[^A-Za-z0-9']+|[^A-Za-z0-9']+$/g, "")
+      }
+
+      function enCore(word) {
+        let out = ""
+        for (const ch of String(word || "")) if (!EN_OPTIONAL_PUNCT.has(ch)) out += ch
+        return out
+      }
+
+      function segmentMap(word) {
+        const segs = WORD_SEGMENTS[word]
+        const map = {}
+        if (!segs) return map
+        let pos = 0
+        let rootCount = 0
+        for (const [text, type] of segs) {
+          if (type === "root") rootCount++
+          const cls = type === "prefix" ? "pre" : type === "suffix" ? "suf" : rootCount === 1 ? "root" : "root2"
+          for (let i = 0; i < text.length; i++) map[pos + i] = cls
+          pos += text.length
+        }
+        return map
+      }
+
+      function syllableMap(word) {
+        const parts = SYLLABLES[word] || [word]
+        const map = {}
+        let pos = 0
+        parts.forEach((part, i) => {
+          for (let j = 0; j < part.length; j++) map[pos + j] = i
+          pos += part.length
+        })
+        return map
+      }
+
+      function masteredKeys(opts) {
+        const words = parseWords(currentSentence.sentence)
+        if (opts.displayMode === "dictation") return new Set(words)
+        if (opts.displayMode === "guide") return new Set()
+        if (opts.mastery === "all") return new Set(words)
+        if (opts.mastery === "current") {
+          const all = new Set(words)
+          if (all.size > 1) all.delete(words[1] || words[0])
+          return all
+        }
+        return new Set()
+      }
+
+      function classSet(classes) {
+        const out = []
+        if (!classes) return out
+        if (classes instanceof Set) return Array.from(classes)
+        return Array.isArray(classes) ? classes : Object.keys(classes).filter((k) => classes[k])
+      }
+
+      function letterClassFor(wi, li, unit, state, opts) {
+        const word = unitText(unit)
+        const ch = word[li]
+        const isPunctCh = !/[A-Za-z0-9']/.test(ch || "")
+        const isRedoWord = state.redoSet.has(wi)
+        const forceDict = opts.gentle && isRedoWord
+        const mastered = state.mastered
+        const dict = !isPunctCh &&
+          opts.displayMode !== "guide" &&
+          (mastered.has(stripPunct(word)) || opts.displayMode === "dictation" || forceDict) &&
+          !(wi === state.wordIdx && state.hadError && !forceDict)
+        const sylCls = {}
+        if (!isPunctCh && opts.colorMode === "syllable") {
+          const map = syllableMap(stripPunct(word))
+          if (map[li] !== undefined) sylCls[`syl-${map[li] % 5}`] = true
+        }
+        const seg = !isPunctCh && opts.colorMode === "word-root" && !dict
+          ? (segmentMap(stripPunct(word))[li] || "")
+          : ""
+        const segCls = seg ? { [`seg-${seg}`]: true } : {}
+        const wordCore = enCore(word)
+        const gentleInp = opts.gentle ? enCore(state.gentleInputs[wi] || "") : ""
+        const doneByInput = gentleInp !== "" && gentleInp === wordCore
+        const wrongByInput = gentleInp !== "" && gentleInp !== wordCore
+        const errKey = `${wi}:${li}`
+
+        if (wi < state.wordIdx || (opts.gentle && wi > state.wordIdx && doneByInput)) {
+          if (opts.gentle && state.gentleErrors[errKey]) return ["incorrect"]
+          if (opts.colorMode === "syllable") return classSet(sylCls)
+          if (isPunctCh) return ["punct-done"]
+          return ["correct"]
+        }
+
+        if (wi > state.wordIdx) {
+          if (opts.gentle && wrongByInput) {
+            if (isPunctCh) return ["punct-done"]
+            return ["incorrect"]
+          }
+          if (isPunctCh) return ["punct"]
+          if (dict) return ["hidden"]
+          if (opts.colorMode === "syllable") return classSet(sylCls)
+          return classSet(segCls)
+        }
+
+        if (isPunctCh && EN_OPTIONAL_PUNCT.has(ch) && li >= enCore(word).length) return ["punct-done"]
+        if (opts.gentle && state.gentleErrors[errKey] && li >= state.letterIdx) return ["incorrect"]
+        if (opts.gentle && state.replayWi === wi && li < state.letterIdx) {
+          const inputCh = state.currentInput[li]
+          return inputCh === ch ? ["correct"] : ["incorrect"]
+        }
+
+        if (li < state.letterIdx) {
+          if (opts.gentle) {
+            if (isPunctCh) return ["punct-done"]
+            return ["correct"]
+          }
+          if (isPunctCh) return ["punct-done"]
+          return ["correct"]
+        }
+
+        if (li === state.letterIdx) {
+          if (opts.gentle) {
+            if (isPunctCh) return ["punct-current"]
+            if (state.hadError || state.replayWi === wi) return ["correct"]
+            if (dict) return ["dict-current"]
+            return ["current"]
+          }
+          if (state.currentInput.length > state.letterIdx) return ["incorrect"]
+          if (isPunctCh) return ["punct-current"]
+          if (state.hadError) return ["correct"]
+          if (dict) return ["dict-current"]
+          return ["current"]
+        }
+
+        if (isPunctCh) return ["punct"]
+        if (dict) return ["hidden"]
+        if (state.hadError && wi === state.wordIdx) return ["correct"]
+        if (opts.colorMode === "syllable") return classSet(sylCls)
+        return classSet(segCls)
+      }
+
+      function letterCharFor(wi, li, unit, state, opts) {
+        const defaultChar = unitText(unit)[li]
+        if (opts.gentle) {
+          if (wi === state.wordIdx && li < state.currentInput.length) return state.currentInput[li]
+          if (wi < state.wordIdx || wi > state.wordIdx) {
+            const input = state.gentleInputs[wi] || ""
+            if (li < input.length) return input[li]
+          }
+        }
+        return defaultChar
+      }
+
+      function unitText(unit) {
+        return String(unit || "")
+      }
+
+      function buildState(words, opts, preset) {
+        const master = masteredKeys(opts)
+        const base = {
+          wordIdx: 0,
+          letterIdx: 0,
+          currentInput: "",
+          hadError: false,
+          gentleInputs: {},
+          gentleErrors: {},
+          replayWi: -1,
+          redoSet: new Set(),
+          mastered: master
+        }
+        const current = Math.min(1, Math.max(0, words.length - 1))
+        const target = enCore(unitText(words[current] || ""))
+
+        if (preset === "fresh") {
+          return { ...base, wordIdx: 0 }
+        }
+        if (preset === "typing" || preset === "wrong" || preset === "revealed") {
+          const typed = preset === "typing" ? Math.min(2, target.length) : preset === "wrong" ? Math.min(2, Math.max(1, target.length - 1)) : 0
+          let input = target.slice(0, typed)
+          if (preset === "wrong") input += "x"
+          return {
+            ...base,
+            wordIdx: current,
+            letterIdx: typed,
+            currentInput: input,
+            hadError: preset === "revealed"
+          }
+        }
+        if (preset === "redo") {
+          const word = unitText(words[current] || "")
+          const extraIndex = words.length
+          words.push(word)
+          const redoSet = new Set([extraIndex])
+          return {
+            ...base,
+            wordIdx: extraIndex,
+            letterIdx: 0,
+            currentInput: "",
+            redoSet
+          }
+        }
+        if (preset === "gentle-error") {
+          const gentleInputs = {}
+          words.forEach((w, i) => {
+            if (i <= current) gentleInputs[i] = enCore(unitText(w))
+          })
+          const w = words[current] || ""
+          const core = enCore(unitText(w))
+          const wrongAt = Math.min(1, Math.max(0, core.length - 1))
+          gentleInputs[current] = core.slice(0, wrongAt) + "z"
+          const gentleErrors = {}
+          let corePos = 0
+          const fullWord = unitText(w)
+          for (let li = 0; li < fullWord.length; li++) {
+            if (EN_OPTIONAL_PUNCT.has(fullWord[li])) continue
+            if ((gentleInputs[current][corePos] || "") !== fullWord[li]) gentleErrors[`${current}:${li}`] = true
+            corePos++
+          }
+          return {
+            ...base,
+            wordIdx: current + 1,
+            letterIdx: 0,
+            currentInput: "",
+            gentleInputs,
+            gentleErrors,
+            hadError: true
+          }
+        }
+        return { ...base, wordIdx: words.length }
+      }
+
+      function renderWord(word, wi, state, opts, isRedoRow) {
+        const classes = ["word-col"]
+        if (wi === state.wordIdx) classes.push("active")
+        if (wi < state.wordIdx) classes.push("completed")
+        if (state.redoSet.has(wi)) classes.push("redo")
+        if (isRedoRow) classes.push("redo-row")
+
+        const cn = opts.showCn ? (WORD_CN[stripPunct(unitText(word))] || "") : ""
+        const avg = opts.showTime && wi < state.wordIdx ? String(240 + ((wi * 83) % 480)) + "ms" : ""
+        let letters = ""
+        const unit = unitText(word)
+        for (let li = 0; li < unit.length; li++) {
+          const cls = classSet(letterClassFor(wi, li, word, state, opts)).join(" ")
+          const ch = letterCharFor(wi, li, word, state, opts)
+          letters += `<span class="letter${cls ? " " + cls : ""}">${esc(ch)}</span>`
+        }
+
+        return `
+          <div class="${classes.join(" ")}" data-wi="${wi}">
+            <span class="word-cn">${esc(cn)}</span>
+            <div class="word-box"><span class="word-letters">${letters}</span></div>
+            <span class="word-time${avg ? " has-value" : ""}">${esc(avg)}</span>
+          </div>
+        `
+      }
+
+      function renderFullWords(words, state, opts) {
+        const first = words.filter((w, wi) => !state.redoSet.has(wi))
+        const redoWords = words.filter((w, wi) => state.redoSet.has(wi))
+        const firstRow = first.map((w, local) => {
+          const wi = words.indexOf(w)
+          return renderWord(w, wi, state, opts, false)
+        }).join("")
+
+        let redoHtml = ""
+        if (opts.redo && opts.showRedoRow && redoWords.length) {
+          redoHtml = `<div class="enSentence enSentenceRedo">${redoWords.map((w, i) => renderWord(w, words.indexOf(w), state, opts, true)).join("")}</div>`
+        }
+        return `<div class="enSentence story">${firstRow}</div>${redoHtml}`
+      }
+
+      function renderPreview() {
+        const opts = settings
+        let words = parseWords(currentSentence.sentence)
+        const wordCountAtBuild = words.length
+        const state = buildState(words, opts, opts.preset)
+        const cnVisible = opts.cnContext && !(opts.preset === "done" && state.wordIdx >= words.length)
+        $("sentenceCnLine").textContent = cnVisible ? currentSentence.cn : ""
+        $("sentenceCnLine").style.display = cnVisible ? "" : "none"
+
+        if (opts.preset === "done" && opts.preset === "done") {
+          $("previewSentenceWrap").innerHTML = renderFullWords(words, state, opts)
+        } else {
+          $("previewSentenceWrap").innerHTML = renderFullWords(words, state, opts)
+        }
+
+        const done = opts.preset === "done" || state.wordIdx >= words.length
+        const currentWordNo = Math.min(state.wordIdx + 1, wordCountAtBuild)
+        $("wordNo").textContent = String(currentWordNo)
+        $("wordTotal").textContent = String(wordCountAtBuild)
+        $("sentenceNo").textContent = String(sentenceIdx + 1)
+        $("sentenceTotal").textContent = String(STORY_LINES.length)
+        $("previewTitle").textContent = `${currentSentence.title}`
+        $("previewSub").textContent = `${currentSentence.sentence} · ${currentSentence.cn}`
+        $("stageName").textContent = stageLabel(opts.preset)
+        $("previewStateCode").textContent = snapshotCode()
+        $("displayValue").textContent = displayModeLabel(opts.displayMode)
+        $("colorValue").textContent = colorModeLabel(opts.colorMode)
+        $("masteryValue").textContent = masteryLabel(opts.mastery)
+
+        $("activeBadges").innerHTML = [
+          badge(displayModeLabel(opts.displayMode), "blue"),
+          badge(colorModeLabel(opts.colorMode), ""),
+          badge(stageLabel(opts.preset), "green"),
+          badge(opts.gentle ? "宽松" : "严格", opts.gentle ? "green" : ""),
+          badge(opts.redo ? "重练" : "跳过", opts.redo ? "red" : "")
+        ].join("")
+      }
+
+      function badge(text, cls) {
+        return `<span class="badge${cls ? " " + cls : ""}">${esc(text)}</span>`
+      }
+
+      function stageLabel(p) {
+        return {
+          fresh: "整句待输",
+          typing: "输入中",
+          wrong: "错键",
+          revealed: "揭示",
+          redo: "重练行",
+          "gentle-error": "宽松标错",
+          done: "整句完成"
+        }[p] || p
+      }
+
+      function displayModeLabel(m) {
+        return { smart: "智能", guide: "全指引", dictation: "全默写" }[m] || m
+      }
+
+      function colorModeLabel(m) {
+        return { "word-root": "词根", syllable: "音节", off: "关" }[m] || m
+      }
+
+      function masteryLabel(m) {
+        return { none: "当前未掌握", current: "当前已掌握", all: "全部已掌握" }[m] || m
+      }
+
+      function snapshotCode() {
+        const o = settings
+        return `display:${o.displayMode} color:${o.colorMode} preset:${o.preset} gentle:${o.gentle ? 1 : 0} redo:${o.redo ? 1 : 0} cn:${o.showCn ? 1 : 0} time:${o.showTime ? 1 : 0}`
+      }
+
+      function baseState(wordIdx, typed = 0, extra = {}) {
+        return {
+          wordIdx,
+          letterIdx: typed,
+          currentInput: extra.input || "",
+          hadError: !!extra.hadError,
+          gentleInputs: extra.gentleInputs || {},
+          gentleErrors: extra.gentleErrors || {},
+          replayWi: -1,
+          redoSet: extra.redoSet || new Set(),
+          mastered: extra.mastered || new Set()
+        }
+      }
+
+      function masteredForDisplay(words, mode, mastery, currentIdx) {
+        if (mode === "guide") return new Set()
+        if (mode === "dictation") return new Set(words)
+        if (mastery === "current") return new Set(words)
+        return new Set(words.filter((_, i) => i !== currentIdx))
+      }
+
+      function matrixCurrentState(words, opts, row, col) {
+        const currentIdx = col.key === "completed"
+          ? Math.min(2, Math.max(0, words.length - 1))
+          : Math.min(1, Math.max(0, words.length - 1))
+        const target = enCore(words[currentIdx] || "")
+        const typed = col.key === "typing"
+          ? Math.min(2, target.length)
+          : col.key === "wrong"
+            ? Math.min(2, Math.max(1, target.length - 1))
+            : 0
+        let input = target.slice(0, typed)
+        if (col.key === "wrong" && typed < target.length) input += "x"
+        const state = baseState(currentIdx, typed, {
+          input,
+          hadError: col.key === "revealed",
+          mastered: masteredForDisplay(words, row.mode, row.mastery, currentIdx)
+        })
+        return state
+      }
+
+      function renderExcerpt(words, state, opts) {
+        const center = Math.min(state.wordIdx, Math.max(0, words.length - 1))
+        const start = Math.max(0, center - 1)
+        const end = Math.min(words.length, center + 4)
+        const slice = words.slice(start, end)
+        return `<div class="enSentence story">${slice.map((w, i) => renderWord(w, start + i, state, opts, false)).join("")}</div>`
+      }
+
+      function renderColorWord(word, state, opts, redo = false) {
+        const classes = ["word-col"]
+        if (state.wordIdx === 0) classes.push("active")
+        if (state.wordIdx > 0) classes.push("completed")
+        if (redo) classes.push("redo")
+        const html = renderWord(word, 0, state, opts, false).replace(/^<div class="[^"]+">/, `<div class="${classes.join(" ")}">`)
+        return html
+      }
+
+      function renderDisplayMatrix() {
+        const words = parseWords(currentSentence.sentence)
+        const matrixOpts = {
+          ...settings,
+          showCn: false,
+          showTime: false,
+          redo: false,
+          gentle: false,
+          displayMode: "guide",
+          mastery: "current"
+        }
+        const rows = [
+          { key: "smart-current", label: "智能", note: "当前词已掌握", mode: "smart", mastery: "current" },
+          { key: "smart-new", label: "智能", note: "当前未掌握，其余已掌握", mode: "smart", mastery: "none" },
+          { key: "guide", label: "全指引", note: "始终显示字母", mode: "guide", mastery: "none" },
+          { key: "dictation", label: "全默写", note: "始终隐藏字母", mode: "dictation", mastery: "none" }
+        ]
+        const columns = [
+          { key: "completed", label: "前词完成" },
+          { key: "pending", label: "当前待输" },
+          { key: "typing", label: "当前输入" },
+          { key: "wrong", label: "错键" },
+          { key: "revealed", label: "揭示后" }
+        ]
+        let table = `<table class="matrix"><thead><tr><th></th>${columns.map((c) => `<th>${esc(c.label)}</th>`).join("")}</tr></thead><tbody>`
+        rows.forEach((row) => {
+          table += `<tr><td class="matrixRowLabel">${esc(row.label)}<small>${esc(row.note)}</small></td>`
+          columns.forEach((col) => {
+            const o = { ...matrixOpts, displayMode: row.mode, mastery: row.mastery }
+            const st = matrixCurrentState(words, o, row, col)
+            table += `<td><div class="matrixCell"><span class="matrixCellLabel">${esc(col.label)}</span>${renderExcerpt(words, st, o)}</div></td>`
+          })
+          table += `</tr>`
+        })
+        table += `</tbody></table>`
+        $("displayMatrix").innerHTML = table
+        $("matrixDesc").textContent = `样本：${currentSentence.sentence}`
+      }
+
+      function colorCellState(kind, opts) {
+        const word = "breakfast"
+        const core = enCore(word)
+        if (kind === "typing") return { st: baseState(0, 3, { input: "bre" }), word }
+        if (kind === "completed") return { st: baseState(1, 0), word }
+        if (kind === "redo") return { st: baseState(1, 0, { redoSet: new Set([0]) }), word, redo: true }
+        return { st: baseState(0, 0), word }
+      }
+
+      function renderColorMatrix() {
+        const opts = {
+          ...settings,
+          showCn: false,
+          showTime: false,
+          redo: true,
+          gentle: false,
+          displayMode: "guide",
+          mastery: "none"
+        }
+        const colorRows = [
+          { key: "word-root", label: "词根", note: "seg-pre/root/root2/suf" },
+          { key: "syllable", label: "音节", note: "syl-0..4" },
+          { key: "off", label: "关", note: "base letter" }
+        ]
+        const states = [
+          { key: "pending", label: "未输入" },
+          { key: "typing", label: "输入中" },
+          { key: "completed", label: "完成后" },
+          { key: "redo", label: "重练完成" }
+        ]
+        let table = `<table class="matrix"><thead><tr><th></th>${states.map((c) => `<th>${esc(c.label)}</th>`).join("")}</tr></thead><tbody>`
+        colorRows.forEach((row) => {
+          table += `<tr><td class="matrixRowLabel">${esc(row.label)}<small>${esc(row.note)}</small></td>`
+          states.forEach((col) => {
+            const cell = colorCellState(col.key, opts)
+            table += `<td><div class="matrixCell"><span class="matrixCellLabel">${esc(col.label)}</span>${renderColorWord(cell.word, cell.st, { ...opts, colorMode: row.key }, cell.redo)}</div></td>`
+          })
+          table += `</tr>`
+        })
+        table += `</tbody></table>`
+        $("colorMatrix").innerHTML = table
+      }
+
+      function renderTokenGrid() {
+        const tokens = [
+          { name: "未输入词根", cls: "seg-pre seg-root seg-suf", word: "experience", render: () => tokenForWord("experience", "seg-pre seg-root seg-suf", false) },
+          { name: "当前字母", cls: ".current", word: "warm", render: () => tokenWord("warm", [["letter current", "w"], ["letter", "a"], ["letter", "r"], ["letter", "m"]]) },
+          { name: "默写当前", cls: ".dict-current", word: "warm", render: () => tokenWord("warm", [["letter dict-current", "w"], ["letter hidden", "a"], ["letter hidden", "r"], ["letter hidden", "m"]]) },
+          { name: "已输入", cls: ".correct", word: "warm", render: () => tokenWord("warm", [["letter correct", "w"], ["letter correct", "a"], ["letter current", "r"], ["letter", "m"]]) },
+          { name: "错键", cls: ".incorrect", word: "warm", render: () => tokenWord("warm", [["letter correct", "w"], ["letter correct", "a"], ["letter incorrect", "r"], ["letter", "m"]]) },
+          { name: "标点", cls: ".punct", word: "cows,", render: () => tokenWord("cows,", [["letter correct", "c"], ["letter correct", "o"], ["letter correct", "w"], ["letter correct", "s"], ["letter punct", ","]]) },
+          { name: "标点当前位置", cls: ".punct-current", word: "cows,", render: () => tokenWord("cows,", [["letter punct-done", "c"], ["letter punct-done", "o"], ["letter punct-done", "w"], ["letter punct-done", "s"], ["letter punct-current", ","]]) },
+          { name: "音节未输", cls: ".syl-0..4", word: "family", render: () => tokenForWord("family", "", true) },
+          { name: "重练完成", cls: ".redo .correct", word: "breakfast", render: () => `<div class="word-box redo"><span class="word-letters">${[...enCore("breakfast")].map((c) => `<span class="letter correct">${esc(c)}</span>`).join("")}</span></div>` },
+          { name: "宽松错字待改", cls: ".incorrect", word: "family", render: () => tokenWord("family", [["letter correct", "f"], ["letter correct", "a"], ["letter incorrect", "m"], ["letter", "i"], ["letter", "l"], ["letter", "y"]]) }
+        ]
+        $("tokenGrid").innerHTML = tokens.map((t) => `
+          <div class="token">
+            <div class="tokenHead"><span class="tokenName">${esc(t.name)}</span><span class="tokenClass">${esc(t.cls)}</span></div>
+            <div class="tokenBody">${t.render()}</div>
+          </div>
+        `).join("")
+      }
+
+      function tokenWord(word, rows) {
+        const letters = rows.map(([cls, ch]) => `<span class="${esc(cls)}">${esc(ch)}</span>`).join("")
+        return `<div class="word-box"><span class="word-letters">${letters}</span></div>`
+      }
+
+      function tokenForWord(word, cls, syllable) {
+        if (syllable) {
+          const map = syllableMap(word)
+          const letters = [...word].map((ch, i) => `<span class="letter syl-${map[i] % 5}">${esc(ch)}</span>`).join("")
+          return `<div class="word-box"><span class="word-letters">${letters}</span></div>`
+        }
+        const map = segmentMap(word)
+        const letters = [...word].map((ch, i) => `<span class="letter ${esc(map[i] || "seg-root")}">${esc(ch)}</span>`).join("")
+        return `<div class="word-box"><span class="word-letters">${letters}</span></div>`
+      }
+
+      function renderParsePreview() {
+        const meta = PARSE_META
+        const wds = meta.wordDetails || []
+        const comps = meta.sentenceStructure || []
+        const bodies = []
+        const puncts = []
+        const rawToks = String(meta.sentenceEn || "").split(/\s+/).filter(Boolean)
+        for (const tok of rawToks) {
+          const m = /^[A-Za-z0-9']+/.exec(tok)
+          if (m) {
+            bodies.push(m[0])
+            puncts.push(tok.slice(m[0].length).replace(/[^.,!?;:'"()<>[\]…—-]+/g, ""))
+          } else if (bodies.length) {
+            puncts[puncts.length - 1] += tok.replace(/[^.,!?;:'"()<>[\]…—-]+/g, "")
+          }
+        }
+        const wdMap = new Map()
+        for (const wd of wds) {
+          const k = String(wd.word || "").toLowerCase().replace(/[.,!?;:"]+$/, "")
+          if (!wdMap.has(k)) wdMap.set(k, wd)
+        }
+        const mkWord = (body, tail) => {
+          const text = String(body || "").toLowerCase().replace(/[.,!?;:"]+$/, "")
+          const wd = wdMap.get(text)
+          const pos = wd?.pos || wd?.partOfSpeech || ""
+          const def = Array.isArray(wd?.definition) ? (wd.definition[0] || "") : (wd?.definition || "")
+          const ph = wd?.phonetic
+          const phStr = ph && typeof ph === "object" ? (ph.us || ph.uk || "") : (ph || "")
+          return {
+            word: body || text,
+            punct: tail || "",
+            ph: phStr ? "/" + phStr + "/" : "",
+            def,
+            pos,
+            posCn: POS_CN[pos] || (pos ? pos.toLowerCase() : ""),
+            posColor: POS_COLORS[pos] || "#9ca3af"
+          }
+        }
+        const groups = []
+        const used = new Array(bodies.length).fill(false)
+        for (const c of comps) {
+          const words = []
+          for (let i = c.start; i <= (c.end ?? c.start) && i < bodies.length; i++) {
+            words.push(mkWord(bodies[i], puncts[i]))
+            used[i] = true
+          }
+          if (words.length) {
+            groups.push({
+              role: c.role || "",
+              type: c.type || "",
+              color: COMP_COLORS[c.type] || "#64748b",
+              explanation: c.explanation || "",
+              words
+            })
+          }
+        }
+        const loose = []
+        bodies.forEach((b, i) => { if (!used[i]) loose.push(mkWord(b, puncts[i])) })
+        if (loose.length) {
+          if (groups.length) groups[groups.length - 1].words.push(...loose)
+          else groups.push({ role: "", color: "#64748b", explanation: "", words: loose })
+        }
+
+        $("parsePreview").innerHTML = `<div class="spParse">${groups.map((g, gi) => `
+          <div class="spGroup${g.role ? "" : " plain"}" style="border-color:${g.color}80;--sp-chip:${g.color};--gi:${gi}">
+            ${g.role ? `<span class="spChip">${esc(g.role)}</span>` : ""}
+            ${g.words.map((wd) => `
+              <div class="spUnit">
+                <span class="spPh">${esc(wd.ph)}</span>
+                <span class="spCell"><span class="spWord">${esc(wd.word)}<span class="spUl" style="background-color:${esc(wd.posColor)}"></span></span>${wd.punct ? `<span class="spPunct">${esc(wd.punct)}</span>` : ""}</span>
+                <span class="spDef">${esc(wd.def)}</span>
+                <span class="spPos">${esc(wd.posCn)}</span>
+                ${g.explanation ? `
+                  <div class="spTip">
+                    <div class="spTipTitle"><span class="spTipRole">${esc(g.role)}</span><span class="spTipType">${esc(g.type)}</span></div>
+                    <div class="spTipBody">${esc(g.explanation)}</div>
+                  </div>` : ""}
+              </div>`).join("")}
+          </div>`).join("")}</div>`
+      }
+
+      function renderAll() {
+        renderPreview()
+        renderDisplayMatrix()
+        renderColorMatrix()
+        renderTokenGrid()
+        renderParsePreview()
+        syncControls()
+      }
+
+      function syncControls() {
+        const o = settings
+        $("showCnInput").checked = o.showCn
+        $("showTimeInput").checked = o.showTime
+        $("redoInput").checked = o.redo
+        $("gentleInput").checked = o.gentle
+        $("punctInput").checked = o.punct
+        $("cnContextInput").checked = o.cnContext
+        $("showRedoRowInput").checked = o.showRedoRow
+        $("sentenceSelect").value = currentSentence.id
+        $("masterySelect").value = o.mastery
+        document.querySelectorAll("#displaySeg .segBtn").forEach((b) => b.classList.toggle("on", b.dataset.mode === o.displayMode))
+        document.querySelectorAll("#colorSeg .segBtn").forEach((b) => b.classList.toggle("on", b.dataset.color === o.colorMode))
+        document.querySelectorAll(".presetBtn").forEach((b) => b.classList.toggle("on", b.dataset.preset === o.preset))
+      }
+
+      function bindEvents() {
+        document.querySelectorAll("#displaySeg .segBtn").forEach((b) => {
+          b.addEventListener("click", () => {
+            settings.displayMode = b.dataset.mode
+            renderAll()
+          })
+        })
+        document.querySelectorAll("#colorSeg .segBtn").forEach((b) => {
+          b.addEventListener("click", () => {
+            settings.colorMode = b.dataset.color
+            renderAll()
+          })
+        })
+        document.querySelectorAll(".presetBtn").forEach((b) => {
+          b.addEventListener("click", () => {
+            settings.preset = b.dataset.preset
+            if (b.dataset.preset === "redo") {
+              settings.redo = true
+              settings.showRedoRow = true
+            }
+            if (b.dataset.preset === "gentle-error") settings.gentle = true
+            renderAll()
+          })
+        })
+        $("masterySelect").addEventListener("change", (e) => {
+          settings.mastery = e.target.value
+          renderAll()
+        })
+        $("sentenceSelect").addEventListener("change", (e) => {
+          const idx = Math.max(0, STORY_LINES.findIndex((s) => s.id === e.target.value))
+          currentSentence = STORY_LINES[idx]
+          sentenceIdx = idx
+          settings.preset = "typing"
+          renderAll()
+        })
+        const bindToggle = (id, key) => {
+          $(id).addEventListener("change", (e) => {
+            settings[key] = e.target.checked
+            renderAll()
+          })
+        }
+        bindToggle("showCnInput", "showCn")
+        bindToggle("showTimeInput", "showTime")
+        bindToggle("redoInput", "redo")
+        bindToggle("gentleInput", "gentle")
+        bindToggle("punctInput", "punct")
+        bindToggle("cnContextInput", "cnContext")
+        bindToggle("showRedoRowInput", "showRedoRow")
+
+        $("themeBtn").addEventListener("click", () => {
+          const root = document.documentElement
+          const dark = root.dataset.theme === "dark"
+          root.dataset.theme = dark ? "light" : "dark"
+          $("themeBtn").textContent = dark ? "暗色" : "亮色"
+        })
+
+        $("randomBtn").addEventListener("click", () => {
+          const modes = ["smart", "guide", "dictation"]
+          const colors = ["word-root", "syllable", "off"]
+          const presets = ["fresh", "typing", "wrong", "revealed", "redo", "done"]
+          settings.displayMode = modes[Math.floor(Math.random() * modes.length)]
+          settings.colorMode = colors[Math.floor(Math.random() * colors.length)]
+          settings.mastery = Math.random() > 0.5 ? "current" : "none"
+          settings.gentle = Math.random() > 0.68
+          settings.redo = Math.random() > 0.58
+          settings.showRedoRow = settings.redo && Math.random() > 0.35
+          settings.showCn = Math.random() > 0.35
+          settings.showTime = Math.random() > 0.7
+          settings.preset = presets[Math.floor(Math.random() * presets.length)]
+          renderAll()
+        })
+
+        $("resetBtn").addEventListener("click", () => {
+          Object.assign(settings, {
+            displayMode: "smart",
+            colorMode: "word-root",
+            mastery: "none",
+            showCn: true,
+            showTime: false,
+            redo: false,
+            gentle: false,
+            punct: false,
+            cnContext: true,
+            showRedoRow: false,
+            preset: "typing"
+          })
+          currentSentence = STORY_LINES[1]
+          sentenceIdx = 1
+          renderAll()
+        })
+
+        $("copyCodeBtn").addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(snapshotCode())
+            $("copyCodeBtn").textContent = "已复制"
+            setTimeout(() => { $("copyCodeBtn").textContent = "复制快照码" }, 900)
+          } catch {
+            $("copyCodeBtn").textContent = snapshotCode()
+          }
+        })
+      }
+
+      renderAll()
+      bindEvents()
+    })()
+  </script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>本地课包读取层验证</title>
+<style>
+  body { font-family: -apple-system, sans-serif; max-width: 760px; margin: 40px auto; padding: 0 16px; color: #1a1a1a; }
+  h1 { font-size: 20px; }
+  button { padding: 8px 16px; font-size: 14px; cursor: pointer; }
+  .card { border: 1px solid #ddd; border-radius: 8px; padding: 12px 16px; margin: 10px 0; }
+  .ok { color: #0a7d32; font-weight: 600; }
+  .err { color: #c5221f; white-space: pre-wrap; font-family: monospace; font-size: 12px; }
+  .warn { color: #b45309; font-weight: 600; }
+  .muted { color: #666; font-size: 12px; }
+  pre { background: #f6f6f6; padding: 8px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+  .row { display: flex; gap: 8px; align-items: center; margin: 6px 0; flex-wrap: wrap; }
+  code { background: #eee; padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+</style>
+</head>
+<body>
+<h1>本地课包目录读取层验证</h1>
+<p class="muted">两种选法都支持：</p>
+<ul class="muted">
+  <li><b>选根目录</b>（如 <code>项目根/LocalCoursePacks（即 shuangping/LocalCoursePacks）</code>）→ 目录里直接有 <code>index.json</code>（注册表）+ 若干课包子目录</li>
+  <li><b>直接选课包子目录</b>（如 <code>项目根/LocalCoursePacks（即 shuangping/LocalCoursePacks）/family-8000</code>）→ 目录里有课包级 <code>index.json</code>（含 courses），自动包装成单包注册表</li>
+</ul>
+<div class="row">
+  <button id="pick">📂 选择本地课包目录</button>
+  <button id="reset" style="display:none">➖ 移除第 1 个本地课包（演示逐包移除）</button>
+  <span id="mode" class="muted">当前：线上模式</span>
+</div>
+<div id="result"></div>
+
+<script type="module">
+  import { hasLocalPackDir, localSourceCount, fetchCoursePackRegistry, fetchCoursePack, fetchCourseData, removeLocalCoursePack, addLocalPackSourceForTesting } from './src/utils/coursePacks.js'
+
+  const mode = document.getElementById('mode')
+  const result = document.getElementById('result')
+  const resetBtn = document.getElementById('reset')
+  const log = (html) => { result.innerHTML += html }
+  const refreshMode = () => {
+    if (!hasLocalPackDir()) { mode.textContent = '当前：线上模式'; resetBtn.style.display = 'none' }
+    else { mode.textContent = `当前：本地模式（${localSourceCount()} 个目录源）`; resetBtn.style.display = 'inline-block' }
+  }
+  const isMissing = (e) => /NotFoundError|not found|ENOENT/i.test(String((e && (e.name + ' ' + e.message)) || ''))
+
+  async function verify(desc, fn) {
+    try {
+      const val = await fn()
+      log(`<div class="card"><span class="ok">✓ ${desc}</span><pre>${JSON.stringify(val, null, 1)}</pre></div>`)
+    } catch (e) {
+      log(`<div class="card"><span class="err">✗ ${desc}\n${e.message}</span></div>`)
+    }
+  }
+
+  // 探测：注册表根（含 packs）| 单课包目录（含 courses）| 未知
+  async function probeIndex(dir) {
+    let j = null
+    try {
+      const txt = await (await (await dir.getFileHandle('index.json')).getFile()).text()
+      j = JSON.parse(txt)
+    } catch {}
+    if (!j) return { kind: null }
+    if (Array.isArray(j.packs)) return { kind: 'registry' }
+    if (Array.isArray(j.courses)) return { kind: 'single' }
+    return { kind: null }
+  }
+
+  document.getElementById('pick').addEventListener('click', async () => {
+    result.innerHTML = ''
+    try {
+      if (!window.showDirectoryPicker) throw new Error('浏览器不支持 File System Access（需 Chrome/Edge）')
+      const dir = await window.showDirectoryPicker({ mode: 'read' })
+      log(`<div class="card">已选目录：<code>${dir.name}</code></div>`)
+      const { kind } = await probeIndex(dir)
+      if (!kind) {
+        log('<div class="card"><span class="err">目录结构无法识别：index.json 应含 packs[]（注册表根）或 courses[]（单课包目录）</span></div>')
+        return
+      }
+      const r = await addLocalPackSourceForTesting(dir, kind)
+      log(`<div class="card"><span class="ok">${r.note}（${kind}，${r.packCount} 个课包）</span></div>`)
+      refreshMode()
+
+      await verify('1. fetchCoursePackRegistry() 合并注册表（本地同名覆盖线上）', async () => {
+        const reg = await fetchCoursePackRegistry()
+        return { 总数: reg.packs.length, 前3: reg.packs.slice(0, 3).map(p => p.slug + (p.local ? '*' : '')) }
+      })
+
+      // 挑一个"可见的本地课包"验证读取链路（多目录时也验证后添加优先/回退）
+      const locals = (await fetchCoursePackRegistry()).packs.filter(p => p.local)
+      if (locals.length) {
+        const first = locals[0]
+        await verify(`2. fetchCoursePack(${first.slug}) 读课包清单`, async () => {
+          const pack = await fetchCoursePack(first.slug)
+          return { title: pack.title, courses: pack.courses.length, 首课: pack.courses[0]?.file, 末课: pack.courses[pack.courses.length - 1]?.file }
+        })
+        await verify(`3. fetchCourseData(${first.slug}) 读单课全量`, async () => {
+          const pack = await fetchCoursePack(first.slug)
+          const c = pack.courses[0]
+          const data = await fetchCourseData(first.slug, c.file)
+          return { 课: data.course?.title, statements: data.statements?.length, sentences: data.sentences?.length }
+        })
+      } else {
+        log('<div class="card muted">（本地注册表没有可见课包，跳过 2/3 读取验证）</div>')
+      }
+    } catch (e) {
+      log(`<div class="card"><span class="err">${e.stack || e.message}</span></div>`)
+    }
+  })
+
+  // 逐包移除验证：每次点掉第一个可见本地课包（只演示，不做"一键清空"）
+  resetBtn.addEventListener('click', async () => {
+    result.innerHTML = ''
+    const locals = (await fetchCoursePackRegistry()).packs.filter(p => p.local)
+    if (!locals.length) {
+      refreshMode()
+      log('<div class="card"><span class="ok">已无本地课包，回到仅线上</span></div>')
+      return
+    }
+    const p = locals[0]
+    const r = await removeLocalCoursePack(p.slug)
+    log(`<div class="card">${r.ok ? '<span class="ok">✓</span>' : '<span class="err">✗</span>'} 移除本地课包：${p.slug}（${r.ok ? '' : r.error || ''}）</div>`)
+    await verify('移除后 fetchCoursePackRegistry()', async () => {
+      const reg = await fetchCoursePackRegistry()
+      return { 总数: reg.packs.length, 本地: reg.packs.filter(x => x.local).map(x => x.slug), 线上: reg.packs.filter(x => !x.local).length }
+    })
+    refreshMode()
+  })
+</script>
+</body>
+</html>

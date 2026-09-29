@@ -1,0 +1,75 @@
+{
+  "designSystemApproved": false,
+  "activePage": "index.html",
+  "version": 1,
+  "createdAt": "2026-09-04T16:36:57.592Z",
+  "updatedAt": "2026-09-04T16:41:57.193Z",
+  "frames": [
+    {
+      "id": "index",
+      "kind": "html-file",
+      "title": "Main Canvas",
+      "fileName": "index.html",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900,
+      "status": "active",
+      "createdAt": "2026-09-04T16:36:57.597Z",
+      "updatedAt": "2026-09-04T16:36:57.597Z"
+    },
+    {
+      "id": "core-sentence-style-playground",
+      "kind": "html-file",
+      "title": "Core Sentence Style Playground",
+      "fileName": "core-sentence-style-playground.html",
+      "x": 1500,
+      "y": 0,
+      "width": 1440,
+      "height": 900,
+      "status": "draft",
+      "createdAt": "2026-09-04T16:36:57.597Z",
+      "updatedAt": "2026-09-04T16:36:57.597Z"
+    },
+    {
+      "id": "en-sentence-playground",
+      "kind": "html-file",
+      "title": "En Sentence Playground",
+      "fileName": "en-sentence-playground.html",
+      "x": 3000,
+      "y": 0,
+      "width": 1440,
+      "height": 900,
+      "status": "draft",
+      "createdAt": "2026-09-04T16:36:57.597Z",
+      "updatedAt": "2026-09-04T16:36:57.597Z"
+    },
+    {
+      "id": "playground-sentences",
+      "kind": "html-file",
+      "title": "Playground Sentences",
+      "fileName": "playground-sentences.html",
+      "x": 4500,
+      "y": 0,
+      "width": 1440,
+      "height": 900,
+      "status": "draft",
+      "createdAt": "2026-09-04T16:36:57.597Z",
+      "updatedAt": "2026-09-04T16:36:57.597Z"
+    },
+    {
+      "id": "visualization-playground",
+      "kind": "html-file",
+      "title": "Visualization Playground",
+      "fileName": "visualization-playground.html",
+      "x": 6000,
+      "y": 0,
+      "width": 1440,
+      "height": 900,
+      "status": "draft",
+      "createdAt": "2026-09-04T16:36:57.597Z",
+      "updatedAt": "2026-09-04T16:36:57.597Z"
+    }
+  ],
+  "activeFrameId": "index"
+}

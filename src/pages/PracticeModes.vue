@@ -186,6 +186,7 @@
                   <div
                     v-if="!enRedoSet.has(wi)"
                     class="word-col"
+                    :data-wi="wi"
                     :class="{ active: wi === wordIdx, completed: wi < wordIdx || enDoneByInput(wi), redo: enRedoSet.has(wi) }"
                   >
                     <span class="word-cn" v-if="(!enStoryMode && !enCustomMode) || settings.enShowWordCn">{{ wordCn(w) }}</span>
@@ -3001,8 +3002,15 @@ function scrollToCurrentWord() {
   if (!el) return
   const cur = el.querySelector(`.word-col[data-wi="${target}"]`)
   if (!cur) return
-  const t = cur.offsetLeft - (el.clientWidth - cur.offsetWidth) + 48
-  el.scrollTo({ left: Math.max(0, t), behavior: 'smooth' })
+  // 用相对滚动容器的坐标：.word-col 无 position，offsetLeft 会相对最近的定位祖先
+  // （.practiceModes）而非滚动容器本身，直接相减会得到错误目标值。
+  const box = el.getBoundingClientRect()
+  const curBox = cur.getBoundingClientRect()
+  const offsetInScroller = curBox.left - box.left + el.scrollLeft
+  const t = offsetInScroller - (el.clientWidth - curBox.width) + 48
+  // 夹在可滚动范围内：目标词过宽时也保证不会滚出内容区
+  const max = Math.max(0, el.scrollWidth - el.clientWidth)
+  el.scrollTo({ left: Math.min(Math.max(0, t), max), behavior: 'smooth' })
 }
 // 当前词/句子/重练词数量变化时：滚动到当前词
 watch(

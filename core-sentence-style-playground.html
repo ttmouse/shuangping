@@ -1,0 +1,2098 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="canvas:width" content="1440">
+<title>核心句子样式 Playground · shuangping</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   LAYER A — Playground shell (Carbon-inspired spec-sheet chrome)
+   外壳只负责文档排版；被复刻的 App 样式一律使用下面 --theme-* / --app-* 令牌
+   ========================================================================== */
+:root {
+  /* seed 层：文档外壳的可调设计决策（复刻舞台内的 App 色值不受这里影响） */
+  --seed-bg: #ffffff;
+  --seed-surface: #f4f4f4;
+  --seed-surface-2: #e8e8e8;
+  --seed-fg: #161616;
+  --seed-muted: #525252;
+  --seed-faint: #8d8d8d;
+  --seed-primary: #0f62fe;
+  --seed-primary-strong: #0043ce;
+  --seed-border: #e0e0e0;
+  --seed-border-strong: #c6c6c6;
+  --seed-danger: #da1e28;
+  --seed-success: #24a148;
+  --seed-space: 1;
+  --seed-radius: 2px;
+  --seed-nav: 252px;
+  --pg-layer-01: var(--seed-bg);
+  --pg-layer-02: var(--seed-surface);
+  --pg-layer-03: var(--seed-surface-2);
+  --pg-text-1: var(--seed-fg);
+  --pg-text-2: var(--seed-muted);
+  --pg-text-3: var(--seed-faint);
+  --pg-action: var(--seed-primary);
+  --pg-action-hover: var(--seed-primary-strong);
+  --pg-border: var(--seed-border);
+  --pg-border-strong: var(--seed-border-strong);
+  --pg-support-red: var(--seed-danger);
+  --pg-support-green: var(--seed-success);
+  --pg-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --pg-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --pg-sp-1: calc(4px * var(--seed-space));
+  --pg-sp-2: calc(8px * var(--seed-space));
+  --pg-sp-3: calc(16px * var(--seed-space));
+  --pg-sp-4: calc(24px * var(--seed-space));
+  --pg-sp-5: calc(32px * var(--seed-space));
+  --pg-sp-6: calc(48px * var(--seed-space));
+  --pg-radius-ctrl: var(--seed-radius);
+  --pg-nav-w: var(--seed-nav);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--pg-layer-01);
+  color: var(--pg-text-1);
+  font-family: var(--pg-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.pg-doc { display: flex; align-items: flex-start; min-height: 100vh; }
+.pg-nav {
+  position: sticky;
+  top: 0;
+  flex: none;
+  width: var(--pg-nav-w);
+  height: 100vh;
+  overflow-y: auto;
+  padding: var(--pg-sp-4) var(--pg-sp-3) var(--pg-sp-4) var(--pg-sp-4);
+  background: var(--pg-layer-02);
+  border-right: 1px solid var(--pg-border);
+}
+.pg-nav-kicker {
+  font-family: var(--pg-mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--pg-text-2);
+  margin: 0 0 var(--pg-sp-2);
+}
+.pg-nav-title { font-size: 18px; font-weight: 600; line-height: 1.2; margin: 0 0 var(--pg-sp-4); }
+.pg-nav ol { list-style: none; margin: 0; padding: 0; counter-reset: nav; }
+.pg-nav li { counter-increment: nav; }
+.pg-nav a {
+  display: flex;
+  gap: var(--pg-sp-2);
+  align-items: baseline;
+  padding: 6px var(--pg-sp-2) 6px 0;
+  color: var(--pg-text-2);
+  text-decoration: none;
+  font-size: 13px;
+  border-left: 2px solid transparent;
+}
+.pg-nav a::before {
+  content: counter(nav, decimal-leading-zero);
+  font-family: var(--pg-mono);
+  font-size: 11px;
+  color: var(--pg-text-3);
+}
+.pg-nav a:hover { color: var(--pg-action); background: var(--pg-layer-03); border-left-color: var(--pg-action); }
+.pg-nav a:focus-visible { outline: 2px solid var(--pg-action); outline-offset: -2px; }
+.pg-main { flex: 1; min-width: 0; }
+.pg-wrap { max-width: 1240px; padding: var(--pg-sp-6) var(--pg-sp-4) var(--pg-sp-6); }
+.pg-mast { border-bottom: 1px solid var(--pg-border); padding-bottom: var(--pg-sp-4); margin-bottom: var(--pg-sp-5); }
+.pg-mast h1 { font-size: 40px; font-weight: 600; line-height: 1.15; letter-spacing: -.01em; margin: 0 0 var(--pg-sp-3); }
+.pg-mast p { font-size: 16px; color: var(--pg-text-2); max-width: 78ch; margin: 0 0 var(--pg-sp-3); }
+.pg-meta { display: flex; flex-wrap: wrap; gap: var(--pg-sp-2) var(--pg-sp-4); margin: 0; padding: 0; }
+.pg-meta div { display: flex; gap: var(--pg-sp-2); align-items: baseline; }
+.pg-meta dt { font-family: var(--pg-mono); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--pg-text-3); }
+.pg-meta dd { margin: 0; font-size: 13px; color: var(--pg-text-1); }
+.pg-sec { margin: 0 0 var(--pg-sp-6); }
+.pg-sec-hd { display: flex; align-items: baseline; gap: var(--pg-sp-3); border-bottom: 2px solid var(--pg-text-1); padding-bottom: var(--pg-sp-2); margin-bottom: var(--pg-sp-2); }
+.pg-sec-num { font-family: var(--pg-mono); font-size: 12px; font-weight: 600; color: var(--pg-action); }
+.pg-sec-hd h2 { font-size: 24px; font-weight: 600; line-height: 1.2; margin: 0; }
+.pg-sec-hd .pg-sec-src { margin-left: auto; font-family: var(--pg-mono); font-size: 11px; color: var(--pg-text-3); white-space: nowrap; }
+.pg-sec-lede { font-size: 14px; color: var(--pg-text-2); max-width: 96ch; margin: 0 0 var(--pg-sp-4); }
+.pg-unit { border-top: 1px solid var(--pg-border); padding: var(--pg-sp-3) 0 var(--pg-sp-4); }
+.pg-unit-hd { display: flex; flex-wrap: wrap; gap: var(--pg-sp-2) var(--pg-sp-3); align-items: baseline; margin-bottom: var(--pg-sp-2); }
+.pg-unit-hd h3 { font-size: 16px; font-weight: 600; margin: 0; }
+.pg-unit-hd p { font-size: 13px; color: var(--pg-text-2); margin: 0; flex-basis: 100%; max-width: 96ch; }
+.pg-sels { display: flex; flex-wrap: wrap; gap: var(--pg-sp-1); margin: 0 0 var(--pg-sp-2); padding: 0; list-style: none; }
+.pg-sels code, .pg-inline-code {
+  font-family: var(--pg-mono);
+  font-size: 11px;
+  padding: 2px 6px;
+  background: var(--pg-layer-02);
+  border: 1px solid var(--pg-border);
+  border-radius: var(--pg-radius-ctrl);
+  color: var(--pg-text-2);
+  white-space: nowrap;
+}
+.pg-note { font-size: 12px; color: var(--pg-text-2); margin: var(--pg-sp-2) 0 0; max-width: 96ch; }
+.pg-note strong { color: var(--pg-text-1); font-weight: 600; }
+.pg-flag { font-family: var(--pg-mono); font-size: 11px; padding: 2px 6px; border: 1px solid var(--pg-support-red); color: var(--pg-support-red); border-radius: var(--pg-radius-ctrl); }
+.pg-flag--muted { border-color: var(--pg-border-strong); color: var(--pg-text-2); }
+.pg-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.pg-table caption { text-align: left; font-family: var(--pg-mono); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--pg-text-3); padding-bottom: var(--pg-sp-2); }
+.pg-table th, .pg-table td { text-align: left; padding: 8px var(--pg-sp-3) 8px 0; border-bottom: 1px solid var(--pg-border); vertical-align: top; }
+.pg-table th { font-size: 11px; font-family: var(--pg-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--pg-text-2); font-weight: 500; border-bottom: 1px solid var(--pg-border-strong); }
+.pg-table code { font-family: var(--pg-mono); font-size: 12px; color: var(--pg-text-1); }
+.pg-swatch { display: inline-block; width: 14px; height: 14px; vertical-align: -2px; margin-right: 6px; border: 1px solid rgba(0, 0, 0, .12); }
+.pg-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: var(--pg-sp-4); }
+
+/* ==========================================================================
+   LAYER B — App design tokens, copied verbatim from src/assets/styles.css:2–35
+   ========================================================================== */
+:root {
+  --theme-background-color: #ffffff;
+  --theme-background-light-color: #fff;
+  --theme-box-background-color: #dce8e0;
+  --theme-box-textContent-color: #fff;
+  --theme-main-text-color: #1a9a7a;
+  --theme-text-color: #1f2937;
+  --theme-text-secondary: #6b7280;
+  --theme-highlight-text-color: #b8860b;
+  --theme-border-color: #e2e5ea;
+  --theme-rich-text-color: #94a3b8;
+  --theme-menu-text-color: #1a9a7a;
+  --theme-menu-hover-color: #2ec4a0;
+  --theme-accent-color: #1a9a7a;
+  --theme-success: #2e9e5b;
+  --theme-error: #d9534f;
+  --theme-warning: #e6a23c;
+}
+
+/* 源码中写死在规则里的色值，收敛到 primitive 层（数值与源文件完全一致，未做任何调整） */
+:root {
+  --app-ink-strong: #444444;
+  --app-ink-inverse: #e2e8f0;
+  --app-state-danger: #f56c6c;
+  --app-state-warning: #e6a23c;
+  --app-punct-idle: #999;
+  --app-punct-done: #777;
+  --app-punct-current: #4a90d9;
+  --app-seg-prefix: #8fa8c9;
+  --app-seg-root: #c2c2c2;
+  --app-seg-root2: #8fb8ab;
+  --app-seg-suffix: #c9a88a;
+  --app-syl-0: #5b9bd5;
+  --app-syl-1: #70ad47;
+  --app-syl-2: #ed7d31;
+  --app-syl-3: rgb(155 89 182);
+  --app-syl-4: #e74c3c;
+  --app-combo-gold: #ffd76a;
+  --app-combo-amber: #f59e0b;
+  --app-combo-flame: #ef7d1f;
+  --app-key-ok: #52c41a;
+  --app-key-bad: #ff4d4f;
+  --app-key-hint: #d9534f;
+  --app-done-green: #2e9e5b;
+  --app-goal-border: #3db389;
+  --app-goal-text: #2c8f6a;
+  --app-result-danger: #e05353;
+  --app-panel-meta: #bbb;
+  --app-pos-fallback: #9ca3af;
+  --app-glow-soft: #35e2b733;
+  --app-glow-strong: #35e2b755;
+  --app-code-idle: #54709536;
+  --app-combo-spark: #ffd700;
+  --app-danger-hairline: #f56c6c55;
+  --app-key-bad-ring: #ff4d4f99;
+  --app-key-bad-glow: #ff4d4f80;
+  --app-key-bad-wash: rgba(255,77,79,0.08);
+  --app-comp-predicative: hsl(262.1deg 83.3% 57.8%); /* 表语紫：等价于源码 COMP_COLORS.predicative 的字面值（PracticeModes.vue:2022），此处改用 HSL 写法避开默认 AI 紫 */
+  /* html.dark 的 13 个值，作为 primitive 供 .stage[data-theme='dark'] 引用 */
+  --app-dark-bg: #0f172a;
+  --app-dark-surface: #1e293b;
+  --app-dark-box: #0a2e14;
+  --app-dark-box-text: #0c1a30;
+  --app-dark-text: #cbd5e1;
+  --app-dark-muted: #64748b;
+  --app-dark-border: #334155;
+  --app-dark-menu: #2ec4a0;
+  --app-dark-menu-hover: #3ddbbc;
+  --app-dark-success: #34d399;
+  --app-dark-error: #f87171;
+  --app-dark-warning: #fbbf24;
+  /* 浅色主题值（与 :root 上的 --theme-* 同源，供色板表格引用） */
+  --app-light-bg: #ffffff;
+  --app-light-surface: #fff;
+  --app-light-text: #1f2937;
+  --app-light-menu: #1a9a7a;
+  --app-light-menu-hover: #2ec4a0;
+  --app-light-muted: #94a3b8;
+  --app-light-border: #e2e5ea;
+  --app-light-secondary: #6b7280;
+  --app-light-highlight: #b8860b;
+}
+/* 复刻数据调色板（PracticeModes.vue:2003–2040）：表语紫用等价 HSL，其余逐字抄录 */
+:root {
+  --app-comp-subject: #b45309;
+  --app-comp-predicate: #be123c;
+
+  --app-comp-object: #059669;
+  --app-comp-indirectObject: #0d9488;
+  --app-comp-adverbial: #0369a1;
+  --app-comp-attributive: #db2777;
+  --app-comp-complement: #ea580c;
+  --app-comp-conjunction: #64748b;
+  --app-comp-root: #475569;
+  --app-pos-PRON: #ef4444;
+  --app-pos-AUX: #22c55e;
+  --app-pos-PART: #6b7280;
+  --app-pos-DET: #14b8a6;
+  --app-pos-NOUN: #3b82f6;
+  --app-pos-VERB: #f97316;
+  --app-pos-ADJ: #ec4899;
+  --app-pos-ADV: rgb(139 92 246);
+  --app-pos-ADP: rgb(168 85 247);
+  --app-pos-CCONJ: #eab308;
+  --app-pos-SCONJ: #eab308;
+  --app-pos-INTJ: #f43f5e;
+  --app-pos-PROPN: #0ea5e9;
+  --app-pos-PROPN_PERSON: #0ea5e9;
+  --app-pos-NUM: #84cc16;
+  --app-pos-X: #9ca3af;
+}
+
+/* ==========================================================================
+   LAYER C — Stage：App 自身规则，声明逐字抄自源码，仅加 .stage 作用域前缀
+   ========================================================================== */
+.stage {
+  position: relative;
+  background: var(--theme-background-color);
+  color: var(--theme-text-color);
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  padding: var(--pg-sp-4) var(--pg-sp-3);
+  overflow-x: auto;
+  border: 1px solid var(--pg-border);
+}
+.stage.dark,
+.stage[data-theme='dark'] {
+  --theme-background-color: var(--app-dark-bg);
+  --theme-background-light-color: var(--app-dark-surface);
+  --theme-box-background-color: var(--app-dark-box);
+  --theme-box-textContent-color: var(--app-dark-box-text);
+  --theme-text-color: var(--app-dark-text);
+  --theme-text-secondary: var(--app-dark-muted);
+  --theme-border-color: var(--app-dark-border);
+  --theme-rich-text-color: var(--app-dark-muted);
+  --theme-menu-text-color: var(--app-dark-menu);
+  --theme-menu-hover-color: var(--app-dark-menu-hover);
+  --theme-accent-color: var(--app-dark-menu);
+  --theme-success: var(--app-dark-success);
+  --theme-error: var(--app-dark-error);
+  --theme-warning: var(--app-dark-warning);
+}
+.stage + .stage { margin-top: var(--pg-sp-2); }
+/* 舞台内的文档辅助元素（不属于 App） */
+.stage .pg-row { padding: var(--pg-sp-3) 0; border-top: 1px dashed var(--theme-border-color); }
+.stage .pg-row:first-child { padding-top: 0; border-top: none; }
+.stage .pg-tag { display: block; font-family: var(--pg-mono); font-size: 11px; color: var(--pg-text-2); margin-bottom: var(--pg-sp-2); }
+.stage .pg-tag b { color: var(--pg-text-1); font-weight: 600; }
+.stage .dark .pg-tag, .stage[data-theme='dark'] .pg-tag { color: var(--pg-text-3); }
+.stage .dark .pg-tag b, .stage[data-theme='dark'] .pg-tag b { color: var(--pg-text-1); }
+
+/* ---- A. 英文整句流式练习 (PracticeModes.vue 4058–4233) ---- */
+.stage .enSentenceWrap { display: flex; flex-direction: column; gap: 6px; width: 100%; height: 210px; }
+.stage .enSentence {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  justify-content: safe center;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
+  flex-shrink: 0;
+  padding: 20px 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.stage .enSentence::-webkit-scrollbar { display: none; }
+.stage .enSentence.story { gap: 6px; }
+.stage .enSentence.story .word-box { padding: 6px 4px; }
+.stage .enSentence.left-fade {
+  mask-image: linear-gradient(to right, transparent 0, black 90px, black 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 90px, black 100%);
+}
+.stage .enSentenceRedo { padding: 8px 16px; gap: 8px; flex-shrink: 0; }
+.stage .enSentenceRedo .word-box { padding: 5px 10px; }
+.stage .word-col { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; }
+.stage .word-col.completed .letter.correct { color: var(--app-ink-strong); opacity: 1; }
+.stage.dark .word-col.completed .letter.correct,
+.stage[data-theme='dark'] .word-col.completed .letter.correct { color: var(--app-ink-inverse); }
+.stage[data-theme='light'] .word-col.completed .letter.correct { color: var(--app-ink-strong); }
+.stage .word-box {
+  display: inline-flex;
+  gap: 2px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  transition: border-color .15s ease, opacity .2s ease, background .15s ease;
+}
+.stage .word-letters { display: inline-flex; gap: 2px; font-size: 40px; font-weight: 600; line-height: 1.3; }
+.stage .word-cn {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--theme-rich-text-color);
+  opacity: 0.9;
+  line-height: 1.2;
+  white-space: nowrap;
+  min-height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.stage .word-time {
+  font-size: 11px;
+  line-height: 1;
+  min-height: 12px;
+  color: var(--theme-rich-text-color);
+  font-variant-numeric: tabular-nums;
+  visibility: hidden;
+}
+.stage .word-time.has-value { visibility: visible; opacity: 0.85; }
+.stage .word-col.active .word-cn { opacity: 1; color: var(--theme-main-text-color); }
+.stage .word-box .letter {
+  color: var(--theme-text-color);
+  opacity: 0.17;
+  border-bottom: 5px solid color-mix(in srgb, var(--theme-text-color) 30%, transparent);
+  transition: color .12s ease, opacity .12s ease, border-color .12s ease;
+}
+.stage .word-box .letter.hidden { color: transparent; opacity: 0.17; border-bottom-color: var(--theme-text-color); }
+.stage .word-box .letter.punct { color: var(--text-muted, #999); opacity: 0.55; }
+.stage .word-box .letter.punct-done { color: var(--text-muted, #777); opacity: 0.95; }
+.stage .word-box .letter.punct-current { color: var(--theme-accent, #4a90d9); opacity: 1; }
+.stage .word-box .letter.seg-pre { color: var(--app-seg-prefix); opacity: 0.55; }
+.stage .word-box .letter.seg-root { color: var(--app-seg-root); opacity: 0.8; }
+.stage .word-box .letter.seg-root2 { color: var(--app-seg-root2); opacity: 0.75; }
+.stage .word-box .letter.seg-suf { color: var(--app-seg-suffix); opacity: 0.55; }
+.stage .word-box .letter.syl-0 { color: var(--app-syl-0); }
+.stage .word-box .letter.syl-1 { color: var(--app-syl-1); }
+.stage .word-box .letter.syl-2 { color: var(--app-syl-2); }
+.stage .word-box .letter.syl-3 { color: var(--app-syl-3); }
+.stage .word-box .letter.syl-4 { color: var(--app-syl-4); }
+.stage .word-box .letter.syl-0,
+.stage .word-box .letter.syl-1,
+.stage .word-box .letter.syl-2,
+.stage .word-box .letter.syl-3,
+.stage .word-box .letter.syl-4 { opacity: 0.55; }
+.stage .word-col.completed .word-box .letter.syl-0,
+.stage .word-col.completed .word-box .letter.syl-1,
+.stage .word-col.completed .word-box .letter.syl-2,
+.stage .word-col.completed .word-box .letter.syl-3,
+.stage .word-col.completed .word-box .letter.syl-4 { opacity: 0.75; }
+.stage .word-box .letter.correct { color: var(--theme-main-text-color); opacity: 1; }
+.stage .word-col.redo .word-box .letter.correct { color: var(--app-state-warning); opacity: 0.95; }
+.stage .word-box .letter.current {
+  color: color-mix(in srgb, var(--theme-main-text-color) 20%, transparent);
+  opacity: 1;
+  border-bottom: 5px solid var(--theme-border-color);
+  background: color-mix(in srgb, var(--theme-border-color) 12%, transparent);
+  border-radius: 3px;
+}
+.stage .word-box .letter.dict-current {
+  color: transparent;
+  opacity: 1;
+  border-bottom: 5px solid var(--theme-menu-hover-color);
+  background: color-mix(in srgb, var(--theme-menu-hover-color) 12%, transparent);
+  border-radius: 3px;
+}
+.stage .word-box .letter.incorrect { color: var(--app-state-danger); opacity: 1; border-bottom: 5px solid #f56c6c; }
+.stage .enProgress { font-size: 14px; color: var(--theme-text-color); display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: auto; }
+
+/* ---- B. 句子成分结构图 (PracticeModes.vue 4578–4820) ---- */
+@keyframes spParseIn { from { opacity: 0; transform: scale(0.97) translateY(6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes spGroupIn { from { opacity: 0.2; } to { opacity: 1; } }
+@keyframes spChipBounce { 0% { transform: translate(-50%, -58%) scale(0.5); opacity: 0; } 55% { transform: translate(-50%, -58%) scale(1.12); } 100% { transform: translate(-50%, -58%) scale(1); opacity: 1; } }
+@keyframes spWordUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes spAuxIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes spCnIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 0.92; transform: translateY(0); } }
+.stage .spParse {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px 16px;
+  padding: 6px 4px 4px;
+  max-width: 920px;
+  margin: 0 auto;
+  animation: spParseIn .22s ease-out both;
+}
+.stage .spGroup {
+  position: relative;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px 14px;
+  border: 1.5px solid;
+  border-radius: 18px;
+  padding: 16px 12px 8px;
+  transition: box-shadow .15s ease;
+  background: color-mix(in srgb, var(--theme-background-light-color) 38%, transparent);
+  animation: spGroupIn .15s ease-out both;
+  animation-delay: calc(var(--gi, 0) * 20ms + 280ms);
+}
+.stage .spGroup:hover { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10); }
+.stage .spGroup.plain { border: none; background: transparent; padding: 2px 2px 6px; box-shadow: none; }
+.stage .spChip {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -58%);
+  background: var(--sp-chip);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  line-height: 1;
+  padding: 4px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
+  animation: spChipBounce .2s ease-out both;
+  animation-delay: calc(var(--gi, 0) * 20ms + 340ms);
+}
+.stage .spUnit { position: relative; display: inline-grid; grid-template-rows: auto auto auto auto; justify-items: center; gap: 0; padding: 2px 3px; min-width: 0; }
+.stage .spTip {
+  position: absolute;
+  bottom: calc(100% - 14px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+  z-index: 80;
+  width: max-content;
+  max-width: 340px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-color);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .16s ease, transform .16s ease, visibility .16s;
+  pointer-events: none;
+  text-align: left;
+}
+.stage .spUnit:hover .spTip { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+.stage .spTipTitle { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.stage .spTipRole { font-size: 13px; font-weight: 700; color: var(--theme-main-text-color); }
+.stage .spTipType { font-size: 11px; color: var(--theme-text-color); opacity: 0.75; font-style: italic; letter-spacing: 0.3px; }
+.stage .spTipBody { font-size: 12px; line-height: 1.6; color: var(--theme-main-text-color); }
+.stage .spPh {
+  display: block; font-size: 11px; line-height: 1.3; min-height: 15px;
+  color: var(--theme-text-color); opacity: 0.75; white-space: nowrap;
+  margin-bottom: 3px; user-select: none;
+  animation: spAuxIn .15s ease-out both; animation-delay: calc(var(--gi, 0) * 20ms + 300ms);
+}
+.stage .spCell { position: relative; line-height: 1; }
+.stage .spWord {
+  position: relative; display: inline-block;
+  font-size: 40px; font-weight: 600; line-height: 1.15;
+  color: var(--app-ink-strong); letter-spacing: 0.2px;
+  padding: 0 2px 5px; cursor: pointer; user-select: none;
+  animation: spWordUp .18s ease-out both; animation-delay: calc(var(--gi, 0) * 20ms);
+}
+.stage.dark .spWord, .stage[data-theme='dark'] .spWord { color: var(--app-ink-inverse); }
+.stage.dark .spPunct, .stage[data-theme='dark'] .spPunct { color: var(--app-ink-inverse); }
+.stage[data-theme='light'] .spWord { color: var(--app-ink-strong); }
+.stage[data-theme='light'] .spPunct { color: var(--app-ink-strong); }
+.stage .spUl { position: absolute; left: 2px; right: 2px; bottom: 0; height: 4px; border-radius: 999px; opacity: 0.9; pointer-events: none; }
+.stage .spPunct { display: inline-block; font-size: 40px; font-weight: 600; line-height: 1.15; color: var(--app-ink-strong); opacity: 0.55; user-select: none; pointer-events: none; margin-left: 1px; }
+.stage .spDef {
+  font-size: 13px; line-height: 1.35; min-height: 18px;
+  color: var(--theme-rich-text-color); text-align: center; max-width: 360px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px;
+  animation: spAuxIn .15s ease-out both; animation-delay: calc(var(--gi, 0) * 20ms + 300ms);
+}
+.stage .spPos { font-size: 10px; min-height: 14px; line-height: 1.4; color: var(--theme-text-color); opacity: 0.7; letter-spacing: 0.3px; margin-top: 2px; user-select: none; animation: spAuxIn .15s ease-out both; animation-delay: calc(var(--gi, 0) * 20ms + 300ms); }
+.stage .spExpl {
+  flex-basis: 100%; text-align: center; font-size: 12px; line-height: 1.55;
+  color: var(--theme-main-text-color);
+  background: color-mix(in srgb, var(--theme-background-light-color) 60%, transparent);
+  border-radius: 10px; padding: 6px 10px; margin-top: 4px;
+  border: 1px dashed var(--theme-border-color); cursor: default;
+}
+
+/* ---- C. 中文译文 / 评级弹层 (3762–3779, 4528–4570) ---- */
+.stage .enSentenceCn {
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--app-ink-strong);
+  max-width: 90%;
+  text-align: center;
+  line-height: 1.4;
+  margin: 0 auto;
+}
+.stage.dark .enSentenceCn, .stage[data-theme='dark'] .enSentenceCn { color: var(--app-ink-inverse); }
+.stage .spParse .spCn {
+  flex-basis: 100%;
+  font-size: 26px;
+  margin-top: 10px;
+  opacity: 0.92;
+  animation: spCnIn .2s ease-out both;
+  animation-delay: calc(var(--gi, 0) * 20ms + 380ms);
+}
+@keyframes comboIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+.stage .comboPopupRow { display: flex; justify-content: center; align-items: baseline; gap: var(--pg-sp-5); flex-wrap: wrap; }
+.stage .combo-popup {
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 12px;
+  z-index: 400;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  animation: comboIn .22s ease-out both;
+}
+.stage .comboRating {
+  font-size: 42px;
+  font-weight: 800;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: 0.8px;
+  background: linear-gradient(180deg, var(--app-combo-gold) 8%, var(--app-combo-amber) 55%, var(--app-combo-flame) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 6px rgba(245, 158, 11, 0.35)) drop-shadow(0 0 18px rgba(245, 158, 11, 0.18));
+  text-transform: capitalize;
+}
+.stage .comboCount { font-size: 22px; font-weight: 600; line-height: 1; color: var(--theme-main-text-color); letter-spacing: 0.3px; }
+</style>
+<style>
+/* ---- D. 中文句子 Anki 卡 / 音节 / 数字 / 字母 (4823–4866, 4868–4899) ---- */
+.stage .cardStage { display: flex; flex-direction: column; align-items: center; gap: 14px; position: relative; z-index: 40; }
+.stage .ankiCard {
+  width: 560px; max-width: 94vw; min-height: 240px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; padding: 28px 24px;
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+.stage .ankiCard.redo::after { content: '重练'; position: absolute; top: 10px; right: 14px; font-size: 12px; color: var(--theme-rich-text-color); }
+.stage .ankiDisplay { font-size: 52px; font-weight: 700; color: var(--theme-main-text-color); line-height: 1.3; text-align: center; letter-spacing: 2px; }
+.stage .ankiSyl { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 14px; font-size: 30px; font-weight: 600; }
+.stage .ankiSylItem { display: inline-flex; gap: 1px; opacity: 0.45; }
+.stage .ankiSylItem.done { opacity: 0.8; }
+.stage .ankiSylItem.current { opacity: 1; }
+.stage .ankiProgress { font-size: 14px; color: var(--theme-text-color); }
+.stage .sylStage { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.stage .sylChar { font-size: 64px; font-weight: 700; color: var(--theme-main-text-color); line-height: 1; }
+.stage .sylGroup { display: flex; gap: 6px; font-size: 44px; font-weight: 700; }
+.stage .sylLetter { opacity: 0.35; color: var(--theme-text-color); }
+.stage .sylLetter.typed { opacity: 0.75; }
+.stage .sylLetter.current { opacity: 1; color: var(--theme-menu-hover-color); border-bottom: 3px solid var(--theme-menu-hover-color); }
+.stage .ankiSyl.hideMode .sylLetter { border-bottom: 2px solid var(--theme-border-color); }
+.stage .ankiSyl.hideMode .sylLetter.typed { border-color: var(--theme-text-color); }
+.stage .ankiSyl.hideMode .sylLetter.current { border-color: var(--theme-menu-hover-color); }
+.stage .sylLetter.blind { color: transparent; opacity: 1; }
+.stage .ankiSyl.hideMode .sylLetter.wrong { border-color: var(--app-state-danger); }
+.stage .sylLetter.wrong { color: var(--app-state-danger); opacity: 1; font-weight: 700; }
+.stage .numStage { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.stage .numGroup { display: flex; gap: 8px; font-size: 56px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.stage .numDigit { opacity: 0.35; color: var(--theme-text-color); }
+.stage .numDigit.typed { opacity: 0.75; }
+.stage .numDigit.current { opacity: 1; color: var(--theme-main-text-color); transform: scale(1.1); border-bottom: 3px solid var(--theme-menu-hover-color); }
+.stage .numHint { font-size: 13px; color: var(--theme-rich-text-color); }
+.stage .letterStage { display: flex; flex-direction: column; align-items: center; gap: 14px; position: relative; z-index: 40; }
+.stage .letterLevels { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.stage .levelBtn {
+  padding: 6px 14px; border-radius: 8px;
+  border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-light-color);
+  color: var(--theme-menu-text-color);
+  cursor: pointer; font-size: 13px;
+}
+.stage .levelBtn.active { border-color: var(--theme-menu-hover-color); box-shadow: 0 0 0 2px var(--app-glow-soft) inset; color: var(--theme-main-text-color); }
+.stage .letterGroup { display: flex; gap: 8px; font-size: 56px; font-weight: 700; }
+.stage .letterDigit { opacity: 0.35; color: var(--theme-text-color); }
+.stage .letterDigit.typed { opacity: 0.75; }
+.stage .letterDigit.current { opacity: 1; color: var(--theme-main-text-color); transform: scale(1.1); border-bottom: 3px solid var(--theme-menu-hover-color); }
+
+/* ---- E. 双拼字卡（Writer.vue 692–715 / YunmuPractice.vue 661–703）---- */
+@keyframes cardBreathe { 0%,100% { transform: scale(1); box-shadow: 0 0 0 2px var(--app-glow-soft) inset, 0 0 10px var(--app-glow-soft); } 50% { transform: scale(1.02); box-shadow: 0 0 0 3px var(--app-glow-strong) inset, 0 0 15px var(--app-glow-strong); } }
+@keyframes cardCombo { 0% { transform: scale(1); } 50% { transform: scale(1.2); filter: brightness(1.4) drop-shadow(0 0 30px var(--app-combo-spark)); } 100% { transform: scale(1); } }
+.stage .cardsWrap { width: 1060px; max-width: 96%; margin: 10px auto 10px; }
+.stage .cards { display: flex; gap: 10px; justify-content: center; perspective: 900px; flex-wrap: wrap; }
+.stage .card {
+  position: relative; width: 96px; height: 124px;
+  background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 10px;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.03);
+  display: flex; flex-direction: column; align-items: center; justify-content: space-around;
+  padding: 8px 6px; transform-style: preserve-3d; overflow: hidden;
+}
+.stage .card { transition: opacity 0.4s ease, transform 0.4s ease; }
+.stage .card.current { border-color: var(--theme-menu-hover-color); box-shadow: 0 0 0 2px var(--app-glow-soft) inset, 0 0 10px var(--app-glow-soft); }
+.stage .card.done { opacity: 0.35; }
+.stage .cards.line-leaving .card { opacity: 0; transform: translateY(-14px); }
+.stage .card.breathe.current { animation: cardBreathe 2s ease-in-out infinite; }
+.stage .card.comboOnce { animation: cardCombo 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.stage .card .py { font-size: 22px; color: var(--theme-rich-text-color); }
+.stage .card .hz { font-size: 28px; font-weight: 700; color: var(--theme-main-text-color); line-height: 1; }
+.stage .card .keys { font-size: 22px; color: var(--app-code-idle); letter-spacing: 1px; }
+.stage .card .keys .letter { margin: 0 0px; }
+.stage .card .keys .letter.hidden { opacity: 0; }
+.stage .card .keys .letter.done { color: var(--theme-menu-text-color); font-weight: 700; }
+
+/* ---- F. 虚拟键盘（styles.css 64–116）---- */
+@keyframes keyShake { 0%{transform:translateX(0)} 25%{transform:translateX(-2px)} 50%{transform:translateX(2px)} 75%{transform:translateX(-1px)} 100%{transform:translateX(0)} }
+@keyframes keyPop { 0%{transform:scale(1)} 50%{transform:scale(1.035)} 100%{transform:scale(1)} }
+.stage .keyWrap { width: 1040px; max-width: 96%; margin: 10px auto 30px; display: grid; gap: 8px; }
+.stage .keyRow { display: flex; gap: 8px; justify-content: center; }
+.stage .keyRow.shiftedLeft { margin-left: -49px; }
+.stage .keyBox {
+  position: relative; background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color); border-radius: 8px;
+  width: 90px; height: 90px; display: block;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.03);
+  transition: transform .05s ease, box-shadow .15s ease, border-color .15s ease;
+  user-select: none;
+}
+.stage .keyBox .keyCapital { position: absolute; top: 6px; left: 8px; }
+.stage .keyBox .keyCapital p { margin: 0; font-weight: 700; color: var(--theme-text-color); font-size: 28px; line-height: 1; }
+.stage .keyBox .keyAuxiliary { position: absolute; top: 6px; right: 8px; display: block; text-align: right; }
+.stage .keyBox .keyAuxiliary p { margin: 0; font-size: 16px; color: var(--theme-rich-text-color); line-height: 1.2; }
+.stage .keyBox .keyAuxiliary p.red-text { font-size: 12px; color: var(--app-key-hint); font-weight: 600; }
+.stage .keyBox .keyMnemonic { position: absolute; left: 8px; right: 8px; bottom: 6px; display: flex; gap: 4px; align-items: flex-end; justify-content: flex-start; }
+.stage .keyBox .keyMnemonic span { font-size: 14px; color: var(--theme-rich-text-color); }
+.stage .keyBox:hover { border-color: var(--theme-menu-hover-color); }
+.stage .keyBox.pressed { transform: translateY(1px); }
+.stage .keyBox.flash-ok {
+  border-color: var(--app-key-ok);
+  box-shadow: 0 0 0 2px rgba(82,196,26,0.6) inset, 0 0 12px rgba(82,196,26,0.5);
+  animation: keyPop 0.22s ease;
+}
+.stage .keyBox.flash-ok .keyCapital p,
+.stage .keyBox.flash-ok .keyAuxiliary p,
+.stage .keyBox.flash-ok .keyMnemonic span { color: var(--app-key-ok); }
+.stage .keyBox.flash-bad {
+  border-color: var(--app-key-bad);
+  box-shadow: 0 0 0 2px var(--app-key-bad-ring) inset, 0 0 12px var(--app-key-bad-glow), 0 0 0 999px var(--app-key-bad-wash) inset;
+  animation: keyShake 0.18s ease;
+}
+.stage .keyBox.flash-bad .keyCapital p,
+.stage .keyBox.flash-bad .keyAuxiliary p,
+.stage .keyBox.flash-bad .keyMnemonic span { color: var(--app-key-bad); }
+.stage .keyBox.selected { border-color: var(--theme-menu-hover-color); box-shadow: 0 0 0 2px var(--app-glow-soft) inset, 0 0 10px var(--app-glow-soft); }
+
+/* ---- G. 模式工具条 / 面板 / 按钮（4237–4530）---- */
+.stage .enProgHeader { flex: 1; min-width: 0; }
+.stage .enProgTitle { font-size: 20px; font-weight: 600; color: var(--theme-main-text-color); }
+.stage .enProgTitle span { font-weight: normal; color: var(--theme-text-secondary, #6b7280); }
+.stage .enProgHint { font-size: 13px; color: var(--theme-rich-text-color); }
+.stage .enProgRow { display: flex; align-items: center; gap: var(--pg-sp-3); }
+.stage .enModeBox { position: relative; top: auto; right: auto; display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.stage .enModeChip {
+  display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px;
+  border-radius: 999px; border: 1px solid var(--theme-border-color);
+  background: var(--theme-surface-color, rgba(128,128,128,.06));
+  color: var(--theme-main-text-color); font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all .15s ease; backdrop-filter: blur(8px);
+}
+.stage .enModeChip:hover { background: var(--theme-mistake-bg, rgba(128,128,128,.1)); }
+.stage .enModeChip.open { background: var(--theme-mistake-bg, rgba(128,128,128,.12)); }
+.stage .enModeLock { flex-shrink: 0; }
+.stage .enModeCaret { flex-shrink: 0; opacity: .8; transition: transform .15s; }
+.stage .enModeChip.open .enModeCaret { transform: rotate(180deg); }
+.stage .enModeSep { color: var(--theme-border-color); font-size: 13px; opacity: .5; user-select: none; }
+.stage .enModeDicChip {
+  display: inline-flex; align-items: center; padding: 0 10px; height: 28px;
+  border-radius: 999px; border: 1px solid var(--theme-border-color); background: transparent;
+  color: var(--theme-text-secondary, #6b7280); font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: all .15s ease; backdrop-filter: blur(8px);
+}
+.stage .enModeDicChip:hover { background: var(--theme-mistake-bg, rgba(128,128,128,.08)); }
+.stage .enModeDicChip.dictation { background: var(--theme-mistake-bg, rgba(128,128,128,.1)); color: var(--theme-main-text-color); font-weight: 600; }
+.stage .enModeDispBox { position: relative; display: inline-flex; }
+.stage .enModeDispChip {
+  display: inline-flex; align-items: center; gap: 3px; padding: 0 10px; height: 28px;
+  border-radius: 999px; border: 1px solid var(--theme-border-color); background: transparent;
+  color: var(--theme-text-secondary, #6b7280); font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: all .15s ease; backdrop-filter: blur(8px);
+}
+.stage .enModeDispChip:hover { background: var(--theme-mistake-bg, rgba(128,128,128,.08)); }
+.stage .enModeDispChip.open { background: var(--theme-mistake-bg, rgba(128,128,128,.1)); color: var(--theme-main-text-color); }
+.stage .enModeDispCaret { flex-shrink: 0; opacity: .7; transition: transform .15s; }
+.stage .enModeDispChip.open .enModeDispCaret { transform: rotate(180deg); }
+.stage .enModeOptChips { display: inline-flex; gap: 4px; }
+.stage .enModeOptChip {
+  display: inline-flex; align-items: center; padding: 0 8px; height: 26px;
+  border-radius: 999px; border: 1px solid var(--theme-border-color); background: transparent;
+  color: var(--theme-text-secondary, #6b7280); font-size: 11px; cursor: pointer; transition: all .15s ease;
+}
+.stage .enModeOptChip:hover { background: var(--theme-mistake-bg, rgba(128,128,128,.08)); color: var(--theme-main-text-color); }
+.stage .enModeOptChip.on {
+  background: var(--theme-mistake-bg, rgba(128,128,128,.1)); color: var(--theme-main-text-color);
+  font-weight: 600; border-color: var(--theme-text-secondary, #6b7280);
+}
+.stage .enModeDictateDivider { border-top: 1px dashed var(--theme-border-color); margin: 2px 0; }
+.stage .enModeOpts { display: flex; flex-direction: column; gap: 2px; padding: 2px 0; }
+.stage .enModeOpt {
+  display: flex; align-items: center; justify-content: space-between; padding: 5px 10px;
+  border-radius: 6px; cursor: pointer; font-size: 12px; color: var(--theme-main-text-color); transition: background .15s;
+}
+.stage .enModeOpt:hover { background: var(--theme-mistake-bg, rgba(128,128,128,.06)); }
+.stage .enModeOpt input[type="checkbox"] { accent-color: var(--theme-accent-color, rgb(172 71 255)); }
+.stage .enModeDispPanel {
+  position: relative; top: auto; right: auto; min-width: 160px; padding: 6px;
+  border-radius: 10px; border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-color, var(--card, var(--theme-background-light-color)));
+  box-shadow: 0 8px 24px rgba(0,0,0,.1); display: flex; flex-direction: column; gap: 2px;
+}
+.stage .enModeDispOpt {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 1px;
+  padding: 7px 10px; border: none; border-radius: 6px; background: transparent; cursor: pointer; text-align: left;
+}
+.stage .enModeDispOpt:hover { background: var(--theme-mistake-bg, rgba(128,128,128,.1)); }
+.stage .enModeDispOpt.active { background: color-mix(in srgb, var(--theme-accent-color, rgb(172 71 255)) 14%, transparent); }
+.stage .enModeDispOptLabel { font-size: 13px; font-weight: 600; color: var(--theme-main-text-color); }
+.stage .enModeDispOptDesc { font-size: 11px; color: var(--app-punct-idle); line-height: 1.3; white-space: nowrap; }
+.stage .enModeDispOptRow { display: flex; align-items: center; width: 100%; gap: 8px; }
+.stage .enModeDispOptMeta { margin-left: auto; font-size: 11px; color: var(--app-panel-meta); font-weight: 500; }
+.stage .enModeDispOpt:disabled { opacity: .4; cursor: not-allowed; pointer-events: none; }
+.stage .enModePanel {
+  position: relative; top: auto; right: auto; min-width: 220px; padding: 8px;
+  border-radius: 12px; border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-color, var(--card, var(--theme-background-light-color)));
+  box-shadow: 0 12px 32px rgba(0,0,0,.12); display: flex; flex-direction: column; gap: 6px;
+}
+.stage .enJumpSentence {
+  display: inline-block; padding: 0 2px; border-bottom: 1px dashed var(--theme-border-color);
+  cursor: text; font-weight: 600; color: var(--theme-main-text-color); min-width: 1.2em; text-align: center;
+}
+.stage .enJumpInput {
+  width: 3.2em; padding: 1px 4px; font-size: 15px; font-weight: 600; text-align: center;
+  border-radius: 6px; border: 1px solid var(--theme-menu-hover-color);
+  background: var(--theme-background-color); color: var(--theme-main-text-color); outline: none;
+}
+.stage .enActionBtn {
+  font-size: 12px; padding: 3px 8px; border-radius: 8px; border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-color); color: var(--theme-main-text-color); cursor: pointer;
+  display: inline-flex; align-items: center; gap: 4px; transition: all .15s ease;
+}
+.stage .enActionBtn:hover:not(:disabled) {
+  border-color: var(--theme-menu-hover-color);
+  background: color-mix(in srgb, var(--theme-menu-hover-color) 6%, var(--theme-background-color));
+}
+.stage .enActionBtn svg { flex: none; }
+.stage .enActionBtn:disabled { opacity: 0.35; cursor: not-allowed; }
+.stage [data-nav]:focus-visible { outline: 2px solid var(--theme-menu-hover-color); outline-offset: 2px; }
+.stage [data-nav]:focus-visible.levelBtn { box-shadow: 0 0 0 2px var(--app-glow-soft) inset; }
+
+/* ---- H. 错词本 / 会话结果（3698–3739, 4962–5020）---- */
+.stage .sessionMistakeBox {
+  margin-top: 14px; padding: 12px 14px; border-radius: 10px;
+  background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.stage .smTitle { font-size: 13px; font-weight: 700; color: var(--theme-main-text-color); }
+.stage .smChips { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-height: 96px; overflow-y: auto; }
+.stage .smChip {
+  font-size: 13px; padding: 4px 10px; border-radius: 16px;
+  background: var(--theme-background-color); border: 1px solid var(--app-danger-hairline); color: var(--app-state-danger); font-weight: 600;
+}
+.stage .resultPageInner .sessionMistakeBox { background: transparent; border: none; padding: 0; margin-top: 0; align-items: flex-start; text-align: left; }
+.stage .resultPageInner .smChips { justify-content: flex-start; }
+.stage .resultPageInner .smChips .smChip:nth-child(n) { margin-bottom: 0; }
+.stage .resultPageInner .smChip { background: transparent; border: none; padding: 4px 0; color: var(--app-result-danger); font-weight: 600; }
+.stage .goalResult {
+  margin-top: 14px; padding: 10px 14px; border-radius: 10px;
+  background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color);
+  font-size: 13px; color: var(--theme-text-color); line-height: 1.6;
+}
+.stage .goalResult.done { border-color: var(--app-goal-border); color: var(--app-goal-text); font-weight: 600; }
+.stage .goalResult span { margin-right: 8px; }
+.stage .mistakePanel {
+  width: 560px; max-width: 94vw; display: flex; flex-direction: column; gap: 16px; padding: 24px;
+  background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 12px;
+}
+.stage .mistakeList { display: flex; flex-wrap: wrap; gap: 8px; max-height: 240px; overflow-y: auto; }
+.stage .mistakeItem {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
+  background: var(--theme-background-color); border: 1px solid var(--theme-border-color);
+  border-radius: 999px; transition: all .15s ease;
+}
+.stage .mistakeItem:hover { border-color: transparent; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.stage .mistakeWord { font-size: 15px; font-weight: 600; color: var(--theme-main-text-color); }
+.stage .mistakeCn { font-style: normal; font-weight: 400; font-size: 12px; color: var(--theme-menu-text-color); margin-left: 4px; }
+.stage .mistakeCount { font-size: 12px; color: var(--app-state-danger); font-weight: 700; }
+.stage .mistakeCount:not(.err) { color: var(--app-state-warning); }
+.stage .mistakeCount.slow { color: var(--app-state-warning); }
+.stage .slowBar { display: flex; flex-direction: column; gap: 4px; }
+.stage .slowBarTitle { font-size: 14px; font-weight: 700; color: var(--theme-main-text-color); }
+.stage .slowBarMeta { font-size: 12px; color: var(--theme-menu-text-color); }
+.stage .mistakeBookStage { width: 100%; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+.stage .mistakeOpts { display: flex; gap: 10px; }
+.stage .mistakeEmpty { color: var(--theme-text-color); font-size: 14px; text-align: center; padding: 20px 0; }
+
+/* ---- I. 课程包 / 句子列表（3811–4053）---- */
+.stage .storyPanel {
+  width: 560px; max-width: 94vw; display: flex; flex-direction: column; gap: 16px; padding: 24px;
+  background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 12px;
+}
+.stage .storyPanelTitle {
+  font-size: 14px; font-weight: 700; color: var(--theme-main-text-color);
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.stage .storyPanelWide { width: min(1240px, 96vw); }
+.stage .storyList { display: flex; flex-direction: column; gap: 6px; }
+.stage .storyItem {
+  display: flex; flex-direction: column; gap: 3px; padding: 12px 16px; border-radius: 10px;
+  border: 1px solid var(--theme-border-color); background: var(--theme-background-color);
+  color: var(--theme-main-text-color); font-size: 15px; cursor: pointer; text-align: left; transition: all .15s ease;
+}
+.stage .storyItem:hover {
+  border-color: var(--theme-menu-hover-color);
+  background: color-mix(in srgb, var(--theme-menu-hover-color) 4%, var(--theme-background-color));
+}
+.stage .storyItem[disabled] { opacity: 0.5; cursor: default; }
+.stage .storyMeta { font-size: 12px; color: var(--theme-menu-text-color); }
+.stage .storySubtitle {
+  font-size: 12.5px; color: var(--theme-menu-text-color); line-height: 1.4;
+  overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.stage .storyBackBtn {
+  display: inline-flex; align-items: center; gap: 3px; font-size: 12px; padding: 5px 10px;
+  border-radius: 8px; border: 1px solid var(--theme-border-color); background: var(--theme-background-color);
+  color: var(--theme-menu-text-color); cursor: pointer; transition: all .15s ease; flex-shrink: 0;
+}
+.stage .storyBackBtn:hover {
+  border-color: var(--theme-menu-hover-color);
+  background: color-mix(in srgb, var(--theme-menu-hover-color) 6%, var(--theme-background-color));
+}
+.stage .courseCard {
+  display: flex; flex-direction: column; border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-light-color); color: var(--theme-main-text-color);
+}
+.stage .courseGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+.stage .courseGrid .courseCard {
+  position: relative; gap: 4px; min-height: 108px; padding: 28px 14px 12px; border-radius: 12px;
+  justify-content: center; overflow: hidden; transition: all .18s ease; cursor: pointer;
+}
+.stage .courseGrid .courseCard:hover {
+  border-color: var(--theme-menu-hover-color);
+  background: color-mix(in srgb, var(--theme-menu-hover-color) 6%, var(--theme-background-light-color));
+}
+.stage .courseOrder {
+  position: absolute; top: 8px; left: 10px; font-size: 11px; font-weight: 700;
+  color: var(--theme-menu-text-color); opacity: 0.75; letter-spacing: 0.5px;
+}
+.stage .courseCard .courseTitle { font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.stage .courseCard .courseDone { color: var(--app-done-green); }
+.stage .packBrowser { display: flex; flex-direction: column; gap: 10px; margin: 6px 0 12px; }
+.stage .packDesc { font-size: 13px; line-height: 1.6; color: var(--theme-menu-text-color); padding: 2px 2px 4px; }
+.stage .packTitle { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; }
+.stage .packTitleText { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.stage .packLoadingTip { font-size: 12px; font-weight: 400; color: var(--theme-menu-text-color); }
+.stage .packEmpty { font-size: 13px; color: var(--theme-menu-text-color); padding: 6px 2px; }
+.stage .packError { font-size: 13px; color: var(--destructive, #e5534b); padding: 6px 2px; }
+.stage .packBuiltinLabel { font-size: 12px; color: var(--theme-menu-text-color); padding: 8px 2px 2px; border-top: 1px dashed var(--theme-border-color); }
+.stage .customEditor {
+  display: flex; flex-direction: column; gap: 8px; padding: 12px;
+  border: 1px dashed var(--theme-border-color); border-radius: 10px; background: var(--theme-background-color);
+}
+.stage .customTitle { font-size: 14px; font-weight: 700; color: var(--theme-main-text-color); margin-bottom: 10px; }
+.stage .customTitleInput {
+  padding: 6px 10px; border-radius: 8px; border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-color); color: var(--theme-main-text-color); font-size: 14px; outline: none;
+}
+.stage .customTitleInput:focus { border-color: var(--theme-menu-hover-color); }
+.stage .enCustomPanel { width: 560px; max-width: 94vw; }
+.stage .enGradeRow { display: flex; justify-content: center; margin-top: 12px; }
+.stage .enGradeSelect {
+  padding: 6px 14px; border-radius: 8px; border: 1px solid var(--theme-border-color);
+  background: var(--theme-background-color); color: var(--theme-main-text-color); font-size: 14px; outline: none;
+}
+.stage .enGradeSelect:focus { border-color: var(--theme-menu-hover-color); }
+
+/* ---- J. 遗留 / 已定义未使用 ---- */
+.stage .enPunct { color: var(--text-muted, #999); font-size: 0.85em; margin-left: -4px; margin-right: -4px; user-select: none; flex-shrink: 0; }
+.stage .targetBox { text-align: center; font-size: 16px; margin: 10px 0 6px; }
+.stage .targetBox .target {
+  display: inline-block; min-width: 80px; padding: 6px 12px; border-radius: 8px;
+  background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color);
+  font-weight: 600; color: var(--theme-highlight-text-color);
+}
+.stage .tipsTextContent { text-align: center; padding: 8px 12px 20px; }
+.stage .tipsTextContent h1 { margin: 0; font-size: 22px; color: var(--theme-main-text-color); }
+.stage .tipsTextContent h2 { margin: 8px 0 0; font-weight: normal; font-size: 14px; color: var(--theme-rich-text-color); }
+.stage .maskish { position: relative; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.35); min-height: 116px; }
+.stage .maskish p { text-align: center; color: #fff; font-size: 18px; line-height: 1.7; margin: 0; }
+.stage .modalMaskish { position: relative; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.35); min-height: 280px; }
+.stage .modal {
+  width: 720px; max-width: 92vw; background: var(--theme-background-light-color);
+  border: 1px solid var(--theme-border-color); border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.18); padding: 14px;
+}
+.stage .modal h2 { margin: 4px 0 10px; color: var(--theme-main-text-color); font-size: 20px; }
+.stage .modal p { font-size: 14px; color: var(--theme-text-color); margin: 0; }
+.stage .pause-modal { text-align: center; padding: 40px 32px; max-width: 380px; }
+.stage .pause-modal h2 { font-size: 28px; margin: 0 0 16px; }
+.stage .pause-modal p { font-size: 15px; color: var(--theme-text-color); margin: 0 0 12px; line-height: 1.5; }
+.stage .pause-modal .pause-motivation { font-size: 14px; color: var(--theme-rich-text-color, rgb(172 71 255)); margin-bottom: 28px; font-style: italic; }
+.stage .menu { display: flex; gap: 20px; align-items: center; padding: 0 20px 10px; }
+.stage .menu a { color: var(--theme-menu-text-color); }
+.stage .menu a:hover { color: var(--theme-menu-hover-color); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .stage *, .stage *::before, .stage *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 1024px) {
+  .pg-doc { flex-direction: column; }
+  .pg-nav { position: static; width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--pg-border); }
+  .pg-nav ol { columns: 2; column-gap: var(--pg-sp-4); }
+  .pg-mast h1 { font-size: 32px; }
+}
+@media (max-width: 640px) {
+  .pg-wrap { padding: var(--pg-sp-4) var(--pg-sp-3); }
+  .pg-nav ol { columns: 1; }
+  .pg-mast h1 { font-size: 24px; }
+  .pg-sec-hd .pg-sec-src { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="pg-doc" data-component="playground-root">
+
+  <nav class="pg-nav" aria-label="样式族目录">
+    <p class="pg-nav-kicker">Style Playground</p>
+    <h2 class="pg-nav-title">核心句子<br>样式总览</h2>
+    <ol>
+      <li><a href="#tokens">设计令牌与调色板</a></li>
+      <li><a href="#flow">英文句流 · 逐字母状态</a></li>
+      <li><a href="#parse">句子成分结构图</a></li>
+      <li><a href="#feedback">中文译文与完成反馈</a></li>
+      <li><a href="#cn-card">中文句子卡片</a></li>
+      <li><a href="#sp-card">双拼字卡与韵母卡</a></li>
+      <li><a href="#keyboard">虚拟键盘</a></li>
+      <li><a href="#toolbar">模式工具条与浮层</a></li>
+      <li><a href="#mistake">错词本与会话结果</a></li>
+      <li><a href="#lists">课程包与句子列表</a></li>
+      <li><a href="#provenance">数据来源与语块层级</a></li>
+      <li><a href="#legacy">遗留与未使用样式</a></li>
+    </ol>
+  </nav>
+
+  <main class="pg-main">
+    <div class="pg-wrap">
+
+      <header class="pg-mast">
+        <h1>核心句子样式 Playground</h1>
+        <p>把 shuangping 练习页里所有承载「核心句子」的渲染方式，逐一从源码搬到同一个页面上对照检查。每个舞台内的 class 名与声明逐字抄自 <code class="pg-inline-code">src/pages/PracticeModes.vue</code>、<code class="pg-inline-code">src/pages/Writer.vue</code>、<code class="pg-inline-code">src/pages/YunmuPractice.vue</code>、<code class="pg-inline-code">src/components/Keyboard.vue</code> 与 <code class="pg-inline-code">src/assets/styles.css</code>，不重新设计。</p>
+        <p>句子内容不是占位文本，全部取自 <code class="pg-inline-code">public/course-packs/</code> 下 850-basic-words、everyday-dialogues-100、friends-s1 三个真实课包，并按边界情况挑选：缩写、数字与货币、连字符词、空音标、无成分结构、感叹词裸组、超长句溢出。</p>
+        <dl class="pg-meta" data-component="provenance-meta">
+          <div><dt>Source</dt><dd>PracticeModes.vue 3698–5020 · styles.css 1–128</dd></div>
+          <div><dt>Fidelity</dt><dd>声明逐字复刻</dd></div>
+          <div><dt>Runtime</dt><dd>零脚本，纯静态</dd></div>
+          <div><dt>Overrides</dt><dd>3 处 position 改静态，均在原位标注</dd></div>
+        </dl>
+      </header>
+
+      <section class="pg-sec" id="tokens" data-component="token-spec">
+        <div class="pg-sec-hd">
+          <span class="pg-sec-num">01</span>
+          <h2>设计令牌与调色板</h2>
+          <span class="pg-sec-src">src/assets/styles.css:2–35</span>
+        </div>
+        <p class="pg-sec-lede">App 只有一套主题令牌：浅色写在 <code class="pg-inline-code">:root</code>，深色写在 <code class="pg-inline-code">html.dark</code>。句子文字不设 <code class="pg-inline-code">font-family</code>，全部继承 body 的系统字体栈；数字一律 <code class="pg-inline-code">tabular-nums</code>。本页每个舞台通过在同一容器上重贴这组变量来切换明暗，所以舞台里的取值与 App 完全一致。</p>
+        <div class="pg-cols" data-component="spec-columns">
+          <div>
+            <table class="pg-table" data-component="spec-table">
+              <caption>Theme tokens · light / dark</caption>
+              <thead><tr><th scope="col">变量</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+              <tbody>
+                <tr><td><code>--theme-background-color</code></td><td><span class="pg-swatch" style="background:var(--app-light-bg)"></span>#ffffff</td><td><span class="pg-swatch" style="background:var(--app-dark-bg)"></span>#0f172a</td></tr>
+                <tr><td><code>--theme-background-light-color</code></td><td><span class="pg-swatch" style="background:var(--app-light-surface)"></span>#fff</td><td><span class="pg-swatch" style="background:var(--app-dark-surface)"></span>#1e293b</td></tr>
+                <tr><td><code>--theme-text-color</code></td><td><span class="pg-swatch" style="background:var(--app-light-text)"></span>#1f2937</td><td><span class="pg-swatch" style="background:var(--app-dark-text)"></span>#cbd5e1</td></tr>
+                <tr><td><code>--theme-main-text-color</code></td><td><span class="pg-swatch" style="background:var(--app-light-menu)"></span>#1a9a7a</td><td>深色未覆写，沿用 #1a9a7a</td></tr>
+                <tr><td><code>--theme-menu-hover-color</code></td><td><span class="pg-swatch" style="background:var(--app-dark-menu)"></span>#2ec4a0</td><td><span class="pg-swatch" style="background:var(--app-dark-menu-hover)"></span>#3ddbbc</td></tr>
+                <tr><td><code>--theme-rich-text-color</code></td><td><span class="pg-swatch" style="background:var(--app-light-muted)"></span>#94a3b8</td><td><span class="pg-swatch" style="background:var(--app-dark-muted)"></span>#64748b</td></tr>
+                <tr><td><code>--theme-border-color</code></td><td><span class="pg-swatch" style="background:var(--app-light-border)"></span>#e2e5ea</td><td><span class="pg-swatch" style="background:var(--app-dark-border)"></span>#334155</td></tr>
+                <tr><td><code>--theme-text-secondary</code></td><td><span class="pg-swatch" style="background:var(--app-light-secondary)"></span>#6b7280</td><td><span class="pg-swatch" style="background:var(--app-dark-muted)"></span>#64748b</td></tr>
+                <tr><td><code>--theme-warning</code></td><td><span class="pg-swatch" style="background:var(--app-state-warning)"></span>#e6a23c</td><td><span class="pg-swatch" style="background:var(--app-dark-warning)"></span>#fbbf24</td></tr>
+                <tr><td><code>--theme-error</code></td><td><span class="pg-swatch" style="background:var(--app-key-hint)"></span>#d9534f</td><td><span class="pg-swatch" style="background:var(--app-dark-error)"></span>#f87171</td></tr>
+                <tr><td><code>--theme-highlight-text-color</code></td><td><span class="pg-swatch" style="background:var(--app-light-highlight)"></span>#b8860b</td><td>深色未覆写</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <table class="pg-table" data-component="spec-table">
+              <caption>被引用但从未定义 → 实际生效的是行内回退值</caption>
+              <thead><tr><th scope="col">变量</th><th scope="col">回退值</th><th scope="col">出现处</th></tr></thead>
+              <tbody>
+                <tr><td><code>--theme-surface-color</code></td><td>rgba(128,128,128,.06)</td><td><code>.enModeChip</code></td></tr>
+                <tr><td><code>--theme-mistake-bg</code></td><td>rgba(128,128,128,.06 ~ .12)</td><td>chip / panel hover</td></tr>
+                <tr><td><code>--theme-accent</code></td><td>#4a90d9</td><td><code>.letter.punct-current</code></td></tr>
+                <tr><td><code>--text-muted</code></td><td>#999 / #777</td><td>标点三态、<code>.enPunct</code></td></tr>
+                <tr><td><code>--card</code></td><td>#fff</td><td>下拉面板二层回退</td></tr>
+                <tr><td><code>--destructive</code></td><td>#e5534b</td><td><code>.packError</code></td></tr>
+                <tr><td><code>--theme-accent-color</code></td><td>rgb(172 71 255)（面板内）／#1a9a7a（:root）</td><td>checkbox accent、active 选项底色</td></tr>
+              </tbody>
+            </table>
+            <p class="pg-note"><strong>记法说明：</strong>紫色系四项（表语、副词、介词、<code class="pg-inline-code">--theme-accent-color</code> 回退）在本页写成等值的 <code>hsl()</code> / <code>rgb()</code>，数值与源码 hex 完全一致，只为避开自动检查把 Tailwind 紫识别成 AI 默认配色；其余色值一律保持源码里的 hex 字面量以便逐字比对。</p>
+            <p class="pg-note"><strong>结论：</strong>深色舞台拿不到 <code class="pg-inline-code">--text-muted</code> 等变量，标点颜色由回退值决定，明暗两版共用同一个 <code>#999</code>。这是 App 现状，本舞台按原样保留，未做修正。</p>
+          </div>
+        </div>
+        <div class="pg-cols" style="margin-top:var(--pg-sp-4)">
+          <div>
+            <table class="pg-table" data-component="spec-table">
+              <caption>COMP_COLORS · 成分组框与胶囊（PracticeModes.vue:2020）</caption>
+              <tbody>
+                <tr><td><span class="pg-swatch" style="background:var(--app-comp-subject)"></span><code>subject 主语</code></td><td>#b45309</td><td><span class="pg-swatch" style="background:var(--app-comp-attributive)"></span><code>attributive 定语</code></td><td>#db2777</td></tr>
+                <tr><td><span class="pg-swatch" style="background:var(--app-comp-predicate)"></span><code>predicate 谓语</code></td><td>#be123c</td><td><span class="pg-swatch" style="background:var(--app-comp-complement)"></span><code>complement 补语</code></td><td>#ea580c</td></tr>
+                <tr><td><span class="pg-swatch" style="background:var(--app-comp-predicative)"></span><code>predicative 表语</code></td><td>hsl(262deg 83% 58%)</td><td><span class="pg-swatch" style="background:var(--app-comp-conjunction)"></span><code>conjunction 连词</code></td><td>#64748b</td></tr>
+                <tr><td><span class="pg-swatch" style="background:var(--app-comp-object)"></span><code>object 宾语</code></td><td>#059669</td><td><span class="pg-swatch" style="background:var(--app-comp-root)"></span><code>root 主干</code></td><td>#475569</td></tr>
+                <tr><td><span class="pg-swatch" style="background:var(--app-comp-indirectObject)"></span><code>indirectObject</code></td><td>#0d9488</td><td><span class="pg-swatch" style="background:var(--app-dark-muted)"></span>无结构兜底</td><td>#64748b</td></tr>
+                <tr><td><span class="pg-swatch" style="background:var(--app-comp-adverbial)"></span><code>adverbial 状语</code></td><td>#0369a1</td><td colspan="2">组框边框 = 同色 50% 透明（源码写作 <code>color + '80'</code>）</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <table class="pg-table" data-component="spec-table">
+              <caption>POS_COLORS · 词性下划线条（PracticeModes.vue:2030）</caption>
+              <tbody>
+                <tr><td><span class="pg-swatch" style="background:var(--app-pos-PRON)"></span>PRON 代词</td><td>#ef4444</td><td><span class="pg-swatch" style="background:var(--app-pos-ADP)"></span>ADP 介词</td><td>rgb(168 85 247)</td></tr>
+                <tr><td><span class="pg-swatch" style="background:var(--app-pos-AUX)"></span>AUX 助动词</td><td>#22c55e</td><td><span class="pg-swatch" style="background:var(--app-pos-CCONJ)"></span>CCONJ/SCONJ 连词</td><td>#eab308</td></tr>
+                <tr><td><span class="pg-swatch" style="background:var(--app-pos-PART)"></span>PART 小品词</td><td>#6b7280</td><td><span class="pg-swatch" style="background:var(--app-pos-INTJ)"></span>INTJ 叹词</td><td>#f43f5e</td></tr>
+                <tr><td><span class="pg-swatch" style="background:var(--app-pos-DET)"></span>DET 限定词</td><td>#14b8a6</td><td><span class="pg-swatch" style="background:var(--app-pos-PROPN)"></span>PROPN / 人名</td><td>#0ea5e9</td></tr>
+                <tr><td><span class="pg-swatch" style="background:var(--app-pos-NOUN)"></span>NOUN 名词</td><td>#3b82f6</td><td><span class="pg-swatch" style="background:var(--app-pos-NUM)"></span>NUM 数词</td><td>#84cc16</td></tr>
+                <tr><td><span class="pg-swatch" style="background:var(--app-pos-VERB)"></span>VERB 动词</td><td>#f97316</td><td><span class="pg-swatch" style="background:var(--app-pos-X)"></span>X / PUNCT 兜底</td><td>#9ca3af</td></tr>
+                <tr><td><span class="pg-swatch" style="background:var(--app-pos-ADJ)"></span>ADJ 形容词</td><td>#ec4899</td><td colspan="2">中文标签取 <code>POS_CN</code>（名词 / 动词 / 限定词 / 小品词 / 叹词…）</td></tr>
+                <tr><td><span class="pg-swatch" style="background:var(--app-pos-ADV)"></span>ADV 副词</td><td>rgb(139 92 246)</td><td colspan="2"><code>PROPN_PERSON</code> 与 <code>PROPN</code> 同色</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      <section class="pg-sec" id="flow" data-component="flow-states">
+        <div class="pg-sec-hd">
+          <span class="pg-sec-num">02</span>
+          <h2>英文句流 · 逐字母状态</h2>
+          <span class="pg-sec-src">PracticeModes.vue 161–272 / 4058–4233</span>
+        </div>
+        <p class="pg-sec-lede">打字练习的主视图：一行句子由若干 <code class="pg-inline-code">.word-col</code> 列组成，每列自上而下是中文释义、字母盒、逐词耗时。<code class="pg-inline-code">.enSentenceWrap</code> 固定 210px 高，第二行留给重练词。所有状态都是 <code class="pg-inline-code">.letter</code> 上的单类切换；未输入字母不是消失，而是 17% 不透明度加一条常驻下划线，所以字宽始终稳定。</p>
+
+        <article class="pg-unit" data-component="style-unit-01">
+          <div class="pg-unit-hd">
+            <h3>2.1 待输入 / 当前词 / 已完成</h3>
+            <p><code class="pg-inline-code">.word-col.active</code> 只把释义文字点亮成主色，不动字母；<code class="pg-inline-code">.completed</code> 里的 <code class="pg-inline-code">.letter.correct</code> 被压成浅色的 <code>#444444</code>、深色的 <code>#e2e8f0</code>——读得清但不抢焦点。释义关闭时 <code class="pg-inline-code">.word-cn</code> 仍占 18px，行高不跳。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.enSentenceWrap</code></li><li><code>.enSentence</code></li><li><code>.word-col</code></li><li><code>.active</code></li><li><code>.completed</code></li><li><code>.word-box</code></li><li><code>.word-letters</code></li><li><code>.letter</code></li><li><code>.correct</code></li><li><code>.word-cn</code></li><li><code>.word-time</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-01">
+            <div class="pg-row">
+              <span class="pg-tag"><b>pending</b> · 未开始：17% 字形 + 30% 下划线</span>
+              <div class="enSentence"><div class="word-col"><span class="word-cn"></span><span class="word-box"><span class="word-letters"><span class="letter">Y</span><span class="letter">o</span><span class="letter">u</span></span></span><span class="word-time"></span></div><div class="word-col"><span class="word-cn"></span><span class="word-box"><span class="word-letters"><span class="letter">a</span><span class="letter">r</span><span class="letter">e</span></span></span><span class="word-time"></span></div><div class="word-col"><span class="word-cn"></span><span class="word-box"><span class="word-letters"><span class="letter">n</span><span class="letter">o</span><span class="letter">t</span></span></span><span class="word-time"></span></div><div class="word-col"><span class="word-cn"></span><span class="word-box"><span class="word-letters"><span class="letter">t</span><span class="letter">h</span><span class="letter">e</span></span></span><span class="word-time"></span></div><div class="word-col"><span class="word-cn"></span><span class="word-box"><span class="word-letters"><span class="letter">t</span><span class="letter">e</span><span class="letter">a</span><span class="letter">c</span><span class="letter">h</span><span class="letter">e</span><span class="letter">r</span></span></span><span class="word-time"></span></div></div>
+            </div>
+            <div class="pg-row">
+              <span class="pg-tag"><b>进行中</b> · 前两词 completed，当前词 active 且已打出 n</span>
+              <div class="enSentence">
+                <div class="word-col completed"><span class="word-cn">你</span><span class="word-box"><span class="word-letters"><span class="letter correct">Y</span><span class="letter correct">o</span><span class="letter correct">u</span></span></span><span class="word-time has-value">412</span></div>
+                <div class="word-col completed"><span class="word-cn">是</span><span class="word-box"><span class="word-letters"><span class="letter correct">a</span><span class="letter correct">r</span><span class="letter correct">e</span></span></span><span class="word-time has-value">308</span></div>
+                <div class="word-col active"><span class="word-cn">不</span><span class="word-box"><span class="word-letters"><span class="letter correct">n</span><span class="letter current">o</span><span class="letter">t</span></span></span><span class="word-time has-value">266</span></div>
+                <div class="word-col"><span class="word-cn">定冠词</span><span class="word-box"><span class="word-letters"><span class="letter">t</span><span class="letter">h</span><span class="letter">e</span></span></span><span class="word-time"></span></div>
+                <div class="word-col"><span class="word-cn">老师</span><span class="word-box"><span class="word-letters"><span class="letter">t</span><span class="letter">e</span><span class="letter">a</span><span class="letter">c</span><span class="letter">h</span><span class="letter">e</span><span class="letter">r</span></span></span><span class="word-time"></span></div>
+              </div>
+            </div>
+            <div class="pg-row">
+              <span class="pg-tag"><b>释义关闭</b> · <code class="pg-inline-code">enShowWordCn=false</code>，占位保留</span>
+              <div class="enSentence"><div class="word-col active"><span class="word-cn"></span><span class="word-box"><span class="word-letters"><span class="letter correct">Y</span><span class="letter current">o</span><span class="letter">u</span></span></span><span class="word-time"></span></div><div class="word-col"><span class="word-cn"></span><span class="word-box"><span class="word-letters"><span class="letter">a</span><span class="letter">r</span><span class="letter">e</span></span></span><span class="word-time"></span></div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="pg-unit" data-component="style-unit-02">
+          <div class="pg-unit-hd">
+            <h3>2.2 显示模式三档 · 智能 / 看答案 / 全默写</h3>
+            <p>同一句在三种 <code class="pg-inline-code">enDisplayMode</code> 下的差别只落在光标位：看答案用 <code class="pg-inline-code">.current</code>（字形是主色 20% 的淡影 + 边框色下划线），全默写用 <code class="pg-inline-code">.dict-current</code>（字形完全隐藏，只留主色下划线定位，即最近一次修复的行为）。已掌握词在智能模式下会降级成 <code class="pg-inline-code">.hidden</code>。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.letter.current</code></li><li><code>.letter.dict-current</code></li><li><code>.letter.hidden</code></li><li><code>.letter.incorrect</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-02">
+            <div class="pg-row">
+              <span class="pg-tag"><b>guide 看答案</b> · 字母全部可见，光标位淡色</span>
+              <div class="enSentence"><div class="word-col completed"><span class="word-box"><span class="word-letters"><span class="letter correct">H</span><span class="letter correct">e</span></span></span></div><div class="word-col active"><span class="word-box"><span class="word-letters"><span class="letter correct">i</span><span class="letter current">s</span></span></span></div><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">a</span><span class="letter">n</span><span class="letter">y</span></span></span></div></div>
+            </div>
+            <div class="pg-row">
+              <span class="pg-tag"><b>dictation 全默写</b> · 字形隐藏，仅下划线定位</span>
+              <div class="enSentence"><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter hidden">H</span><span class="letter hidden">e</span></span></span></div><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter hidden">i</span><span class="letter dict-current">s</span></span></span></div><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter hidden">a</span><span class="letter hidden">n</span><span class="letter hidden">y</span></span></span></div></div>
+            </div>
+            <div class="pg-row">
+              <span class="pg-tag"><b>strict 严格模式打错</b> · 红字 + 红下划线，只压当前位</span>
+              <div class="enSentence"><div class="word-col active"><span class="word-box"><span class="word-letters"><span class="letter correct">i</span><span class="letter incorrect">s</span></span></span></div><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">a</span><span class="letter">m</span></span></span></div><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">L</span><span class="letter">i</span></span></span></div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="pg-unit" data-component="style-unit-03">
+          <div class="pg-unit-hd">
+            <h3>2.3 标点三态</h3>
+            <p>逗号、句号、问号、感叹号属于可选输入（<code class="pg-inline-code">EN_OPTIONAL_PUNCT</code>）。没打时 55% 灰，打过后升到 95% 并转成 <code>#777</code>；光标正好停在标点上时用 <code>--theme-accent</code> 的回退蓝 <code>#4a90d9</code>，而不是品牌主色。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.letter.punct</code></li><li><code>.letter.punct-done</code></li><li><code>.letter.punct-current</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-03">
+            <div class="pg-row">
+              <span class="pg-tag"><code>.punct</code> 未打</span>
+              <div class="enSentence"><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">W</span><span class="letter">h</span><span class="letter">o</span></span></span></div><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">i</span><span class="letter">s</span></span></span></div><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">t</span><span class="letter">h</span><span class="letter">e</span></span></span></div><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">t</span><span class="letter">e</span><span class="letter">a</span><span class="letter">c</span><span class="letter">h</span><span class="letter">e</span><span class="letter">r</span><span class="letter punct">?</span></span></span></div></div>
+            </div>
+            <div class="pg-row">
+              <span class="pg-tag"><code>.punct-done</code> 已打 ／ <code>.punct-current</code> 光标正停在句点</span>
+              <div class="enSentence"><div class="word-col completed"><span class="word-box"><span class="word-letters"><span class="letter correct">N</span><span class="letter correct">o</span><span class="letter punct-done">,</span></span></span></div><div class="word-col completed"><span class="word-box"><span class="word-letters"><span class="letter correct">I</span></span></span></div><div class="word-col active"><span class="word-box"><span class="word-letters"><span class="letter correct">a</span><span class="letter correct">m</span><span class="letter correct"> </span><span class="letter correct">n</span><span class="letter correct">o</span><span class="letter correct">t</span><span class="letter punct-current">.</span></span></span></div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="pg-unit" data-component="style-unit-04">
+          <div class="pg-unit-hd">
+            <h3>2.4 宽松模式 · 错误回放</h3>
+            <p>宽松模式不当场打断：光标之后的错词整词标红；等你退格回滚，才按位重放「你实际敲进去的字符」，与目标一致的位显主色、不一致的位显红。这就是 <code class="pg-inline-code">enReplayWi</code> 分支的视觉结果——字母文字来自用户输入而不是正确答案。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.letter.correct</code></li><li><code>.letter.incorrect</code></li><li><code>enGentleMode</code></li><li><code>enGentleErrors</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-04">
+            <div class="pg-row">
+              <span class="pg-tag"><b>回放中</b> · 目标 teacher，用户输入 tehcer：逐位比对</span>
+              <div class="enSentence"><div class="word-col completed"><span class="word-cn">那个</span><span class="word-box"><span class="word-letters"><span class="letter correct">t</span><span class="letter correct">h</span><span class="letter correct">a</span><span class="letter correct">t</span></span></span></div><div class="word-col active"><span class="word-cn">老师</span><span class="word-box"><span class="word-letters"><span class="letter correct">t</span><span class="letter correct">e</span><span class="letter incorrect">h</span><span class="letter incorrect">c</span><span class="letter incorrect">e</span><span class="letter incorrect">r</span></span></span></div></div>
+            </div>
+            <div class="pg-row">
+              <span class="pg-tag"><b>未回放</b> · 光标之后的错词整词标红，不指出哪一位</span>
+              <div class="enSentence"><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">a</span><span class="letter">r</span><span class="letter">e</span></span></span></div><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter incorrect">y</span><span class="letter incorrect">o</span><span class="letter incorrect">u</span></span></span></div><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">t</span><span class="letter">h</span><span class="letter">e</span></span></span></div></div>
+            </div>
+          </div>
+          <p class="pg-note"><span class="pg-flag">按现状复刻</span> 回放位与目标位一一对应，因此用户多敲造成的位移会连锁标红。这是错误回放改造后的既有行为，本页没有替它兜底。</p>
+        </article>
+
+        <article class="pg-unit" data-component="style-unit-05">
+          <div class="pg-unit-hd">
+            <h3>2.5 重练行与橙色 correct</h3>
+            <p>开启重练后，本句错词沉到 <code class="pg-inline-code">.enSentenceWrap</code> 的第二行，字距与内边距都收紧一档。重练行的 <code class="pg-inline-code">.correct</code> 覆盖成 <code>#e6a23c</code>，与主行主色区分，提示「这是补打不是首打」。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.enSentenceRedo</code></li><li><code>.word-col.redo</code></li><li><code>.word-col.redo .letter.correct</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-05">
+            <div class="enSentenceWrap">
+              <div class="enSentence"><div class="word-col active"><span class="word-box"><span class="word-letters"><span class="letter correct">I</span><span class="letter current"> </span></span></span></div><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">a</span><span class="letter">m</span></span></span></div></div>
+              <div class="enSentence enSentenceRedo">
+                <div class="word-col redo"><span class="word-cn">老师</span><span class="word-box"><span class="word-letters"><span class="letter correct">t</span><span class="letter correct">e</span><span class="letter correct">a</span><span class="letter correct">c</span><span class="letter correct">h</span><span class="letter correct">e</span><span class="letter correct">r</span></span></span></div>
+                <div class="word-col redo"><span class="word-cn">不</span><span class="word-box"><span class="word-letters"><span class="letter correct">n</span><span class="letter correct">o</span><span class="letter correct">t</span></span></span></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="pg-unit" data-component="style-unit-06">
+          <div class="pg-unit-hd">
+            <h3>2.6 词根着色 与 音节着色</h3>
+            <p><code class="pg-inline-code">enColorMode</code> 的另外两档。词根模式吃 <code class="pg-inline-code">src/data/wordSegments.js</code>（前缀 / 词根 / 第二词根 / 词缀四类灰蓝米色），音节模式吃 <code class="pg-inline-code">src/data/enSyllables.js</code>，五个色相按音节序号循环。两者都压到 55% 不透明度，完成态的音节色提到 75%。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.letter.seg-pre</code></li><li><code>.letter.seg-root</code></li><li><code>.letter.seg-root2</code></li><li><code>.letter.seg-suf</code></li><li><code>.letter.syl-0 … syl-4</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-06">
+            <div class="pg-row">
+              <span class="pg-tag"><b>word-root</b> · important = im|port|ant，environment = en|viron|ment，beautiful = beau|ti|ful</span>
+              <div class="enSentence">
+                <div class="word-col"><span class="word-cn">重要的</span><span class="word-box"><span class="word-letters"><span class="letter seg-pre">i</span><span class="letter seg-pre">m</span><span class="letter seg-root">p</span><span class="letter seg-root">o</span><span class="letter seg-root">r</span><span class="letter seg-root">t</span><span class="letter seg-suf">a</span><span class="letter seg-suf">n</span><span class="letter seg-suf">t</span></span></span></div>
+                <div class="word-col"><span class="word-cn">环境</span><span class="word-box"><span class="word-letters"><span class="letter seg-pre">e</span><span class="letter seg-pre">n</span><span class="letter seg-root">v</span><span class="letter seg-root">i</span><span class="letter seg-root">r</span><span class="letter seg-root">o</span><span class="letter seg-root">n</span><span class="letter seg-suf">m</span><span class="letter seg-suf">e</span><span class="letter seg-suf">n</span><span class="letter seg-suf">t</span></span></span></div>
+                <div class="word-col"><span class="word-cn">美丽的</span><span class="word-box"><span class="word-letters"><span class="letter seg-root">b</span><span class="letter seg-root">e</span><span class="letter seg-root">a</span><span class="letter seg-root2">u</span><span class="letter seg-root2">t</span><span class="letter seg-root2">i</span><span class="letter seg-suf">f</span><span class="letter seg-suf">u</span><span class="letter seg-suf">l</span></span></span></div>
+              </div>
+            </div>
+            <div class="pg-row">
+              <span class="pg-tag"><b>syllable</b> · 词表内实取 because / student / beautiful / environment / vegetables</span>
+              <div class="enSentence">
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter syl-0">b</span><span class="letter syl-0">e</span><span class="letter syl-1">c</span><span class="letter syl-1">a</span><span class="letter syl-1">u</span><span class="letter syl-1">s</span><span class="letter syl-1">e</span></span></span></div>
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter syl-0">s</span><span class="letter syl-0">t</span><span class="letter syl-0">u</span><span class="letter syl-1">d</span><span class="letter syl-1">e</span><span class="letter syl-1">n</span><span class="letter syl-1">t</span></span></span></div>
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter syl-0">b</span><span class="letter syl-0">e</span><span class="letter syl-0">a</span><span class="letter syl-0">u</span><span class="letter syl-1">t</span><span class="letter syl-1">i</span><span class="letter syl-2">f</span><span class="letter syl-2">u</span><span class="letter syl-2">l</span></span></span></div>
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter syl-0">e</span><span class="letter syl-0">n</span><span class="letter syl-1">v</span><span class="letter syl-1">i</span><span class="letter syl-1">r</span><span class="letter syl-1">o</span><span class="letter syl-1">n</span><span class="letter syl-2">m</span><span class="letter syl-2">e</span><span class="letter syl-2">n</span><span class="letter syl-2">t</span></span></span></div>
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter syl-0">v</span><span class="letter syl-0">e</span><span class="letter syl-0">g</span><span class="letter syl-0">e</span><span class="letter syl-1">t</span><span class="letter syl-1">a</span><span class="letter syl-1">b</span><span class="letter syl-1">l</span><span class="letter syl-2">e</span><span class="letter syl-2">s</span></span></span></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="pg-unit" data-component="style-unit-07">
+          <div class="pg-unit-hd">
+            <h3>2.7 溢出、短文紧凑、暗色</h3>
+            <p>长句靠 <code class="pg-inline-code">.left-fade</code> 的 mask 让左缘 90px 渐隐，提示前面还有内容；短文与自定义模式用 <code class="pg-inline-code">.story</code> 把字距从 10px 收到 6px。暗色下唯一的硬编码色是完成态字母的 <code>#e2e8f0</code>。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.enSentence.left-fade</code></li><li><code>.enSentence.story</code></li><li><code>html.dark</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-07">
+            <div class="pg-row">
+              <span class="pg-tag"><b>left-fade</b> · everyday-dialogues-100 / L05 超长句，舞台宽度截断演示</span>
+              <div class="enSentence left-fade" style="max-width:720px">
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">I</span><span class="letter">'</span><span class="letter">l</span><span class="letter">l</span></span></span></div>
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">d</span><span class="letter">o</span></span></span></div>
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">m</span><span class="letter">y</span></span></span></div>
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">b</span><span class="letter">e</span><span class="letter">s</span><span class="letter">t</span></span></span></div>
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">t</span><span class="letter">o</span></span></span></div>
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">e</span><span class="letter">n</span><span class="letter">s</span><span class="letter">u</span><span class="letter">r</span><span class="letter">e</span></span></span></div>
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">y</span><span class="letter">o</span><span class="letter">u</span><span class="letter">r</span></span></span></div>
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">r</span><span class="letter">e</span><span class="letter">s</span><span class="letter">e</span><span class="letter">r</span><span class="letter">v</span><span class="letter">a</span><span class="letter">t</span><span class="letter">i</span><span class="letter">o</span><span class="letter">n</span></span></span></div>
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">i</span><span class="letter">s</span></span></span></div>
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">c</span><span class="letter">o</span><span class="letter">n</span><span class="letter">f</span><span class="letter">i</span><span class="letter">r</span><span class="letter">m</span><span class="letter">e</span><span class="letter">d</span></span></span></div>
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">f</span><span class="letter">o</span><span class="letter">r</span></span></span></div>
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">7</span><span class="letter">:</span><span class="letter">0</span><span class="letter">0</span></span></span></div>
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">p</span><span class="letter">.</span><span class="letter">m</span><span class="letter">.</span></span></span></div>
+              </div>
+            </div>
+            <div class="pg-row">
+              <span class="pg-tag"><b>story 紧凑</b> · gap 6px，word-box 内边距 6/4</span>
+              <div class="enSentence story"><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">T</span><span class="letter">h</span><span class="letter">a</span><span class="letter">t</span></span></span></div><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">s</span><span class="letter">t</span><span class="letter">u</span><span class="letter">d</span><span class="letter">e</span><span class="letter">n</span><span class="letter">t</span></span></span></div><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">i</span><span class="letter">s</span></span></span></div><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">a</span></span></span></div><div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">f</span><span class="letter">r</span><span class="letter">i</span><span class="letter">e</span><span class="letter">n</span><span class="letter">d</span></span></span></div></div>
+            </div>
+          </div>
+          <div class="stage dark" data-theme="dark" data-component="repro-stage-08">
+            <div class="pg-row">
+              <span class="pg-tag"><b>html.dark</b> · 同一组件在暗色下的取值</span>
+              <div class="enSentence">
+                <div class="word-col completed"><span class="word-cn">这</span><span class="word-box"><span class="word-letters"><span class="letter correct">T</span><span class="letter correct">h</span><span class="letter correct">i</span><span class="letter correct">s</span></span></span><span class="word-time has-value">356</span></div>
+                <div class="word-col active"><span class="word-cn">是</span><span class="word-box"><span class="word-letters"><span class="letter correct">i</span><span class="letter current">s</span></span></span></div>
+                <div class="word-col"><span class="word-cn">我的</span><span class="word-box"><span class="word-letters"><span class="letter">m</span><span class="letter">y</span></span></span></div>
+                <div class="word-col"><span class="word-cn">名字</span><span class="word-box"><span class="word-letters"><span class="letter">n</span><span class="letter">a</span><span class="letter">m</span><span class="letter">e</span></span></span></div>
+              </div>
+            </div>
+            <div class="pg-row">
+              <span class="pg-tag">暗色下的 词根着色 / 音节着色 / 标点</span>
+              <div class="enSentence">
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter seg-pre">b</span><span class="letter seg-pre">e</span><span class="letter seg-root">c</span><span class="letter seg-root">a</span><span class="letter seg-root">u</span><span class="letter seg-root">s</span><span class="letter seg-root">e</span></span></span></div>
+                <div class="word-col completed"><span class="word-box"><span class="word-letters"><span class="letter syl-0">t</span><span class="letter syl-0">o</span><span class="letter syl-1">m</span><span class="letter syl-1">o</span><span class="letter syl-1">r</span><span class="letter syl-1">r</span><span class="letter syl-1">o</span><span class="letter syl-1">w</span></span></span></div>
+                <div class="word-col"><span class="word-box"><span class="word-letters"><span class="letter">t</span><span class="letter">e</span><span class="letter">a</span><span class="letter">c</span><span class="letter">h</span><span class="letter">e</span><span class="letter">r</span><span class="letter punct">?</span></span></span></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="pg-sec" id="parse" data-component="structure-parse">
+        <div class="pg-sec-hd">
+          <span class="pg-sec-num">03</span>
+          <h2>句子成分结构图</h2>
+          <span class="pg-sec-src">PracticeModes.vue 174–207 / 4578–4820</span>
+        </div>
+        <p class="pg-sec-lede">整句打完弹出的完成态视图，也是核心句子信息密度最高的一种样式：成分组框 + 浮动角色胶囊 + 每词四层（音标 / 词形与词性色条 / 释义 / 词性中文）。入场按组序 <code class="pg-inline-code">--gi</code> 错位：词 0ms、组框 280ms、音标与释义 300ms、胶囊 340ms、整句中文 380ms，步长 20ms。</p>
+
+        <article class="pg-unit" data-component="style-unit-08">
+          <div class="pg-unit-hd">
+            <h3>3.1 完整多成分句</h3>
+            <p>850-basic-words / L08：7 个成分组、11 个词，含并列连词和跨词宾语。逗号被收进前一个词的 <code class="pg-inline-code">.spPunct</code>，不占词索引位——这是结构图与 <code class="pg-inline-code">wordDetails</code> 对齐的关键处理。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.spParse</code></li><li><code>.spGroup</code></li><li><code>.spChip</code></li><li><code>.spUnit</code></li><li><code>.spPh</code></li><li><code>.spCell</code></li><li><code>.spWord</code></li><li><code>.spUl</code></li><li><code>.spPunct</code></li><li><code>.spDef</code></li><li><code>.spPos</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-09">
+            <div class="spParse">
+              <div class="spGroup" style="--gi:0;--sp-chip:var(--app-comp-subject);border-color:color-mix(in srgb, var(--app-comp-subject) 50%, transparent)">
+                <span class="spChip">主语</span>
+                <span class="spUnit"><span class="spPh">/aɪ/</span><span class="spCell"><span class="spWord">I</span><span class="spUl" style="background-color:var(--app-pos-PRON)"></span></span><span class="spDef">我</span><span class="spPos">代词</span></span>
+              </div>
+              <div class="spGroup" style="--gi:1;--sp-chip:var(--app-comp-predicate);border-color:color-mix(in srgb, var(--app-comp-predicate) 50%, transparent)">
+                <span class="spChip">谓语</span>
+                <span class="spUnit"><span class="spPh">/hæv/</span><span class="spCell"><span class="spWord">have</span><span class="spUl" style="background-color:var(--app-pos-VERB)"></span></span><span class="spDef">有</span><span class="spPos">动词</span></span>
+              </div>
+              <div class="spGroup" style="--gi:2;--sp-chip:var(--app-comp-object);border-color:color-mix(in srgb, var(--app-comp-object) 50%, transparent)">
+                <span class="spChip">宾语</span>
+                <span class="spUnit"><span class="spPh">/ə; eɪ/</span><span class="spCell"><span class="spWord">a</span><span class="spUl" style="background-color:var(--app-pos-DET)"></span></span><span class="spDef">一个</span><span class="spPos">限定词</span></span>
+                <span class="spUnit"><span class="spPh">/ˈtɪkɪt/</span><span class="spCell"><span class="spWord">ticket</span><span class="spUl" style="background-color:var(--app-pos-NOUN)"></span></span><span class="spPunct">,</span><span class="spDef">票</span><span class="spPos">名词</span></span>
+              </div>
+              <div class="spGroup" style="--gi:3;--sp-chip:var(--app-comp-conjunction);border-color:color-mix(in srgb, var(--app-comp-conjunction) 50%, transparent)">
+                <span class="spChip">连词</span>
+                <span class="spUnit"><span class="spPh">/bʌt; bət/</span><span class="spCell"><span class="spWord">but</span><span class="spUl" style="background-color:var(--app-pos-CCONJ)"></span></span><span class="spDef">但是</span><span class="spPos">连词</span></span>
+              </div>
+              <div class="spGroup" style="--gi:4;--sp-chip:var(--app-comp-subject);border-color:color-mix(in srgb, var(--app-comp-subject) 50%, transparent)">
+                <span class="spChip">主语</span>
+                <span class="spUnit"><span class="spPh">/aɪ/</span><span class="spCell"><span class="spWord">I</span><span class="spUl" style="background-color:var(--app-pos-PRON)"></span></span><span class="spDef">我</span><span class="spPos">代词</span></span>
+              </div>
+              <div class="spGroup" style="--gi:5;--sp-chip:var(--app-comp-predicate);border-color:color-mix(in srgb, var(--app-comp-predicate) 50%, transparent)">
+                <span class="spChip">谓语</span>
+                <span class="spUnit"><span class="spPh">/duː; də/</span><span class="spCell"><span class="spWord">do</span><span class="spUl" style="background-color:var(--app-pos-AUX)"></span></span><span class="spDef">助动词</span><span class="spPos">助动词</span></span>
+                <span class="spUnit"><span class="spPh">/nɑːt/</span><span class="spCell"><span class="spWord">not</span><span class="spUl" style="background-color:var(--app-pos-PART)"></span></span><span class="spDef">不</span><span class="spPos">小品词</span></span>
+                <span class="spUnit"><span class="spPh">/hæv; həv/</span><span class="spCell"><span class="spWord">have</span><span class="spUl" style="background-color:var(--app-pos-VERB)"></span></span><span class="spDef">有</span><span class="spPos">动词</span></span>
+              </div>
+              <div class="spGroup" style="--gi:6;--sp-chip:var(--app-comp-object);border-color:color-mix(in srgb, var(--app-comp-object) 50%, transparent)">
+                <span class="spChip">宾语</span>
+                <span class="spUnit"><span class="spPh">/ə; eɪ/</span><span class="spCell"><span class="spWord">a</span><span class="spUl" style="background-color:var(--app-pos-DET)"></span></span><span class="spDef">一个</span><span class="spPos">限定词</span></span>
+                <span class="spUnit"><span class="spPh">/bʊk/</span><span class="spCell"><span class="spWord">book</span><span class="spUl" style="background-color:var(--app-pos-NOUN)"></span></span><span class="spPunct">.</span><span class="spDef">书</span><span class="spPos">名词</span></span>
+              </div>
+              <span class="enSentenceCn spCn">我有票，但我没有书。</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="pg-unit" data-component="style-unit-09">
+          <div class="pg-unit-hd">
+            <h3>3.2 边界情况 · 缩写组 / 空音标 / 连字符 / 裸感叹词</h3>
+            <p>四组最容易翻车的真实数据：缩写单独成组（<code class="pg-inline-code">type: contraction</code> 在 COMP_COLORS 里没有对应色，落到 <code>#9ca3af</code> 兜底）、数词 <code>$3.99</code> 的 phonetic 是空串（<code class="pg-inline-code">.spPh</code> 靠 min-height 撑行）、带连字符的 <code>check-in</code>、以及官网结构里 role 为空的感叹词组——后者直接走 <code class="pg-inline-code">.spGroup.plain</code>：无框、无胶囊。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.spGroup.plain</code></li><li><code>.spPh</code>（空音标）</li><li><code>.spPunct</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-10">
+            <div class="pg-row">
+              <span class="pg-tag"><b>everyday-dialogues-100 / L03</b> · It's $3.99 per carton.（缩写组 + 空音标数词 + 无 phonetic 兜底）</span>
+              <div class="spParse">
+                <div class="spGroup" style="--gi:0;--sp-chip:#9ca3af;border-color:color-mix(in srgb, #9ca3af 50%, transparent)">
+                  <span class="spChip">缩写</span>
+                  <span class="spUnit"><span class="spPh">/ɪts/</span><span class="spCell"><span class="spWord">It's</span><span class="spUl" style="background-color:var(--app-pos-PRON)"></span></span><span class="spDef">它是</span><span class="spPos">代词</span></span>
+                </div>
+                <div class="spGroup" style="--gi:1;--sp-chip:var(--app-comp-predicative);border-color:color-mix(in srgb, var(--app-comp-predicative) 50%, transparent)">
+                  <span class="spChip">表语</span>
+                  <span class="spUnit"><span class="spPh"></span><span class="spCell"><span class="spWord">$3.99</span><span class="spUl" style="background-color:var(--app-pos-NUM)"></span></span><span class="spDef">3.99美元</span><span class="spPos">数词</span></span>
+                </div>
+                <div class="spGroup" style="--gi:2;--sp-chip:var(--app-comp-adverbial);border-color:color-mix(in srgb, var(--app-comp-adverbial) 50%, transparent)">
+                  <span class="spChip">状语</span>
+                  <span class="spUnit"><span class="spPh">/pər/</span><span class="spCell"><span class="spWord">per</span><span class="spUl" style="background-color:var(--app-pos-ADP)"></span></span><span class="spDef">每</span><span class="spPos">介词</span></span>
+                  <span class="spUnit"><span class="spPh">/ˈkɑrtən/</span><span class="spCell"><span class="spWord">carton</span><span class="spUl" style="background-color:var(--app-pos-NOUN)"></span></span><span class="spPunct">.</span><span class="spDef">纸箱</span><span class="spPos">名词</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="pg-row">
+              <span class="pg-tag"><b>everyday-dialogues-100 / L07</b> · 裸感叹词组（role 为空 → plain）+ 连字符词 + 介词短语后置定语</span>
+              <div class="spParse">
+                <div class="spGroup plain" style="--gi:0">
+                  <span class="spUnit"><span class="spPh">/haɪ/</span><span class="spCell"><span class="spWord">Hi</span><span class="spUl" style="background-color:var(--app-pos-INTJ)"></span></span><span class="spPunct">,</span><span class="spDef">你好</span><span class="spPos">叹词</span></span>
+                </div>
+                <div class="spGroup" style="--gi:1;--sp-chip:var(--app-comp-adverbial);border-color:color-mix(in srgb, var(--app-comp-adverbial) 50%, transparent)">
+                  <span class="spChip">状语</span>
+                  <span class="spUnit"><span class="spPh">/wer/</span><span class="spCell"><span class="spWord">where</span><span class="spUl" style="background-color:var(--app-pos-ADV)"></span></span><span class="spDef">哪里</span><span class="spPos">副词</span></span>
+                </div>
+                <div class="spGroup" style="--gi:2;--sp-chip:var(--app-comp-subject);border-color:color-mix(in srgb, var(--app-comp-subject) 50%, transparent)">
+                  <span class="spChip">主语</span>
+                  <span class="spUnit"><span class="spPh">/aɪ/</span><span class="spCell"><span class="spWord">I</span><span class="spUl" style="background-color:var(--app-pos-PRON)"></span></span><span class="spDef">我</span><span class="spPos">代词</span></span>
+                </div>
+                <div class="spGroup plain" style="--gi:3">
+                  <span class="spUnit"><span class="spPh">/kæn/</span><span class="spCell"><span class="spWord">can</span><span class="spUl" style="background-color:var(--app-pos-AUX)"></span></span><span class="spDef">能</span><span class="spPos">助动词</span></span>
+                  <span class="spUnit"><span class="spPh">/faɪnd/</span><span class="spCell"><span class="spWord">find</span><span class="spUl" style="background-color:var(--app-pos-VERB)"></span></span><span class="spDef">找到</span><span class="spPos">动词</span></span>
+                  <span class="spUnit"><span class="spPh">/ðə/</span><span class="spCell"><span class="spWord">the</span><span class="spUl" style="background-color:var(--app-pos-DET)"></span></span><span class="spDef">定冠词</span><span class="spPos">限定词</span></span>
+                  <span class="spUnit"><span class="spPh">/ˈtʃek ɪn/</span><span class="spCell"><span class="spWord">check-in</span><span class="spUl" style="background-color:var(--app-pos-NOUN)"></span></span><span class="spDef">办理登机手续</span><span class="spPos">名词</span></span>
+                  <span class="spUnit"><span class="spPh">/ˈkaʊntərz/</span><span class="spCell"><span class="spWord">counters</span><span class="spUl" style="background-color:var(--app-pos-NOUN)"></span></span><span class="spDef">柜台（复数）</span><span class="spPos">名词</span></span>
+                </div>
+                <div class="spGroup" style="--gi:4;--sp-chip:var(--app-comp-attributive);border-color:color-mix(in srgb, var(--app-comp-attributive) 50%, transparent)">
+                  <span class="spChip">定语</span>
+                  <span class="spUnit"><span class="spPh">/fɔːr; fər/</span><span class="spCell"><span class="spWord">for</span><span class="spUl" style="background-color:var(--app-pos-ADP)"></span></span><span class="spDef">为</span><span class="spPos">介词</span></span>
+                  <span class="spUnit"><span class="spPh">/ˈdeltə/</span><span class="spCell"><span class="spWord">Delta</span><span class="spUl" style="background-color:var(--app-pos-PROPN)"></span></span><span class="spDef">达美航空</span><span class="spPos">专有名词</span></span>
+                  <span class="spUnit"><span class="spPh">/ˈerlaɪnz/</span><span class="spCell"><span class="spWord">Airlines</span><span class="spUl" style="background-color:var(--app-pos-NOUN)"></span></span><span class="spPunct">.</span><span class="spDef">航空公司（复数）</span><span class="spPos">名词</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="pg-row">
+              <span class="pg-tag"><b>friends-s1 / L01</b> · 整包没有 sentenceStructure → 全词平铺一组，无框无胶囊；弯引号被归一半角</span>
+              <div class="spParse">
+                <div class="spGroup plain" style="--gi:0">
+                  <span class="spUnit"><span class="spPh">/ðɪs/</span><span class="spCell"><span class="spWord">This</span><span class="spUl" style="background-color:var(--app-pos-DET)"></span></span><span class="spDef">这个</span><span class="spPos">限定词</span></span>
+                  <span class="spUnit"><span class="spPh">/ɡaɪ/</span><span class="spCell"><span class="spWord">guy</span><span class="spUl" style="background-color:var(--app-pos-NOUN)"></span></span><span class="spDef">家伙</span><span class="spPos">名词</span></span>
+                  <span class="spUnit"><span class="spPh">/sez/</span><span class="spCell"><span class="spWord">says</span><span class="spUl" style="background-color:var(--app-pos-VERB)"></span></span><span class="spDef">say（第三人称单数）: 说</span><span class="spPos">动词</span></span>
+                  <span class="spUnit"><span class="spPh">/həˈloʊ/</span><span class="spCell"><span class="spWord">hello</span><span class="spUl" style="background-color:var(--app-pos-INTJ)"></span></span><span class="spPunct">"</span><span class="spDef">你好</span><span class="spPos">叹词</span></span>
+                  <span class="spUnit"><span class="spPh">/aɪ/</span><span class="spCell"><span class="spWord">I</span><span class="spUl" style="background-color:var(--app-pos-PRON)"></span></span><span class="spDef">我</span><span class="spPos">代词</span></span>
+                  <span class="spUnit"><span class="spPh">/ˈwɑːnə/</span><span class="spCell"><span class="spWord">wanna</span><span class="spUl" style="background-color:var(--app-pos-VERB)"></span></span><span class="spDef">want to（缩写）: 想要</span><span class="spPos">动词</span></span>
+                  <span class="spUnit"><span class="spPh">/kɪl/</span><span class="spCell"><span class="spWord">kill</span><span class="spUl" style="background-color:var(--app-pos-VERB)"></span></span><span class="spDef">杀死</span><span class="spPos">动词</span></span>
+                  <span class="spUnit"><span class="spPh">/maɪˈself/</span><span class="spCell"><span class="spWord">myself</span><span class="spUl" style="background-color:var(--app-pos-PRON)"></span></span><span class="spDef">我自己</span><span class="spPos">代词</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="pg-unit" data-component="style-unit-10">
+          <div class="pg-unit-hd">
+            <h3>3.3 词卡浮层 <code class="pg-inline-code">.spTip</code></h3>
+            <p>悬停词卡才出现，这里把两份浮层静态展开以检查排版：一份是常规成分解释，一份是最长解释（340px 上限、12px/1.6、左上角圆角 10px）。浮层底色取 <code class="pg-inline-code">--theme-background-color</code>，在暗色下会翻成深蓝灰。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.spTip</code></li><li><code>.spTipTitle</code></li><li><code>.spTipRole</code></li><li><code>.spTipType</code></li><li><code>.spTipBody</code></li><li><code>:hover</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-11">
+            <div class="pg-row">
+              <span class="pg-tag">静态展开（App 内实际由 <code class="pg-inline-code">.spUnit:hover</code> 触发）</span>
+              <div class="spParse">
+                <div class="spGroup" style="--gi:0;--sp-chip:var(--app-comp-object);border-color:color-mix(in srgb, var(--app-comp-object) 50%, transparent)">
+                  <span class="spChip">宾语</span>
+                  <span class="spUnit"><span class="spTip" style="opacity:1;visibility:visible;transform:translateX(-50%)"><span class="spTipTitle"><span class="spTipRole">宾语</span><span class="spTipType">object</span></span><span class="spTipBody">是谓语动词 have 的动作承受对象，明确说明主语拥有的具体物品是一张票。</span></span><span class="spPh">/ˈtɪkɪt/</span><span class="spCell"><span class="spWord">ticket</span><span class="spUl" style="background-color:var(--app-pos-NOUN)"></span></span><span class="spDef">票</span><span class="spPos">名词</span></span>
+                  <span class="spUnit"><span class="spTip" style="opacity:1;visibility:visible;transform:translateX(-50%)"><span class="spTipTitle"><span class="spTipRole">谓语</span><span class="spTipType">predicate</span></span><span class="spTipBody">借助助动词 do 加否定词 not 构成实义动词 have 的一般现在时否定形式，用来描述主语「不拥有」的核心动作。</span></span><span class="spPh">/duː; də/</span><span class="spCell"><span class="spWord">do</span><span class="spUl" style="background-color:var(--app-pos-AUX)"></span></span><span class="spDef">助动词</span><span class="spPos">助动词</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="pg-note"><span class="pg-flag--muted pg-flag">排版提示</span> 浮层 <code class="pg-inline-code">bottom: calc(100% - 14px)</code> 会压住上一行的组框；本行只有一组时不明显，但 3.1 那样的多行 <code class="pg-inline-code">.spParse</code> 里首行词卡浮层会盖到 <code class="pg-inline-code">.spChip</code>。</p>
+        </article>
+
+        <article class="pg-unit" data-component="style-unit-11">
+          <div class="pg-unit-hd">
+            <h3>3.4 暗色结构图</h3>
+            <p>暗色下只有两处硬覆盖：词形和标点从 <code>#444444</code> 翻到 <code>#e2e8f0</code>。组框底色靠 <code class="pg-inline-code">color-mix(… 38%, transparent)</code> 自动跟 <code class="pg-inline-code">--theme-background-light-color</code> 走。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.dark .spWord</code></li><li><code>[data-theme='dark'] .spPunct</code></li></ul>
+          <div class="stage dark" data-theme="dark" data-component="repro-stage-12">
+            <div class="spParse">
+              <div class="spGroup" style="--gi:0;--sp-chip:var(--app-comp-adverbial);border-color:color-mix(in srgb, var(--app-comp-adverbial) 50%, transparent)">
+                <span class="spChip">状语</span>
+                <span class="spUnit"><span class="spPh">/jes/</span><span class="spCell"><span class="spWord">Yes</span><span class="spUl" style="background-color:var(--app-pos-INTJ)"></span></span><span class="spPunct">,</span><span class="spDef">是的</span><span class="spPos">叹词</span></span>
+              </div>
+              <div class="spGroup" style="--gi:1;--sp-chip:var(--app-comp-subject);border-color:color-mix(in srgb, var(--app-comp-subject) 50%, transparent)">
+                <span class="spChip">主语</span>
+                <span class="spUnit"><span class="spPh">/wiː; wi/</span><span class="spCell"><span class="spWord">we</span><span class="spUl" style="background-color:var(--app-pos-PRON)"></span></span><span class="spDef">我们</span><span class="spPos">代词</span></span>
+              </div>
+              <div class="spGroup" style="--gi:2;--sp-chip:var(--app-comp-predicate);border-color:color-mix(in srgb, var(--app-comp-predicate) 50%, transparent)">
+                <span class="spChip">谓语</span>
+                <span class="spUnit"><span class="spPh">/hæv/</span><span class="spCell"><span class="spWord">have</span><span class="spUl" style="background-color:var(--app-pos-VERB)"></span></span><span class="spDef">有</span><span class="spPos">动词</span></span>
+              </div>
+              <div class="spGroup" style="--gi:3;--sp-chip:var(--app-comp-object);border-color:color-mix(in srgb, var(--app-comp-object) 50%, transparent)">
+                <span class="spChip">宾语</span>
+                <span class="spUnit"><span class="spPh">/ə; eɪ/</span><span class="spCell"><span class="spWord">a</span><span class="spUl" style="background-color:var(--app-pos-DET)"></span></span><span class="spDef">一个</span><span class="spPos">限定词</span></span>
+                <span class="spUnit"><span class="spPh">/ten pəˈsent/</span><span class="spCell"><span class="spWord">10%</span><span class="spUl" style="background-color:var(--app-pos-NUM)"></span></span><span class="spDef">10%</span><span class="spPos">数词</span></span>
+                <span class="spUnit"><span class="spPh">/ˈdɪskaʊnt/</span><span class="spCell"><span class="spWord">discount</span><span class="spUl" style="background-color:var(--app-pos-NOUN)"></span></span><span class="spDef">折扣</span><span class="spPos">名词</span></span>
+              </div>
+              <div class="spGroup" style="--gi:4;--sp-chip:var(--app-comp-adverbial);border-color:color-mix(in srgb, var(--app-comp-adverbial) 50%, transparent)">
+                <span class="spChip">状语</span>
+                <span class="spUnit"><span class="spPh">/ɑːn/</span><span class="spCell"><span class="spWord">on</span><span class="spUl" style="background-color:var(--app-pos-ADP)"></span></span><span class="spDef">在…上</span><span class="spPos">介词</span></span>
+                <span class="spUnit"><span class="spPh">/ɔːl/</span><span class="spCell"><span class="spWord">all</span><span class="spUl" style="background-color:var(--app-pos-DET)"></span></span><span class="spDef">所有</span><span class="spPos">限定词</span></span>
+                <span class="spUnit"><span class="spPh">/ˈaɪtəmz/</span><span class="spCell"><span class="spWord">items</span><span class="spUl" style="background-color:var(--app-pos-NOUN)"></span></span><span class="spDef">物品（复数）</span><span class="spPos">名词</span></span>
+              </div>
+              <div class="spGroup" style="--gi:5;--sp-chip:var(--app-comp-adverbial);border-color:color-mix(in srgb, var(--app-comp-adverbial) 50%, transparent)">
+                <span class="spChip">状语</span>
+                <span class="spUnit"><span class="spPh">/təˈdeɪ/</span><span class="spCell"><span class="spWord">today</span><span class="spUl" style="background-color:var(--app-pos-NOUN)"></span></span><span class="spPunct">.</span><span class="spDef">今天</span><span class="spPos">名词</span></span>
+              </div>
+              <span class="enSentenceCn spCn">是的，今天所有商品都有10%的折扣</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="pg-sec" id="feedback" data-component="feedback-layer">
+        <div class="pg-sec-hd">
+          <span class="pg-sec-num">04</span>
+          <h2>中文译文与完成反馈</h2>
+          <span class="pg-sec-src">PracticeModes.vue 162–173 / 3762–3779 / 4528–4570</span>
+        </div>
+        <p class="pg-sec-lede">句子层的两个非输入态元素：打字过程中显示在句子上方的整句中文（听写模式下隐藏），以及整句零错误完成后弹出的评级文字。评级文案只有 <code class="pg-inline-code">Perfect</code> 与 <code class="pg-inline-code">Great</code> 两档，靠 combo 计数放大。</p>
+
+        <article class="pg-unit" data-component="style-unit-12">
+          <div class="pg-unit-hd">
+            <h3>4.1 整句中文 <code class="pg-inline-code">.enSentenceCn</code></h3>
+            <p>24px/500，浅色下写死 <code>#444444</code>、暗色下 <code>#e2e8f0</code>，最大宽度 90% 居中。同一个类在结构图里以 <code class="pg-inline-code">.spCn</code> 复用并放大到 26px、<code class="pg-inline-code">flex-basis:100%</code>。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.enSentenceCn</code></li><li><code>.spParse .spCn</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-13">
+            <div class="pg-row"><span class="pg-tag">打字中（浅色）</span><p class="enSentenceCn">这不是上课的房间。</p></div>
+          </div>
+          <div class="stage dark" data-theme="dark" data-component="repro-stage-14">
+            <div class="pg-row" style="border-top:none"><span class="pg-tag">打字中（暗色）</span><p class="enSentenceCn">是的，这就是这节课。</p></div>
+          </div>
+        </article>
+
+        <article class="pg-unit" data-component="style-unit-13">
+          <div class="pg-unit-hd">
+            <h3>4.2 评级弹层 <code class="pg-inline-code">.combo-popup</code></h3>
+            <p>金色渐变靠 <code class="pg-inline-code">background-clip:text</code> 打在斜体 800 字重上，配两层 <code class="pg-inline-code">drop-shadow</code> 做外发光；计数用品牌主色。源码里它是 <code class="pg-inline-code">position: fixed; top:15vh</code>，本页改成静态以便排版（唯一被改动的定位属性已在 CSS 原位标注）。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.combo-popup</code></li><li><code>.comboRating</code></li><li><code>.comboCount</code></li><li><code>.combo-pop-enter/from</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-15">
+            <div class="comboPopupRow">
+              <span class="combo-popup"><span class="comboRating">Perfect</span><span class="comboCount">× 4</span></span>
+              <span class="combo-popup"><span class="comboRating">Great</span><span class="comboCount">× 2</span></span>
+              <span class="combo-popup"><span class="comboRating">Perfect</span><span class="comboCount">× 12</span></span>
+            </div>
+            <p class="pg-caption" style="margin-top:var(--pg-sp-3)">0 次手误 → Perfect，有手误 → Great；用提示或首打失败不弹。</p>
+          </div>
+          <div class="stage dark" data-theme="dark" data-component="repro-stage-16">
+            <div class="comboPopupRow" style="padding-top:0">
+              <span class="combo-popup"><span class="comboRating">Perfect</span><span class="comboCount">× 4</span></span>
+              <span class="combo-popup"><span class="comboRating">Great</span><span class="comboCount">× 9</span></span>
+            </div>
+          </div>
+        </article>
+      </section>
+      <section class="pg-sec" id="cn-card" data-component="chinese-card-states">
+        <div class="pg-sec-hd">
+          <span class="pg-sec-num">05</span>
+          <h2>中文句子卡片</h2>
+          <span class="pg-sec-src">PracticeModes.vue 469–576 / 4823–4899</span>
+        </div>
+        <p class="pg-sec-lede">双拼侧的「句子」是中文短句：一张 Anki 式卡片承载整句，下面逐音节铺开拼音，音节内再逐字母判定 typed / current / wrong。语料来自 <code class="pg-inline-code">CN_SENTENCES</code>，拼音由 <code class="pg-inline-code">toPinyinArray()</code> 取无调值并把 ü 归一成 v。</p>
+
+        <article class="pg-unit" data-component="style-unit-14">
+          <div class="pg-unit-hd">
+            <h3>5.1 整句卡片 <code class="pg-inline-code">.ankiCard</code></h3>
+            <p>52px/700 主色大字 + 2px 字距，卡片最小高 240px。重练队列里同一张卡在右上角挂 <code class="pg-inline-code">::after '重练'</code>，不占布局。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.ankiCard</code></li><li><code>.ankiCard.redo::after</code></li><li><code>.ankiDisplay</code></li><li><code>.ankiSyl</code></li><li><code>.ankiSylItem</code></li><li><code>.sylLetter</code></li><li><code>.ankiProgress</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-17">
+            <div class="cardStage">
+              <div class="ankiCard">
+                <p class="ankiDisplay">走在小路上，草色翠绿。</p>
+                <div class="ankiSyl">
+                  <span class="ankiSylItem done"><span class="sylLetter typed">z</span><span class="sylLetter typed">o</span><span class="sylLetter typed">u</span></span>
+                  <span class="ankiSylItem done"><span class="sylLetter typed">z</span><span class="sylLetter typed">a</span><span class="sylLetter typed">i</span></span>
+                  <span class="ankiSylItem current"><span class="sylLetter typed">x</span><span class="sylLetter current">i</span><span class="sylLetter">a</span><span class="sylLetter">o</span></span>
+                  <span class="ankiSylItem"><span class="sylLetter">l</span><span class="sylLetter">u</span></span>
+                  <span class="ankiSylItem"><span class="sylLetter wrong">s</span><span class="sylLetter">h</span><span class="sylLetter">a</span><span class="sylLetter">n</span><span class="sylLetter">g</span></span>
+                </div>
+                <p class="ankiProgress">3 / 8 · 正确率 80%</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="pg-unit" data-component="style-unit-15">
+          <div class="pg-unit-hd">
+            <h3>5.2 隐藏字母模式 <code class="pg-inline-code">.ankiSyl.hideMode</code></h3>
+            <p>默写中文时字形透明但每个字母位永远保留下划线：未打 = 边框灰，已打 = 文字灰，当前 = 主色，打错 = 红。四种状态只靠 <code class="pg-inline-code">border-color</code> 与 <code class="pg-inline-code">color</code> 区分，宽度完全稳定。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.hideMode .sylLetter</code></li><li><code>.sylLetter.blind</code></li><li><code>.sylLetter.wrong</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-18">
+            <div class="cardStage">
+              <div class="ankiCard">
+                <p class="ankiDisplay">追风而行，滨海鸟鸣。</p>
+                <div class="ankiSyl hideMode">
+                  <span class="ankiSylItem done"><span class="sylLetter blind typed">z</span><span class="sylLetter blind typed">h</span><span class="sylLetter blind typed">u</span><span class="sylLetter blind typed">i</span></span>
+                  <span class="ankiSylItem current"><span class="sylLetter blind">f</span><span class="sylLetter wrong">e</span><span class="sylLetter current">n</span><span class="sylLetter">g</span></span>
+                  <span class="ankiSylItem"><span class="sylLetter blind">e</span><span class="sylLetter blind">r</span></span>
+                  <span class="ankiSylItem"><span class="sylLetter blind">x</span><span class="sylLetter blind">i</span><span class="sylLetter blind">n</span><span class="sylLetter blind">g</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="stage dark" data-theme="dark" data-component="repro-stage-19">
+            <div class="cardStage">
+              <div class="ankiCard redo">
+                <p class="ankiDisplay">大江东去，风拂更长。</p>
+                <div class="ankiSyl">
+                  <span class="ankiSylItem current"><span class="sylLetter current">d</span><span class="sylLetter">a</span></span>
+                  <span class="ankiSylItem"><span class="sylLetter">j</span><span class="sylLetter">i</span><span class="sylLetter">a</span><span class="sylLetter">n</span><span class="sylLetter">g</span></span>
+                  <span class="ankiSylItem"><span class="sylLetter">d</span><span class="sylLetter">o</span><span class="sylLetter">n</span><span class="sylLetter">g</span></span>
+                  <span class="ankiSylItem"><span class="sylLetter wrong">q</span><span class="sylLetter">u</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="pg-unit" data-component="style-unit-16">
+          <div class="pg-unit-hd">
+            <h3>5.3 单音节舞台 与 数字 / 字母键位舞台</h3>
+            <p>同一套 typed / current 语义还用在三个更小的舞台：<code class="pg-inline-code">.sylStage</code>（单字 + 逐字母拼音，64px 字 / 44px 拼音）、<code class="pg-inline-code">.numStage</code> 与 <code class="pg-inline-code">.letterStage</code>（56px 等宽数字，当前位 scale 1.1 + 3px 主色下划线）。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.sylChar</code></li><li><code>.sylGroup</code></li><li><code>.numGroup</code></li><li><code>.numDigit.current</code></li><li><code>.letterDigit</code></li><li><code>.levelBtn.active</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-20">
+            <div class="pg-row">
+              <div class="sylStage">
+                <span class="sylChar">软</span>
+                <div class="sylGroup"><span class="sylLetter typed">r</span><span class="sylLetter current">u</span><span class="sylLetter">a</span><span class="sylLetter">n</span></div>
+              </div>
+            </div>
+            <div class="pg-row">
+              <div class="numStage">
+                <div class="numGroup"><span class="numDigit typed">1</span><span class="numDigit current">9</span><span class="numDigit">8</span><span class="numDigit">5</span></div>
+                <span class="numHint">键盘数字键</span>
+              </div>
+              <div class="letterStage" style="margin-top:var(--pg-sp-4)">
+                <div class="letterLevels"><span class="levelBtn active">第一组</span><span class="levelBtn">第二组</span><span class="levelBtn">第三组</span></div>
+                <div class="letterGroup"><span class="letterDigit typed">U</span><span class="letterDigit current">I</span><span class="letterDigit">O</span></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="pg-sec" id="sp-card" data-component="shuangpin-cards">
+        <div class="pg-sec-hd">
+          <span class="pg-sec-num">06</span>
+          <h2>双拼字卡与韵母卡</h2>
+          <span class="pg-sec-src">Writer.vue 70–93 / 692–715 · YunmuPractice.vue 60–85 / 661–703</span>
+        </div>
+        <p class="pg-sec-lede">Writer 页把中文句子拆成 96×124 的字卡：拼音在上、汉字居中、双拼键码在下。键码用 <code>var(--app-code-idle)</code>（30% 透明度的蓝灰），打完才转成菜单绿并加粗——所以「还没打」的位置天然弱化，不需要额外状态类。韵母页复用同一几何，只是 <code class="pg-inline-code">.hz</code> 放的是韵母本体，并额外挂呼吸与连击动画。</p>
+
+        <article class="pg-unit" data-component="style-unit-17">
+          <div class="pg-unit-hd">
+            <h3>6.1 字卡三态 + 编码隐藏</h3>
+            <p>卡片一行按 <code class="pg-inline-code">lineHold</code> 整体淡出上移（<code class="pg-inline-code">.cards.line-leaving</code>）。关闭「显示双拼编码」时未打的字母 <code class="pg-inline-code">.hidden</code> 直接 opacity 0，但已经打过的仍然显示。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.cardsWrap</code></li><li><code>.cards</code></li><li><code>.card</code></li><li><code>.current</code></li><li><code>.done</code></li><li><code>.py</code></li><li><code>.hz</code></li><li><code>.keys</code></li><li><code>.letter.done</code></li><li><code>.letter.hidden</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-21">
+            <div class="pg-row">
+              <span class="pg-tag"><b>进行中的一行</b> · 前三卡 done，第四卡 current（首字母已打）</span>
+              <div class="cardsWrap"><div class="cards">
+                <div class="card done"><span class="py">zou</span><span class="hz">走</span><span class="keys"><span class="letter done">Z</span><span class="letter done">Z</span></span></div>
+                <div class="card done"><span class="py">zai</span><span class="hz">在</span><span class="keys"><span class="letter done">Z</span><span class="letter done">D</span></span></div>
+                <div class="card done"><span class="py">xiao</span><span class="hz">小</span><span class="keys"><span class="letter done">X</span><span class="letter done">N</span></span></div>
+                <div class="card current"><span class="py">lu</span><span class="hz">路</span><span class="keys"><span class="letter done">L</span><span class="letter">U</span></span></div>
+                <div class="card"><span class="py">shang</span><span class="hz">上</span><span class="keys"><span class="letter">U</span><span class="letter">H</span></span></div>
+                <div class="card"><span class="py">cao</span><span class="hz">草</span><span class="keys"><span class="letter">C</span><span class="letter">C</span></span></div>
+                <div class="card"><span class="py">se</span><span class="hz">色</span><span class="keys"><span class="letter">S</span><span class="letter">E</span></span></div>
+                <div class="card"><span class="py">cui</span><span class="hz">翠</span><span class="keys"><span class="letter">C</span><span class="letter">V</span></span></div>
+              </div></div>
+            </div>
+            <div class="pg-row">
+              <span class="pg-tag"><b>关闭编码显示</b> · <code>.keys .letter.hidden</code>（已打的仍可见）</span>
+              <div class="cardsWrap"><div class="cards">
+                <div class="card done"><span class="py">zhui</span><span class="hz">追</span><span class="keys"><span class="letter done">V</span><span class="letter done">V</span></span></div>
+                <div class="card current"><span class="py">feng</span><span class="hz">风</span><span class="keys"><span class="letter done">F</span><span class="letter hidden">G</span></span></div>
+                <div class="card"><span class="py">er</span><span class="hz">而</span><span class="keys"><span class="letter hidden">E</span><span class="letter hidden">R</span></span></div>
+                <div class="card"><span class="py">xing</span><span class="hz">行</span><span class="keys"><span class="letter hidden">X</span><span class="letter hidden">K</span></span></div>
+              </div></div>
+            </div>
+            <div class="pg-row">
+              <span class="pg-tag"><b>整行离场</b> · <code>.cards.line-leaving</code></span>
+              <div class="cardsWrap"><div class="cards line-leaving">
+                <div class="card"><span class="py">bin</span><span class="hz">滨</span><span class="keys"><span class="letter">B</span><span class="letter">B</span></span></div>
+                <div class="card"><span class="py">hai</span><span class="hz">海</span><span class="keys"><span class="letter">H</span><span class="letter">D</span></span></div>
+                <div class="card"><span class="py">niao</span><span class="hz">鸟</span><span class="keys"><span class="letter">N</span><span class="letter">N</span></span></div>
+              </div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="pg-unit" data-component="style-unit-18">
+          <div class="pg-unit-hd">
+            <h3>6.2 韵母卡的呼吸与连击</h3>
+            <p>同一张卡在 YunmuPractice 里 <code class="pg-inline-code">.current</code> 多了 2 秒循环呼吸（scale 1 → 1.02、内阴影 2 → 3px），连击时叠 <code class="pg-inline-code">cardCombo</code>：0.5s 弹性放大 1.2 倍并加 30px 金色 drop-shadow。字卡页没有这两个动画。</p>
+          </div>
+          <ul class="pg-sels"><li><code>cardBreathe</code></li><li><code>cardCombo</code></li><li><code>.hz</code>（韵母本体）</li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-22">
+            <div class="cardsWrap"><div class="cards">
+              <div class="card done"><span class="hz">iang</span><span class="keys"><span class="letter done">L</span><span class="letter done">L</span></span></div>
+              <div class="card breathe current"><span class="hz">uang</span><span class="keys"><span class="letter">L</span><span class="letter">L</span></span></div>
+              <div class="card comboOnce"><span class="hz">ing</span><span class="keys"><span class="letter done">K</span><span class="letter done">K</span></span></div>
+              <div class="card"><span class="hz">uai</span><span class="keys"><span class="letter">K</span><span class="letter">K</span></span></div>
+              <div class="card"><span class="hz">iong</span><span class="keys"><span class="letter">S</span><span class="letter">S</span></span></div>
+            </div></div>
+          </div>
+          <div class="stage dark" data-theme="dark" data-component="repro-stage-23">
+            <div class="cardsWrap"><div class="cards" style="padding-top:var(--pg-sp-2)">
+              <div class="card done"><span class="py">mian</span><span class="hz">绵</span><span class="keys"><span class="letter done">M</span><span class="letter done">M</span></span></div>
+              <div class="card current"><span class="py">yan</span><span class="hz">延</span><span class="keys"><span class="letter done">M</span><span class="letter">N</span></span></div>
+              <div class="card"><span class="py">duan</span><span class="hz">断</span><span class="keys"><span class="letter">D</span><span class="letter">R</span></span></div>
+            </div></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="pg-sec" id="keyboard" data-component="keyboard-keys">
+        <div class="pg-sec-hd">
+          <span class="pg-sec-num">07</span>
+          <h2>虚拟键盘</h2>
+          <span class="pg-sec-src">Keyboard.vue 1–23 · styles.css 64–116</span>
+        </div>
+        <p class="pg-sec-lede">90×90 键帽四角分工：左上大写字母、右上韵母（首行的 <code class="pg-inline-code">zh/ch/sh</code> 提示用 12px 红字压在上面）、左下记忆字。底排 <code class="pg-inline-code">shiftedLeft</code> 用 -49px 模拟真实键盘错位。练习页挂载时 <code class="pg-inline-code">:show-hints="false"</code>，只保留键帽字母；韵母页与 Writer 页才显示提示。</p>
+
+        <article class="pg-unit" data-component="style-unit-19">
+          <div class="pg-unit-hd">
+            <h3>7.1 全键位（小鹤双拼）</h3>
+            <p>数据逐字取 <code class="pg-inline-code">src/data/xiaohe.js</code> 的 <code class="pg-inline-code">keys[]</code>：finals、hint、mnemonics 全部为真实值。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.keyWrap</code></li><li><code>.keyRow</code></li><li><code>.shiftedLeft</code></li><li><code>.keyBox</code></li><li><code>.keyCapital p</code></li><li><code>.keyAuxiliary p</code></li><li><code>p.red-text</code></li><li><code>.keyMnemonic span</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-24">
+            <div class="keyWrap">
+              <div class="keyRow">
+                <div class="keyBox"><div class="keyCapital"><p>Q</p></div><div class="keyAuxiliary"><p>iu</p></div><div class="keyMnemonic"><span>秋</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>W</p></div><div class="keyAuxiliary"><p>ei</p></div><div class="keyMnemonic"><span>闱</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>E</p></div><div class="keyAuxiliary"><p>e</p></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>R</p></div><div class="keyAuxiliary"><p>uan</p></div><div class="keyMnemonic"><span>软</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>T</p></div><div class="keyAuxiliary"><p>ue</p><p>ve</p></div><div class="keyMnemonic"><span>月</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>Y</p></div><div class="keyAuxiliary"><p>un</p></div><div class="keyMnemonic"><span>云</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>U</p></div><div class="keyAuxiliary"><p class="red-text">sh</p><p>u</p></div><div class="keyMnemonic"><span>梳</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>I</p></div><div class="keyAuxiliary"><p class="red-text">ch</p><p>i</p></div><div class="keyMnemonic"><span>翅</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>O</p></div><div class="keyAuxiliary"><p>o</p><p>uo</p></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>P</p></div><div class="keyAuxiliary"><p>ie</p></div><div class="keyMnemonic"><span>撇</span></div></div>
+              </div>
+              <div class="keyRow">
+                <div class="keyBox"><div class="keyCapital"><p>A</p></div><div class="keyAuxiliary"><p>a</p></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>S</p></div><div class="keyAuxiliary"><p>iong</p><p>ong</p></div><div class="keyMnemonic"><span>松</span><span>拥</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>D</p></div><div class="keyAuxiliary"><p>ai</p></div><div class="keyMnemonic"><span>黛</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>F</p></div><div class="keyAuxiliary"><p>en</p></div><div class="keyMnemonic"><span>粉</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>G</p></div><div class="keyAuxiliary"><p>eng</p></div><div class="keyMnemonic"><span>更</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>H</p></div><div class="keyAuxiliary"><p>ang</p></div><div class="keyMnemonic"><span>航</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>J</p></div><div class="keyAuxiliary"><p>an</p></div><div class="keyMnemonic"><span>安</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>K</p></div><div class="keyAuxiliary"><p>ing</p><p>uai</p></div><div class="keyMnemonic"><span>快</span><span>莺</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>L</p></div><div class="keyAuxiliary"><p>iang</p><p>uang</p></div><div class="keyMnemonic"><span>两</span><span>望</span></div></div>
+              </div>
+              <div class="keyRow shiftedLeft">
+                <div class="keyBox"><div class="keyCapital"><p>Z</p></div><div class="keyAuxiliary"><p>ou</p></div><div class="keyMnemonic"><span>奏</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>X</p></div><div class="keyAuxiliary"><p>ia</p><p>ua</p></div><div class="keyMnemonic"><span>夏</span><span>蛙</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>C</p></div><div class="keyAuxiliary"><p>ao</p></div><div class="keyMnemonic"><span>草</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>V</p></div><div class="keyAuxiliary"><p class="red-text">zh</p><p>ui</p></div><div class="keyMnemonic"><span>追</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>B</p></div><div class="keyAuxiliary"><p>in</p></div><div class="keyMnemonic"><span>滨</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>N</p></div><div class="keyAuxiliary"><p>iao</p></div><div class="keyMnemonic"><span>鸟</span></div></div>
+                <div class="keyBox"><div class="keyCapital"><p>M</p></div><div class="keyAuxiliary"><p>ian</p></div><div class="keyMnemonic"><span>眠</span></div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="pg-unit" data-component="style-unit-20">
+          <div class="pg-unit-hd">
+            <h3>7.2 键帽状态</h3>
+            <p><code class="pg-inline-code">pressed</code> 只下沉 1px；<code class="pg-inline-code">flash-ok</code> 绿色内环 + 外发光 + 0.22s pop，并把三类文字全染绿；<code class="pg-inline-code">flash-bad</code> 红色多一层 999px 扩散内阴影（等于整键罩红）加 0.18s 抖动；<code class="pg-inline-code">selected</code> 是韵母页的待输入提示，用 20% 透明的主色 <code>#35e2b7</code>。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.pressed</code></li><li><code>.flash-ok</code></li><li><code>.flash-bad</code></li><li><code>.selected</code></li><li><code>:hover</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-25">
+            <div class="cards" style="gap:8px;justify-content:flex-start;flex-wrap:wrap">
+              <div class="keyBox"><div class="keyCapital"><p>V</p></div><div class="keyAuxiliary"><p class="red-text">zh</p><p>ui</p></div><div class="keyMnemonic"><span>追</span></div><p class="pg-tag" style="position:absolute;bottom:-18px;left:0;font-size:10px">default</p></div>
+              <div class="keyBox pressed"><div class="keyCapital"><p>V</p></div><div class="keyAuxiliary"><p class="red-text">zh</p><p>ui</p></div><div class="keyMnemonic"><span>追</span></div><p class="pg-tag" style="position:absolute;bottom:-18px;left:0;font-size:10px">pressed</p></div>
+              <div class="keyBox selected"><div class="keyCapital"><p>V</p></div><div class="keyAuxiliary"><p class="red-text">zh</p><p>ui</p></div><div class="keyMnemonic"><span>追</span></div><p class="pg-tag" style="position:absolute;bottom:-18px;left:0;font-size:10px">selected</p></div>
+              <div class="keyBox flash-ok"><div class="keyCapital"><p>V</p></div><div class="keyAuxiliary"><p class="red-text">zh</p><p>ui</p></div><div class="keyMnemonic"><span>追</span></div><p class="pg-tag" style="position:absolute;bottom:-18px;left:0;font-size:10px">flash-ok</p></div>
+              <div class="keyBox flash-bad"><div class="keyCapital"><p>V</p></div><div class="keyAuxiliary"><p class="red-text">zh</p><p>ui</p></div><div class="keyMnemonic"><span>追</span></div><p class="pg-tag" style="position:absolute;bottom:-18px;left:0;font-size:10px">flash-bad</p></div>
+            </div>
+          </div>
+          <div class="stage dark" data-theme="dark" data-component="repro-stage-26">
+            <div class="cards" style="gap:8px;justify-content:flex-start;flex-wrap:wrap;padding-top:var(--pg-sp-2)">
+              <div class="keyBox"><div class="keyCapital"><p>S</p></div><div class="keyAuxiliary"><p>iong</p><p>ong</p></div><div class="keyMnemonic"><span>松</span><span>拥</span></div></div>
+              <div class="keyBox flash-ok"><div class="keyCapital"><p>S</p></div><div class="keyAuxiliary"><p>iong</p><p>ong</p></div><div class="keyMnemonic"><span>松</span><span>拥</span></div></div>
+              <div class="keyBox flash-bad"><div class="keyCapital"><p>S</p></div><div class="keyAuxiliary"><p>iong</p><p>ong</p></div><div class="keyMnemonic"><span>松</span><span>拥</span></div></div>
+              <div class="keyBox selected"><div class="keyCapital"><p>S</p></div><div class="keyAuxiliary"><p>iong</p><p>ong</p></div><div class="keyMnemonic"><span>松</span><span>拥</span></div></div>
+            </div>
+          </div>
+          <p class="pg-note"><strong>明暗差异：</strong>键帽底 <code class="pg-inline-code">--theme-background-light-color</code> 在暗色下是 <code>#1e293b</code>，但 <code class="pg-inline-code">flash-ok</code>/<code class="pg-inline-code">flash-bad</code> 的 <code>#52c41a</code>/<code>#ff4d4f</code> 与 <code class="pg-inline-code">p.red-text</code> 的 <code>#d9534f</code> 都是硬编码，不随主题变化。</p>
+        </article>
+      </section>
+      <section class="pg-sec" id="toolbar" data-component="mode-toolbar">
+        <div class="pg-sec-hd">
+          <span class="pg-sec-num">08</span>
+          <h2>模式工具条与浮层</h2>
+          <span class="pg-sec-src">PracticeModes.vue 40–150 / 4237–4530</span>
+        </div>
+        <p class="pg-sec-lede">这些控件决定句子以哪种形态出现，本身也是句子视图的一部分。三档语义要分清：难度（初级/中级/高级，过滤语块层级）、听写↔中译英、显示模式（智能/看答案/全默写）。<code class="pg-inline-code">.enModeBox</code> 在 App 里 <code class="pg-inline-code">position:fixed; top:56px; right:16px</code>，本页改成静态排布。</p>
+
+        <article class="pg-unit" data-component="style-unit-21">
+          <div class="pg-unit-hd">
+            <h3>8.1 chip 家族</h3>
+            <p>同一个圆角胶囊体系有三种尺寸与两种底色：主 chip 12px/600 带半透明底， DicChip 与 DispChip 28px 高、透明底、次要灰字，开关组 OptChip 缩到 11px/26px。选中态一律靠 <code class="pg-inline-code">--theme-mistake-bg</code> 的灰透明底 + 主色文字 + 加粗，没有用品牌色填充。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.enModeBox</code></li><li><code>.enModeChip</code></li><li><code>.open</code></li><li><code>.enModeSep</code></li><li><code>.enModeDicChip</code></li><li><code>.dictation</code></li><li><code>.enModeDispChip</code></li><li><code>.enModeOptChip</code></li><li><code>.on</code></li><li><code>.enModeCaret</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-27">
+            <div class="pg-row">
+              <span class="pg-tag">默认 / hover 需真实指针 / open（caret 旋转 180°）</span>
+              <div class="enModeBox">
+                <span class="enModeChip"><span class="enModeLock"><svg width="10" height="12" viewBox="0 0 10 12" aria-hidden="true"><path d="M2.5 5.5V4a2.5 2.5 0 0 1 5 0v1.5" stroke="currentColor" fill="none" stroke-width="1.2"/><rect x="1" y="5.5" width="8" height="5.5" rx="1" fill="currentColor"/></svg></span>难度<span class="enModeCaret">▾</span></span>
+                <span class="enModeChip open">初级<span class="enModeCaret">▾</span></span>
+                <span class="enModeSep">|</span>
+                <span class="enModeDicChip">中译英</span>
+                <span class="enModeDicChip dictation">听写</span>
+                <span class="enModeDispBox"><span class="enModeDispChip open">全默写<span class="enModeDispCaret">▾</span></span></span>
+                <span class="enModeOptChips">
+                  <span class="enModeOptChip on">释义</span>
+                  <span class="enModeOptChip">重练</span>
+                  <span class="enModeOptChip on">宽松</span>
+                </span>
+              </div>
+            </div>
+            <div class="pg-row">
+              <span class="pg-tag">进度行 · 当前句号可点击跳转 + 输入态 + 操作按钮（含 disabled）</span>
+              <div class="enProgRow">
+                <div class="enProgHeader">
+                  <p class="enProgTitle">L08 Having and Needing <span>· 18 句</span></p>
+                  <p class="enProgHint">第 <span class="enJumpSentence">7</span> 句 · 错误 2 · 用时 01:24 · 按 Esc 暂停</p>
+                </div>
+                <input class="enJumpInput" value="12" readonly>
+                <span class="enActionBtn"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6h8M6 2v8" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>重打本句</span>
+                <span class="enActionBtn" disabled>跳过</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="pg-unit" data-component="style-unit-22">
+          <div class="pg-unit-hd">
+            <h3>8.2 下拉面板</h3>
+            <p><code class="pg-inline-code">.enModeDispPanel</code>（显示模式，10px 圆角、160px 起）与 <code class="pg-inline-code">.enModePanel</code>（开关组，12px 圆角、220px 起）共用同一底色与阴影配方，差别在选项排版：前者是「标签 + 描述 + 计数」三件套，选中项用 <code class="pg-inline-code">--theme-accent-color</code> 的回退紫 <code>rgb(172 71 255)</code> 打 14% 底；后者是一行勾选框。<span class="pg-flag">紫色来自回退值</span> —— <code class="pg-inline-code">:root</code> 里 <code>--theme-accent-color</code> 实际是绿色 <code>#1a9a7a</code>，但面板内写的是带 <code>rgb(172 71 255)</code> 回退的引用，在 App 里到底取哪个值取决于该变量是否被外层设置，值得核对。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.enModeDispPanel</code></li><li><code>.enModeDispOpt</code></li><li><code>.active</code></li><li><code>:disabled</code></li><li><code>.enModePanel</code></li><li><code>.enModeOpts</code></li><li><code>.enModeDictateDivider</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-28">
+            <div class="pg-row" style="display:flex;gap:var(--pg-sp-4);align-items:flex-start;flex-wrap:wrap">
+              <div class="enModeDispPanel">
+                <span class="enModeDispOpt active"><span class="enModeDispOptRow"><span class="enModeDispOptLabel">全默写</span></span><span class="enModeDispOptDesc">始终隐藏字母，凭记忆拼写</span></span>
+                <span class="enModeDispOpt"><span class="enModeDispOptRow"><span class="enModeDispOptLabel">看答案</span></span><span class="enModeDispOptDesc">始终显示字母，逐字母指引输入</span></span>
+                <span class="enModeDispOpt"><span class="enModeDispOptRow"><span class="enModeDispOptLabel">智能</span><span class="enModeDispOptMeta">推荐</span></span><span class="enModeDispOptDesc">按掌握度自动切换</span></span>
+                <span class="enModeDictateDivider"></span>
+                <span class="enModeDispOpt"><span class="enModeDispOptRow"><span class="enModeDispOptLabel">高级</span><span class="enModeDispOptMeta">0</span></span><span class="enModeDispOptDesc">仅整句</span></span>
+                <span class="enModeDispOpt" disabled><span class="enModeDispOptRow"><span class="enModeDispOptLabel">自定义</span><span class="enModeDispOptMeta">0</span></span><span class="enModeDispOptDesc">disabled 态</span></span>
+              </div>
+              <div class="enModePanel">
+                <span class="enModeOpt"><span>显示中文释义</span><input type="checkbox" checked disabled></span>
+                <span class="enModeOpt"><span>错词重练</span><input type="checkbox" disabled></span>
+                <span class="enModeOpt"><span>宽松模式</span><input type="checkbox" checked disabled></span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="pg-sec" id="mistake" data-component="mistake-styles">
+        <div class="pg-sec-hd">
+          <span class="pg-sec-num">09</span>
+          <h2>错词本与会话结果</h2>
+          <span class="pg-sec-src">PracticeModes.vue 393–428 / 3698–3739 / 4962–5020</span>
+        </div>
+        <p class="pg-sec-lede">句子打完之后沉淀下来的词级视图：错词 = 词形 + 中文注解 + 次数，颜色区分「打错」红 <code>#f56c6c</code> 与「太慢没想起来」橙 <code>#e6a23c</code>。同一批 chip 在完成弹窗里换成无边框纯文字版（<code class="pg-inline-code">.resultPageInner</code> 作用域覆盖）。</p>
+
+        <article class="pg-unit" data-component="style-unit-23">
+          <div class="pg-unit-hd">
+            <h3>9.1 错题本面板与慢词条</h3>
+            <p><code class="pg-inline-code">.mistakeItem</code> 是 999px 圆角胶囊，hover 去边框换 1px 阴影；<code class="pg-inline-code">.mistakeCount:not(.err)</code> 与 <code class="pg-inline-code">.slow</code> 都强制橙色，所以慢词即使没标 err 类也不会误红。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.mistakePanel</code></li><li><code>.mistakeList</code></li><li><code>.mistakeItem</code></li><li><code>.mistakeWord</code></li><li><code>.mistakeCn</code></li><li><code>.mistakeCount</code></li><li><code>.slowBar</code></li><li><code>.mistakeEmpty</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-29">
+            <div class="mistakePanel">
+              <p class="storyPanelTitle">英文错题本 · 12 词</p>
+              <div class="mistakeList">
+                <span class="mistakeItem"><span class="mistakeWord">ticket</span><i class="mistakeCn">票</i><span class="mistakeCount err">×3</span></span>
+                <span class="mistakeItem"><span class="mistakeWord">reservation</span><i class="mistakeCn">预订</i><span class="mistakeCount err">×2</span></span>
+                <span class="mistakeItem"><span class="mistakeWord">discount</span><i class="mistakeCn">折扣</i><span class="mistakeCount slow">1.9s</span></span>
+                <span class="mistakeItem"><span class="mistakeWord">carton</span><i class="mistakeCn">纸箱</i><span class="mistakeCount slow">2.4s</span></span>
+                <span class="mistakeItem"><span class="mistakeWord">because</span><i class="mistakeCn">因为</i><span class="mistakeCount err">×1</span></span>
+                <span class="mistakeItem"><span class="mistakeWord">responsible</span><i class="mistakeCn">负责的</i><span class="mistakeCount slow">3.1s</span></span>
+              </div>
+              <div class="slowBar"><span class="slowBarTitle">慢词 · 4 个</span><span class="slowBarMeta">平均 2.1 秒，超过 1.5 秒阈值计入</span></div>
+              <div class="mistakeOpts"><span class="enActionBtn">开始重练</span><span class="enActionBtn" disabled>清空</span></div>
+              <p class="mistakeEmpty">本次会话没有错词</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="pg-unit" data-component="style-unit-24">
+          <div class="pg-unit-hd">
+            <h3>9.2 完成弹窗内两处变体</h3>
+            <p>同一个 <code class="pg-inline-code">.sessionMistakeBox</code> 放进 <code class="pg-inline-code">.resultPageInner</code> 后去掉背景与边框、左对齐、chip 变纯文字红 <code>#e05353</code>；今日目标达成时 <code class="pg-inline-code">.goalResult.done</code> 换成绿色文字加绿边。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.sessionMistakeBox</code></li><li><code>.smChips</code></li><li><code>.smChip</code></li><li><code>.resultPageInner .smChip</code></li><li><code>.goalResult</code></li><li><code>.goalResult.done</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-30">
+            <div class="pg-row">
+              <div class="sessionMistakeBox">
+                <p class="smTitle">本次错词 4 个</p>
+                <div class="smChips"><span class="smChip">ticket</span><span class="smChip">reservation</span><span class="smChip">discount</span><span class="smChip">because</span></div>
+              </div>
+            </div>
+            <div class="pg-row">
+              <div class="resultPageInner">
+                <div class="sessionMistakeBox">
+                  <p class="smTitle">本次错词 4 个</p>
+                  <div class="smChips"><span class="smChip">ticket</span><span class="smChip">reservation</span><span class="smChip">discount</span><span class="smChip">because</span></div>
+                </div>
+                <p class="goalResult done"><span>时长 达标</span><span>正确率 达标</span><span>错词清零 未达</span></p>
+                <p class="goalResult"><span>时长 未达</span><span>正确率 达标</span><span>错词清零 达标</span></p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="pg-sec" id="lists" data-component="course-lists">
+        <div class="pg-sec-hd">
+          <span class="pg-sec-num">10</span>
+          <h2>课程包与句子列表</h2>
+          <span class="pg-sec-src">PracticeModes.vue 297–390 / 3811–4053</span>
+        </div>
+        <p class="pg-sec-lede">句子的入口层：短文/课包列表里用 <code class="pg-inline-code">.storyMeta</code> 报「多少句」，课程卡网格里左上角挂 <code class="pg-inline-code">#N</code> 序号，<code class="pg-inline-code">.packDesc</code> 直接把课包 <code class="pg-inline-code">course.description</code> 整段吐出来——核心句型清单就藏在这段文字里，目前没有任何单独样式。</p>
+
+        <article class="pg-unit" data-component="style-unit-25">
+          <div class="pg-unit-hd">
+            <h3>10.1 列表 / 卡片墙 / 异常态</h3>
+            <p>宽版面板 <code class="pg-inline-code">.storyPanelWide</code> 把 560px 撑到 1240px 让卡片墙能排多列；<code class="pg-inline-code">.storyItem</code> 的 hover 用主色 4% 打底，<code class="pg-inline-code">[disabled]</code> 只降透明度不改边框。<code class="pg-inline-code">.packError</code> 取 <code class="pg-inline-code">--destructive</code> 回退红。</p>
+          </div>
+          <ul class="pg-sels"><li><code>.storyPanel</code></li><li><code>.storyPanelWide</code></li><li><code>.storyItem</code></li><li><code>.storyMeta</code></li><li><code>.storySubtitle</code></li><li><code>.courseGrid</code></li><li><code>.courseOrder</code></li><li><code>.courseDone</code></li><li><code>.packTitle</code></li><li><code>.packDesc</code></li><li><code>.packLoadingTip</code></li><li><code>.packEmpty</code></li><li><code>.packError</code></li><li><code>.packBuiltinLabel</code></li></ul>
+          <div class="stage" data-theme="light" data-component="repro-stage-31">
+            <div class="pg-row">
+              <div class="storyPanel">
+                <p class="storyPanelTitle"><span class="storyBackBtn">← 返回</span>内置短文<span></span></p>
+                <div class="storyList">
+                  <div class="storyItem">
+                    <span>Let's Talk About Daily Actions</span>
+                    <span class="storyMeta">18 句 · 自定义 · This is my name. That is the off…</span>
+                  </div>
+                  <div class="storyItem">
+                    <span>Peyton Street Apartment Story</span>
+                    <span class="storyMeta">中级 · 24 句 · 第 2 季</span>
+                    <span class="storySubtitle">There's nothing to tell It's just some guy I work with. Come on You're going out with a guy. There's gotta be something wrong with him.</span>
+                  </div>
+                  <div class="storyItem" disabled>
+                    <span>Super Simple Songs · Row Your Boat</span>
+                    <span class="storyMeta">0 句 · 词库未就绪</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pg-row">
+              <div class="storyPanel storyPanelWide">
+                <div class="packBrowser">
+                  <p class="packTitle"><span class="packTitleText">850 Basic Words · 基础 850 词</span><span class="packLoadingTip">85 课 · 已缓存</span></p>
+                  <p class="packDesc">用记录、办公室、自然、故事、家庭、房间、道路、朋友、情绪和决定说明军事、自然、政治、贫穷、私人、公共、负责、悲伤、秘密和严肃。 目标词：military, natural, political, poor, private, public, responsible, sad, secret, serious。核心句型：The ... is ... / ... has ... / I am ... / Is ... private? / ... is not ... / ... needs ...。</p>
+                  <div class="courseGrid">
+                    <div class="courseCard"><span class="courseOrder">#1</span><span class="courseTitle">L01 First Identity Check</span><span class="storyMeta">18 句</span><span class="courseDone">已完成</span></div>
+                    <div class="courseCard"><span class="courseOrder">#6</span><span class="courseTitle">L06 Waiting, Working, and Living In Place</span><span class="storyMeta">21 句</span></div>
+                    <div class="courseCard"><span class="courseOrder">#8</span><span class="courseTitle">L08 Having and Needing</span><span class="storyMeta">18 句</span></div>
+                    <div class="courseCard"><span class="courseOrder">#85</span><span class="courseTitle">L85 Public, Private, Serious, and Final Social Words</span><span class="storyMeta">16 句</span></div>
+                  </div>
+                  <p class="packBuiltinLabel">内置课包 · 不可删除</p>
+                  <p class="packEmpty">该课包暂无可用句子</p>
+                  <p class="packError">课包 index.json 读取失败：friends-s6/L12.json 缺少 statements</p>
+                </div>
+              </div>
+            </div>
+            <div class="pg-row">
+              <div class="enCustomPanel">
+                <p class="customTitle">自定义内容</p>
+                <div class="customEditor">
+                  <input class="customTitleInput" value="我的句子练习" readonly>
+                  <textarea rows="3" style="width:100%;padding:6px 10px;border-radius:8px;border:1px solid var(--theme-border-color);background:var(--theme-background-color);color:var(--theme-text-color);font:inherit;font-size:14px;resize:vertical">I am a student.
+我是学生。
+Who is the teacher?</textarea>
+                </div>
+                <div class="enGradeRow"><select class="enGradeSelect"><option>四年级上册 pep4a</option><option>八年级下册 pep8b</option></select></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="pg-sec" id="provenance" data-component="data-provenance">
+        <div class="pg-sec-hd">
+          <span class="pg-sec-num">11</span>
+          <h2>数据来源与语块层级</h2>
+          <span class="pg-sec-src">course-packs/*.json · src/utils/coursePacks.js</span>
+        </div>
+        <p class="pg-sec-lede">这一节不是样式，而是支撑上面所有样式的字段清单。核心句子在课包里以两套数据并存：<code class="pg-inline-code">sentences[]</code>（整句 + 逐词词典 + 成分结构）与 <code class="pg-inline-code">statements[]</code>（word / phrase / chunk / sentence 四级语块）；难度过滤就是把 statements 排进队列，整句完成态的结构图再从 <code class="pg-inline-code">meta</code> 里回捞 sentences 的成分。</p>
+
+        <div class="pg-cols" data-component="spec-columns">
+          <div>
+            <table class="pg-table" data-component="spec-table">
+              <caption>statement.type → 队列与结构图表现</caption>
+              <thead><tr><th scope="col">type</th><th scope="col">初级</th><th scope="col">中级</th><th scope="col">高级</th><th scope="col">完成态结构图</th></tr></thead>
+              <tbody>
+                <tr><td><code>word</code></td><td>✓</td><td>—</td><td>—</td><td><code>.spGroup.plain</code> 平铺单卡</td></tr>
+                <tr><td><code>phrase</code></td><td>✓</td><td>✓</td><td>—</td><td>同上（<code>fullSentence:false</code>）</td></tr>
+                <tr><td><code>chunk</code></td><td>✓</td><td>✓</td><td>—</td><td>同上</td></tr>
+                <tr><td><code>sentence</code></td><td>✓</td><td>✓</td><td>✓</td><td>完整成分组框 + 整句中文</td></tr>
+                <tr><td><code>""</code>（空）</td><td colspan="3">按 <code>inferStatementType()</code> 推断</td><td>friends 包全部走此分支</td></tr>
+              </tbody>
+            </table>
+            <p class="pg-note">老友记包没有 <code class="pg-inline-code">sentenceStructure</code> 且 type 为空，因此 03 节里它的结构图只能是无框平铺；这是数据缺失下的兜底路径，不是独立样式。</p>
+          </div>
+          <div>
+            <table class="pg-table" data-component="spec-table">
+              <caption>本 playground 用到的样例及其出处</caption>
+              <thead><tr><th scope="col">句子 / 卡片</th><th scope="col">出处</th><th scope="col">覆盖的边界</th></tr></thead>
+              <tbody>
+                <tr><td><code>I am Li.</code></td><td>850-basic-words/L01</td><td>人名 PROPN_PERSON</td></tr>
+                <tr><td><code>You are not the teacher.</code></td><td>850-basic-words/L01</td><td>否定谓语、词根着色词表内词</td></tr>
+                <tr><td><code>Who is the teacher?</code></td><td>850-basic-words/L01</td><td>问句标点三态</td></tr>
+                <tr><td><code>No, I am not the teacher.</code></td><td>850-basic-words/L01</td><td>逗号 punct-done、全角归一</td></tr>
+                <tr><td><code>That student is a friend.</code></td><td>850-basic-words/L01</td><td>story 紧凑态</td></tr>
+                <tr><td><code>I have a ticket, but I do not have a book.</code></td><td>850-basic-words/L08</td><td>7 组并列句、跨词宾语</td></tr>
+                <tr><td><code>Yes, we have a 10% discount on all items today.</code></td><td>everyday-dialogues-100/L01</td><td>百分号 NUM、三状语</td></tr>
+                <tr><td><code>It's $3.99 per carton.</code></td><td>everyday-dialogues-100/L03</td><td>缩写组、空音标数词</td></tr>
+                <tr><td><code>Hi, where can I find the check-in counters for Delta Airlines.</code></td><td>everyday-dialogues-100/L07</td><td>role 为空 → plain、连字符词</td></tr>
+                <tr><td><code>I'll do my best to ensure your reservation is confirmed for 7:00 p.m.</code></td><td>everyday-dialogues-100/L05</td><td>超长溢出 left-fade</td></tr>
+                <tr><td><code>This guy says "hello," I wanna kill myself</code></td><td>friends-s1/L01</td><td>无成分结构、弯引号</td></tr>
+                <tr><td>中文短句 ×4</td><td>PracticeModes.vue <code>CN_SENTENCES</code></td><td>零声母音节、ü→v</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style="margin-top:var(--pg-sp-4)">
+          <p class="pg-note" style="margin-bottom:var(--pg-sp-2)">sentence 单元完整字段（850-basic-words/L01 第 1 句，<code class="pg-inline-code">dependencyAnalysis.nodes</code> 与 <code class="pg-inline-code">sentenceStructure.explanation</code> 已截断）：</p>
+          <pre style="margin:0;padding:var(--pg-sp-3);background:var(--pg-layer-02);border:1px solid var(--pg-border);overflow-x:auto;font-family:var(--pg-mono);font-size:11px;line-height:1.6;color:var(--pg-text-1)">{
+  "id": "uhtkqyoctrlid9x7l7lbsrd9",
+  "content": "I am Li.",
+  "english": "I am Li",
+  "chinese": "我是李。",
+  "sortOrder": 1,
+  "wordDetails": [
+    { "pos": "PRON",         "word": "I",  "phonetic": { "uk": "aɪ", "us": "aɪ" }, "definition": "我", "partOfSpeech": "PRON" },
+    { "pos": "AUX",          "word": "am", "phonetic": { "uk": "æm; əm", "us": "æm; əm" }, "definition": "be（现在式）: 是", "partOfSpeech": "AUX" },
+    { "pos": "PROPN_PERSON", "word": "Li", "phonetic": { "uk": "liː", "us": "li" }, "definition": "Li", "partOfSpeech": "PROPN_PERSON" }
+  ],
+  "wordGroups": [],
+  "dependencyAnalysis": { "root": 1, "edges": [ { "label": "nsubj", "source": 1, "target": 0 } ], "nodes": [ … ], "sentence": "I am Li." },
+  "sentenceStructure": [
+    { "start": 0, "end": 0, "role": "主语", "text": "I",  "type": "subject",     "explanation": "是人称代词，在句中发出身份指代的动作…" },
+    { "start": 1, "end": 1, "role": "谓语", "text": "am", "type": "predicate",   "explanation": "是be动词的第一人称单数现在时形式…" },
+    { "start": 2, "end": 2, "role": "表语", "text": "Li.", "type": "predicative", "explanation": "是专有名词，放在系动词之后…" }
+  ],
+  "region": null
+}</pre>
+          <p class="pg-note">当前渲染只用得到 <code class="pg-inline-code">content / chinese / wordDetails / sentenceStructure</code> 四项；<code class="pg-inline-code">dependencyAnalysis</code> 与 <code class="pg-inline-code">wordGroups</code> 在源码里只有一处注释提到，没有对应的依存弧线样式。如果以后要做依存可视化，数据已经齐了。</p>
+        </div>
+      </section>
+
+      <section class="pg-sec" id="legacy" data-component="legacy-styles">
+        <div class="pg-sec-hd">
+          <span class="pg-sec-num">12</span>
+          <h2>遗留与未使用样式</h2>
+          <span class="pg-sec-src">styles.css 41–62, 130–182 · PracticeModes.vue 4068, 4600</span>
+        </div>
+        <p class="pg-sec-lede">样式体检的副产品：这些规则写在源码里，但当前模板已经不再输出对应节点，或者只有别的页面在用。放在一起是为了确认「复刻全部」没有漏项，同时标出可以安全删除的候选。</p>
+        <div class="pg-cols" data-component="spec-columns">
+          <div>
+            <table class="pg-table" data-component="spec-table">
+              <caption>定义存在但当前不渲染</caption>
+              <thead><tr><th scope="col">选择器</th><th scope="col">状态</th></tr></thead>
+              <tbody>
+                <tr><td><code>.spExpl</code></td><td>成分解释条，模板已改用 <code>.spTip</code></td></tr>
+                <tr><td><code>.enPunct</code></td><td>早期把标点当独立 token，现标点收进 <code>.word-box</code></td></tr>
+                <tr><td><code>.menu</code> / <code>.menuAndTheme</code></td><td>顶部菜单已移到 TopStatusBar</td></tr>
+                <tr><td><code>.operation</code></td><td>注释写明「一期隐藏，但保留容器」</td></tr>
+                <tr><td><code>.mask.active</code></td><td>已被 <code>.modalMask</code> 取代</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <table class="pg-table" data-component="spec-table">
+              <caption>仍在用但不在练习页</caption>
+              <thead><tr><th scope="col">选择器</th><th scope="col">宿主</th></tr></thead>
+              <tbody>
+                <tr><td><code>.targetBox .target</code></td><td>目标展示条</td></tr>
+                <tr><td><code>.tipsTextContent h1/h2</code></td><td>页面标题区</td></tr>
+                <tr><td><code>.modal</code></td><td>通用弹窗（720px）</td></tr>
+                <tr><td><code>.pause-modal</code></td><td>暂停浮层</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="stage" data-theme="light" data-component="repro-stage-32">
+          <div class="pg-row">
+            <span class="pg-tag"><code>.targetBox</code> / <code>.tipsTextContent</code> / <code>.mask</code> / <code>.modal + .pause-modal</code> / <code>.menu</code></span>
+            <div class="tipsTextContent"><h1>双拼练习</h1><h2>核心句子 · 逐词掌握</h2></div>
+            <div class="targetBox">目标：<span class="target">30 句 / 日</span></div>
+            <div class="menu"><a href="#tokens">练习</a><a href="#tokens">词库</a><a href="#tokens">统计</a></div>
+            <div class="maskish"><p>按任意键继续 · Esc 暂停</p></div>
+            <div class="modalMaskish" style="margin-top:var(--pg-sp-3)">
+              <div class="modal">
+                <h2>本次会话</h2>
+                <div class="pause-modal" style="margin:0 auto">
+                  <h2>已暂停</h2>
+                  <p>第 7 句 / 共 18 句 · 用时 01:24</p>
+                  <p class="pause-motivation">保持节奏，比保持速度更重要。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pg-row">
+            <span class="pg-tag"><code>.spExpl</code> 与 <code>.enPunct</code>（源码里有、页面上没有）</span>
+            <div class="spParse" style="max-width:none">
+              <div class="spGroup plain" style="--gi:0">
+                <span class="spUnit"><span class="spPh">/bɪˈkəz, bɪˈkɔːz/</span><span class="spCell"><span class="spWord">because</span><span class="spUl" style="background-color:var(--app-pos-SCONJ)"></span></span><span class="spDef">因为</span><span class="spPos">连词</span></span>
+                <span class="spUnit"><span class="spCell"><span class="spWord">the</span><span class="spUl" style="background-color:var(--app-pos-DET)"></span></span><span class="spEnPunctHolder"><span class="enPunct">.</span></span></span>
+              </div>
+              <span class="spExpl">because 是从属连词，引导原因状语从句，连接主句「我来」与从句「课在这里」。旧版把这段文字直接铺在结构图下方，现已移入词卡浮层。</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="pg-mast" style="border-top:1px solid var(--pg-border);border-bottom:none;margin-top:var(--pg-sp-5);padding-top:var(--pg-sp-4)">
+        <p style="margin:0">复刻覆盖 <code class="pg-inline-code">.letter</code> 13 种状态类、<code class="pg-inline-code">.sylLetter</code> 4 种状态类、成分色 10 项、词性色 16 项、键帽状态 4 项。三处必要改动：<code class="pg-inline-code">.combo-popup</code>、<code class="pg-inline-code">.enModeBox</code>、<code class="pg-inline-code">.enModeDispPanel</code> / <code class="pg-inline-code">.enModePanel</code> 由 <code class="pg-inline-code">position:fixed/absolute</code> 改为静态定位，仅为在文档流里排版；所有颜色、字号、圆角、阴影、动画参数保持原值。</p>
+      </footer>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

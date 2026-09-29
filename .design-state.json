@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-04T15:43:17.116Z",
+  "execution": {
+    "status": "ready_to_present",
+    "lastLintCheckedAt": "2026-09-04T15:41:48.563Z",
+    "lastLintSummary": {
+      "p0": 0,
+      "p1": 1,
+      "p2": 2,
+      "fileCount": 1,
+      "checkedAt": "2026-09-04T15:41:48.563Z"
+    },
+    "tweaksStatus": "provided",
+    "tweaksCount": 4,
+    "nudgeControlSummary": {
+      "total": 4,
+      "color": 0,
+      "nonColor": 4,
+      "slider": 3,
+      "select": 0,
+      "lightTheme": 1,
+      "darkTheme": 1
+    },
+    "hasActiveRenderableFrame": true,
+    "buildStatus": "not_applicable",
+    "noBuildReason": "交付物是 Canvas 工作区根目录下的单文件静态 HTML（core-sentence-style-playground.html），零脚本、无依赖、无构建产物；项目的 Vite 构建链未被触碰，因此不适用 React/Vite 构建校验。",
+    "completedAt": "2026-09-04T15:43:17.116Z"
+  },
+  "designPlan": {
+    "status": "cancelled",
+    "cancelledAt": "2026-09-04T15:21:35.580Z",
+    "directExecutionRequested": true,
+    "directExecutionReason": "直接执行",
+    "directExecutionAt": "2026-09-04T15:21:35.580Z"
+  }
+}

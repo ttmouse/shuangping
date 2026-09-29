@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>英文练习 · 记忆强化升级蓝图（示意）</title>
+<style>
+  :root{
+    --bg:#f6f8f7; --ink:#1f2a2e; --sub:#5b6b70; --line:#d8e0de;
+    --teal:#0e7c7b; --teal-soft:#e2f1f0;
+    --green:#2e8b57; --green-soft:#e4f2ea;
+    --amber:#c77800; --amber-soft:#fdf0dd;
+    --red:#c0473b; --red-soft:#fbe7e4;
+    --slate:#445866; --slate-soft:#e8eef2;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+    line-height:1.55;padding:28px 18px 48px;}
+  .wrap{max-width:1180px;margin:0 auto;}
+  header h1{font-size:24px;margin:0 0 6px;}
+  header p{margin:0;color:var(--sub);font-size:14px;}
+  .badge{display:inline-block;font-size:12px;color:var(--slate);background:var(--slate-soft);
+    border:1px solid var(--line);border-radius:999px;padding:2px 10px;margin-top:10px;}
+  .band{margin-top:26px;background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:20px 22px;box-shadow:0 1px 2px rgba(20,40,40,.04);}
+  .band h2{font-size:17px;margin:0 0 4px;display:flex;align-items:center;gap:8px;}
+  .band .hint{font-size:13px;color:var(--sub);margin:0 0 16px;}
+  .tag{font-size:11px;font-weight:700;border-radius:6px;padding:2px 8px;letter-spacing:.5px;}
+  .tag.now{background:var(--red-soft);color:var(--red);}
+  .tag.goal{background:var(--green-soft);color:var(--green);}
+
+  /* ---- loop comparison ---- */
+  .cols{display:flex;gap:18px;flex-wrap:wrap;}
+  .col{flex:1 1 340px;border-radius:12px;padding:16px;}
+  .col.now{background:#fcf3f2;border:1px solid #f0d4d0;}
+  .col.goal{background:#f1f7f4;border:1px solid #cfe6dc;}
+  .col h3{margin:0 0 4px;font-size:15px;}
+  .col .cap{font-size:12.5px;color:var(--sub);margin:0 0 14px;}
+  .flow{display:flex;flex-direction:column;gap:0;}
+  .node{border-radius:10px;padding:10px 12px;font-size:13.5px;background:#fff;border:1.5px solid var(--line);}
+  .col.now .node{border-color:#e7c3bd;}
+  .col.goal .node{border-color:#bfe0d0;}
+  .node b{display:block;font-size:13.5px;}
+  .node span{font-size:12px;color:var(--sub);}
+  .arrow{align-self:center;color:var(--sub);font-size:16px;line-height:1;margin:4px 0;}
+  .loopback{margin-top:10px;border-top:1.5px dashed currentColor;padding-top:8px;font-size:12px;text-align:center;border-radius:0;}
+  .col.now .loopback{color:var(--red);}
+  .col.goal .loopback{color:var(--green);}
+  .crossday{margin-top:12px;border-radius:10px;padding:10px 12px;font-size:12.5px;background:var(--green-soft);
+    border:1px solid #bfe0cd;color:#1f5e40;}
+  .gap-note{margin-top:12px;font-size:12.5px;color:var(--red);background:var(--red-soft);
+    border:1px solid #f0d4d0;border-radius:10px;padding:9px 12px;}
+
+  /* ---- state machine ---- */
+  .sm{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;}
+  .state{flex:1 1 150px;min-width:150px;border-radius:12px;padding:12px 12px 14px;background:#fff;border:1.5px solid var(--line);position:relative;}
+  .state .s-name{font-weight:700;font-size:14px;}
+  .state .s-desc{font-size:12px;color:var(--sub);margin-top:4px;min-height:48px;}
+  .state .s-step{display:inline-block;margin-top:8px;font-size:11.5px;border-radius:6px;padding:2px 8px;background:var(--slate-soft);color:var(--slate);}
+  .state.new{border-color:#c8d4dc;background:#f4f8fa;}
+  .state.learning{border-color:#e8c98a;background:#fdf6e9;}
+  .state.review{border-color:#9ed3b6;background:#eef8f2;}
+  .state.relearn{border-color:#e7b3ac;background:#fdf0ee;}
+  .trans{flex:0 0 34px;display:flex;align-items:center;justify-content:center;color:var(--sub);font-size:13px;text-align:center;}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--sub);}
+  .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px;}
+
+  /* ---- grade mapping ---- */
+  table{width:100%;border-collapse:collapse;font-size:13px;overflow:hidden;border-radius:10px;}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;}
+  th{background:var(--slate-soft);font-weight:700;font-size:12.5px;}
+  .g0{color:var(--red);font-weight:700;white-space:nowrap;}
+  .g1{color:var(--amber);font-weight:700;white-space:nowrap;}
+  .g2{color:var(--teal);font-weight:700;white-space:nowrap;}
+  .g3{color:var(--green);font-weight:700;white-space:nowrap;}
+
+  /* ---- roadmap ---- */
+  .road{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  @media (max-width:880px){.road{grid-template-columns:1fr 1fr;}}
+  @media (max-width:560px){.road{grid-template-columns:1fr;} .trans{flex-basis:100%;transform:rotate(90deg);height:20px;}}
+  .phase{border-radius:12px;padding:14px;border:1px solid var(--line);background:#fff;}
+  .phase .ph-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+  .phase .ph-no{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:13px;color:#fff;}
+  .phase h3{margin:0;font-size:14px;}
+  .phase ul{margin:0;padding-left:18px;font-size:12.5px;color:var(--ink);}
+  .phase li{margin:5px 0;}
+  .phase .cost{font-size:11.5px;color:var(--sub);margin-top:10px;display:block;}
+  .p0 .ph-no{background:var(--red);} .p0{border-color:#ecc7c1;background:#fdf5f4;}
+  .p1 .ph-no{background:var(--amber);} .p1{border-color:#ecd6ad;background:#fdf8ee;}
+  .p2 .ph-no{background:var(--teal);} .p2{border-color:#bfe0df;background:#f2f8f8;}
+  .p3 .ph-no{background:var(--slate);} .p3{border-color:#cdd8df;background:#f5f8fa;}
+
+  .formula{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;background:#0f2626;
+    color:#cfeee9;border-radius:10px;padding:10px 12px;margin-top:14px;overflow-wrap:break-word;white-space:normal;line-height:1.7;}
+  footer{margin-top:22px;font-size:12px;color:var(--sub);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>英文练习 · 记忆强化升级蓝图</h1>
+    <p>从「单次会话内的集中重复」升级为「内层刻意练习 × 外层间隔重复（SRS）」的双闭环——让练错、练慢的词在遗忘边缘被主动召回，间隔逐步拉长，进入长期记忆。</p>
+    <span class="badge">结构示意 · 非算法精确曲线 · 参考 Anki(SM-2) / FSRS / 刻意练习</span>
+  </header>
+
+  <!-- 1. 现状 vs 目标 -->
+  <section class="band">
+    <h2>① 核心诊断：现在只有「会话内记忆」，缺「跨天记忆模型」</h2>
+    <p class="hint">左：现有强化全部集中在一次练习内，且被最近一次表现覆盖；右：新增跨天间隔闭环，在遗忘边缘复习。</p>
+    <div class="cols">
+      <div class="col now">
+        <h3><span class="tag now">现状</span> 单会话 · 集中闭环</h3>
+        <p class="cap">错词加权 / 慢词连打 N 遍 / 当场重入队 —— 短期流利，长期保持差</p>
+        <div class="flow">
+          <div class="node"><b>出题（档位加权）</b><span>error/slow 权重 5，mastered 权重 1</span></div>
+          <div class="arrow">▼</div>
+          <div class="node"><b>错 / 慢</b><span>同一词一行连续重复 5 遍（无间隔）</span></div>
+          <div class="arrow">▼</div>
+          <div class="node"><b>最近一次定档</b><span>一次打快→永久 mastered；一次打慢→slow</span></div>
+          <div class="loopback">↺ 仅在「本次会话 / 本课」内循环，关掉页面即失忆</div>
+        </div>
+        <div class="gap-note">缺口：没有到期日 / 间隔 / 遗忘曲线；没有跨课包的「今日复习」；周一会的词周五照样忘。</div>
+      </div>
+
+      <div class="col goal">
+        <h3><span class="tag goal">目标</span> 双闭环 · 长期记忆</h3>
+        <p class="cap">内层刻意练习（会话内间隔+交错）＋ 外层间隔重复（跨天到期召回）</p>
+        <div class="flow">
+          <div class="node"><b>内层｜刻意练习</b><span>错词在其后第 1·3·6 个词复现（间隔+交错）；错误归因→微练</span></div>
+          <div class="arrow">▼</div>
+          <div class="node"><b>自动评级（0–3 档）</b><span>出错/速度/提示/首答 → Again·Hard·Good·Easy</span></div>
+          <div class="arrow">▼</div>
+          <div class="node"><b>更新记忆卡</b><span>稳定性 S↑、间隔指数拉长、重排到期日</span></div>
+          <div class="crossday">⟳ 外层｜跨天：今日到期队列跨所有课包交错抽取，在「即将遗忘还能想起」时再提取（复习优先于新词）。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. 状态机 + 自动评级 -->
+  <section class="band">
+    <h2>② SRS 卡片状态机 ＋ 零额外操作的自动评级</h2>
+    <p class="hint">新词经会话内短步学习后「毕业」；复习失败回到重学；评级直接复用现有「出错 / ms每字母 / 提示 / 首答」信号与两套阈值。</p>
+    <div class="sm">
+      <div class="state new"><div class="s-name">New 新卡</div><div class="s-desc">首次出现，抄写/识别为主</div><span class="s-step">学习步 1min→10min</span></div>
+      <div class="trans">→<br>通过</div>
+      <div class="state learning"><div class="s-name">Learning 学习中</div><div class="s-desc">会话内间隔复现，仍易忘</div><span class="s-step">毕业 → 1 天</span></div>
+      <div class="trans">→<br>连续通过</div>
+      <div class="state review"><div class="s-name">Review 复习中</div><div class="s-desc">间隔 1d→6d→×EF 指数拉长；通道升级到默写/听写/中译英</div><span class="s-step">成熟卡间隔可达数周</span></div>
+      <div class="trans">→<br>Again</div>
+      <div class="state relearn"><div class="s-name">Relearning 重学</div><div class="s-desc">遗忘召回，间隔重置；累计 5 次失败判为 Leech，换助记策略</div><span class="s-step">lapses+1</span></div>
+    </div>
+    <div class="legend">
+      <span><i style="background:#f4f8fa;border:1px solid #c8d4dc"></i>New</span>
+      <span><i style="background:#fdf6e9;border:1px solid #e8c98a"></i>Learning</span>
+      <span><i style="background:#eef8f2;border:1px solid #9ed3b6"></i>Review</span>
+      <span><i style="background:#fdf0ee;border:1px solid #e7b3ac"></i>Relearning / Leech</span>
+    </div>
+
+    <div style="overflow-x:auto;margin-top:16px;">
+    <table>
+      <thead><tr><th style="width:120px">评级（自动）</th><th>判定条件（严格模式，复用现有遥测与阈值）</th><th style="width:200px">调度结果</th></tr></thead>
+      <tbody>
+        <tr><td class="g0">Again 0</td><td>出错（enHadError）；或按过「看词/显示答案」；或听写未回忆而看答案</td><td>回学习步 / 重学，lapses+1</td></tr>
+        <tr><td class="g1">Hard 1</td><td>无错但 ms/字母 &gt; 慢阈值；或多次自我纠正/typo；或字母长停顿</td><td>间隔小幅增长，EF 略降</td></tr>
+        <tr><td class="g2">Good 2</td><td>无错、首答、ms/字母落在「掌握阈值～慢阈值」之间</td><td>间隔 ×EF 正常推进</td></tr>
+        <tr><td class="g3">Easy 3</td><td>无错、首答、ms/字母 ≤ 掌握阈值有余量，且<b>最近连续 2 次都快</b>（防侥幸秒过）</td><td>间隔加速增长，EF 上升</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="formula">SM-2：EF 初始 2.5（下限 1.3）｜间隔 1 天 → 6 天 → round(上一间隔 × EF)｜失败重置回学习步
+&nbsp;&nbsp;·&nbsp;&nbsp;FSRS（P3）：R(t) = 0.9 ^ (t / S)，在 R 跌到目标保持率(默认 0.9)时安排复习</div>
+  </section>
+
+  <!-- 3. 路线图 -->
+  <section class="band">
+    <h2>③ 分阶段落地路线（P0 性价比最高）</h2>
+    <p class="hint">每阶段都可独立上线、独立见效；P0 即可补上最关键的「跨天间隔」缺口。</p>
+    <div class="road">
+      <div class="phase p0">
+        <div class="ph-head"><div class="ph-no">P0</div><h3>跨天间隔闭环</h3></div>
+        <ul>
+          <li>新增 srs.js（SM-2＋学习步）与 review store，键 sp-srs-cards</li>
+          <li>现有信号自动评级，存复习日志，迁移旧掌握度/慢词</li>
+          <li>首页「今日复习」全局到期队列，复习优先于新词＋7天预测</li>
+          <li>慢词连打 → 会话内 1/3/6 间隔交错复现</li>
+        </ul>
+        <span class="cost">成本：低 ｜ 收益：最高（补上时间维度）</span>
+      </div>
+      <div class="phase p1">
+        <div class="ph-head"><div class="ph-no">P1</div><h3>刻意练习精准化</h3></div>
+        <ul>
+          <li>持久化逐字母耗时/错误，定位卡顿点</li>
+          <li>微练生成器：后缀 / bigram / 易混词 / 最小对立对</li>
+          <li>Leech 钉子词检测并换编码策略</li>
+          <li>通道晋级阶梯（抄写→默写→听写→中译英）按阶段门控</li>
+        </ul>
+        <span class="cost">成本：中 ｜ 收益：高（打准薄弱点）</span>
+      </div>
+      <div class="phase p2">
+        <div class="ph-head"><div class="ph-no">P2</div><h3>精加工与多语境</h3></div>
+        <ul>
+          <li>构词法带义拆解、词源/关键词助记、配图</li>
+          <li>词→句倒排索引：多语境复现＋挖空 cloze 卡</li>
+          <li>跨课包按 lemma 合并为一张卡</li>
+          <li>保持率仪表盘（R%/热力图/mature/leech）＋保持率每日目标</li>
+        </ul>
+        <span class="cost">成本：中 ｜ 收益：中长期（深度理解）</span>
+      </div>
+      <div class="phase p3">
+        <div class="ph-head"><div class="ph-no">P3</div><h3>个性化与护城河</h3></div>
+        <ul>
+          <li>用个人复习日志跑 FSRS 优化器替换 SM-2</li>
+          <li>自适应阈值；遗忘边缘提醒 / PWA</li>
+          <li>Anki .apkg 导入导出；跨端同步</li>
+          <li>跟读 / 发音评分作为新提取通道</li>
+        </ul>
+        <span class="cost">成本：较高 ｜ 收益：差异化与留存</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    依据：间隔 &gt; 集中、交错 &gt; 分组、提取测试 &gt; 重复阅读（Bjork「合意困难」；Roediger &amp; Karpicke 2006；Karpicke &amp; Roediger 2008；Rohrer &amp; Taylor 2007）；算法参考 Anki SM-2 与开源 FSRS（open-spaced-repetition）。本图为结构示意，详见 docs/english-memory-srs-proposal.md。
+  </footer>
+</div>
+</body>
+</html>

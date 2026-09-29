@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>核心句子样式 Playground — 双拼练习</title>
+<style>
+  /* ============ 主题变量（来自项目） ============ */
+  :root {
+    --theme-background-color: #ffffff;
+    --theme-background-light-color: #fff;
+    --theme-box-background-color: #dce8e0;
+    --theme-box-textContent-color: #fff;
+    --theme-main-text-color: #1a9a7a;
+    --theme-text-color: #1f2937;
+    --theme-text-secondary: #6b7280;
+    --theme-highlight-text-color: #b8860b;
+    --theme-border-color: #e2e5ea;
+    --theme-rich-text-color: #94a3b8;
+    --theme-menu-text-color: #1a9a7a;
+    --theme-menu-hover-color: #2ec4a0;
+    --theme-accent-color: #1a9a7a;
+    --theme-success: #2e9e5b;
+    --theme-error: #d9534f;
+    --theme-warning: #e6a23c;
+  }
+  html.dark {
+    --theme-background-color: #0f172a;
+    --theme-background-light-color: #1e293b;
+    --theme-box-background-color: #0a2e14;
+    --theme-box-textContent-color: #0c1a30;
+    --theme-text-color: #cbd5e1;
+    --theme-text-secondary: #64748b;
+    --theme-border-color: #334155;
+    --theme-rich-text-color: #64748b;
+    --theme-menu-text-color: #2ec4a0;
+    --theme-menu-hover-color: #3ddbbc;
+    --theme-accent-color: #2ec4a0;
+    --theme-success: #34d399;
+    --theme-error: #f87171;
+    --theme-warning: #fbbf24;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--theme-background-color);
+    color: var(--theme-text-color);
+    padding: 0 0 60px;
+    transition: background .3s, color .3s;
+  }
+  .header {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--theme-background-color);
+    border-bottom: 1px solid var(--theme-border-color);
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    backdrop-filter: blur(8px);
+  }
+  .header h1 { font-size: 20px; color: var(--theme-main-text-color); font-weight: 700; }
+  .header h1 small { font-weight: 400; font-size: 13px; color: var(--theme-rich-text-color); margin-left: 10px; }
+  .theme-toggle {
+    background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 8px;
+    padding: 6px 14px; cursor: pointer; font-size: 13px; color: var(--theme-text-color);
+    transition: all .2s;
+  }
+  .theme-toggle:hover { border-color: var(--theme-menu-hover-color); }
+  .pool { max-width: 1100px; margin: 0 auto; padding: 24px; }
+  .section-title {
+    font-size: 14px; font-weight: 600; color: var(--theme-rich-text-color);
+    text-transform: uppercase; letter-spacing: .05em;
+    margin-bottom: 14px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--theme-border-color);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title .tag {
+    font-size: 10px; font-weight: 500; text-transform: none;
+    background: var(--theme-box-background-color); color: var(--theme-main-text-color);
+    padding: 2px 8px; border-radius: 4px;
+  }
+  .section { margin-bottom: 40px; }
+  .demo-box {
+    background: var(--theme-background-light-color);
+    border: 1px solid var(--theme-border-color);
+    border-radius: 12px;
+    padding: 20px 24px;
+  }
+  .demo-box + .demo-box { margin-top: 10px; }
+  .demo-label {
+    font-size: 11px; font-weight: 600; color: var(--theme-rich-text-color);
+    margin-bottom: 10px; letter-spacing: .3px;
+  }
+
+  /* ============================================================ */
+  /* 真实项目 CSS（去 data-v 属性选择器） */
+  /* ============================================================ */
+
+  /* ---- 模式控制栏（右上角） ---- */
+  .enModeBox {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .enModeChip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--theme-border-color);
+    background: rgba(128,128,128,.06);
+    color: var(--theme-main-text-color);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s ease;
+    backdrop-filter: blur(8px);
+  }
+  .enModeChip:hover { background: rgba(128,128,128,.1); }
+  .enModeChip.open { background: rgba(128,128,128,.12); }
+  .enModeChip.open .enModeCaret { transform: rotate(180deg); }
+  .enModeCaret { flex-shrink: 0; opacity: .8; transition: transform .15s; }
+  .enModeLock { flex-shrink: 0; }
+  .enModeSep { color: var(--theme-border-color); font-size: 13px; opacity: .5; user-select: none; }
+  .enModeDicChip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 10px;
+    height: 28px;
+    border-radius: 999px;
+    border: 1px solid var(--theme-border-color);
+    background: transparent;
+    color: var(--theme-text-secondary, #6b7280);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .15s ease;
+    backdrop-filter: blur(8px);
+  }
+  .enModeDicChip:hover { background: rgba(128,128,128,.08); }
+  .enModeDicChip.dictation { background: rgba(128,128,128,.1); color: var(--theme-main-text-color); font-weight: 600; }
+  .enModeDispBox { position: relative; display: inline-flex; }
+  .enModeDispChip {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 0 10px;
+    height: 28px;
+    border-radius: 999px;
+    border: 1px solid var(--theme-border-color);
+    background: transparent;
+    color: var(--theme-text-secondary, #6b7280);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .15s ease;
+    backdrop-filter: blur(8px);
+  }
+  .enModeDispChip:hover { background: rgba(128,128,128,.08); }
+  .enModeDispChip.open { background: rgba(128,128,128,.1); color: var(--theme-main-text-color); }
+  .enModeDispChip.open .enModeDispCaret { transform: rotate(180deg); }
+  .enModeDispCaret { flex-shrink: 0; opacity: .7; transition: transform .15s; }
+  .enModeOptChips { display: inline-flex; gap: 4px; }
+  .enModeOptChip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 8px;
+    height: 26px;
+    border-radius: 999px;
+    border: 1px solid var(--theme-border-color);
+    background: transparent;
+    color: var(--theme-text-secondary, #6b7280);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .enModeOptChip:hover { background: rgba(128,128,128,.08); color: var(--theme-main-text-color); }
+  .enModeOptChip.on { background: rgba(128,128,128,.1); color: var(--theme-main-text-color); font-weight: 600; border-color: var(--theme-text-secondary, #6b7280); }
+
+  /* ---- 下拉面板 ---- */
+  .enModeDispPanel {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 160px;
+    padding: 6px;
+    border-radius: 10px;
+    border: 1px solid var(--theme-border-color);
+    background: var(--theme-background-color, #fff);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    z-index: 200;
+  }
+  .enModePanel {
+    position: relative;
+    min-width: 220px;
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid var(--theme-border-color);
+    background: var(--theme-background-color, #fff);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .enModeDispOpt {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+    padding: 7px 10px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+  }
+  .enModeDispOpt:hover { background: rgba(128,128,128,.1); }
+  .enModeDispOpt.active { background: color-mix(in srgb, var(--theme-accent-color, #1a9a7a) 14%, transparent); }
+  .enModeDispOptLabel { font-size: 13px; font-weight: 600; color: var(--theme-main-text-color); }
+  .enModeDispOptDesc { font-size: 11px; color: #999; line-height: 1.3; white-space: nowrap; }
+  .enModeDispOptRow { display: flex; align-items: center; width: 100%; gap: 8px; }
+  .enModeDispOptMeta { margin-left: auto; font-size: 11px; color: #bbb; font-weight: 500; }
+  .enModeDispOpt:disabled { opacity: .4; cursor: not-allowed; pointer-events: none; }
+  .enModeDictateDivider { border-top: 1px dashed var(--theme-border-color); margin: 2px 0; }
+
+  /* ---- 练习舞台 ---- */
+  .enStage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    width: 100%;
+    flex: 1;
+  }
+  .enSentenceCn {
+    font-size: 24px;
+    font-weight: 500;
+    color: #444;
+    max-width: 90%;
+    text-align: center;
+    line-height: 1.4;
+  }
+  html.dark .enSentenceCn { color: #e2e8f0; }
+  .enSentenceWrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+  }
+  .enSentence {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    max-width: 100%;
+    flex-shrink: 0;
+    padding: 20px 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .enSentence::-webkit-scrollbar { display: none; }
+  .enSentence.story { gap: 6px; }
+  .enSentence.story .word-box { padding: 6px 4px; }
+  .enSentenceRedo {
+    padding: 8px 16px;
+    gap: 8px;
+    flex-shrink: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .enSentenceRedo::-webkit-scrollbar { display: none; }
+  .enSentenceRedo .word-box { padding: 5px 10px; }
+
+  /* ---- 单词列 ---- */
+  .word-col {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .word-col.completed .letter.correct { color: #444; opacity: 1; }
+  html.dark .word-col.completed .letter.correct { color: #e2e8f0; }
+  .word-box {
+    display: inline-flex;
+    gap: 2px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: border-color .15s ease, opacity .2s ease, background .15s ease;
+  }
+  .word-letters {
+    display: inline-flex;
+    gap: 2px;
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .word-box .letter {
+    color: var(--theme-text-color);
+    opacity: .17;
+    border-bottom: 5px solid color-mix(in srgb, var(--theme-text-color) 30%, transparent);
+    transition: color .12s ease, opacity .12s ease, border-color .12s ease;
+  }
+  .word-box .letter.hidden { color: transparent; opacity: .17; border-bottom-color: var(--theme-text-color); }
+  .word-box .letter.punct { color: #999; opacity: .55; }
+  .word-box .letter.punct-done { color: #777; opacity: .95; }
+  .word-box .letter.punct-current { color: var(--theme-accent, #4a90d9); opacity: 1; }
+  .word-box .letter.correct { color: var(--theme-text-color); opacity: 1; border-bottom-color: var(--theme-success, #2e9e5b); }
+  .word-box .letter.wrong { color: var(--theme-error, #d9534f); opacity: 1; border-bottom-color: var(--theme-error, #d9534f); }
+  .word-box .letter.current { color: var(--theme-main-text-color); opacity: 1; border-bottom-color: var(--theme-main-text-color); }
+  .word-cn {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--theme-rich-text-color);
+    opacity: .9;
+    line-height: 1.2;
+    white-space: nowrap;
+    min-height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  .word-col.active .word-cn { opacity: 1; color: var(--theme-main-text-color); }
+  .word-time {
+    font-size: 11px;
+    line-height: 1;
+    min-height: 12px;
+    color: var(--theme-rich-text-color);
+    font-variant-numeric: tabular-nums;
+    visibility: hidden;
+  }
+  .word-time.has-value { visibility: visible; opacity: .85; }
+
+  /* ---- 进度头 ---- */
+  .enProgHeader { flex: 1; min-width: 0; }
+  .enProgTitle { font-size: 20px; font-weight: 600; color: var(--theme-main-text-color); }
+  .enProgTitle span { font-weight: 400; color: var(--theme-text-secondary, #6b7280); }
+  .enProgHint { font-size: 13px; color: var(--theme-rich-text-color); }
+  .enJumpSentence {
+    display: inline-block; padding: 0 2px;
+    border-bottom: 1px dashed var(--theme-border-color);
+    cursor: text; font-weight: 600; color: var(--theme-main-text-color);
+    min-width: 1.2em; text-align: center;
+  }
+  .enJumpInput {
+    width: 3.2em; padding: 1px 4px; font-size: 15px; font-weight: 600;
+    text-align: center; border-radius: 6px;
+    border: 1px solid var(--theme-menu-hover-color);
+    background: var(--theme-background-color); color: var(--theme-main-text-color); outline: none;
+  }
+  .enProgress {
+    font-size: 14px; color: var(--theme-text-color);
+    display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: auto;
+  }
+  .enActionBtn {
+    font-size: 12px; padding: 3px 8px; border-radius: 8px;
+    border: 1px solid var(--theme-border-color);
+    background: var(--theme-background-color); color: var(--theme-main-text-color);
+    cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
+    transition: all .15s ease;
+  }
+  .enActionBtn:hover:not(:disabled) { border-color: var(--theme-menu-hover-color); background: color-mix(in srgb, var(--theme-menu-hover-color) 6%, var(--theme-background-color)); }
+  .enActionBtn:disabled { opacity: .35; cursor: not-allowed; }
+  .enActionBtn svg { flex: none; }
+
+  /* ---- 句子成分结构 ---- */
+  .spParse {
+    display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center;
+    gap: 12px 16px; padding: 6px 4px 4px; max-width: 920px; margin: 0 auto;
+  }
+  .spGroup {
+    position: relative; display: inline-flex; flex-wrap: wrap;
+    align-items: flex-end; justify-content: center; gap: 8px 14px;
+    border: 1.5px solid; border-radius: 18px; padding: 16px 12px 8px;
+    transition: box-shadow .15s ease;
+    background: color-mix(in srgb, var(--theme-background-light-color) 38%, transparent);
+  }
+  .spGroup:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.1); }
+  .spGroup.plain { border: none; background: transparent; padding: 2px 2px 6px; box-shadow: none; }
+  .spChip {
+    position: absolute; left: 50%; top: 0;
+    transform: translate(-50%, -58%);
+    background: var(--sp-chip); color: #fff;
+    font-size: 10px; font-weight: 600; letter-spacing: 1px; line-height: 1;
+    padding: 4px 9px; border-radius: 999px; white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.18);
+  }
+  .spUnit {
+    position: relative; display: inline-grid;
+    grid-template-rows: auto auto auto auto;
+    justify-items: center; gap: 0; padding: 2px 3px; min-width: 0;
+  }
+  .spPh { display: block; font-size: 11px; line-height: 1.3; min-height: 15px; color: var(--theme-text-color); opacity: .75; white-space: nowrap; margin-bottom: 3px; user-select: none; }
+  .spWord { position: relative; display: inline-block; font-size: 40px; font-weight: 600; line-height: 1.15; color: #444; letter-spacing: .2px; padding: 0 2px 5px; cursor: pointer; user-select: none; }
+  html.dark .spWord { color: #e2e8f0; }
+  .spUl { position: absolute; left: 2px; right: 2px; bottom: 0; height: 4px; border-radius: 999px; opacity: .9; pointer-events: none; }
+  .spPunct { display: inline-block; font-size: 40px; font-weight: 600; line-height: 1.15; color: #444; opacity: .55; user-select: none; pointer-events: none; margin-left: 1px; }
+  html.dark .spPunct { color: #e2e8f0; }
+  .spDef { font-size: 13px; line-height: 1.35; min-height: 18px; color: var(--theme-rich-text-color); text-align: center; max-width: 360px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+  .spPos { font-size: 10px; min-height: 14px; line-height: 1.4; color: var(--theme-text-color); opacity: .7; letter-spacing: .3px; margin-top: 2px; user-select: none; }
+  .spCn { flex-basis: 100%; font-size: 26px; margin-top: 10px; opacity: .92; }
+
+  /* ---- combo-popup 评级 ---- */
+  .combo-popup {
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 12px;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .comboRating {
+    font-size: 42px; font-weight: 800; font-style: italic; line-height: 1; letter-spacing: .8px;
+    background: linear-gradient(180deg, #ffd76a 8%, #f59e0b 55%, #ef7d1f);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 2px 6px rgba(245,158,11,.35)) drop-shadow(0 0 18px rgba(245,158,11,.18));
+    text-transform: capitalize;
+  }
+  .comboCount { font-size: 22px; font-weight: 600; line-height: 1; color: var(--theme-main-text-color); letter-spacing: .3px; }
+
+  /* ---- 其他 ---- */
+  .btn {
+    padding: 8px 20px; border-radius: 8px;
+    border: 1px solid var(--theme-border-color);
+    background: var(--theme-background-light-color);
+    color: var(--theme-menu-text-color);
+    cursor: pointer; font-size: 14px;
+  }
+  .btn.primary { background: var(--theme-menu-text-color); border-color: var(--theme-menu-text-color); color: #fff; font-weight: 600; }
+  .bottomStats { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; padding: 10px 12px; }
+  .bsItem { text-align: center; min-width: 72px; }
+  .bsValue { display: block; font-size: 18px; font-weight: 700; color: var(--theme-main-text-color); font-variant-numeric: tabular-nums; }
+  .bsLabel { font-size: 11px; color: var(--theme-text-color); }
+
+  @media (max-width: 600px) {
+    .word-letters { font-size: 32px; } .spWord { font-size: 32px; } .spPunct { font-size: 32px; }
+    .enSentenceCn { font-size: 20px; } .pool { padding: 12px; } .header h1 { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>核心句子样式 Playground <small>双拼练习 · 真实项目样式</small></h1>
+  <button class="theme-toggle" id="themeToggle">暗色</button>
+</div>
+
+<div class="pool">
+
+  <!-- ============================================================ -->
+  <!-- 1. 模式控制栏（右上角完整工具栏） -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <div class="section-title">1. 模式控制栏 <span class="tag">.enModeBox + 所有 chip + 面板</span></div>
+
+    <div class="demo-box">
+      <div class="demo-label">工具栏（第 1 行：难度 chip + 练习模式 + 显示模式 + 选项开关）</div>
+      <div class="enModeBox">
+        <button class="enModeChip">
+          <svg class="enModeLock" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          <span>初级</span>
+          <svg class="enModeCaret" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <span class="enModeSep">|</span>
+        <button class="enModeDicChip">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 14-2 2-2-2"/><path d="M18 8v8"/></svg>
+          <span>中译英</span>
+        </button>
+        <span class="enModeSep">|</span>
+        <div class="enModeDispBox">
+          <button class="enModeDispChip">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/></svg>
+            <span>智能</span>
+            <svg class="enModeDispCaret" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+        </div>
+        <span class="enModeSep">|</span>
+        <span class="enModeOptChips">
+          <span class="enModeOptChip on">释义</span>
+          <span class="enModeOptChip">重练</span>
+          <span class="enModeOptChip">严格</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="demo-box">
+      <div class="demo-label">显示模式下拉面板（.enModeDispPanel）</div>
+      <div class="enModeDispBox" style="z-index:10;">
+        <div class="enModeDispPanel" style="position:relative;top:0;box-shadow:none;border-color:var(--theme-border-color);">
+          <button class="enModeDispOpt active">
+            <span class="enModeDispOptLabel">智能</span>
+            <span class="enModeDispOptDesc">按掌握度自动切换</span>
+          </button>
+          <button class="enModeDispOpt">
+            <span class="enModeDispOptLabel">看答案</span>
+            <span class="enModeDispOptDesc">始终显示字母，逐字母指引输入</span>
+          </button>
+          <button class="enModeDispOpt">
+            <span class="enModeDispOptLabel">全默写</span>
+            <span class="enModeDispOptDesc">始终隐藏字母，凭记忆拼写</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-box">
+      <div class="demo-label">难度下拉面板（.enModePanel）</div>
+      <div class="enModeDispBox" style="z-index:10;">
+        <div class="enModePanel" style="position:relative;top:0;box-shadow:none;border-color:var(--theme-border-color);">
+          <button class="enModeDispOpt active">
+            <span class="enModeDispOptRow">
+              <span class="enModeDispOptLabel">初级</span>
+              <span class="enModeDispOptMeta">42</span>
+            </span>
+            <span class="enModeDispOptDesc">单词 + 短语 + 整句</span>
+          </button>
+          <button class="enModeDispOpt">
+            <span class="enModeDispOptRow">
+              <span class="enModeDispOptLabel">中级</span>
+              <span class="enModeDispOptMeta">28</span>
+            </span>
+            <span class="enModeDispOptDesc">短语 + 整句</span>
+          </button>
+          <button class="enModeDispOpt" disabled>
+            <span class="enModeDispOptRow">
+              <span class="enModeDispOptLabel">高级</span>
+              <span class="enModeDispOptMeta">0</span>
+            </span>
+            <span class="enModeDispOptDesc">仅整句</span>
+          </button>
+          <div class="enModeDictateDivider"></div>
+          <button class="enModeDispOpt">
+            <span class="enModeDispOptRow">
+              <span class="enModeDispOptLabel">全类型</span>
+              <span class="enModeDispOptMeta">42</span>
+            </span>
+          </button>
+          <button class="enModeDispOpt">
+            <span class="enModeDispOptRow">
+              <span class="enModeDispOptLabel">自定义</span>
+              <span class="enModeDispOptMeta">18</span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- 2. 显示模式组合（1 句，多种模式） -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <div class="section-title">2. 显示模式组合 <span class="tag">.enSentence + .letter 不同状态</span></div>
+
+    <div class="demo-box">
+      <div class="demo-label">模式：智能（smart）— 当前词 active，已打 correct，未打 pending</div>
+      <div class="enSentence">
+        <div class="word-col completed">
+          <span class="word-cn">限定词</span>
+          <div class="word-box">
+            <span class="word-letters">
+              <span class="letter correct">T</span>
+              <span class="letter correct">h</span>
+              <span class="letter correct">e</span>
+            </span>
+          </div>
+        </div>
+        <div class="word-col active">
+          <span class="word-cn">名词</span>
+          <div class="word-box" style="border-color:var(--theme-main-text-color);">
+            <span class="word-letters">
+              <span class="letter correct">h</span>
+              <span class="letter correct">o</span>
+              <span class="letter correct">r</span>
+              <span class="letter correct">s</span>
+              <span class="letter correct">e</span>
+              <span class="letter correct">s</span>
+            </span>
+          </div>
+        </div>
+        <div class="word-col active">
+          <span class="word-cn">动词</span>
+          <div class="word-box" style="border-color:var(--theme-main-text-color);">
+            <span class="word-letters">
+              <span class="letter correct">a</span>
+              <span class="letter correct">r</span>
+              <span class="letter current">e</span>
+              <span class="letter" style="opacity:.17"> </span>
+            </span>
+          </div>
+        </div>
+        <div class="word-col">
+          <span class="word-cn">形容词</span>
+          <div class="word-box">
+            <span class="word-letters">
+              <span class="letter" style="opacity:.17">s</span>
+              <span class="letter" style="opacity:.17">t</span>
+              <span class="letter" style="opacity:.17">r</span>
+              <span class="letter" style="opacity:.17">o</span>
+              <span class="letter" style="opacity:.17">n</span>
+              <span class="letter" style="opacity:.17">g</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-box">
+      <div class="demo-label">模式：看答案（guide）— 始终显示字母，逐字母指引</div>
+      <div class="enSentence">
+        <div class="word-col completed">
+          <span class="word-cn">限定词</span>
+          <div class="word-box">
+            <span class="word-letters">
+              <span class="letter correct">T</span>
+              <span class="letter correct">h</span>
+              <span class="letter correct">e</span>
+            </span>
+          </div>
+        </div>
+        <div class="word-col active">
+          <span class="word-cn">名词</span>
+          <div class="word-box" style="border-color:var(--theme-main-text-color);">
+            <span class="word-letters">
+              <span class="letter correct">h</span>
+              <span class="letter correct">o</span>
+              <span class="letter correct">r</span>
+              <span class="letter correct">s</span>
+              <span class="letter correct">e</span>
+              <span class="letter correct">s</span>
+            </span>
+          </div>
+        </div>
+        <div class="word-col active">
+          <span class="word-cn">动词</span>
+          <div class="word-box" style="border-color:var(--theme-main-text-color);">
+            <span class="word-letters">
+              <span class="letter correct">a</span>
+              <span class="letter correct">r</span>
+              <span class="letter current">e</span>
+            </span>
+          </div>
+        </div>
+        <div class="word-col">
+          <span class="word-cn">形容词</span>
+          <div class="word-box">
+            <span class="word-letters">
+              <span class="letter" style="border-bottom:5px solid var(--theme-main-text-color);opacity:.5;color:var(--theme-text-color);">s</span>
+              <span class="letter" style="border-bottom:5px solid var(--theme-main-text-color);opacity:.5;color:var(--theme-text-color);">t</span>
+              <span class="letter" style="border-bottom:5px solid var(--theme-main-text-color);opacity:.5;color:var(--theme-text-color);">r</span>
+              <span class="letter" style="border-bottom:5px solid var(--theme-main-text-color);opacity:.5;color:var(--theme-text-color);">o</span>
+              <span class="letter" style="border-bottom:5px solid var(--theme-main-text-color);opacity:.5;color:var(--theme-text-color);">n</span>
+              <span class="letter" style="border-bottom:5px solid var(--theme-main-text-color);opacity:.5;color:var(--theme-text-color);">g</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-box">
+      <div class="demo-label">模式：全默写（dictation）— 字母 hidden（透明），只留底线</div>
+      <div class="enSentence">
+        <div class="word-col completed">
+          <span class="word-cn">限定词</span>
+          <div class="word-box">
+            <span class="word-letters">
+              <span class="letter hidden">T</span>
+              <span class="letter hidden">h</span>
+              <span class="letter hidden">e</span>
+            </span>
+          </div>
+        </div>
+        <div class="word-col active">
+          <span class="word-cn">名词</span>
+          <div class="word-box" style="border-color:var(--theme-main-text-color);">
+            <span class="word-letters">
+              <span class="letter hidden">h</span>
+              <span class="letter hidden">o</span>
+              <span class="letter hidden">r</span>
+              <span class="letter hidden">s</span>
+              <span class="letter hidden">e</span>
+              <span class="letter hidden">s</span>
+            </span>
+          </div>
+        </div>
+        <div class="word-col active">
+          <span class="word-cn">动词</span>
+          <div class="word-box" style="border-color:var(--theme-main-text-color);">
+            <span class="word-letters">
+              <span class="letter hidden">a</span>
+              <span class="letter hidden">r</span>
+              <span class="letter hidden">e</span>
+            </span>
+          </div>
+        </div>
+        <div class="word-col">
+          <span class="word-cn">形容词</span>
+          <div class="word-box">
+            <span class="word-letters">
+              <span class="letter hidden">s</span>
+              <span class="letter hidden">t</span>
+              <span class="letter hidden">r</span>
+              <span class="letter hidden">o</span>
+              <span class="letter hidden">n</span>
+              <span class="letter hidden">g</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- 3. 练习模式组合（1 句，中译英 vs 听写） -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <div class="section-title">3. 练习模式切换 <span class="tag">中译英 vs 听写 + 显示中文</span></div>
+
+    <div class="demo-box">
+      <div class="demo-label">中译英 + 显示中文释义</div>
+      <div class="enSentence">
+        <div class="word-col completed">
+          <span class="word-cn">限定词</span>
+          <div class="word-box"><span class="word-letters"><span class="letter correct">T</span><span class="letter correct">h</span><span class="letter correct">e</span></span></div>
+        </div>
+        <div class="word-col active">
+          <span class="word-cn" style="opacity:1;color:var(--theme-main-text-color);">名词</span>
+          <div class="word-box" style="border-color:var(--theme-main-text-color);"><span class="word-letters"><span class="letter correct">h</span><span class="letter correct">o</span><span class="letter correct">r</span><span class="letter correct">s</span><span class="letter correct">e</span><span class="letter correct">s</span></span></div>
+        </div>
+        <div class="word-col">
+          <span class="word-cn">动词</span>
+          <div class="word-box"><span class="word-letters"><span class="letter" style="opacity:.17">a</span><span class="letter" style="opacity:.17">r</span><span class="letter" style="opacity:.17">e</span></span></div>
+        </div>
+      </div>
+      <div class="enSentenceCn" style="font-size:18px;margin-top:8px;text-align:center;">马很强壮。</div>
+    </div>
+
+    <div class="demo-box">
+      <div class="demo-label">中译英 + 隐藏中文释义（enShowWordCn=false）</div>
+      <div class="enSentence">
+        <div class="word-col completed">
+          <div class="word-box"><span class="word-letters"><span class="letter correct">T</span><span class="letter correct">h</span><span class="letter correct">e</span></span></div>
+        </div>
+        <div class="word-col active">
+          <div class="word-box" style="border-color:var(--theme-main-text-color);"><span class="word-letters"><span class="letter correct">h</span><span class="letter correct">o</span><span class="letter correct">r</span><span class="letter correct">s</span><span class="letter correct">e</span><span class="letter correct">s</span></span></div>
+        </div>
+        <div class="word-col">
+          <div class="word-box"><span class="word-letters"><span class="letter" style="opacity:.17">a</span><span class="letter" style="opacity:.17">r</span><span class="letter" style="opacity:.17">e</span></span></div>
+        </div>
+      </div>
+      <div class="enSentenceCn" style="font-size:18px;margin-top:8px;text-align:center;">马很强壮。</div>
+    </div>
+
+    <div class="demo-box">
+      <div class="demo-label">听写模式（dictation）— 无中文提示，字母 hidden</div>
+      <div class="enSentence story">
+        <div class="word-col completed">
+          <div class="word-box"><span class="word-letters"><span class="letter hidden">T</span><span class="letter hidden">h</span><span class="letter hidden">e</span></span></div>
+        </div>
+        <div class="word-col active">
+          <div class="word-box" style="border-color:var(--theme-main-text-color);"><span class="word-letters"><span class="letter hidden">h</span><span class="letter hidden">o</span><span class="letter hidden">r</span><span class="letter hidden">s</span><span class="letter hidden">e</span><span class="letter hidden">s</span></span></div>
+        </div>
+        <div class="word-col">
+          <div class="word-box"><span class="word-letters"><span class="letter hidden">a</span><span class="letter hidden">r</span><span class="letter hidden">e</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- 4. 严格/宽松模式 + 重练（1 句） -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <div class="section-title">4. 严格/宽松 + 重练模式 <span class="tag">.letter.wrong + .enSentenceRedo</span></div>
+
+    <div class="demo-box">
+      <div class="demo-label">严格模式 — 打错字母立即标红（.letter.wrong）</div>
+      <div class="enSentence">
+        <div class="word-col completed">
+          <span class="word-cn">限定词</span>
+          <div class="word-box"><span class="word-letters"><span class="letter correct">T</span><span class="letter correct">h</span><span class="letter correct">e</span></span></div>
+        </div>
+        <div class="word-col active">
+          <span class="word-cn" style="opacity:1;color:var(--theme-main-text-color);">名词</span>
+          <div class="word-box" style="border-color:var(--theme-error);"><span class="word-letters"><span class="letter correct">h</span><span class="letter correct">o</span><span class="letter wrong">x</span><span class="letter wrong">r</span></span></div>
+        </div>
+        <div class="word-col">
+          <span class="word-cn">动词</span>
+          <div class="word-box"><span class="word-letters"><span class="letter" style="opacity:.17">a</span><span class="letter" style="opacity:.17">r</span><span class="letter" style="opacity:.17">e</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-box">
+      <div class="demo-label">宽松模式（Gentle）— 打错不立即判，整词完成后统一检查</div>
+      <div class="enSentence">
+        <div class="word-col completed">
+          <span class="word-cn">限定词</span>
+          <div class="word-box"><span class="word-letters"><span class="letter" style="opacity:.4">T</span><span class="letter" style="opacity:.4">h</span><span class="letter" style="opacity:.4">e</span></span></div>
+        </div>
+        <div class="word-col active">
+          <span class="word-cn" style="opacity:1;color:var(--theme-main-text-color);">名词</span>
+          <div class="word-box" style="border-color:var(--theme-main-text-color);"><span class="word-letters"><span class="letter" style="opacity:.4">h</span><span class="letter" style="opacity:.4">o</span><span class="letter current">r</span><span class="letter" style="opacity:.17">s</span><span class="letter" style="opacity:.17">e</span></span></div>
+        </div>
+        <div class="word-col">
+          <span class="word-cn">动词</span>
+          <div class="word-box"><span class="word-letters"><span class="letter" style="opacity:.17">a</span><span class="letter" style="opacity:.17">r</span><span class="letter" style="opacity:.17">e</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-box">
+      <div class="demo-label">错词重练行（enRedoPractice=true）— 单独一行展示需重练的词</div>
+      <div class="enSentenceWrap">
+        <div class="enSentence">
+          <div class="word-col completed">
+            <span class="word-cn">限定词</span>
+            <div class="word-box"><span class="word-letters"><span class="letter correct">T</span><span class="letter correct">h</span><span class="letter correct">e</span></span></div>
+          </div>
+          <div class="word-col completed">
+            <span class="word-cn">名词</span>
+            <div class="word-box"><span class="word-letters"><span class="letter correct">h</span><span class="letter correct">o</span><span class="letter correct">r</span><span class="letter correct">s</span><span class="letter correct">e</span><span class="letter correct">s</span></span></div>
+          </div>
+          <div class="word-col completed">
+            <span class="word-cn">动词</span>
+            <div class="word-box"><span class="word-letters"><span class="letter correct">a</span><span class="letter correct">r</span><span class="letter correct">e</span></span></div>
+          </div>
+        </div>
+        <div class="enSentenceRedo">
+          <span class="redo-label" style="font-size:13px;font-weight:600;color:var(--theme-error,#d9534f);background:color-mix(in srgb,var(--theme-error,#d9534f) 8%,var(--theme-background-color));padding:2px 8px;border-radius:4px;">重练</span>
+          <div class="word-col active">
+            <span class="word-cn">名词</span>
+            <div class="word-box" style="border-color:var(--theme-main-text-color);"><span class="word-letters"><span class="letter correct">h</span><span class="letter correct">o</span><span class="letter current">r</span><span class="letter" style="opacity:.17">s</span><span class="letter" style="opacity:.17">e</span></span></div>
+          </div>
+          <div class="word-col">
+            <span class="word-cn">形容词</span>
+            <div class="word-box"><span class="word-letters"><span class="letter" style="opacity:.17">s</span><span class="letter" style="opacity:.17">t</span><span class="letter" style="opacity:.17">r</span><span class="letter" style="opacity:.17">o</span><span class="letter" style="opacity:.17">n</span><span class="letter" style="opacity:.17">g</span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- 5. 句子成分结构图（1 句） -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <div class="section-title">5. 句子成分结构图 <span class="tag">.spParse + .spGroup + .spUnit</span></div>
+    <div class="demo-box">
+      <div class="spParse">
+        <div class="spGroup" style="border-color: #e91e6380; --sp-chip: #e91e63;">
+          <span class="spChip">主语</span>
+          <div class="spUnit">
+            <span class="spPh">/ðə/</span>
+            <span class="spCell"><span class="spWord">The<span class="spUl" style="background:#2196f3"></span></span></span>
+            <span class="spDef">限定词</span>
+            <span class="spPos">det.</span>
+          </div>
+          <div class="spUnit">
+            <span class="spPh">/ˈhɔːrsɪz/</span>
+            <span class="spCell"><span class="spWord">horses<span class="spUl" style="background:#4caf50"></span></span></span>
+            <span class="spDef">名词</span>
+            <span class="spPos">n.</span>
+          </div>
+        </div>
+        <div class="spGroup" style="border-color: #2196f380; --sp-chip: #2196f3;">
+          <span class="spChip">谓语</span>
+          <div class="spUnit">
+            <span class="spPh">/ɑːr/</span>
+            <span class="spCell"><span class="spWord">are<span class="spUl" style="background:#f44336"></span></span></span>
+            <span class="spDef">动词</span>
+            <span class="spPos">v.</span>
+          </div>
+        </div>
+        <div class="spGroup" style="border-color: #ff980080; --sp-chip: #ff9800;">
+          <span class="spChip">表语</span>
+          <div class="spUnit">
+            <span class="spPh">/strɔːŋ/</span>
+            <span class="spCell"><span class="spWord">strong<span class="spUl" style="background:#ff9800"></span></span></span>
+            <span class="spDef">形容词</span>
+            <span class="spPos">adj.</span>
+          </div>
+        </div>
+        <div class="spCn">马很强壮。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- 6. 进度 + 评级 + 统计（组合展示） -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <div class="section-title">6. 进度 + 评级 + 统计 <span class="tag">.enProgHeader + .combo-popup + .bottomStats</span></div>
+    <div class="demo-box">
+      <div class="enProgHeader">
+        <h1 class="enProgTitle">第 3 / 15 句 <span>. 第 4 / 6 词</span></h1>
+        <h2 class="enProgHint">（默写：看中文打英文，打错会显示单词）</h2>
+      </div>
+      <div class="combo-popup" style="margin:16px 0;position:static;transform:none;">
+        <span class="comboRating">Perfect</span>
+        <span class="comboCount">x 5</span>
+      </div>
+      <div class="combo-popup" style="margin:0 0 16px;position:static;transform:none;">
+        <span class="comboRating">Great</span>
+        <span class="comboCount">x 3</span>
+      </div>
+      <div class="bottomStats" style="border-top:1px solid var(--theme-border-color);padding-top:16px;">
+        <div class="bsItem">
+          <span class="bsValue">85<span style="font-size:12px;color:var(--theme-text-color)">%</span></span>
+          <span class="bsLabel">一次命中率</span>
+        </div>
+        <div class="bsItem">
+          <span class="bsValue">47</span>
+          <span class="bsLabel">完成词数</span>
+        </div>
+        <div class="bsItem">
+          <span class="bsValue">362<span style="font-size:12px;color:var(--theme-text-color)">ms</span></span>
+          <span class="bsLabel">平均每词用时</span>
+        </div>
+        <div class="bsItem">
+          <span class="bsValue">3</span>
+          <span class="bsLabel">查看答案</span>
+        </div>
+        <div class="bsItem">
+          <span class="bsValue">2</span>
+          <span class="bsLabel">重听</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const html = document.documentElement;
+  const btn = document.getElementById('themeToggle');
+  html.classList.toggle('dark');
+  btn.textContent = html.classList.contains('dark') ? '亮色' : '暗色';
+});
+</script>
+</body>
+</html>
