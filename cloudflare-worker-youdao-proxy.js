@@ -13,7 +13,47 @@
  * 6. 把 Worker URL 告诉我，我修改前端代码使用这个代理
  *
  * 免费额度：每天 100,000 次请求，足够个人使用
+ *
+ * 防滥用（2026-09-29）：
+ * - 方法只放行 GET/OPTIONS
+ * - 路径只放行实际使用的 /result /jsonapi_s /suggest /dictvoice
+ * - 来源校验：Origin 在白名单内才放行（dev 来源 localhost 放行）
+ * - 简单限流：单 IP 每 60s 最多 60 次查询
  */
+
+// ===== 需要按实际部署域名维护的白名单（生产：GitHub Pages，2026-09-29 PM 提供） =====
+const ALLOWED_ORIGINS = [
+  'https://ttmouse.github.io',
+]
+const ALLOWED_DEV_HOSTNAMES = ['localhost', '127.0.0.1']
+
+const ALLOWED_PATHS = ['/result', '/jsonapi_s', '/suggest', '/dictvoice']
+const RATE_LIMIT = 60 // 次
+const RATE_WINDOW_MS = 60_000 // ms
+// 简单内存限流：每请求 IP 计数（单实例 Worker 级别，多实例下近似）
+const rateBuckets = new Map() // ip -> { count, windowStart }
+
+function corsHeaders(origin) {
+  return {
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Headers': '*',
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
+  }
+}
+
+function checkRateLimit(ip) {
+  const now = Date.now()
+  let bucket = rateBuckets.get(ip)
+  if (!bucket || now - bucket.windowStart > RATE_WINDOW_MS) {
+    bucket = { count: 0, windowStart: now }
+    rateBuckets.set(ip, bucket)
+    if (rateBuckets.size > 10000) rateBuckets.clear()
+  }
+  bucket.count += 1
+  return bucket.count <= RATE_LIMIT
+}
 
 export default {
   async fetch(request, env, ctx) {
@@ -23,29 +63,57 @@ export default {
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         status: 204,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-          'Access-Control-Allow-Headers': '*',
-          'Access-Control-Max-Age': '86400',
-        },
+        headers: corsHeaders(request.headers.get('Origin') ?? '*'),
       })
+    }
+
+    // 防滥用检查（404/403 都不暴露细节）
+    if (request.method !== 'GET') {
+      return new Response('Method Not Allowed', { status: 405 })
     }
 
     // 只处理 /api/youdao/* 路径
     if (!url.pathname.startsWith('/api/youdao/')) {
       return new Response('Not Found. Use /api/youdao/* to proxy dict.youdao.com', {
         status: 404,
-        headers: { 'Access-Control-Allow-Origin': '*' },
+      })
+    }
+
+    // 路径白名单：只转发实际用到的有道接口
+    const targetPath = url.pathname.replace('/api/youdao', '')
+    if (!ALLOWED_PATHS.some((p) => targetPath === p || targetPath.startsWith(p + '?') || targetPath.startsWith('/dictvoice'))) {
+      return new Response('Path Not Allowed', { status: 403 })
+    }
+
+    // 来源校验：Origin 必须在白名单内（dev 的 localhost 也放行）
+    const origin = request.headers.get('Origin') ?? ''
+    const originHost = origin ? new URL(origin).hostname : ''
+    if (!origin) {
+      return new Response('Origin Not Allowed', { status: 403 })
+    }
+    if (
+      !ALLOWED_ORIGINS.includes(origin) &&
+      !ALLOWED_DEV_HOSTNAMES.includes(originHost)
+    ) {
+      return new Response('Origin Not Allowed', { status: 403 })
+    }
+
+    // 简单限流
+    const ip = request.headers.get('CF-Connecting-IP') ?? 'unknown'
+    if (!checkRateLimit(ip)) {
+      return new Response('Too Many Requests', {
+        status: 429,
+        headers: corsHeaders(origin),
       })
     }
 
     // 构建目标 URL：去掉 /api/youdao 前缀，转发到 dict.youdao.com
-    const targetPath = url.pathname.replace('/api/youdao', '')
     const targetUrl = 'https://dict.youdao.com' + targetPath + url.search
 
     try {
       // 转发请求，模拟完整的浏览器请求头（绕过有道的代理检测）
+      // Cookie 改由环境变量/Secret 注入，不再写死在代码里（2026-09-29）
+      const cookieValue = (typeof env.YOUDAO_COOKIE === "string" && env.YOUDAO_COOKIE) ? env.YOUDAO_COOKIE : "i18n_redirected=zh"
       const response = await fetch(targetUrl, {
         method: request.method,
         headers: {
@@ -66,8 +134,7 @@ export default {
           'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
           'sec-ch-ua-mobile': '?0',
           'sec-ch-ua-platform': '"macOS"',
-          Cookie:
-            'OUTFOX_SEARCH_USER_ID_NCOO=1209711592.2933877; OUTFOX_SEARCH_USER_ID=465541934@125.121.96.80; i18n_redirected=zh',
+          Cookie: cookieValue,
         },
         // 不转发客户端的 cookie（避免携带用户的有道登录态）
         credentials: 'omit',
@@ -81,10 +148,11 @@ export default {
         headers: response.headers,
       })
 
-      // 覆盖/添加 CORS 头
-      newResponse.headers.set('Access-Control-Allow-Origin', '*')
-      newResponse.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+      // 覆盖/添加 CORS 头（回显白名单内的 Origin）
+      newResponse.headers.set('Access-Control-Allow-Origin', origin)
+      newResponse.headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS')
       newResponse.headers.set('Access-Control-Allow-Headers', '*')
+      newResponse.headers.set('Vary', 'Origin')
 
       // 移除可能导致问题的头
       newResponse.headers.delete('content-security-policy')
@@ -96,7 +164,7 @@ export default {
         status: 502,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
+          ...corsHeaders(origin),
         },
       })
     }
