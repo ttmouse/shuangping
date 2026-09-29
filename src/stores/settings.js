@@ -33,6 +33,7 @@ export const useSettingsStore = defineStore('settings', {
     enSpeakOnError: true, // 单词朗读·错误时朗读：打错时朗读该词纠音（默认开）
     enSpeakSentence: true, // 英文整句朗读：进入新句子时整句作一次请求先试有道原声（与单词同音色），失败回退系统语音连读；多词句生效
     enTTSAccent: 'uk', // 英文发音口音：'uk'=英音（有道 type=2）| 'us'=美音（type=1）
+    enSlowSpeak: false, // 英文·慢速朗读：单词/整句的自动朗读与重听按 0.6 倍速播放（变速不变调），听不清时用
     enDisplayMode: 'smart', // 英文显示模式：'smart'=智能(根据掌握度)|'guide'=全指引(始终显示字母)|'dictation'=全默写(始终隐藏字母)
     enGrade: 'all', // 英文词库年级：'all' | 'g4' | 'g5' | 'g6'
     enShowWordCn: true, // 英文·单词上方中文翻译是否显示（默认开）
@@ -130,6 +131,12 @@ export const useSettingsStore = defineStore('settings', {
       this.enSpeakOnError = !this.enSpeakOnError
       this.save()
       return this.enSpeakOnError
+    },
+    // 慢速朗读开关（0.6 倍速，变速不变调）
+    toggleEnSlowSpeak() {
+      this.enSlowSpeak = !this.enSlowSpeak
+      this.save()
+      return this.enSlowSpeak
     },
     // 英文整句朗读：进入新句子时先朗读整句
     toggleEnSpeakSentence() {

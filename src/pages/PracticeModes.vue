@@ -248,6 +248,7 @@
             <!-- 逐词看词（仅隐藏答案态可用）：与整句开关并存，查看当前词答案并计入统计 -->
             <button v-if="!enAnswerShown" class="enActionBtn" v-qtip :disabled="!enCanViewAnswer" @click="enViewAnswer" data-tip="显示当前单词（计入完成统计）" data-nav><svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>看词</button>
             <button class="enActionBtn" v-qtip @click="enRelisten" data-tip="重读当前单词 (Ctrl+,)" data-nav><svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>重听单词</button>
+            <button class="enActionBtn" :class="{ on: settings.enSlowSpeak }" v-qtip @click="settings.toggleEnSlowSpeak()" :data-tip="settings.enSlowSpeak ? '慢速朗读已开启（0.6 倍速变速不变调），点击恢复常速' : '慢速朗读：单词/整句按 0.6 倍速播放（变速不变调），听不清时用'" data-nav><svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m16 9 4 6"/><path d="m20 7-6 10"/></svg>慢速</button>
             <button v-if="settings.enSpeakSentence" class="enActionBtn" v-qtip @click="speakWholeSentence" data-tip="重听整句 (Ctrl+')" data-nav><svg class="enIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>重听整句</button>
           </div>
         </template>
@@ -301,7 +302,7 @@
                             <span class="courseOrder">#{{ c.order }}</span>
                           </span>
                           <span v-if="c.subtitle" class="storySubtitle">{{ c.subtitle }}</span>
-                          <span class="courseStatus"><span v-if="isRecentCourse(c)" class="courseRecentBadge" title="最近学习的课程">最近学习</span><span v-if="courseRec(c)?.completed" class="courseDone" title="已练习完成">已完成<span v-if="courseRec(c)?.lastPracticed"> · {{ relTime(courseRec(c).lastPracticed) }}</span></span><span v-else-if="courseRec(c)?.lastPracticed" class="courseLast" title="上次练习时间">上次 {{ relTime(courseRec(c).lastPracticed) }}</span></span>
+                          <span class="courseStatus"><span v-if="isRecentCourse(c)" class="courseRecentBadge" title="最近学习的课程">最近学习</span><span v-if="courseRec(c)?.completed" class="courseDone" title="已练习完成">已完成<span v-if="courseRec(c)?.lastPracticed"> · {{ relTime(courseRec(c).lastPracticed) }}</span></span><span v-else-if="courseRec(c)?.lastPracticed" class="courseLast" title="上次练习时间">上次 {{ relTime(courseRec(c).lastPracticed) }}</span><span v-if="courseRec(c)?.stars" class="courseStars" :title="'历史最好成绩 ' + courseRec(c).stars + ' 星，重刷可冲击满星'">{{ '★'.repeat(courseRec(c).stars) }}</span></span>
                           <span class="courseCardFoot">
                             <span class="courseStatsRow">
                               <span v-for="s in statParts(c)" :key="s.k" class="statItem" :title="s.title">
@@ -681,7 +682,15 @@
             </div>
           </div>
 
-          <!-- 主统计区：答对/又错 + 时长/答题数，横向一字排开，纯文字无背景块 -->
+          <!-- 通关星级：按本次表现评星（完成即 1 星，最高 3 星），课包课程另存历史最好成绩 -->
+          <div class="rpStars" v-if="sessionStars > 0">
+            <span class="rpStarRow">
+              <span v-for="i in 3" :key="i" class="rpStar" :class="{ on: i <= sessionStars }" :style="{ '--i': i - 1 }">★</span>
+            </span>
+            <span class="rpStarsTitle">{{ sessionStarsTitle }}</span>
+          </div>
+
+          <!-- 主统计区：答对/又错 + 时长/答题数/最高连击，横向一字排开，纯文字无背景块 -->
           <div class="rpSummary">
             <div class="rpItem">
               <span class="rpItemValue ok">{{ enFirstHitCount }}</span>
@@ -698,6 +707,10 @@
             <div class="rpItem">
               <span class="rpItemValue">{{ enWordCount }}</span>
               <span class="rpItemLabel">答题数</span>
+            </div>
+            <div class="rpItem">
+              <span class="rpItemValue">{{ enMaxCombo }}</span>
+              <span class="rpItemLabel">最高连击</span>
             </div>
           </div>
 
@@ -1344,10 +1357,12 @@ function loadCourseProgress() {
 function saveCourseProgress() {
   try { localStorage.setItem(COURSE_PROGRESS_KEY, JSON.stringify(courseProgress)) } catch {}
 }
-function markCourseComplete(packSlug, courseFile) {
+function markCourseComplete(packSlug, courseFile, stars = 0) {
   if (!packSlug || !courseFile) return
   if (!courseProgress[packSlug]) courseProgress[packSlug] = {}
-  courseProgress[packSlug][courseFile] = { completed: true, lastPracticed: Date.now() }
+  const prev = courseProgress[packSlug][courseFile]
+  // 星级保留历史最好成绩：鼓励孩子“再刷一次拿满星”
+  courseProgress[packSlug][courseFile] = { completed: true, lastPracticed: Date.now(), stars: Math.max(stars || 0, prev?.stars || 0) }
   saveCourseProgress()
 }
 // 触碰课程（开始练习/打开阅读）：记录 lastPracticed，保留 completed；课程卡显示"上次 x 天前"
@@ -2366,7 +2381,7 @@ function speakWholeSentence() {
   if (!settings.enSpeakSentence) return
   const words = enSentence.value.filter((_, i) => !enRedoSet.value.has(i)).map(w => unitText(w)).filter(Boolean)
   if (!words.length) return
-  speakSentence(words, settings.enTTSAccent || 'uk', enStoryMode.value ? 2 : 1)
+  speakSentence(words, settings.enTTSAccent || 'uk', enStoryMode.value ? 2 : 1, null, settings.enSlowSpeak ? 0.6 : 0)
 }
 function speakEnglish(word, force = false) {
   if (!word) return
@@ -2377,7 +2392,7 @@ function speakEnglish(word, force = false) {
   // 同句同词不重复朗读（force=打错时强制朗读）
   if (!force && enLastSpokenKey === key) return
   enLastSpokenKey = key
-  speakWord(w, settings.enTTSAccent || 'uk')
+  speakWord(w, settings.enTTSAccent || 'uk', settings.enSlowSpeak ? 0.6 : 0)
 }
 
 // 数字状态
@@ -3684,6 +3699,7 @@ function start() {
   enAnswerOverride.value = null // 新会话复位答案显隐，回到全局偏好（显示答案/隐藏答案是会话级临时操作）
   enCombo.value = 0 // 新会话从零连击
   enMaxCombo.value = 0
+  sessionStars.value = 0 // 新会话重置通关星级（完成时重新评星）
   resetSentenceScoring()
   // 普通开始：清空本次错词记录；刻意练习开始（mistakePracticeMode=true）保留供队列使用
   if (!mistakePracticeMode.value) sessionMistakes.value = []
@@ -4016,13 +4032,27 @@ function handleInput(code, shiftKey) {
   return res
 }
 
+// 通关星级（孩子激励）：完成即 1 星；一次命中率 ≥60% → 2 星；≥90% 且全程没用“看词/显示答案” → 3 星
+const sessionStars = ref(0)
+const sessionStarsTitle = computed(() =>
+  sessionStars.value >= 3 ? '三星通关！你就是单词小达人！'
+    : sessionStars.value === 2 ? '很棒！再来一次就能拿满星'
+      : '完成啦！再练一次冲击满星吧'
+)
+function calcSessionStars() {
+  if (enViewAnswers.value === 0 && enFirstHitRate.value >= 90) return 3
+  if (enFirstHitRate.value >= 60) return 2
+  return 1
+}
 function finish() {
   completed.value = true
   // 整课完成庆祝（官网只在完成整门课时放彩带/烟花 + victory 音效，非每句）
   fireCourseCelebration()
-  // 课包课程完成：标记进度，并清除续练位置（整课已通关，下次从头开始）
+  // 通关星级：按本次表现评星（结算层展示）
+  sessionStars.value = calcSessionStars()
+  // 课包课程完成：标记进度（含星级，保留历史最好），并清除续练位置（整课已通关，下次从头开始）
   if (mode.value === 'stories' && currentCourse.value && activePack.value) {
-    markCourseComplete(activePack.value.slug, currentCourse.value.file)
+    markCourseComplete(activePack.value.slug, currentCourse.value.file, sessionStars.value)
     clearCourseResume()
   }
   closeEnModePanel()
@@ -5078,6 +5108,15 @@ onBeforeUnmount(() => {
   background: var(--theme-text-secondary);
   flex-shrink: 0;
 }
+/* 课程卡历史最好星级：金色小星，鼓励重刷冲满星 */
+.courseStars {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #f59e0b;
+}
 /* 卡脚部：统计与状态行；顶部细分割线与正文分层，增加层次感 */
 .courseCard .courseCardFoot {
   margin-top: auto;
@@ -5824,6 +5863,12 @@ onBeforeUnmount(() => {
   opacity: 0.35;
   cursor: not-allowed;
 }
+/* 慢速朗读开启态：琥珀色描边 + 淡底，与普通操作钮区分 */
+.enActionBtn.on {
+  border-color: #f59e0b;
+  color: #b45309;
+  background: color-mix(in srgb, #f59e0b 12%, var(--theme-background-color));
+}
 
 /* 评级弹层（复刻官网 comboPopup：居中一行简单文字，如 Perfect × 4，无背景装饰） */
 .combo-popup {
@@ -6558,6 +6603,36 @@ onBeforeUnmount(() => {
 .rpItemValue { font-size: 28px; font-weight: 700; line-height: 1; color: var(--theme-main-text-color); font-variant-numeric: tabular-nums; }
 .rpItemValue.ok { color: #2c8f6a; }
 .rpItemValue.wrong { color: #e05353; }
+
+/* 通关星级：三颗星逐颗弹出 + 称号语（孩子激励） */
+.rpStars {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 0 2px;
+}
+.rpStarRow { display: flex; gap: 10px; }
+.rpStar {
+  font-size: 34px;
+  line-height: 1;
+  color: color-mix(in srgb, var(--theme-main-text-color) 14%, transparent);
+}
+.rpStar.on {
+  color: #f59e0b;
+  text-shadow: 0 1px 4px color-mix(in srgb, #f59e0b 35%, transparent);
+  animation: starPop .42s cubic-bezier(.34, 1.56, .64, 1) backwards;
+  animation-delay: calc(var(--i) * .18s);
+}
+@keyframes starPop {
+  from { opacity: 0; transform: scale(.2) rotate(-18deg); }
+  to { opacity: 1; transform: scale(1) rotate(0); }
+}
+.rpStarsTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #b45309;
+}
 .rpItemLabel { font-size: 12px; color: var(--theme-text-color); }
 /* 区块：无背景，只保留标题下方的细分隔线 */
 .rpSection { padding: 2px 8px; }

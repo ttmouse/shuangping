@@ -161,7 +161,7 @@ if (typeof speechSynthesis !== 'undefined') {
   refreshVoices()
   speechSynthesis.addEventListener?.('voiceschanged', refreshVoices)
 }
-function speakNative(text, accent, token, repeat = 1, onDone = null) {
+function speakNative(text, accent, token, repeat = 1, onDone = null, rate = 0) {
   if (typeof speechSynthesis === 'undefined' || isStale(token)) return
   try {
     const u = new SpeechSynthesisUtterance(text)
@@ -172,7 +172,7 @@ function speakNative(text, accent, token, repeat = 1, onDone = null) {
       null
     if (voice) u.voice = voice
     u.lang = voice ? voice.lang : lang
-    u.rate = 0.95
+    u.rate = rate > 0 ? rate : 0.95
     u.pitch = 1
     u.volume = 0.8
     speechSynthesis.cancel() // 防止与其它语音合成叠加
@@ -190,7 +190,7 @@ function speakNative(text, accent, token, repeat = 1, onDone = null) {
 // 整句朗读：整个句子作为一次请求发给有道（同接口同音色）；
 // 命中（词典预生成音频）→ 直接播放整句；失败（500 null audio / 超时）
 // → 回退系统语音整句连读。textOrWords 支持单词数组或字符串。
-export function speakSentence(textOrWords, accent = 'uk', repeat = 1, onDone = null) {
+export function speakSentence(textOrWords, accent = 'uk', repeat = 1, onDone = null, rate = 0) {
   const text = Array.isArray(textOrWords)
     ? textOrWords.filter(Boolean).join(' ')
     : String(textOrWords || '').trim()
@@ -226,12 +226,15 @@ export function speakSentence(textOrWords, accent = 'uk', repeat = 1, onDone = n
         return tryDictvoice()
       }
       sentenceFailCache.set(text, Date.now())
-      speakNative(text, accent, token, repeat, onDone) // 未收录 → 回退系统语音整句连读
+      speakNative(text, accent, token, repeat, onDone, rate) // 未收录 → 回退系统语音整句连读
     }
   }
   // 重复播放：一遍结束后自动接着下一遍（打被断时中止后续重复）
   const playRepeat = n => {
-    const playOnce = () => a.play().catch(() => {})
+    const playOnce = () => {
+      if (rate > 0) { a.playbackRate = rate; a.preservesPitch = true } // 慢速：变速不变调
+      a.play().catch(() => {})
+    }
     if (n <= 1) {
       a.onended = () => { if (!isStale(token) && typeof onDone === 'function') onDone() }
       playOnce()
@@ -268,7 +271,7 @@ export function speakSentence(textOrWords, accent = 'uk', repeat = 1, onDone = n
 // 朗读单词；连续朗读时自动打断上一个（包括整句朗读）
 // 注意：只打断「正在播放」的音频；仍在加载（未开始出声）的不打断，
 // 否则第一个词在加载慢（如外网有道接口）时会被下一个词掐掉，导致首词无声
-export function speakWord(word, accent = 'uk') {
+export function speakWord(word, accent = 'uk', rate = 0) {
   if (!word) return
   stopAllSpeech() // 单词发音打断整句朗读
   try {
@@ -276,6 +279,7 @@ export function speakWord(word, accent = 'uk') {
     const url = `${TTS_ENDPOINT}?type=${type}&audio=${encodeURIComponent(word)}`
     const a = new Audio(url)
     a.volume = 0.6 // 发音音量 60%
+    if (rate > 0) { a.playbackRate = rate; a.preservesPitch = true } // 慢速：变速不变调，孩子听不清时可放慢
     a.play().catch(() => {})
     lastAudio = a
   } catch {
