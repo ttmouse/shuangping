@@ -900,6 +900,17 @@
         <span class="pm-wc-word">{{ wordCard.wd.word }}</span>
         <button class="pm-wc-btn" v-qtip data-tip="美式发音" @click="playWord('us')">美</button>
         <button class="pm-wc-btn" v-qtip data-tip="英式发音" @click="playWord('uk')">英</button>
+        <button
+          class="pm-wc-add"
+          :class="{ on: inVocabBook(wordCard.wd) }"
+          v-qtip
+          :data-tip="inVocabBook(wordCard.wd) ? '点击从生词本移除' : '收藏到生词本，长期保留'"
+          @click="toggleVocabWord(wordCard.wd)"
+        >
+          <svg v-if="inVocabBook(wordCard.wd)" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg>
+          <svg v-else viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+          {{ inVocabBook(wordCard.wd) ? '已在生词本' : '加入生词本' }}
+        </button>
       </div>
       <div class="pm-wc-phs">
         <span v-if="wordCard.wd.phUs" class="pm-wc-ph"><b>美</b>{{ wordCard.wd.phUs }}</span>
@@ -958,19 +969,6 @@
         >展开更多例句（{{ youdaoDetail.sentences.length - 1 }}）</button>
       </div>
       <div v-if="youdaoLoading" class="pm-wc-loading">加载词典中…</div>
-      <div class="pm-wc-actions">
-        <button
-          class="pm-wc-add"
-          :class="{ on: inVocabBook(wordCard.wd) }"
-          v-qtip
-          :data-tip="inVocabBook(wordCard.wd) ? '点击从生词本移除' : '收藏到生词本，长期保留'"
-          @click="toggleVocabWord(wordCard.wd)"
-        >
-          <svg v-if="inVocabBook(wordCard.wd)" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg>
-          <svg v-else viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-          {{ inVocabBook(wordCard.wd) ? '已在生词本' : '加入生词本' }}
-        </button>
-      </div>
     </div>
   </div>
 </template>
@@ -6154,7 +6152,8 @@ onBeforeUnmount(() => {
 .pm-wc-expand { display: block; margin: 4px 0 0; padding: 2px 0; font-size: 11px; color: var(--theme-text-secondary); background: none; border: none; cursor: pointer; text-align: left; opacity: .7; transition: opacity .12s ease; }
 .pm-wc-expand:hover { opacity: 1; color: var(--theme-main-text-color); }
 .pm-wc-actions { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--theme-border-color); }
-.pm-wc-add { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 8px 10px; font-size: 13px; font-weight: 600; border-radius: 9px; border: 1px solid var(--theme-border-color); background: transparent; color: var(--theme-text-color); cursor: pointer; transition: border-color .15s ease, color .15s ease, background .15s ease; }
+/* 收藏生词本：浮层头部右侧的小按钮（auto margin 推到行尾） */
+.pm-wc-add { display: inline-flex; align-items: center; gap: 4px; margin-left: auto; padding: 2px 8px; font-size: 11px; font-weight: 600; white-space: nowrap; border-radius: 6px; border: 1px solid var(--theme-border-color); background: transparent; color: var(--theme-text-color); cursor: pointer; transition: border-color .15s ease, color .15s ease, background .15s ease; }
 .pm-wc-add:hover { border-color: var(--theme-main-text-color); color: var(--theme-main-text-color); }
 .pm-wc-add.on { border-color: var(--theme-main-text-color); background: color-mix(in srgb, var(--theme-main-text-color) 12%, transparent); color: var(--theme-main-text-color); }
 @media (max-width: 720px) { .pm-wordcard { width: 260px; } }

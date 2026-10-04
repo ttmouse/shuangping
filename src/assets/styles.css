@@ -17,6 +17,8 @@
   --theme-error: #d9534f;
   --theme-warning: #e6a23c;
   --theme-card-background: #f6f6f6;
+  --theme-flash-ok: #52c41a;
+  --theme-flash-bad: #ff4d4f;
 }
 html.dark {
   --theme-background-color: #0f172a;
@@ -34,6 +36,8 @@ html.dark {
   --theme-error: #f87171;
   --theme-warning: #fbbf24;
   --theme-card-background: #1e293b;
+  --theme-flash-ok: #52c41a;
+  --theme-flash-bad: #ff4d4f;
 }
 * { box-sizing: border-box; }
 html, body, #app { height: 100%; }
@@ -80,27 +84,27 @@ a { color: var(--theme-menu-text-color); text-decoration: none; }
 .keyBox:hover { border-color: var(--theme-menu-hover-color); }
 .keyBox.pressed { transform: translateY(1px); }
 .keyBox.flash-ok {
-  border-color: #52c41a;
+  border-color: var(--theme-flash-ok);
   box-shadow:
-    0 0 0 2px rgba(82,196,26,0.6) inset,
-    0 0 12px rgba(82,196,26,0.5);
+    0 0 0 2px color-mix(in srgb, var(--theme-flash-ok) 60%, transparent) inset,
+    0 0 12px color-mix(in srgb, var(--theme-flash-ok) 50%, transparent);
   animation: keyPop 0.22s ease;
 }
 .keyBox.flash-ok .keyCapital p,
 .keyBox.flash-ok .keyAuxiliary p,
-.keyBox.flash-ok .keyMnemonic span { color: #52c41a; }
+.keyBox.flash-ok .keyMnemonic span { color: var(--theme-flash-ok); }
 .keyBox.flash-bad {
-  border-color: #ff4d4f;
+  border-color: var(--theme-flash-bad);
   /* 强化红色内阴影 + 外发光，并加一层轻微红色蒙层 */
   box-shadow:
-    0 0 0 2px #ff4d4f99 inset,
-    0 0 12px #ff4d4f80,
-    0 0 0 999px rgba(255,77,79,0.08) inset;
+    0 0 0 2px color-mix(in srgb, var(--theme-flash-bad) 60%, transparent) inset,
+    0 0 12px color-mix(in srgb, var(--theme-flash-bad) 50%, transparent),
+    0 0 0 999px color-mix(in srgb, var(--theme-flash-bad) 8%, transparent) inset;
   animation: keyShake 0.18s ease;
 }
 .keyBox.flash-bad .keyCapital p,
 .keyBox.flash-bad .keyAuxiliary p,
-.keyBox.flash-bad .keyMnemonic span { color: #ff4d4f; }
+.keyBox.flash-bad .keyMnemonic span { color: var(--theme-flash-bad); }
 
 @keyframes keyShake {
   0%   { transform: translateX(0) }
