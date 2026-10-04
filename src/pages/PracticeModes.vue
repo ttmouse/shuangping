@@ -894,36 +894,25 @@
 
     <AchievementNotification :new-achievements="newAchievements" />
 
-    <!-- 词卡浮层：点击完成态单词弹出（同阅读模式 CourseReading 的 cr-wordcard） -->
-    <div v-if="wordCard" class="pm-wordcard" :style="{ left: wordCard.x + 'px', top: wordCard.y + 'px' }" @click.stop>
-      <div class="pm-wc-head">
-        <span class="pm-wc-word">{{ wordCard.wd.word }}</span>
-        <button class="pm-wc-btn" v-qtip data-tip="美式发音" @click="playWord('us')">美</button>
-        <button class="pm-wc-btn" v-qtip data-tip="英式发音" @click="playWord('uk')">英</button>
-        <button
-          class="pm-wc-add"
-          :class="{ on: inVocabBook(wordCard.wd) }"
-          v-qtip
-          :data-tip="inVocabBook(wordCard.wd) ? '点击从生词本移除' : '收藏到生词本，长期保留'"
-          @click="toggleVocabWord(wordCard.wd)"
-        >
-          <svg v-if="inVocabBook(wordCard.wd)" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg>
-          <svg v-else viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-          {{ inVocabBook(wordCard.wd) ? '已在生词本' : '加入生词本' }}
-        </button>
-      </div>
-      <div class="pm-wc-phs">
-        <span v-if="wordCard.wd.phUs" class="pm-wc-ph"><b>美</b>{{ wordCard.wd.phUs }}</span>
-        <span v-if="wordCard.wd.phUk" class="pm-wc-ph"><b>英</b>{{ wordCard.wd.phUk }}</span>
-      </div>
-      <div class="pm-wc-defs">
-        <div class="pm-wc-def"><i v-if="wordCard.wd.posCn">{{ wordCard.wd.posCn }}</i>{{ wordCard.wd.def || '' }}</div>
-      </div>
+    <!-- 词卡浮层：共享组件 WordCard（阅读模式同款），扩展内容走默认插槽 -->
+    <WordCard
+      v-if="wordCard"
+      :x="wordCard.x"
+      :y="wordCard.y"
+      :word="wordCard.wd.word"
+      :ph-us="wordCard.wd.phUs"
+      :ph-uk="wordCard.wd.phUk"
+      :pos-cn="wordCard.wd.posCn"
+      :def="wordCard.wd.def"
+      :in-vocab="inVocabBook(wordCard.wd)"
+      @play="playWord"
+      @toggle="toggleVocabWord(wordCard.wd)"
+    >
       <!-- 本课例句：当前练习句子（英文+中文），点击播放整句发音 -->
       <div v-if="wordCard.sentenceEn" class="pm-wc-sents pm-wc-example" @click="playWord('sentence')">
         <div class="pm-wc-sents-title">本课例句</div>
         <div class="pm-wc-sent">
-          <div class="pm-wc-sent-en">{{ wordCard.sentenceEn }}<span class="pm-wc-sent-vol">🔊</span></div>
+          <div class="pm-wc-sent-en"><template v-for="(tk, ti) in vocabTokens(wordCard.sentenceEn)" :key="ti"><span :class="{ 'is-vocab': tk.v }">{{ tk.t }}</span></template><span class="pm-wc-sent-vol">🔊</span></div>
           <div class="pm-wc-sent-cn">{{ wordCard.sentenceCn }}</div>
         </div>
       </div>
@@ -936,7 +925,7 @@
       <div v-if="relatedWordEntries.length" class="pm-wc-sents">
         <div class="pm-wc-sents-title">相关词/短语</div>
         <div v-for="(e, ei) in relatedWordEntries.slice(0, wordEntriesExpanded ? 5 : 2)" :key="ei" class="pm-wc-sent">
-          <div class="pm-wc-sent-en"><b>{{ e.entry }}</b></div>
+          <div class="pm-wc-sent-en"><b :class="{ 'is-vocab': vocabHas(e.entry) }">{{ e.entry }}</b></div>
           <div class="pm-wc-sent-cn">{{ e.explain }}</div>
         </div>
         <button
@@ -959,7 +948,7 @@
           class="pm-wc-sent pm-wc-sent-clickable"
           @click="playSentence(s.speech)"
         >
-          <div class="pm-wc-sent-en">{{ s.en }}<span v-if="s.speech" class="pm-wc-sent-vol">🔊</span></div>
+          <div class="pm-wc-sent-en"><template v-for="(tk, ti) in vocabTokens(s.en)" :key="ti"><span :class="{ 'is-vocab': tk.v }">{{ tk.t }}</span></template><span v-if="s.speech" class="pm-wc-sent-vol">🔊</span></div>
           <div class="pm-wc-sent-cn">{{ s.cn }}</div>
         </div>
         <button
@@ -969,7 +958,7 @@
         >展开更多例句（{{ youdaoDetail.sentences.length - 1 }}）</button>
       </div>
       <div v-if="youdaoLoading" class="pm-wc-loading">加载词典中…</div>
-    </div>
+    </WordCard>
   </div>
 </template>
 
@@ -977,6 +966,7 @@
 import { computed, onMounted, onBeforeUnmount, ref, reactive, watch, nextTick, inject, defineAsyncComponent } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import TopStatusBar from '../components/TopStatusBar.vue'
+import WordCard from '../components/WordCard.vue'
 import AchievementNotification from '../components/AchievementNotification.vue'
 import Keyboard from '../components/Keyboard.vue'
 import { WORDS } from '../data/words.js'
@@ -2078,6 +2068,17 @@ const vocabBookWords = computed(() =>
 function inVocabBook(wd) {
   const key = String(wd?.word || '').trim().toLowerCase()
   return !!vocabBook[key]
+}
+// 词卡浮层内英文着色：在生词本里的词显示生词色（与阅读模式 is-vocab 一致）
+function vocabHas(s) {
+  return !!vocabBook[String(s || '').trim().toLowerCase()]
+}
+// 把英文句子切成 token：{ t: 文本, v: 是否生词本单词 }（空白原样保留，查词时剥掉标点）
+function vocabTokens(text) {
+  return String(text || '').split(/(\s+)/).map((t) => ({
+    t,
+    v: /[A-Za-z]/.test(t) && vocabHas(t.replace(/[^A-Za-z'’-]/g, '')),
+  }))
 }
 // 生词来源标签：收藏时快照当前课包/课程名（如 "short-stories/pep5 人教版五年级上 · U1 PartA"），没有课包上下文则留空
 function vocabSourceLabel() {
@@ -6121,16 +6122,7 @@ onBeforeUnmount(() => {
 .dark .spWord:hover,
 [data-theme='dark'] .spWord:hover,
 [data-theme='light'] .spWord:hover { color: var(--theme-main-text-color); }
-/* 词卡浮层（同阅读模式 .cr-wordcard） */
-.pm-wordcard { position: fixed; z-index: 200; width: 300px; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 14px; box-shadow: 0 12px 32px rgba(0,0,0,.18); padding: 14px 16px; }
-.pm-wc-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.pm-wc-word { font-size: 22px; font-weight: 700; }
-.pm-wc-phs { display: flex; gap: 10px; margin-top: 2px; flex-wrap: wrap; }
-.pm-wc-ph { font-size: 14px; color: var(--theme-text-secondary); }
-.pm-wc-ph b { font-weight: 600; color: var(--theme-main-text-color); margin-right: 3px; font-style: normal; }
-.pm-wc-btn { padding: 2px 9px; font-size: 12px; border-radius: 6px; border: 1px solid var(--theme-border-color); background: transparent; color: var(--theme-text-color); cursor: pointer; }
-.pm-wc-btn:hover { border-color: var(--theme-main-text-color); color: var(--theme-main-text-color); }
-.pm-wc-defs { margin-top: 10px; }
+/* 词卡浮层：容器/头部/收藏按钮样式已收敛到共享组件 WordCard.vue，这里只留插槽内容样式 */
 .pm-wc-def { font-size: 14px; line-height: 1.6; }
 .pm-wc-def i { font-style: normal; color: var(--theme-main-text-color); margin-right: 4px; }
 .pm-wc-def-yd { color: var(--theme-text-secondary); font-size: 13px; line-height: 1.5; margin-top: 4px; }
@@ -6151,12 +6143,8 @@ onBeforeUnmount(() => {
 /* 展开更多：弱样式入口（小字、灰色、无边框） */
 .pm-wc-expand { display: block; margin: 4px 0 0; padding: 2px 0; font-size: 11px; color: var(--theme-text-secondary); background: none; border: none; cursor: pointer; text-align: left; opacity: .7; transition: opacity .12s ease; }
 .pm-wc-expand:hover { opacity: 1; color: var(--theme-main-text-color); }
-.pm-wc-actions { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--theme-border-color); }
-/* 收藏生词本：浮层头部右侧的小按钮（auto margin 推到行尾） */
-.pm-wc-add { display: inline-flex; align-items: center; gap: 4px; margin-left: auto; padding: 2px 8px; font-size: 11px; font-weight: 600; white-space: nowrap; border-radius: 6px; border: 1px solid var(--theme-border-color); background: transparent; color: var(--theme-text-color); cursor: pointer; transition: border-color .15s ease, color .15s ease, background .15s ease; }
-.pm-wc-add:hover { border-color: var(--theme-main-text-color); color: var(--theme-main-text-color); }
-.pm-wc-add.on { border-color: var(--theme-main-text-color); background: color-mix(in srgb, var(--theme-main-text-color) 12%, transparent); color: var(--theme-main-text-color); }
-@media (max-width: 720px) { .pm-wordcard { width: 260px; } }
+/* 浮层内生词本单词着色（同阅读模式 .cr-text.is-vocab 的琥珀色语义） */
+.wordcard .is-vocab { color: var(--theme-warning); }
 .spDef {
   font-size: 13px;
   line-height: 1.35;

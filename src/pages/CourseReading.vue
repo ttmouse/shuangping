@@ -144,33 +144,20 @@
       </div>
     </div>
 
-    <!-- 词卡浮层 -->
-    <div v-if="wordCard" class="cr-wordcard" :style="{ left: wordCard.x + 'px', top: wordCard.y + 'px' }" @click.stop>
-      <div class="cr-wc-head">
-        <span class="cr-wc-word">{{ wordCard.tok.text }}</span>
-        <button class="cr-wc-btn" title="美式发音" @click="playWord('us')">美</button>
-        <button class="cr-wc-btn" title="英式发音" @click="playWord('uk')">英</button>
-      </div>
-      <div class="cr-wc-phs">
-        <span v-if="wordCard.tok.phoneticUs" class="cr-wc-ph"><b>美</b>{{ wordCard.tok.phoneticUs }}</span>
-        <span v-if="wordCard.tok.phonetic" class="cr-wc-ph"><b>英</b>{{ wordCard.tok.phonetic }}</span>
-      </div>
-      <div class="cr-wc-defs">
-        <div class="cr-wc-def"><i v-if="wordCard.tok.posCn">{{ wordCard.tok.posCn }}</i> {{ wordCard.tok.def || '' }}</div>
-      </div>
-      <div class="cr-wc-actions">
-        <button
-          class="cr-wc-add"
-          :class="{ on: inVocabBook(wordCard.tok) }"
-          title="收藏到生词本，长期保留"
-          @click="toggleVocabWord(wordCard.tok)"
-        >
-          <svg v-if="inVocabBook(wordCard.tok)" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg>
-          <svg v-else viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-          {{ inVocabBook(wordCard.tok) ? '已在生词本' : '加入生词本' }}
-        </button>
-      </div>
-    </div>
+    <!-- 词卡浮层：共享组件 WordCard（与练习页同一实现） -->
+    <WordCard
+      v-if="wordCard"
+      :x="wordCard.x"
+      :y="wordCard.y"
+      :word="wcText(wordCard.tok)"
+      :ph-us="wordCard.tok.phoneticUs"
+      :ph-uk="wordCard.tok.phonetic"
+      :pos-cn="wordCard.tok.posCn"
+      :def="wordCard.tok.def"
+      :in-vocab="inVocabBook(wordCard.tok)"
+      @play="playWord"
+      @toggle="toggleVocabWord(wordCard.tok)"
+    />
   </div>
 </template>
 
@@ -179,6 +166,7 @@ import { ref, computed, reactive, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { fetchCourseData, fetchCoursePack, buildCourseDict } from '../utils/coursePacks.js'
 import { speakSentence, speakWord, stopAllSpeech } from '../utils/tts.js'
+import WordCard from '../components/WordCard.vue'
 
 // ---------- 词性中文 / 颜色（与练习页一致） ----------
 const POS_CN = { PRON:'代词', AUX:'助动词', PART:'小品词', DET:'限定词', NOUN:'名词', VERB:'动词', ADJ:'形容词', ADV:'副词', ADP:'介词', CCONJ:'连词', SCONJ:'连词', INTJ:'感叹词', PROPN:'专有名词', PROPN_PERSON:'人名', NUM:'数词', X:'其他', PUNCT:'标点', '':'', null:'', undefined:'' }
@@ -518,6 +506,11 @@ function inVocabBook(tok) {
   const key = String(tok?.word || '').trim().toLowerCase()
   return !!vocabBook[key]
 }
+// 词卡标题展示：剥掉词面前后的标点（如 "weekend?" → "weekend"）
+function wcText(tok) {
+  const s = String(tok?.text || tok?.word || '')
+  return s.replace(/^[^A-Za-z0-9]+|[^A-Za-z0-9]+$/g, '') || s
+}
 function toggleVocabWord(tok) {
   const key = String(tok?.word || '').trim().toLowerCase()
   if (!key || !/[A-Za-z0-9]/.test(key)) return // 纯标点/符号单元不收藏
@@ -635,27 +628,11 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', onKey); window.rem
 .cr-minibtn.on { border-color: var(--theme-main-text-color); color: var(--theme-main-text-color); }
 .cr-readreset { margin-top: 6px; padding: 6px; font-size: 12px; border-radius: 8px; border: 1px solid var(--theme-border-color); background: transparent; color: var(--theme-text-secondary); cursor: pointer; width: 100%; }
 
-/* 词卡 */
-.cr-wordcard { position: fixed; z-index: 200; width: 300px; background: var(--theme-background-light-color); border: 1px solid var(--theme-border-color); border-radius: 14px; box-shadow: 0 12px 32px rgba(0,0,0,.18); padding: 14px 16px; }
-.cr-wc-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.cr-wc-word { font-size: 22px; font-weight: 700; }
-.cr-wc-phs { display: flex; gap: 10px; margin-top: 2px; flex-wrap: wrap; }
-.cr-wc-ph { font-size: 14px; color: var(--theme-text-secondary); }
-.cr-wc-ph b { font-weight: 600; color: var(--theme-main-text-color); margin-right: 3px; font-style: normal; }
-.cr-wc-btn { padding: 2px 9px; font-size: 12px; border-radius: 6px; border: 1px solid var(--theme-border-color); background: transparent; color: var(--theme-text-color); cursor: pointer; }
-.cr-wc-btn:hover { border-color: var(--theme-main-text-color); color: var(--theme-main-text-color); }
-.cr-wc-defs { margin-top: 10px; }
-.cr-wc-def { font-size: 14px; line-height: 1.6; }
-.cr-wc-def i { font-style: normal; color: var(--theme-main-text-color); margin-right: 4px; }
-.cr-wc-actions { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--theme-border-color); }
-.cr-wc-add { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 8px 10px; font-size: 13px; font-weight: 600; border-radius: 9px; border: 1px solid var(--theme-border-color); background: transparent; color: var(--theme-text-color); cursor: pointer; transition: border-color .15s ease, color .15s ease, background .15s ease; }
-.cr-wc-add:hover { border-color: var(--theme-main-text-color); color: var(--theme-main-text-color); }
-.cr-wc-add.on { border-color: var(--theme-main-text-color); background: color-mix(in srgb, var(--theme-main-text-color) 12%, transparent); color: var(--theme-main-text-color); }
+/* 词卡浮层：样式已收敛到共享组件 WordCard.vue */
 
 @media (max-width: 720px) {
   /* 窄屏：标题允许折行完整展示，不截断 */
   .cr-title { white-space: normal; line-height: 1.35; }
   .cr-article { padding: 16px 10px 120px; }
-  .cr-wordcard { width: 260px; }
 }
 </style>
